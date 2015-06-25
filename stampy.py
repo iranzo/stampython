@@ -150,7 +150,7 @@ texto = ""
 for message in getupdates(options):
     update_id = message['update_id']
     try:
-        texto = message['message']['text']
+        texto = message['message']['text'].lower()
         chat_id = message['message']['chat']['id']
         message_id = int(message['message']['message_id'])
     except:
@@ -184,6 +184,8 @@ for message in getupdates(options):
 print "Last processed message at %s" % date
 print "Last processed update id %s" % lastupdateid
 print "Last processed text %s" % texto
+
+clearupdates(options, offset=lastupdateid + 1)
 
 # Close database
 if con:
