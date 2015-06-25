@@ -78,9 +78,9 @@ for message in result['result']:
 
         for word in texto.split():
             if "++" in word:
-                print "++ encontrado en %s" % word
+                print "++ Found in %s" % word
             if "--" in word:
-                print "-- encontrado en %s" % word
+                print "-- Found in %s" % word
 
 print "Last processed message at %s" % date
 print "Last processed update id %s" % lastupdateid
