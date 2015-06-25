@@ -41,7 +41,10 @@ p.add_option("-b", "--database", dest="database", help="database file for storin
 p.add_option('-v', "--verbosity", dest="verbosity", help="Show messages while running", metavar='[0-n]', default=0,
              type='int')
 p.add_option('-u', "--url", dest="url", help="Define URL for accessing bot API", default="https://api.telegram.org/bot")
+p.add_option('-c', '--control', dest='control', help="Define chat_id for monitoring service", default=None)
+
 (options, args) = p.parse_args()
+
 
 if options.token:
     token = options.token
@@ -52,46 +55,56 @@ else:
 con = None
 
 
-def sendmessage(options, chat_id=0, text=""):
+def sendmessage(options, chat_id=0, text="", reply_to_message_id=None):
     url = "%s%s/sendMessage" % (options.url, options.token)
     message = "%s?chat_id=%s&text=%s" % (url, chat_id, urllib.quote_plus(text))
+    if reply_to_message_id:
+            message = message + "&reply_to_message_id=%s" % reply_to_message_id
     return json.load(urllib.urlopen(message))
 
 
-url = "%s%s/getUpdates" % (options.url, options.token)
+def getupdates(options, offset=0, limit=100):
+    url = "%s%s/getUpdates" % (options.url, options.token)
+    message = "%s?" % url
+    if offset != 0:
+        message = message + "&offset=%s" % offset
+    message = message + "&limit=%s" % limit
+    result = None
+    try:
+        result = json.load(urllib.urlopen(message))
+    except:
+        result = None
+    for item in result['result']:
+        yield item
 
-try:
-    result = json.load(urllib.urlopen(url))
-except:
-    print "Error accesing URL with token, exitting"
-    sys.exit(1)
+
+# Main code
 
 date = 0
 lastupdateid = 0
 print "Initial message at %s" % date
 texto = ""
-for message in result['result']:
-    updateid = message['update_id']
-    if updateid > lastupdateid:
-        lastupdateid = updateid
+for message in getupdates(options):
+    update_id = message['update_id']
+    try:
+        texto = message['message']['text']
+        chat = message['message']['chat']['id']
+    except:
+        error = 1
+
+    if update_id > lastupdateid:
+        lastupdateid = update_id
     newdate = int(float(message['message']['date']))
     if newdate > date:
         date = newdate
-        try:
-            error = 0
-            texto = message['message']['text']
-            chat = message['message']['chat']['id']
-        except:
-            error = 1
-
         for word in texto.split():
             if "++" in word:
-                print "++ Found in %s" % word
+                print "++ Found in %s at %s with id %s" % (word, chat, update_id)
             if "--" in word:
-                print "-- Found in %s" % word
+                print "-- Found in %s at %s with id %s" % (word, chat, update_id)
 
 print "Last processed message at %s" % date
 print "Last processed update id %s" % lastupdateid
 print "Last processed text %s" % texto
 
-print sendmessage(options, chat_id=5812695, text="Ejecucion de stampy")
+# sendmessage(options, chat_id=options.control, text="Stampy execution ended")
