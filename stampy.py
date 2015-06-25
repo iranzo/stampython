@@ -36,9 +36,11 @@ Stampy is a script for controlling Karma via Telegram.org bot api
 # Option parsing
 p = optparse.OptionParser("stampy.py [arguments]", description=description)
 p.add_option("-t", "--token", dest="token", help="API token for bot access to messages", default=None)
-p.add_option("-b", "--database", dest="database", help="database file for storing karma and last processed message", default="stampy.db")
+p.add_option("-b", "--database", dest="database", help="database file for storing karma and last processed message",
+             default="stampy.db")
 p.add_option('-v', "--verbosity", dest="verbosity", help="Show messages while running", metavar='[0-n]', default=0,
              type='int')
+p.add_option('-u', "--url", dest="url", help="Define URL for accessing bot API", default="https://api.telegram.org/bot")
 (options, args) = p.parse_args()
 
 if options.token:
@@ -47,25 +49,31 @@ else:
     print "Token required for operation, please check https://core.telegram.org/bots"
     sys.exit(1)
 
-url = 'https://api.telegram.org/bot%s/getUpdates' % token
+con = None
+
+
+def sendmessage(options, chat_id=0, text=""):
+    url = "%s%s/sendMessage" % (options.url, options.token)
+    message = "%s?chat_id=%s&text=%s" % (url, chat_id, urllib.quote_plus(text))
+    return json.load(urllib.urlopen(message))
+
+
+url = "%s%s/getUpdates" % (options.url, options.token)
+
 try:
     result = json.load(urllib.urlopen(url))
 except:
     print "Error accesing URL with token, exitting"
     sys.exit(1)
 
-con = None
-
-
 date = 0
 lastupdateid = 0
 print "Initial message at %s" % date
-
+texto = ""
 for message in result['result']:
     updateid = message['update_id']
     if updateid > lastupdateid:
         lastupdateid = updateid
-
     newdate = int(float(message['message']['date']))
     if newdate > date:
         date = newdate
@@ -85,3 +93,5 @@ for message in result['result']:
 print "Last processed message at %s" % date
 print "Last processed update id %s" % lastupdateid
 print "Last processed text %s" % texto
+
+print sendmessage(options, chat_id=5812695, text="Ejecucion de stampy")
