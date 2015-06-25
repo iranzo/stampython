@@ -13,15 +13,6 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    See the
 # GNU General Public License for more details.
 
-# TODO
-# Mostly everything :), initial steps are there for accessing URL
-# - Database integration and updating with new values
-# - Confirm last processed message and save it in database as well as sending request to telegram api to mark as read
-# - Create functions for the calls to increase/decrease karma
-# - Create functions for sending back karma count to originating channel
-# - Run loop to get new messages and post updates
-# - Consider moving to webhook for async operation
-
 import optparse
 import json
 import urllib
