@@ -27,6 +27,7 @@ import json
 import urllib
 import sqlite3 as lite
 import sys
+from time import sleep
 
 description = """
 Stampy is a script for controlling Karma via Telegram.org bot api
@@ -42,7 +43,7 @@ p.add_option('-v', "--verbosity", dest="verbosity", help="Show messages while ru
              type='int')
 p.add_option('-u', "--url", dest="url", help="Define URL for accessing bot API", default="https://api.telegram.org/bot")
 p.add_option('-c', '--control', dest='control', help="Define chat_id for monitoring service", default=None)
-p.add_option('-d', '--daemon', dest='daemon', help="Run as daemon", default=None)
+p.add_option('-d', '--daemon', dest='daemon', help="Run as daemon", default=False, action="store_true")
 
 (options, args) = p.parse_args()
 
@@ -122,12 +123,56 @@ def putkarma(options, word, value):
     con.commit()
     return value
 
+
+def process():
+    date = 0
+    lastupdateid = 0
+    print "Initial message at %s" % date
+    texto = ""
+    error = 0
+    for message in getupdates(options):
+        update_id = message['update_id']
+        try:
+            texto = message['message']['text'].lower()
+            chat_id = message['message']['chat']['id']
+            message_id = int(message['message']['message_id'])
+        except:
+            error = 1
+
+        if update_id > lastupdateid:
+            lastupdateid = update_id
+        newdate = int(float(message['message']['date']))
+        if newdate > date:
+            date = newdate
+            for word in texto.split():
+                if len(word) >= 4:
+                    change = 0
+                    if "++" == word[-2:]:
+                        print "++ Found in %s at %s with id %s" % (word, chat_id, message_id)
+                        change = 1
+                    if "--" == word[-2:]:
+                        print "-- Found in %s at %s with id %s" % (word, chat_id, message_id)
+                        change = -1
+                    if change != 0:
+                        # Remove last two characters from word (++ or --)
+                        word = word[0:-2]
+                        karma = updatekarma(options, word=word, change=change)
+                        if karma != 0:
+                            text = "%s now has %s karma points." % (word, karma)
+                        else:
+                            text = "%s now has no Karma and has been garbage collected." % word
+                        sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id)
+        clearupdates(options, offset=update_id)
+
+    print "Last processed message at %s" % date
+    print "Last processed update id %s" % lastupdateid
+    print "Last processed text %s" % texto
+
+    clearupdates(options, offset=lastupdateid + 1)
+
 # Main code
 
-
 # Initialize database access
-
-
 con = None
 try:
     con = lite.connect(options.database)
@@ -142,50 +187,14 @@ except lite.Error, e:
 
 # Database initialized
 
-
-date = 0
-lastupdateid = 0
-print "Initial message at %s" % date
-texto = ""
-for message in getupdates(options):
-    update_id = message['update_id']
-    try:
-        texto = message['message']['text'].lower()
-        chat_id = message['message']['chat']['id']
-        message_id = int(message['message']['message_id'])
-    except:
-        error = 1
-
-    if update_id > lastupdateid:
-        lastupdateid = update_id
-    newdate = int(float(message['message']['date']))
-    if newdate > date:
-        date = newdate
-        for word in texto.split():
-            if len(word) >= 4:
-                change = 0
-                if "++" == word[-2:]:
-                    print "++ Found in %s at %s with id %s" % (word, chat_id, message_id)
-                    change = 1
-                if "--" == word[-2:]:
-                    print "-- Found in %s at %s with id %s" % (word, chat_id, message_id)
-                    change = -1
-                if change != 0:
-                    # Remove last two characters from word (++ or --)
-                    word = word[0:-2]
-                    karma = updatekarma(options, word=word, change=change)
-                    if karma != 0:
-                        text = "%s now has %s karma points." % (word, karma)
-                    else:
-                        text = "%s now has no Karma and has been garbage collected." % word
-                    sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id)
-    clearupdates(options, offset=update_id)
-
-print "Last processed message at %s" % date
-print "Last processed update id %s" % lastupdateid
-print "Last processed text %s" % texto
-
-clearupdates(options, offset=lastupdateid + 1)
+if options.daemon:
+    print "Running in daemon mode"
+    while 1 > 0:
+        process()
+        sleep(10)
+else:
+    print "Running in one-shoot mode"
+    process()
 
 # Close database
 if con:
