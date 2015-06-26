@@ -9,6 +9,7 @@ Check more information about [Telegram Bots](https://core.telegram.org/bots/).
 ## Notes
 - On first execution it will create database and start filling values
 
-## Test
-- I've a copy running on <openshift.redhat.com> at <http://stampy-iranzo.rhcloud.com/> with the name `redken_bot`. Invite it to your channels if you want to give it a try.
+ ## Test
+ - I've a copy running on <openshift.redhat.com> at <http://stampy-iranzo.rhcloud.com/> with the name `redken_bot`. Invite it to your channels if you want to give it a try or click <https://telegram.me/redken_bot>.
+
 
