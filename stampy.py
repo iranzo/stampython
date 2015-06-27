@@ -127,11 +127,19 @@ def createdb(options):
     return cur.execute('CREATE TABLE karma(word TEXT, value INT)')
 
 
+def createkarma(options, word):
+    sql = "INSERT INTO karma VALUES('%s',0)" % word
+    cur.execute(sql)
+    return con.commit()
+
+
 def putkarma(options, word, value):
+    if getkarma(options, word) == 0:
+        createkarma(options, word)
     if value != 0:
         sql = "UPDATE karma SET value = '%s' WHERE word = '%s'" % (value, word)
-    if value == 0:
-        sql = "DELETE FROM karma WHERE word = '%s'" % word
+    else:
+        sql = "DELETE FROM karma WHERE  word = '%s'" % word
     cur.execute(sql)
     con.commit()
     return value
@@ -198,7 +206,7 @@ def rank(options, word=None):
             # Get value from SQL query
             value = value[1]
         except:
-            # Value didn't exist before, create as 0 value
+            # Value didn't exist before, return 0 value
             value = 0
         text = "%s has %s karma points." % (word, value)
     else:
