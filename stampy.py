@@ -118,17 +118,9 @@ def getkarma(options, word):
         # Get value from SQL query
         value = value[1]
     except:
-        # Value didn't exist before, create as 0 value
-        createkarma(options, word)
+        # Value didn't exist before, return 0
         value = 0
     return value
-
-
-def createkarma(options, word):
-    string = (word, )
-    sql = "INSERT INTO karma VALUES('%s',0)" % string
-    cur.execute(sql)
-    return con.commit()
 
 
 def createdb(options):
@@ -136,7 +128,10 @@ def createdb(options):
 
 
 def putkarma(options, word, value):
-    sql = "UPDATE karma SET value = '%s' WHERE word = '%s'" % (value, word)
+    if value != 0:
+        sql = "UPDATE karma SET value = '%s' WHERE word = '%s'" % (value, word)
+    if value == 0:
+        sql = "DELETE FROM karma WHERE word = '%s'" % word
     cur.execute(sql)
     con.commit()
     return value
@@ -204,7 +199,6 @@ def rank(options, word=None):
             value = value[1]
         except:
             # Value didn't exist before, create as 0 value
-            createkarma(options, word)
             value = 0
         text = "%s has %s karma points." % (word, value)
     else:
