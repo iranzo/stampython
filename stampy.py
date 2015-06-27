@@ -109,7 +109,8 @@ def updatekarma(options, word=None, change=0):
 
 
 def getkarma(options, word):
-    sql = "SELECT * FROM karma WHERE word='%s'" % word
+    string = (word, )
+    sql = "SELECT * FROM karma WHERE word='%s'" % string
     cur.execute(sql)
     value = cur.fetchone()
     try:
@@ -123,7 +124,8 @@ def getkarma(options, word):
 
 
 def createkarma(options, word):
-    sql = "INSERT INTO karma VALUES('%s',0)" % word
+    string = (word, )
+    sql = "INSERT INTO karma VALUES('%s',0)" % string
     cur.execute(sql)
     return con.commit()
 
@@ -145,7 +147,8 @@ def telegramcommands(options, texto, chat_id, message_id):
     commandtext = None
     for case in switch(word):
         if case('/help'):
-            commandtext = "To use this bot use word++ or word-- to increment or decrement karma, a new message will be sent providing the new total"
+            commandtext = "To use this bot use word++ or word-- to increment or decrement karma, a new message will be sent providing the new total\n"
+            commandtext = commandtext + "Use rank word or rank to get value for actual word or top 10 rankings\n"
             break
         if case('/start'):
             commandtext = "This bot does not use start or stop commands, it automatically checks for karma operands"
@@ -187,7 +190,8 @@ def rank(options, word=None):
     text = ""
     if word:
         # if word is provided, return the rank value for that word
-        sql = "SELECT * FROM karma WHERE word='%s'" % word
+        string = (word,)
+        sql = "SELECT * FROM karma WHERE word='%s'" % string
         cur.execute(sql)
         value = cur.fetchone()
         try:
