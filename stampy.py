@@ -139,13 +139,91 @@ def putkarma(options, word, value):
     return value
 
 
+def telegramcommands(options, texto, chat_id, message_id):
+    # Process lines for commands in the first word of the line (Telegram commands)
+    word = texto.split()[0]
+    commandtext = None
+    for case in switch(word):
+        if case('/help'):
+            commandtext = "To use this bot use word++ or word-- to increment or decrement karma, a new message will be sent providing the new total"
+            break
+        if case('/start'):
+            commandtext = "This bot does not use start or stop commands, it automatically checks for karma operands"
+            break
+        if case('/stop'):
+            commandtext = "This bot does not use start or stop commands, it automatically checks for karma operands"
+            break
+        if case():
+            commandtext = None
+    if commandtext:
+        sendmessage(options, chat_id=chat_id, text=commandtext, reply_to_message_id=message_id)
+    return
+
+
+def karmacommands(options, texto, chat_id, message_id):
+    # Process lines for commands in the first word of the line (Telegram commands)
+    word = texto.split()[0]
+    commandtext = None
+    for case in switch(word):
+        if case('rank'):
+            word = None
+            try:
+                word = texto.split()[1]
+            except:
+                word = None
+            commandtext = rank(options, word)
+            break
+        if case('srank'):
+            commandtext = "srank is still not implemented"
+            break
+        if case():
+            commandtext = None
+    if commandtext:
+        sendmessage(options, chat_id=chat_id, text=commandtext, reply_to_message_id=message_id)
+    return
+
+
+def rank(options, word=None):
+    text = ""
+    if word:
+        # if word is provided, return the rank value for that word
+        sql = "SELECT * FROM karma WHERE word='%s'" % word
+        cur.execute(sql)
+        value = cur.fetchone()
+        try:
+            # Get value from SQL query
+            value = value[1]
+        except:
+            # Value didn't exist before, create as 0 value
+            createkarma(options, word)
+            value = 0
+        text = "%s has %s karma points." % (word, value)
+    else:
+        # if word is not provided, return top 10 words with top karma
+        sql = "select * from karma ORDER BY value DESC LIMIT 10;"
+
+        text = "Global rankings:\n"
+        line = 0
+        for item in cur.execute(sql):
+            print item
+            try:
+                value = item[1]
+                word = item[0]
+                line = line + 1
+                text = text + "%s. %s (%s)\n" % (line, word, value)
+            except:
+                value = 0
+
+    return text
+
+
 def process():
     # Main code for processing the karma updates
     date = 0
     lastupdateid = 0
     print "Initial message at %s" % date
     texto = ""
-    error = 0
+    error = False
     count = 0
     # Process each mesage available in updates URL and search for karma operators
     for message in getupdates(options):
@@ -158,53 +236,42 @@ def process():
             message_id = int(message['message']['message_id'])
             date = int(float(message['message']['date']))
         except:
-            error = 1
+            error = True
 
         # Update last message id to later clear it from the server
         if update_id > lastupdateid:
             lastupdateid = update_id
 
-        # Process lines for commands in the first word of the line
-        word = texto.split()[0]
-        commandtext = None
-        for case in switch(word):
-            if case('/help'):
-                commandtext = "To use this bot use word++ or word-- to increment or decrement karma, a new message will be sent providing the new total"
-                break
-            if case('/start'):
-                commandtext = "This bot does not use start or stop commands, it automatically checks for karma operands"
-                break
-            if case('/stop'):
-                commandtext = "This bot does not use start or stop commands, it automatically checks for karma operands"
-                break
-            if case():
-                commandtext = None
-        if commandtext:
-            sendmessage(options, chat_id=chat_id, text=commandtext, reply_to_message_id=message_id)
+        if not error:
+            # Search for telegram commands
+            telegramcommands(options, texto, chat_id, message_id)
 
-        # Process each word in the line received to search for karma operators
-        for word in texto.split():
-            if len(word) >= 4:
-                # Determine karma change and apply it
-                change = 0
-                if "++" == word[-2:]:
-                    print "++ Found in %s at %s with id %s" % (word, chat_id, message_id)
-                    change = 1
-                if "--" == word[-2:]:
-                    print "-- Found in %s at %s with id %s" % (word, chat_id, message_id)
-                    change = -1
-                if change != 0:
-                    # Remove last two characters from word (++ or --)
-                    word = word[0:-2]
-                    karma = updatekarma(options, word=word, change=change)
-                    if karma != 0:
-                        # Karma has changed, report back
-                        text = "%s now has %s karma points." % (word, karma)
-                    else:
-                        # New karma is 0
-                        text = "%s now has no Karma and has been garbage collected." % word
-                    # Send originating user for karma change a reply with the new value
-                    sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id)
+            # Search for karma commands
+            karmacommands(options, texto, chat_id, message_id)
+
+            # Process each word in the line received to search for karma operators
+            for word in texto.split():
+                if len(word) >= 4:
+                    # Determine karma change and apply it
+                    change = 0
+                    if "++" == word[-2:]:
+                        print "++ Found in %s at %s with id %s" % (word, chat_id, message_id)
+                        change = 1
+                    if "--" == word[-2:]:
+                        print "-- Found in %s at %s with id %s" % (word, chat_id, message_id)
+                        change = -1
+                    if change != 0:
+                        # Remove last two characters from word (++ or --)
+                        word = word[0:-2]
+                        karma = updatekarma(options, word=word, change=change)
+                        if karma != 0:
+                            # Karma has changed, report back
+                            text = "%s now has %s karma points." % (word, karma)
+                        else:
+                            # New karma is 0
+                            text = "%s now has no Karma and has been garbage collected." % word
+                        # Send originating user for karma change a reply with the new value
+                        sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id)
 
     print "Last processed message at: %s" % date
     print "Last processed update id: %s" % lastupdateid
