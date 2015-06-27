@@ -38,14 +38,14 @@ p.add_option('-d', '--daemon', dest='daemon', help="Run as daemon", default=Fals
 
 (options, args) = p.parse_args()
 
-
+# Check if we've the token required to access or exit
 if options.token:
     token = options.token
 else:
     print "Token required for operation, please check https://core.telegram.org/bots"
     sys.exit(1)
 
-
+# Function definition
 def sendmessage(options, chat_id=0, text="", reply_to_message_id=None):
     url = "%s%s/sendMessage" % (options.url, options.token)
     message = "%s?chat_id=%s&text=%s" % (url, chat_id, urllib.quote_plus(text.encode('utf8')))
@@ -93,6 +93,7 @@ def getkarma(options, word):
         # Get value from SQL query
         value = value[1]
     except:
+        # Value didn't exist before, create as 0 value
         createkarma(options, word)
         value = 0
     return value
@@ -116,11 +117,13 @@ def putkarma(options, word, value):
 
 
 def process():
+    # Main code for processing the karma updates
     date = 0
     lastupdateid = 0
     print "Initial message at %s" % date
     texto = ""
     error = 0
+    # Process each mesage available in updates URL and search for karma operators
     for message in getupdates(options):
         update_id = message['update_id']
         try:
@@ -135,8 +138,10 @@ def process():
         newdate = int(float(message['message']['date']))
         if newdate > date:
             date = newdate
+            # Process each word in the line received to search for karma operators
             for word in texto.split():
                 if len(word) >= 4:
+                    # Determine karma change and apply it
                     change = 0
                     if "++" == word[-2:]:
                         print "++ Found in %s at %s with id %s" % (word, chat_id, message_id)
@@ -149,16 +154,22 @@ def process():
                         word = word[0:-2]
                         karma = updatekarma(options, word=word, change=change)
                         if karma != 0:
+                            # Karma has changed, report back
                             text = "%s now has %s karma points." % (word, karma)
                         else:
+                            # New karma is 0
                             text = "%s now has no Karma and has been garbage collected." % word
+                        # Send originating user for karma change a reply with the new value
                         sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id)
+        # clear updates (mark messages as read)
         clearupdates(options, offset=update_id)
+        # TODO: Is this needed really?
 
     print "Last processed message at %s" % date
     print "Last processed update id %s" % lastupdateid
     print "Last processed text %s" % texto
 
+    # clear updates (marking messages as read)
     clearupdates(options, offset=lastupdateid + 1)
 
 # Main code
@@ -178,6 +189,7 @@ except lite.Error, e:
 
 # Database initialized
 
+# Check operation mode and call process as required
 if options.daemon:
     print "Running in daemon mode"
     while 1 > 0:
