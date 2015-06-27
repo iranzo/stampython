@@ -150,7 +150,7 @@ def process():
     # Process each mesage available in updates URL and search for karma operators
     for message in getupdates(options):
         # Count messages in each batch
-        count = count +1
+        count = count + 1
         update_id = message['update_id']
         try:
             texto = message['message']['text'].lower()
@@ -160,8 +160,28 @@ def process():
         except:
             error = 1
 
+        # Update last message id to later clear it from the server
         if update_id > lastupdateid:
             lastupdateid = update_id
+
+        # Process lines for commands in the first word of the line
+        word = texto.split()[0]
+        commandtext = None
+        for case in switch(word):
+            if case('/help'):
+                commandtext = "To use this bot use word++ or word-- to increment or decrement karma, a new message will be sent providing the new total"
+                break
+            if case('/start'):
+                commandtext = "This bot does not use start or stop commands, it automatically checks for karma operands"
+                break
+            if case('/stop'):
+                commandtext = "This bot does not use start or stop commands, it automatically checks for karma operands"
+                break
+            if case():
+                commandtext = None
+        if commandtext:
+            sendmessage(options, chat_id=chat_id, text=commandtext, reply_to_message_id=message_id)
+
         # Process each word in the line received to search for karma operators
         for word in texto.split():
             if len(word) >= 4:
