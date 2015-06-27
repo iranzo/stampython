@@ -81,7 +81,9 @@ def putkarma(options, word, value):
 def process():
     # TODO
     # read from file and process loop
-            for word in texto.split():
+    with open(options.file) as f:
+        for line in f:
+            for word in line.split():
                 if len(word) >= 4:
                     change = 0
                     if "++" == word[-2:]:
