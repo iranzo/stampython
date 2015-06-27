@@ -151,6 +151,7 @@ def telegramcommands(options, texto, chat_id, message_id):
         if case('/help'):
             commandtext = "To use this bot use word++ or word-- to increment or decrement karma, a new message will be sent providing the new total\n\n"
             commandtext = commandtext + "Use rank word or rank to get value for actual word or top 10 rankings\n\n"
+            commandtext = commandtext + "Use srank word to search for similar words already ranked\n\n"
             commandtext = commandtext + "Learn more about this bot in https://github.com/iranzo/stampython"
             break
         if case('/start'):
@@ -172,7 +173,6 @@ def karmacommands(options, texto, chat_id, message_id):
     commandtext = None
     for case in switch(word):
         if case('rank'):
-            word = None
             try:
                 word = texto.split()[1]
             except:
@@ -180,7 +180,11 @@ def karmacommands(options, texto, chat_id, message_id):
             commandtext = rank(options, word)
             break
         if case('srank'):
-            commandtext = "srank is still not implemented"
+            try:
+                word = texto.split()[1]
+            except:
+                word = None
+            commandtext = srank(options, word)
             break
         if case():
             commandtext = None
@@ -221,6 +225,26 @@ def rank(options, word=None):
             except:
                 value = 0
 
+    return text
+
+
+def srank(options, word=None):
+    text = ""
+    if word is None:
+        # If no word is provided to srank, call rank instead
+        text = rank(options, word)
+    else:
+        string = "%" + word + "%"
+        sql = "SELECT * FROM karma WHERE word LIKE '%s' LIMIT 10" % string
+
+        for item in cur.execute(sql):
+            print item
+            try:
+                value = item[1]
+                word = item[0]
+                text = text + "%s: (%s)\n" % (word, value)
+            except:
+                value = 0
     return text
 
 
