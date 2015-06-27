@@ -147,8 +147,9 @@ def telegramcommands(options, texto, chat_id, message_id):
     commandtext = None
     for case in switch(word):
         if case('/help'):
-            commandtext = "To use this bot use word++ or word-- to increment or decrement karma, a new message will be sent providing the new total\n"
-            commandtext = commandtext + "Use rank word or rank to get value for actual word or top 10 rankings\n"
+            commandtext = "To use this bot use word++ or word-- to increment or decrement karma, a new message will be sent providing the new total\n\n"
+            commandtext = commandtext + "Use rank word or rank to get value for actual word or top 10 rankings\n\n"
+            commandtext = commandtext + "Learn more about this bot in https://github.com/iranzo/stampython"
             break
         if case('/start'):
             commandtext = "This bot does not use start or stop commands, it automatically checks for karma operands"
