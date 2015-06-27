@@ -45,6 +45,29 @@ else:
     print "Token required for operation, please check https://core.telegram.org/bots"
     sys.exit(1)
 
+
+# Implement switch from http://code.activestate.com/recipes/410692/
+class switch(object):
+    def __init__(self, value):
+        self.value = value
+        self.fall = False
+
+    def __iter__(self):
+        """Return the match method once, then stop"""
+        yield self.match
+        raise StopIteration
+
+    def match(self, *args):
+        """Indicate whether or not to enter a case suite"""
+        if self.fall or not args:
+            return True
+        elif self.value in args:  # changed for v1.5, see below
+            self.fall = True
+            return True
+        else:
+            return False
+
+
 # Function definition
 def sendmessage(options, chat_id=0, text="", reply_to_message_id=None):
     url = "%s%s/sendMessage" % (options.url, options.token)
@@ -123,51 +146,50 @@ def process():
     print "Initial message at %s" % date
     texto = ""
     error = 0
+    count = 0
     # Process each mesage available in updates URL and search for karma operators
     for message in getupdates(options):
+        # Count messages in each batch
+        count = count +1
         update_id = message['update_id']
         try:
             texto = message['message']['text'].lower()
             chat_id = message['message']['chat']['id']
             message_id = int(message['message']['message_id'])
+            date = int(float(message['message']['date']))
         except:
             error = 1
 
         if update_id > lastupdateid:
             lastupdateid = update_id
-        newdate = int(float(message['message']['date']))
-        if newdate > date:
-            date = newdate
-            # Process each word in the line received to search for karma operators
-            for word in texto.split():
-                if len(word) >= 4:
-                    # Determine karma change and apply it
-                    change = 0
-                    if "++" == word[-2:]:
-                        print "++ Found in %s at %s with id %s" % (word, chat_id, message_id)
-                        change = 1
-                    if "--" == word[-2:]:
-                        print "-- Found in %s at %s with id %s" % (word, chat_id, message_id)
-                        change = -1
-                    if change != 0:
-                        # Remove last two characters from word (++ or --)
-                        word = word[0:-2]
-                        karma = updatekarma(options, word=word, change=change)
-                        if karma != 0:
-                            # Karma has changed, report back
-                            text = "%s now has %s karma points." % (word, karma)
-                        else:
-                            # New karma is 0
-                            text = "%s now has no Karma and has been garbage collected." % word
-                        # Send originating user for karma change a reply with the new value
-                        sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id)
-        # clear updates (mark messages as read)
-        clearupdates(options, offset=update_id)
-        # TODO: Is this needed really?
+        # Process each word in the line received to search for karma operators
+        for word in texto.split():
+            if len(word) >= 4:
+                # Determine karma change and apply it
+                change = 0
+                if "++" == word[-2:]:
+                    print "++ Found in %s at %s with id %s" % (word, chat_id, message_id)
+                    change = 1
+                if "--" == word[-2:]:
+                    print "-- Found in %s at %s with id %s" % (word, chat_id, message_id)
+                    change = -1
+                if change != 0:
+                    # Remove last two characters from word (++ or --)
+                    word = word[0:-2]
+                    karma = updatekarma(options, word=word, change=change)
+                    if karma != 0:
+                        # Karma has changed, report back
+                        text = "%s now has %s karma points." % (word, karma)
+                    else:
+                        # New karma is 0
+                        text = "%s now has no Karma and has been garbage collected." % word
+                    # Send originating user for karma change a reply with the new value
+                    sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id)
 
-    print "Last processed message at %s" % date
-    print "Last processed update id %s" % lastupdateid
-    print "Last processed text %s" % texto
+    print "Last processed message at: %s" % date
+    print "Last processed update id: %s" % lastupdateid
+    print "Last processed text: %s" % texto
+    print "Number of messages procesed in this batch: %s" % count
 
     # clear updates (marking messages as read)
     clearupdates(options, offset=lastupdateid + 1)
