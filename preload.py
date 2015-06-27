@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Description: Script for preloading karma in database
+# Description: Script for pre-loading karma in database
 # Author: Pablo Iranzo Gomez (Pablo.Iranzo@gmail.com)
 #
 #
@@ -21,7 +21,7 @@ import sys
 from time import sleep
 
 description = """
-This script preloads database with karma from files
+This script pre-loads database with karma from files
 
 """
 

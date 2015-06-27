@@ -47,7 +47,7 @@ else:
 
 
 # Implement switch from http://code.activestate.com/recipes/410692/
-class switch(object):
+class Switch(object):
     def __init__(self, value):
         self.value = value
         self.fall = False
@@ -85,7 +85,6 @@ def getupdates(options, offset=0, limit=100):
     if offset != 0:
         message = message + "offset=%s&" % offset
     message = message + "limit=%s" % limit
-    result = None
     try:
         result = json.load(urllib.urlopen(message))
     except:
@@ -147,7 +146,7 @@ def telegramcommands(options, texto, chat_id, message_id):
     # Process lines for commands in the first word of the line (Telegram commands)
     word = texto.split()[0]
     commandtext = None
-    for case in switch(word):
+    for case in Switch(word):
         if case('/help'):
             commandtext = "To use this bot use word++ or word-- to increment or decrement karma, a new message will be sent providing the new total\n\n"
             commandtext = commandtext + "Use rank word or rank to get value for actual word or top 10 rankings\n\n"
@@ -171,7 +170,7 @@ def karmacommands(options, texto, chat_id, message_id):
     # Process lines for commands in the first word of the line (Telegram commands)
     word = texto.split()[0]
     commandtext = None
-    for case in switch(word):
+    for case in Switch(word):
         if case('rank'):
             try:
                 word = texto.split()[1]
@@ -194,7 +193,6 @@ def karmacommands(options, texto, chat_id, message_id):
 
 
 def rank(options, word=None):
-    text = ""
     if word:
         # if word is provided, return the rank value for that word
         string = (word,)
@@ -223,7 +221,7 @@ def rank(options, word=None):
                 line = line + 1
                 text = text + "%s. %s (%s)\n" % (line, word, value)
             except:
-                value = 0
+                continue
 
     return text
 
@@ -244,7 +242,7 @@ def srank(options, word=None):
                 word = item[0]
                 text = text + "%s: (%s)\n" % (word, value)
             except:
-                value = 0
+                continue
     return text
 
 
@@ -256,7 +254,7 @@ def process():
     texto = ""
     error = False
     count = 0
-    # Process each mesage available in updates URL and search for karma operators
+    # Process each message available in updates URL and search for karma operators
     for message in getupdates(options):
         # Count messages in each batch
         count = count + 1

@@ -1,6 +1,6 @@
 Mostly everything :), initial steps are there for accessing URL
 
-- Consider moving to webhook for async operation
+- Consider moving to web-hook for async operation
     - Now it runs in daemon mode, polling every 10 seconds
 - Implement showing drawing or sticker for X00, X000, X0000 ranks
     - Initial graphics in ascii from irc stampy
