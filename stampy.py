@@ -69,11 +69,13 @@ class switch(object):
 
 
 # Function definition
-def sendmessage(options, chat_id=0, text="", reply_to_message_id=None):
+def sendmessage(options, chat_id=0, text="", reply_to_message_id=None, disable_web_page_preview=True):
     url = "%s%s/sendMessage" % (options.url, options.token)
     message = "%s?chat_id=%s&text=%s" % (url, chat_id, urllib.quote_plus(text.encode('utf8')))
     if reply_to_message_id:
             message = message + "&reply_to_message_id=%s" % reply_to_message_id
+    if disable_web_page_preview:
+            message = message + "&disable_web_page_preview=1"
     return json.load(urllib.urlopen(message))
 
 
