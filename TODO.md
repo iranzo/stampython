@@ -9,4 +9,4 @@ Mostly everything :), initial steps are there for accessing URL
 - Implement banning of consecutive karma changes from same user for a period of time
 - Implement /settings to store settings per chat [be silent, timeout for ban, etc]
 - Implement statistics on total number of processed messages, different chats being used, last time active, etc
-
+- Implement uniform logging based on verbose setting for each module within stampy, timestamp, etc
