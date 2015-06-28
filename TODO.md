@@ -8,5 +8,5 @@ Mostly everything :), initial steps are there for accessing URL
 - Initial load of karma points from older bot (possible separate script)
 - Implement banning of consecutive karma changes from same user for a period of time
 - Implement /settings to store settings per chat [be silent, timeout for ban, etc]
-
+- Implement statistics on total number of processed messages, different chats being used, last time active, etc
 
