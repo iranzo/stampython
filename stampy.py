@@ -18,6 +18,8 @@ import json
 import urllib
 import sqlite3 as lite
 import sys
+import time
+import datetime
 from time import sleep
 
 description = """
@@ -38,15 +40,9 @@ p.add_option('-d', '--daemon', dest='daemon', help="Run as daemon", default=Fals
 
 (options, args) = p.parse_args()
 
-# Check if we've the token required to access or exit
-if options.token:
-    token = options.token
-else:
-    print "Token required for operation, please check https://core.telegram.org/bots"
-    sys.exit(1)
-
-
 # Implement switch from http://code.activestate.com/recipes/410692/
+
+
 class Switch(object):
     def __init__(self, value):
         self.value = value
@@ -216,7 +212,6 @@ def rank(options, word=None):
         text = "Global rankings:\n"
         line = 0
         for item in cur.execute(sql):
-            print item
             try:
                 value = item[1]
                 word = item[0]
@@ -238,7 +233,6 @@ def srank(options, word=None):
         sql = "SELECT * FROM karma WHERE word LIKE '%s' LIMIT 10" % string
 
         for item in cur.execute(sql):
-            print item
             try:
                 value = item[1]
                 word = item[0]
@@ -248,11 +242,18 @@ def srank(options, word=None):
     return text
 
 
+def log(options, facility="stampy", severity="INFO", verbosity=0, text=""):
+    when = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
+    if verbosity >= options.verbosity:
+        print "%s stampy : %s : %s : %s" % (when, facility, severity, text)
+    return
+
+
 def process():
     # Main code for processing the karma updates
     date = 0
     lastupdateid = 0
-    print "Initial message at %s" % date
+    log(options, facility="main", verbosity=0, text="Initial message at %s" % date)
     texto = ""
     error = False
     count = 0
@@ -286,10 +287,10 @@ def process():
                     # Determine karma change and apply it
                     change = 0
                     if "++" == word[-2:]:
-                        print "++ Found in %s at %s with id %s" % (word, chat_id, message_id)
+                        log(options, facility="main", verbosity=1, text="++ Found in %s at %s with id %s" % (word, chat_id, message_id))
                         change = 1
                     if "--" == word[-2:]:
-                        print "-- Found in %s at %s with id %s" % (word, chat_id, message_id)
+                        log(options, facility="main", verbosity=1, text="-- Found in %s at %s with id %s" % (word, chat_id, message_id))
                         change = -1
                     if change != 0:
                         # Remove last two characters from word (++ or --)
@@ -304,15 +305,23 @@ def process():
                         # Send originating user for karma change a reply with the new value
                         sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id)
 
-    print "Last processed message at: %s" % date
-    print "Last processed update id: %s" % lastupdateid
-    print "Last processed text: %s" % texto
-    print "Number of messages procesed in this batch: %s" % count
+    log(options, facility="main", verbosity=0, text="Last processed message at: %s" % date)
+    log(options, facility="main", verbosity=0, text="Last processed update_id : %s" % lastupdateid)
+    log(options, facility="main", verbosity=0, text="Last processed text: %s" % texto)
+    log(options, facility="main", verbosity=0, text="Number of messages in this batch: %s" % count)
 
     # clear updates (marking messages as read)
     clearupdates(options, offset=lastupdateid + 1)
 
 # Main code
+
+# Check if we've the token required to access or exit
+if options.token:
+    token = options.token
+else:
+    log(options, facility="main", severity="ERROR", verbosity=0, text="Token required for operation, please check https://core.telegram.org/bots")
+    sys.exit(1)
+
 
 # Initialize database access
 con = None
@@ -324,19 +333,19 @@ try:
 
 except lite.Error, e:
     createdb(options)
-    print "Error %s:" % e.args[0]
+    log(options, facility="main", verbosity=0, text="Error %s:" % e.args[0])
     sys.exit(1)
 
 # Database initialized
 
 # Check operation mode and call process as required
 if options.daemon:
-    print "Running in daemon mode"
+    log(options, facility="main", verbosity=0, text="Running in daemon mode")
     while 1 > 0:
         process()
         sleep(10)
 else:
-    print "Running in one-shoot mode"
+    log(options, facility="main", verbosity=0, text="Running in one-shoot mode")
     process()
 
 # Close database
