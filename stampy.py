@@ -244,7 +244,7 @@ def srank(options, word=None):
 
 def log(options, facility="stampy", severity="INFO", verbosity=0, text=""):
     when = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
-    if verbosity >= options.verbosity:
+    if options.verbosity > verbosity:
         print "%s stampy : %s : %s : %s" % (when, facility, severity, text)
     return
 
