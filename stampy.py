@@ -72,6 +72,7 @@ def sendmessage(options, chat_id=0, text="", reply_to_message_id=None, disable_w
             message = message + "&reply_to_message_id=%s" % reply_to_message_id
     if disable_web_page_preview:
             message = message + "&disable_web_page_preview=1"
+    log(options, facility="sendmessage", verbosity=3, text="Sending message: %s" % text)
     return json.load(urllib.urlopen(message))
 
 
@@ -86,6 +87,7 @@ def getupdates(options, offset=0, limit=100):
     except:
         result = None
     for item in result['result']:
+        log(options, facility="getupdates", verbosity=9, text="Getting updates and returning: %s" % item)
         yield item
 
 
@@ -97,6 +99,7 @@ def clearupdates(options, offset):
         result = json.load(urllib.urlopen(message))
     except:
         result = None
+    log(options, facility="clearupdates", verbosity=9, text="Clearing messages")
     return result
 
 
@@ -110,16 +113,20 @@ def getkarma(options, word):
     sql = "SELECT * FROM karma WHERE word='%s'" % string
     cur.execute(sql)
     value = cur.fetchone()
+
     try:
         # Get value from SQL query
         value = value[1]
+
     except:
         # Value didn't exist before, return 0
         value = 0
+
     return value
 
 
 def createdb(options):
+    # Create database if it doesn't exist
     return cur.execute('CREATE TABLE karma(word TEXT, value INT)')
 
 
@@ -160,8 +167,11 @@ def telegramcommands(options, texto, chat_id, message_id):
             break
         if case():
             commandtext = None
+
+    # If any of above commands did match, send command
     if commandtext:
         sendmessage(options, chat_id=chat_id, text=commandtext, reply_to_message_id=message_id)
+        log(options, facility="telegramcommands", verbosity=9, text="Command: %s" % word)
     return
 
 
@@ -169,6 +179,8 @@ def karmacommands(options, texto, chat_id, message_id):
     # Process lines for commands in the first word of the line (Telegram commands)
     word = texto.split()[0]
     commandtext = None
+
+    # Check first word for commands
     for case in Switch(word):
         if case('rank'):
             try:
@@ -186,8 +198,11 @@ def karmacommands(options, texto, chat_id, message_id):
             break
         if case():
             commandtext = None
+
+    # If any of above cases did a match, send command
     if commandtext:
         sendmessage(options, chat_id=chat_id, text=commandtext, reply_to_message_id=message_id)
+        log(options, facility="karmacommands", verbosity=9, text="karmacommand:  %s" % word)
     return
 
 
@@ -198,13 +213,16 @@ def rank(options, word=None):
         sql = "SELECT * FROM karma WHERE word='%s'" % string
         cur.execute(sql)
         value = cur.fetchone()
+
         try:
             # Get value from SQL query
             value = value[1]
+
         except:
             # Value didn't exist before, return 0 value
             value = 0
         text = "%s has %s karma points." % (word, value)
+
     else:
         # if word is not provided, return top 10 words with top karma
         sql = "select * from karma ORDER BY value DESC LIMIT 10;"
@@ -219,7 +237,7 @@ def rank(options, word=None):
                 text = text + "%s. %s (%s)\n" % (line, word, value)
             except:
                 continue
-
+    log(options, facility="rank", verbosity=9, text="Returning karma %s for word %s" % (text, word))
     return text
 
 
@@ -239,6 +257,7 @@ def srank(options, word=None):
                 text = text + "%s: (%s)\n" % (word, value)
             except:
                 continue
+    log(options, facility="srank", verbosity=9, text="Returning srank for word: %s" % word)
     return text
 
 
@@ -257,6 +276,7 @@ def process():
     texto = ""
     error = False
     count = 0
+
     # Process each message available in updates URL and search for karma operators
     for message in getupdates(options):
         # Count messages in each batch
@@ -267,6 +287,12 @@ def process():
             chat_id = message['message']['chat']['id']
             message_id = int(message['message']['message_id'])
             date = int(float(message['message']['date']))
+            chat_name = message['message']['chat']['title']
+            who_un = message['message']['from']['username']
+            who_ln = message['message']['from']['last_name']
+            who_gn = message['message']['from']['first_name']
+            who_id = message['message']['from']['id']
+
         except:
             error = True
 
@@ -287,10 +313,10 @@ def process():
                     # Determine karma change and apply it
                     change = 0
                     if "++" == word[-2:]:
-                        log(options, facility="main", verbosity=1, text="++ Found in %s at %s with id %s" % (word, chat_id, message_id))
+                        log(options, facility="main", verbosity=1, text="++ Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)" % (word, chat_id, message_id, chat_name, who_id, who_un, who_gn, who_ln))
                         change = 1
                     if "--" == word[-2:]:
-                        log(options, facility="main", verbosity=1, text="-- Found in %s at %s with id %s" % (word, chat_id, message_id))
+                        log(options, facility="main", verbosity=1, text="-- Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)" % (word, chat_id, message_id, chat_name, who_id, who_un, who_gn, who_ln))
                         change = -1
                     if change != 0:
                         # Remove last two characters from word (++ or --)
