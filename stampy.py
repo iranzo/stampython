@@ -83,10 +83,10 @@ def getupdates(options, offset=0, limit=100):
         message = message + "offset=%s&" % offset
     message = message + "limit=%s" % limit
     try:
-        result = json.load(urllib.urlopen(message))
+        result = json.load(urllib.urlopen(message))['result']
     except:
         result = None
-    for item in result['result']:
+    for item in result:
         log(options, facility="getupdates", verbosity=9, text="Getting updates and returning: %s" % item)
         yield item
 
@@ -288,12 +288,16 @@ def process():
             message_id = int(message['message']['message_id'])
             date = int(float(message['message']['date']))
             chat_name = message['message']['chat']['title']
-            who_ln = message['message']['from']['last_name']
             who_gn = message['message']['from']['first_name']
             who_id = message['message']['from']['id']
 
         except:
             error = True
+
+        try:
+            who_ln = message['message']['from']['last_name']
+        except:
+            who_ln = None
 
         # Some user might not have username defined so this was failing and message was ignored
         try:
@@ -315,7 +319,7 @@ def process():
 
             # Process each word in the line received to search for karma operators
             for word in texto.split():
-                log(options, facility="main", verbosity=9, text="Processing word %s sent by id %s named %s (%s %s)" % (word, who_id, who_un, who_gn, who_ln))
+                log(options, facility="main", verbosity=9, text="Processing word %s sent by id %s with username %s (%s %s)" % (word, who_id, who_un, who_gn, who_ln))
                 if len(word) >= 4:
                     # Determine karma change and apply it
                     change = 0
