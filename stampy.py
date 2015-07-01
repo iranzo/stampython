@@ -263,7 +263,7 @@ def srank(options, word=None):
 
 def log(options, facility="stampy", severity="INFO", verbosity=0, text=""):
     when = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
-    if options.verbosity > verbosity:
+    if options.verbosity >= verbosity:
         print "%s stampy : %s : %s : %s" % (when, facility, severity, text)
     return
 
@@ -288,13 +288,19 @@ def process():
             message_id = int(message['message']['message_id'])
             date = int(float(message['message']['date']))
             chat_name = message['message']['chat']['title']
-            who_un = message['message']['from']['username']
             who_ln = message['message']['from']['last_name']
             who_gn = message['message']['from']['first_name']
             who_id = message['message']['from']['id']
 
         except:
             error = True
+
+        # Some user might not have username defined so this was failing and message was ignored
+        try:
+            who_un = message['message']['from']['username']
+
+        except:
+            who_un = None
 
         # Update last message id to later clear it from the server
         if update_id > lastupdateid:
@@ -309,6 +315,7 @@ def process():
 
             # Process each word in the line received to search for karma operators
             for word in texto.split():
+                log(options, facility="main", verbosity=9, text="Processing word %s sent by id %s named %s (%s %s)" % (word, who_id, who_un, who_gn, who_ln))
                 if len(word) >= 4:
                     # Determine karma change and apply it
                     change = 0
