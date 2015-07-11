@@ -96,7 +96,7 @@ def getupdates(options, offset=0, limit=100):
     try:
         result = json.load(urllib.urlopen(message))['result']
     except:
-        result = None
+        result = []
     for item in result:
         log(options, facility="getupdates", verbosity=9,
             text="Getting updates and returning: %s" % item)
