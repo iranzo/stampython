@@ -29,14 +29,21 @@ Stampy is a script for controlling Karma via Telegram.org bot api
 
 # Option parsing
 p = optparse.OptionParser("stampy.py [arguments]", description=description)
-p.add_option("-t", "--token", dest="token", help="API token for bot access to messages", default=None)
-p.add_option("-b", "--database", dest="database", help="database file for storing karma and last processed message",
+p.add_option("-t", "--token", dest="token",
+             help="API token for bot access to messages", default=None)
+p.add_option("-b", "--database", dest="database",
+             help="database file for storing karma and last processed message",
              default="stampy.db")
-p.add_option('-v', "--verbosity", dest="verbosity", help="Show messages while running", metavar='[0-n]', default=0,
+p.add_option('-v', "--verbosity", dest="verbosity",
+             help="Show messages while running", metavar='[0-n]', default=0,
              type='int')
-p.add_option('-u', "--url", dest="url", help="Define URL for accessing bot API", default="https://api.telegram.org/bot")
-p.add_option('-c', '--control', dest='control', help="Define chat_id for monitoring service", default=None)
-p.add_option('-d', '--daemon', dest='daemon', help="Run as daemon", default=False, action="store_true")
+p.add_option('-u', "--url", dest="url",
+             help="Define URL for accessing bot API",
+             default="https://api.telegram.org/bot")
+p.add_option('-c', '--control', dest='control',
+             help="Define chat_id for monitoring service", default=None)
+p.add_option('-d', '--daemon', dest='daemon', help="Run as daemon",
+             default=False, action="store_true")
 
 (options, args) = p.parse_args()
 
@@ -65,14 +72,18 @@ class Switch(object):
 
 
 # Function definition
-def sendmessage(options, chat_id=0, text="", reply_to_message_id=None, disable_web_page_preview=True):
+def sendmessage(options, chat_id=0, text="", reply_to_message_id=None,
+                disable_web_page_preview=True):
     url = "%s%s/sendMessage" % (options.url, options.token)
-    message = "%s?chat_id=%s&text=%s" % (url, chat_id, urllib.quote_plus(text.encode('utf8')))
+    message = "%s?chat_id=%s&text=%s" % (url, chat_id,
+                                         urllib.quote_plus(text.encode('utf8'))
+                                         )
     if reply_to_message_id:
             message = message + "&reply_to_message_id=%s" % reply_to_message_id
     if disable_web_page_preview:
             message = message + "&disable_web_page_preview=1"
-    log(options, facility="sendmessage", verbosity=3, text="Sending message: %s" % text)
+    log(options, facility="sendmessage", verbosity=3,
+        text="Sending message: %s" % text)
     return json.load(urllib.urlopen(message))
 
 
@@ -87,7 +98,8 @@ def getupdates(options, offset=0, limit=100):
     except:
         result = None
     for item in result:
-        log(options, facility="getupdates", verbosity=9, text="Getting updates and returning: %s" % item)
+        log(options, facility="getupdates", verbosity=9,
+            text="Getting updates and returning: %s" % item)
         yield item
 
 
@@ -149,7 +161,7 @@ def putkarma(options, word, value):
 
 
 def telegramcommands(options, texto, chat_id, message_id):
-    # Process lines for commands in the first word of the line (Telegram commands)
+    # Process lines for commands in the first word of the line (Telegram)
     word = texto.split()[0]
     commandtext = None
     for case in Switch(word):
@@ -170,8 +182,10 @@ def telegramcommands(options, texto, chat_id, message_id):
 
     # If any of above commands did match, send command
     if commandtext:
-        sendmessage(options, chat_id=chat_id, text=commandtext, reply_to_message_id=message_id)
-        log(options, facility="telegramcommands", verbosity=9, text="Command: %s" % word)
+        sendmessage(options, chat_id=chat_id, text=commandtext,
+                    reply_to_message_id=message_id)
+        log(options, facility="telegramcommands", verbosity=9,
+            text="Command: %s" % word)
     return
 
 
@@ -201,8 +215,10 @@ def karmacommands(options, texto, chat_id, message_id):
 
     # If any of above cases did a match, send command
     if commandtext:
-        sendmessage(options, chat_id=chat_id, text=commandtext, reply_to_message_id=message_id)
-        log(options, facility="karmacommands", verbosity=9, text="karmacommand:  %s" % word)
+        sendmessage(options, chat_id=chat_id, text=commandtext,
+                    reply_to_message_id=message_id)
+        log(options, facility="karmacommands", verbosity=9,
+                              text="karmacommand:  %s" % word)
     return
 
 
@@ -237,7 +253,8 @@ def rank(options, word=None):
                 text = text + "%s. %s (%s)\n" % (line, word, value)
             except:
                 continue
-    log(options, facility="rank", verbosity=9, text="Returning karma %s for word %s" % (text, word))
+    log(options, facility="rank", verbosity=9,
+        text="Returning karma %s for word %s" % (text, word))
     return text
 
 
@@ -257,7 +274,8 @@ def srank(options, word=None):
                 text = text + "%s: (%s)\n" % (word, value)
             except:
                 continue
-    log(options, facility="srank", verbosity=9, text="Returning srank for word: %s" % word)
+    log(options, facility="srank", verbosity=9,
+        text="Returning srank for word: %s" % word)
     return text
 
 
@@ -272,12 +290,13 @@ def process():
     # Main code for processing the karma updates
     date = 0
     lastupdateid = 0
-    log(options, facility="main", verbosity=0, text="Initial message at %s" % date)
+    log(options, facility="main", verbosity=0,
+        text="Initial message at %s" % date)
     texto = ""
     error = False
     count = 0
 
-    # Process each message available in updates URL and search for karma operators
+    # Process each message available in URL and search for karma operators
     for message in getupdates(options):
         # Count messages in each batch
         count = count + 1
@@ -299,7 +318,8 @@ def process():
         except:
             who_ln = None
 
-        # Some user might not have username defined so this was failing and message was ignored
+        # Some user might not have username defined so this
+        # was failing and message was ignored
         try:
             who_un = message['message']['from']['username']
 
@@ -319,15 +339,18 @@ def process():
 
             # Process each word in the line received to search for karma operators
             for word in texto.split():
-                log(options, facility="main", verbosity=9, text="Processing word %s sent by id %s with username %s (%s %s)" % (word, who_id, who_un, who_gn, who_ln))
+                log(options, facility="main", verbosity=9,
+                    text="Processing word %s sent by id %s with username %s (%s %s)" % (word, who_id, who_un, who_gn, who_ln))
                 if len(word) >= 4:
                     # Determine karma change and apply it
                     change = 0
                     if "++" == word[-2:]:
-                        log(options, facility="main", verbosity=1, text="++ Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)" % (word, chat_id, message_id, chat_name, who_id, who_un, who_gn, who_ln))
+                        log(options, facility="main", verbosity=1,
+                            text="++ Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)" % (word, chat_id, message_id, chat_name, who_id, who_un, who_gn, who_ln))
                         change = 1
                     if "--" == word[-2:]:
-                        log(options, facility="main", verbosity=1, text="-- Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)" % (word, chat_id, message_id, chat_name, who_id, who_un, who_gn, who_ln))
+                        log(options, facility="main", verbosity=1,
+                            text="-- Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)" % (word, chat_id, message_id, chat_name, who_id, who_un, who_gn, who_ln))
                         change = -1
                     if change != 0:
                         # Remove last two characters from word (++ or --)
@@ -339,13 +362,19 @@ def process():
                         else:
                             # New karma is 0
                             text = "%s now has no Karma and has been garbage collected." % word
-                        # Send originating user for karma change a reply with the new value
-                        sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id)
+                        # Send originating user for karma change a reply with
+                        # the new value
+                        sendmessage(options, chat_id=chat_id, text=text,
+                                    reply_to_message_id=message_id)
 
-    log(options, facility="main", verbosity=0, text="Last processed message at: %s" % date)
-    log(options, facility="main", verbosity=0, text="Last processed update_id : %s" % lastupdateid)
-    log(options, facility="main", verbosity=0, text="Last processed text: %s" % texto)
-    log(options, facility="main", verbosity=0, text="Number of messages in this batch: %s" % count)
+    log(options, facility="main", verbosity=0,
+        text="Last processed message at: %s" % date)
+    log(options, facility="main", verbosity=0,
+        text="Last processed update_id : %s" % lastupdateid)
+    log(options, facility="main", verbosity=0,
+        text="Last processed text: %s" % texto)
+    log(options, facility="main", verbosity=0,
+        text="Number of messages in this batch: %s" % count)
 
     # clear updates (marking messages as read)
     clearupdates(options, offset=lastupdateid + 1)
@@ -356,7 +385,8 @@ def process():
 if options.token:
     token = options.token
 else:
-    log(options, facility="main", severity="ERROR", verbosity=0, text="Token required for operation, please check https://core.telegram.org/bots")
+    log(options, facility="main", severity="ERROR", verbosity=0,
+        text="Token required for operation, please check https://core.telegram.org/bots")
     sys.exit(1)
 
 
@@ -382,7 +412,8 @@ if options.daemon:
         process()
         sleep(10)
 else:
-    log(options, facility="main", verbosity=0, text="Running in one-shoot mode")
+    log(options, facility="main", verbosity=0,
+        text="Running in one-shoot mode")
     process()
 
 # Close database
