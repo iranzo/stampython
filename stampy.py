@@ -223,9 +223,7 @@ def karmacommands(options, texto, chat_id, message_id):
 
 
 def rank(options, word=None):
-    if word[0] == "@":
-        # Remove @ from mentions for karma
-        word = word[1:]
+
     if word:
         # if word is provided, return the rank value for that word
         string = (word,)
@@ -342,6 +340,9 @@ def process():
 
             # Process each word in the line received to search for karma operators
             for word in texto.split():
+                if word[0] == "@":
+                    # Remove @ from mentions for karma
+                    word = word[1:]
                 log(options, facility="main", verbosity=9,
                     text="Processing word %s sent by id %s with username %s (%s %s)" % (word, who_id, who_un, who_gn, who_ln))
                 if len(word) >= 4:
