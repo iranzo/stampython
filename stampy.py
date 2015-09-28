@@ -223,6 +223,9 @@ def karmacommands(options, texto, chat_id, message_id):
 
 
 def rank(options, word=None):
+    if word[0] == "@":
+        # Remove @ from mentions for karma
+        word = word[1:]
     if word:
         # if word is provided, return the rank value for that word
         string = (word,)
