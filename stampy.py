@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# encoding: utf-8
 #
 # Description: Bot for controlling karma on Telegram
 # Author: Pablo Iranzo Gomez (Pablo.Iranzo@gmail.com)
@@ -343,6 +344,7 @@ def process():
                 if word[0] == "@":
                     # Remove @ from mentions for karma
                     word = word[1:]
+                word = word.replace("'", '')
                 log(options, facility="main", verbosity=9,
                     text="Processing word %s sent by id %s with username %s (%s %s)" % (word, who_id, who_un, who_gn, who_ln))
                 if len(word) >= 4:
