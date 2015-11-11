@@ -288,6 +288,42 @@ def log(options, facility="stampy", severity="INFO", verbosity=0, text=""):
     return
 
 
+def sendsticker(options, chat_id=0, sticker="", text="", reply_to_message_id="", reply_markup=""):
+    url = "%s%s/sendSticker" % (options.url, options.token)
+    message = "%s?chat_id=%s" % (url, chat_id)
+    message = "%s&sticker=%s" % (message, sticker)
+    if reply_to_message_id:
+        message = message + "&reply_to_message_id=%s" % reply_to_message_id
+    log(options, facility="sendsticker", verbosity=3, text="Sending sticker: %s" % text)
+    return json.load(urllib.urlopen(message))
+
+
+def stampy(options, chat_id="", karma=0, reply_to_message_id=False):
+
+    karma = "%s" % karma
+    # Sticker definitions for each rank
+    X00 = "BQADBAADYwAD17FYAAEidrCCUFH7AgI"
+    X000 = "BQADBAADZQAD17FYAAEeeRNtkOWfBAI"
+    X0000 = "BQADBAADZwAD17FYAAHHuNL2oLuShwI"
+    X00000 = "BQADBAADaQAD17FYAAHzIBRZeY4uNAI"
+
+    sticker = ""
+    if karma[-5:] == "00000":
+        sticker = X00000
+    elif karma[-4:] == "0000":
+        sticker = X0000
+    elif karma[-3:] == "000":
+        sticker = X000
+    elif karma[-2:] == "00":
+        sticker = X00
+
+    text = "Sticker for %s karma points" % karma
+
+    if sticker != "":
+        sendsticker(options, chat_id=chat_id, sticker=sticker, text="%s" % text)
+    return
+
+
 def process():
     # Main code for processing the karma updates
     date = 0
@@ -372,6 +408,7 @@ def process():
                         # the new value
                         sendmessage(options, chat_id=chat_id, text=text,
                                     reply_to_message_id=message_id)
+                        stampy(options, chat_id=chat_id, karma=karma, reply_to_message_id=message_id)
 
     log(options, facility="main", verbosity=0,
         text="Last processed message at: %s" % date)
