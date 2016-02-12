@@ -291,6 +291,8 @@ def karmacommands(options,texto, chat_id, message_id, who_un):
 
 
 def rank(options, word=None):
+    if getalias(options,word):
+        word=getalias(options,word)
     if word:
         # if word is provided, return the rank value for that word
         string = (word,)
@@ -327,6 +329,8 @@ def rank(options, word=None):
 
 
 def srank(options, word=None):
+    if getalias(options,word):
+        word=getalias(options,word)
     text = ""
     if word is None:
         # If no word is provided to srank, call rank instead
