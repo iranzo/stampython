@@ -50,7 +50,6 @@ p.add_option('-d', '--daemon', dest='daemon', help="Run as daemon",
 
 # Implement switch from http://code.activestate.com/recipes/410692/
 
-
 class Switch(object):
     def __init__(self, value):
         self.value = value
@@ -146,7 +145,7 @@ def createdb(options):
     return
 
 
-def getconfig(options, key):
+def config(options, key):
     string = (key, )
     sql = "SELECT * FROM config WHERE key='%s'" % string
     cur.execute(sql)
@@ -337,12 +336,12 @@ def showconfig(options, word=False):
         except:
             # Value didn't exist before, return 0 value
             value = 0
-        text = "%s has an alias %s" % (word, value)
+        text = "%s ha a value of %s" % (word, value)
 
     else:
-        sql = "select * from alias ORDER BY key DESC"
+        sql = "select * from config ORDER BY key DESC"
 
-        text = "Defined aliases:\n"
+        text = "Defined configurations:\n"
         line = 0
         for item in cur.execute(sql):
             try:
@@ -421,7 +420,7 @@ def configcommands(options, texto, chat_id, message_id, who_un):
 
         for case in Switch(command):
             if case('show'):
-                text = listconfig(options, word)
+                text = showconfig(options, word)
                 sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
                 showconfig(options, word)
                 break
