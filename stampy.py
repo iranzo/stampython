@@ -140,7 +140,9 @@ def getkarma(options, word):
 
 def createdb(options):
     # Create database if it doesn't exist
-    return cur.execute('CREATE TABLE karma(word TEXT, value INT)')
+    cur.execute('CREATE TABLE karma(word TEXT, value INT)')
+    cur.execute('CREATE TABLE alias(key TEXT, value TEXT)')
+    return
 
 
 def createkarma(options, word):
@@ -161,7 +163,7 @@ def putkarma(options, word, value):
     return value
 
 
-def telegramcommands(options, texto, chat_id, message_id):
+def telegramcommands(options, texto, chat_id, message_id, who_un):
     # Process lines for commands in the first word of the line (Telegram)
     word = texto.split()[0]
     commandtext = None
@@ -179,10 +181,10 @@ def telegramcommands(options, texto, chat_id, message_id):
             commandtext = "This bot does not use start or stop commands, it automatically checks for karma operands"
             break
         if case('/alias'):
-            aliascommands(texto, chat_id, message_id, who_un)
+            aliascommands(options, texto, chat_id, message_id, who_un)
             break
         if case('/debug'):
-            debugcommands(texto, chat_id, message_id, who_un)
+            debugcommands(options, texto, chat_id, message_id, who_un)
             break
         if case():
             commandtext = None
@@ -195,6 +197,31 @@ def telegramcommands(options, texto, chat_id, message_id):
             text="Command: %s" % word)
     return
 
+def getalias(options,word):
+    string = (word, )
+    sql = "SELECT * FROM alias WHERE key='%s'" % string
+    cur.execute(sql)
+    value = cur.fetchone()
+
+    try:
+        # Get value from SQL query
+        value = value[1]
+
+    except:
+        # Value didn't exist before, return 0
+        value = False
+
+    return value
+
+def createalias(options,word,value):
+    sql = "INSERT INTO alias VALUES('%s','%s')" % (word,value)
+    cur.execute(sql)
+    return con.commit()
+
+def deletealias(options,word):
+    sql = "DELETE FROM alias WHERE key='%s'" % word
+    cur.execute(sql)
+    return con.commit()
 
 def aliascommands(options,texto, chat_id, message_id, who_un):
     log(options,facility="aliascommands", verbosity=9,
@@ -205,7 +232,13 @@ def aliascommands(options,texto, chat_id, message_id, who_un):
                 key = word.split('=')[0]
                 value = word.split('=')[1]
                 text = "Setting alias for %s to %s" % (key, value)
-                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                createalias(options,word=key,value=value)
+            if "~" in word:
+                key = word.split('~')[0]
+                text = "Deleting alias for %s" % key
+                sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                deletealias(options,word=key)
     return
 
 
@@ -258,7 +291,6 @@ def karmacommands(options,texto, chat_id, message_id, who_un):
 
 
 def rank(options, word=None):
-
     if word:
         # if word is provided, return the rank value for that word
         string = (word,)
@@ -404,10 +436,10 @@ def process():
 
         if not error:
             # Search for telegram commands
-            telegramcommands(options, texto, chat_id, message_id)
+            telegramcommands(options, texto, chat_id, message_id, who_un)
 
             # Search for karma commands
-            karmacommands(options, texto, chat_id, message_id)
+            karmacommands(options, texto, chat_id, message_id, who_un)
 
             # Process each word in the line received to search for karma operators
             for word in texto.split():
@@ -436,6 +468,8 @@ def process():
                     if change != 0:
                         # Remove last two characters from word (++ or --)
                         word = word[0:-2]
+                        if getalias(options,word):
+                            word=getalias(options,word)
                         karma = updatekarma(options, word=word, change=change)
                         if karma != 0:
                             # Karma has changed, report back
