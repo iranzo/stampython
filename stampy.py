@@ -178,6 +178,12 @@ def telegramcommands(options, texto, chat_id, message_id):
         if case('/stop'):
             commandtext = "This bot does not use start or stop commands, it automatically checks for karma operands"
             break
+        if case('/alias'):
+            aliascommands(texto, chat_id, message_id, who_un)
+            break
+        if case('/debug'):
+            debugcommands(texto, chat_id, message_id, who_un)
+            break
         if case():
             commandtext = None
 
@@ -190,7 +196,35 @@ def telegramcommands(options, texto, chat_id, message_id):
     return
 
 
-def karmacommands(options, texto, chat_id, message_id):
+def aliascommands(options,texto, chat_id, message_id, who_un):
+    log(options,facility="aliascommands", verbosity=9,
+        text="Command: %s by %s" % (texto, who_un))
+    if who_un == "iranzo":
+        for word in texto.split(' '):
+            if "=" in word:
+                key = word.split('=')[0]
+                value = word.split('=')[1]
+                text = "Setting alias for %s to %s" % (key, value)
+                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+    return
+
+
+def debugcommands(options,texto, chat_id, message_id, who_un):
+    log(options,facility="debugcommands", verbosity=9,
+        text="Command: %s by %s" % (texto, who_un))
+    if who_un == "iranzo":
+        for word in texto.split(' '):
+            if "=" in word:
+                key = word.split('=')[0]
+                value = word.split('=')[1]
+                text = "Setting debug for %s to %s" % (key, value)
+                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                if key == 'level':
+                    options.verbosity = value
+    return
+
+
+def karmacommands(options,texto, chat_id, message_id, who_un):
     # Process lines for commands in the first word of the line (Telegram commands)
     word = texto.split()[0]
     commandtext = None
@@ -428,7 +462,6 @@ def process():
     clearupdates(options, offset=lastupdateid + 1)
 
 # Main code
-
 # Check if we've the token required to access or exit
 if options.token:
     token = options.token
