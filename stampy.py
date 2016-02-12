@@ -209,6 +209,9 @@ def telegramcommands(options, texto, chat_id, message_id, who_un):
         if case('/alias'):
             aliascommands(options, texto, chat_id, message_id, who_un)
             break
+        if case('/config'):
+            configcommands(options, texto, chat_id, message_id, who_un)
+            break
         if case('/debug'):
             debugcommands(options, texto, chat_id, message_id, who_un)
             break
@@ -254,7 +257,7 @@ def createalias(options, word, value):
             cur.execute(sql)
             log(options, facility="alias", verbosity=9, text="createalias: %s=%s" % (word, value))
             return con.commit()
-    return false
+    return False
 
 
 def deletealias(options, word):
@@ -299,6 +302,76 @@ def listalias(options, word=False):
     return text
 
 
+
+
+
+
+def setconfig(options, word, value):
+    if getalias(options, value) == word:
+        log(options, facility="alias", verbosity=9, text="createalias: circular reference %s=%s" % (word, value))
+    else:
+        if not getalias(options, word):
+            sql = "INSERT INTO config VALUES('%s','%s')" % (word, value)
+            cur.execute(sql)
+            log(options, facility="config", verbosity=9, text="createalias: %s=%s" % (word, value))
+            return con.commit()
+    return False
+
+
+def deleteconfig(options, word):
+    sql = "DELETE FROM config WHERE key='%s'" % word
+    cur.execute(sql)
+    log(options, facility="config", verbosity=9, text="rmalias: %s" % word)
+    return con.commit()
+
+
+def showconfig(options, word=False):
+    if word:
+        # if word is provided, return the alais for that word
+        string = (word,)
+        sql = "SELECT * FROM config WHERE key='%s'" % string
+        cur.execute(sql)
+        value = cur.fetchone()
+
+        try:
+            # Get value from SQL query
+            value = value[1]
+
+        except:
+            # Value didn't exist before, return 0 value
+            value = 0
+        text = "%s has an alias %s" % (word, value)
+
+    else:
+        sql = "select * from alias ORDER BY key DESC"
+
+        text = "Defined aliases:\n"
+        line = 0
+        for item in cur.execute(sql):
+            try:
+                value = item[1]
+                word = item[0]
+                line += 1
+                text += "%s. %s (%s)\n" % (line, word, value)
+            except:
+                continue
+    log(options, facility="config", verbosity=9,
+        text="Returning config %s for word %s" % (text, word))
+    return text
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def aliascommands(options, texto, chat_id, message_id, who_un):
     log(options, facility="alias", verbosity=9,
         text="Command: %s by %s" % (texto, who_un))
@@ -334,6 +407,43 @@ def aliascommands(options, texto, chat_id, message_id, who_un):
                     updatekarma(options, word=key, change=-old)
                     updatekarma(options, word=value, change=old)
                     createalias(options, word=key, value=value)
+
+    return
+
+def configcommands(options, texto, chat_id, message_id, who_un):
+    log(options, facility="config", verbosity=9,
+        text="Command: %s by %s" % (texto, who_un))
+    if who_un == options.owner:
+        log(options, facility="config", verbosity=9,
+            text="Command: %s by %s" % (texto, who_un))
+        command = texto.split(' ')[1]
+        try:
+            word = texto.split(' ')[2]
+        except:
+            word = ""
+
+        for case in Switch(command):
+            if case('show'):
+                text = listconfig(options, word)
+                sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                showconfig(options, word)
+                break
+            if case('delete'):
+                key = word
+                text = "Deleting alias for %s" % key
+                sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                deleteconfig(options, word=key)
+                break
+            if case('set'):
+                word = texto.split(' ')[1]
+                if "=" in word:
+                    key = word.split('=')[0]
+                    value = word.split('=')[1]
+                    setconfig(options,word=key)
+                    text = "Setting alias for %s to %s" % (key, value)
+                    sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+            if case():
+                break
 
     return
 
