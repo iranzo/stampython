@@ -80,9 +80,9 @@ def sendmessage(options, chat_id=0, text="", reply_to_message_id=None,
                                          urllib.quote_plus(text.encode('utf8'))
                                          )
     if reply_to_message_id:
-            message = message + "&reply_to_message_id=%s" % reply_to_message_id
+        message += "&reply_to_message_id=%s" % reply_to_message_id
     if disable_web_page_preview:
-            message = message + "&disable_web_page_preview=1"
+        message += "&disable_web_page_preview=1"
     log(options, facility="sendmessage", verbosity=3,
         text="Sending message: %s" % text)
     return json.load(urllib.urlopen(message))
@@ -92,8 +92,8 @@ def getupdates(options, offset=0, limit=100):
     url = "%s%s/getUpdates" % (options.url, options.token)
     message = "%s?" % url
     if offset != 0:
-        message = message + "offset=%s&" % offset
-    message = message + "limit=%s" % limit
+        message += "offset=%s&" % offset
+    message += "limit=%s" % limit
     try:
         result = json.load(urllib.urlopen(message))['result']
     except:
@@ -107,7 +107,7 @@ def getupdates(options, offset=0, limit=100):
 def clearupdates(options, offset):
     url = "%s%s/getUpdates" % (options.url, options.token)
     message = "%s?" % url
-    message = message + "offset=%s&" % offset
+    message += "offset=%s&" % offset
     try:
         result = json.load(urllib.urlopen(message))
     except:
@@ -170,9 +170,9 @@ def telegramcommands(options, texto, chat_id, message_id, who_un):
     for case in Switch(word):
         if case('/help'):
             commandtext = "To use this bot use word++ or word-- to increment or decrement karma, a new message will be sent providing the new total\n\n"
-            commandtext = commandtext + "Use rank word or rank to get value for actual word or top 10 rankings\n\n"
-            commandtext = commandtext + "Use srank word to search for similar words already ranked\n\n"
-            commandtext = commandtext + "Learn more about this bot in https://github.com/iranzo/stampython"
+            commandtext += "Use rank word or rank to get value for actual word or top 10 rankings\n\n"
+            commandtext += "Use srank word to search for similar words already ranked\n\n"
+            commandtext += "Learn more about this bot in https://github.com/iranzo/stampython"
             break
         if case('/start'):
             commandtext = "This bot does not use start or stop commands, it automatically checks for karma operands"
@@ -197,7 +197,8 @@ def telegramcommands(options, texto, chat_id, message_id, who_un):
             text="Command: %s" % word)
     return
 
-def getalias(options,word):
+
+def getalias(options, word):
     string = (word, )
     sql = "SELECT * FROM alias WHERE key='%s'" % string
     cur.execute(sql)
@@ -213,18 +214,21 @@ def getalias(options,word):
 
     return value
 
-def createalias(options,word,value):
-    sql = "INSERT INTO alias VALUES('%s','%s')" % (word,value)
+
+def createalias(options, word, value):
+    sql = "INSERT INTO alias VALUES('%s','%s')" % (word, value)
     cur.execute(sql)
     return con.commit()
 
-def deletealias(options,word):
+
+def deletealias(options, word):
     sql = "DELETE FROM alias WHERE key='%s'" % word
     cur.execute(sql)
     return con.commit()
 
-def aliascommands(options,texto, chat_id, message_id, who_un):
-    log(options,facility="aliascommands", verbosity=9,
+
+def aliascommands(options, texto, chat_id, message_id, who_un):
+    log(options, facility="aliascommands", verbosity=9,
         text="Command: %s by %s" % (texto, who_un))
     if who_un == "iranzo":
         for word in texto.split(' '):
@@ -234,21 +238,21 @@ def aliascommands(options,texto, chat_id, message_id, who_un):
                 text = "Setting alias for %s to %s" % (key, value)
                 sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
                 # Removing duplicates on karma DB and add the previous values
-                old=getkarma(options,key)
-                new=getkarma(options,value)
+                old = getkarma(options, key)
+                new = getkarma(options, value)
                 updatekarma(options, word=key, change=-old)
                 updatekarma(options, word=value, change=old)
-                createalias(options,word=key,value=value)
+                createalias(options, word=key, value=value)
             if "~" in word:
                 key = word.split('~')[0]
                 text = "Deleting alias for %s" % key
                 sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
-                deletealias(options,word=key)
+                deletealias(options, word=key)
     return
 
 
-def debugcommands(options,texto, chat_id, message_id, who_un):
-    log(options,facility="debugcommands", verbosity=9,
+def debugcommands(options, texto, chat_id, message_id, who_un):
+    log(options, facility="debugcommands", verbosity=9,
         text="Command: %s by %s" % (texto, who_un))
     if who_un == "iranzo":
         for word in texto.split(' '):
@@ -256,13 +260,13 @@ def debugcommands(options,texto, chat_id, message_id, who_un):
                 key = word.split('=')[0]
                 value = word.split('=')[1]
                 text = "Setting debug for %s to %s" % (key, value)
-                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
                 if key == 'level':
                     options.verbosity = value
     return
 
 
-def karmacommands(options,texto, chat_id, message_id, who_un):
+def karmacommands(options, texto, chat_id, message_id, who_un):
     # Process lines for commands in the first word of the line (Telegram commands)
     word = texto.split()[0]
     commandtext = None
@@ -296,8 +300,8 @@ def karmacommands(options,texto, chat_id, message_id, who_un):
 
 
 def rank(options, word=None):
-    if getalias(options,word):
-        word=getalias(options,word)
+    if getalias(options, word):
+        word = getalias(options, word)
     if word:
         # if word is provided, return the rank value for that word
         string = (word,)
@@ -324,8 +328,8 @@ def rank(options, word=None):
             try:
                 value = item[1]
                 word = item[0]
-                line = line + 1
-                text = text + "%s. %s (%s)\n" % (line, word, value)
+                line += 1
+                text += "%s. %s (%s)\n" % (line, word, value)
             except:
                 continue
     log(options, facility="rank", verbosity=9,
@@ -334,8 +338,8 @@ def rank(options, word=None):
 
 
 def srank(options, word=None):
-    if getalias(options,word):
-        word=getalias(options,word)
+    if getalias(options, word):
+        word = getalias(options, word)
     text = ""
     if word is None:
         # If no word is provided to srank, call rank instead
@@ -348,7 +352,7 @@ def srank(options, word=None):
             try:
                 value = item[1]
                 word = item[0]
-                text = text + "%s: (%s)\n" % (word, value)
+                text += "%s: (%s)\n" % (word, value)
             except:
                 continue
     log(options, facility="srank", verbosity=9,
@@ -368,7 +372,7 @@ def sendsticker(options, chat_id=0, sticker="", text="", reply_to_message_id="",
     message = "%s?chat_id=%s" % (url, chat_id)
     message = "%s&sticker=%s" % (message, sticker)
     if reply_to_message_id:
-        message = message + "&reply_to_message_id=%s" % reply_to_message_id
+        message += "&reply_to_message_id=%s" % reply_to_message_id
     log(options, facility="sendsticker", verbosity=3, text="Sending sticker: %s" % text)
     return json.load(urllib.urlopen(message))
 
@@ -377,20 +381,20 @@ def stampy(options, chat_id="", karma=0, reply_to_message_id=False):
 
     karma = "%s" % karma
     # Sticker definitions for each rank
-    X00 = "BQADBAADYwAD17FYAAEidrCCUFH7AgI"
-    X000 = "BQADBAADZQAD17FYAAEeeRNtkOWfBAI"
-    X0000 = "BQADBAADZwAD17FYAAHHuNL2oLuShwI"
-    X00000 = "BQADBAADaQAD17FYAAHzIBRZeY4uNAI"
+    x00 = "BQADBAADYwAD17FYAAEidrCCUFH7AgI"
+    x000 = "BQADBAADZQAD17FYAAEeeRNtkOWfBAI"
+    x0000 = "BQADBAADZwAD17FYAAHHuNL2oLuShwI"
+    x00000 = "BQADBAADaQAD17FYAAHzIBRZeY4uNAI"
 
     sticker = ""
     if karma[-5:] == "00000":
-        sticker = X00000
+        sticker = x00000
     elif karma[-4:] == "0000":
-        sticker = X0000
+        sticker = x0000
     elif karma[-3:] == "000":
-        sticker = X000
+        sticker = x000
     elif karma[-2:] == "00":
-        sticker = X00
+        sticker = x00
 
     text = "Sticker for %s karma points" % karma
 
@@ -412,7 +416,7 @@ def process():
     # Process each message available in URL and search for karma operators
     for message in getupdates(options):
         # Count messages in each batch
-        count = count + 1
+        count += 1
         update_id = message['update_id']
         try:
             texto = message['message']['text'].lower()
@@ -477,8 +481,8 @@ def process():
                     if change != 0:
                         # Remove last two characters from word (++ or --)
                         word = word[0:-2]
-                        if getalias(options,word):
-                            word=getalias(options,word)
+                        if getalias(options, word):
+                            word = getalias(options, word)
                         karma = updatekarma(options, word=word, change=change)
                         if karma != 0:
                             # Karma has changed, report back
