@@ -239,14 +239,22 @@ def getalias(options, word):
         # Value didn't exist before, return 0
         value = False
 
-    return value
+    # We can define recursive aliases, so this will return the ultimate one
+    if value:
+        return getalias(options, word=value)
+    return word
 
 
 def createalias(options, word, value):
-    sql = "INSERT INTO alias VALUES('%s','%s')" % (word, value)
-    cur.execute(sql)
-    log(options, facility="alias", verbosity=9, text="createalias: %s=%s" % (word, value))
-    return con.commit()
+    if getalias(options, value) == word:
+        log(options, facility="alias", verbosity=9, text="createalias: circular reference %s=%s" % (word, value))
+    else:
+        if not getalias(options, word):
+            sql = "INSERT INTO alias VALUES('%s','%s')" % (word, value)
+            cur.execute(sql)
+            log(options, facility="alias", verbosity=9, text="createalias: %s=%s" % (word, value))
+            return con.commit()
+    return false
 
 
 def deletealias(options, word):
@@ -295,24 +303,38 @@ def aliascommands(options, texto, chat_id, message_id, who_un):
     log(options, facility="alias", verbosity=9,
         text="Command: %s by %s" % (texto, who_un))
     if who_un == options.owner:
-        for word in texto.split(' '):
-            if "=" in word:
-                key = word.split('=')[0]
-                value = word.split('=')[1]
-                text = "Setting alias for %s to %s" % (key, value)
+        log(options, facility="alias", verbosity=9,
+            text="Command: %s by %s" % (texto, who_un))
+        command = texto.split(' ')[1]
+        try:
+            word = texto.split(' ')[2]
+        except:
+            word = ""
+
+        for case in Switch(command):
+            if case('list'):
+                text = listalias(options, word)
                 sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
-                # Removing duplicates on karma DB and add the previous values
-                old = getkarma(options, key)
-                updatekarma(options, word=key, change=-old)
-                updatekarma(options, word=value, change=old)
-                createalias(options, word=key, value=value)
-            if "~" in word:
-                key = word.split('~')[0]
+                break
+            if case('delete'):
+                key = word
                 text = "Deleting alias for %s" % key
                 sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
                 deletealias(options, word=key)
-            if "%" in word:
-                listalias(options, word)
+                break
+            if case():
+                word = texto.split(' ')[1]
+                if "=" in word:
+                    key = word.split('=')[0]
+                    value = word.split('=')[1]
+                    text = "Setting alias for %s to %s" % (key, value)
+                    sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                    # Removing duplicates on karma DB and add the previous values
+                    old = getkarma(options, key)
+                    updatekarma(options, word=key, change=-old)
+                    updatekarma(options, word=value, change=old)
+                    createalias(options, word=key, value=value)
+
     return
 
 
