@@ -50,6 +50,7 @@ p.add_option('-d', '--daemon', dest='daemon', help="Run as daemon",
 
 # Implement switch from http://code.activestate.com/recipes/410692/
 
+
 class Switch(object):
     def __init__(self, value):
         self.value = value
@@ -157,7 +158,7 @@ def config(options, key):
 
     except:
         # Value didn't exist before, return 0
-        value = 0
+        value = False
 
     return value
 
@@ -298,20 +299,11 @@ def listalias(options, word=False):
     return text
 
 
-
-
-
-
 def setconfig(options, word, value):
-    if getalias(options, value) == word:
-        log(options, facility="alias", verbosity=9, text="createalias: circular reference %s=%s" % (word, value))
-    else:
-        if not getalias(options, word):
-            sql = "INSERT INTO config VALUES('%s','%s')" % (word, value)
-            cur.execute(sql)
-            log(options, facility="config", verbosity=9, text="createalias: %s=%s" % (word, value))
-            return con.commit()
-    return False
+    sql = "INSERT INTO config VALUES('%s','%s')" % (word, value)
+    cur.execute(sql)
+    log(options, facility="config", verbosity=9, text="createalias: %s=%s" % (word, value))
+    return con.commit()
 
 
 def deleteconfig(options, word):
@@ -336,7 +328,7 @@ def showconfig(options, word=False):
         except:
             # Value didn't exist before, return 0 value
             value = 0
-        text = "%s ha a value of %s" % (word, value)
+        text = "%s has a value of %s" % (word, value)
 
     else:
         sql = "select * from config ORDER BY key DESC"
@@ -356,22 +348,10 @@ def showconfig(options, word=False):
     return text
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 def aliascommands(options, texto, chat_id, message_id, who_un):
     log(options, facility="alias", verbosity=9,
         text="Command: %s by %s" % (texto, who_un))
-    if who_un == options.owner:
+    if who_un == config(options, 'owner'):
         log(options, facility="alias", verbosity=9,
             text="Command: %s by %s" % (texto, who_un))
         command = texto.split(' ')[1]
@@ -406,10 +386,11 @@ def aliascommands(options, texto, chat_id, message_id, who_un):
 
     return
 
+
 def configcommands(options, texto, chat_id, message_id, who_un):
     log(options, facility="config", verbosity=9,
         text="Command: %s by %s" % (texto, who_un))
-    if who_un == options.owner:
+    if who_un == config(options, 'owner'):
         log(options, facility="config", verbosity=9,
             text="Command: %s by %s" % (texto, who_un))
         command = texto.split(' ')[1]
@@ -426,18 +407,19 @@ def configcommands(options, texto, chat_id, message_id, who_un):
                 break
             if case('delete'):
                 key = word
-                text = "Deleting alias for %s" % key
+                text = "Deleting config for %s" % key
                 sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
                 deleteconfig(options, word=key)
                 break
             if case('set'):
-                word = texto.split(' ')[1]
+                word = texto.split(' ')[2]
                 if "=" in word:
                     key = word.split('=')[0]
                     value = word.split('=')[1]
-                    setconfig(options,word=key)
-                    text = "Setting alias for %s to %s" % (key, value)
+                    setconfig(options, word=key, value=value)
+                    text = "Setting config for %s to %s" % (key, value)
                     sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                break
             if case():
                 break
 
@@ -540,7 +522,7 @@ def srank(options, word=None):
 
 def log(options, facility=options.database, severity="INFO", verbosity=0, text=""):
     when = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
-    if options.verbosity >= verbosity:
+    if config(options, 'verbosity') >= verbosity:
         print "%s %s : %s : %s : %s" % (when, options.database, facility, severity, text)
     return
 
@@ -597,7 +579,7 @@ def process():
         count += 1
         update_id = message['update_id']
         try:
-            texto = message['message']['text'].lower()
+            texto = message['message']['text']
             chat_id = message['message']['chat']['id']
             message_id = int(message['message']['message_id'])
             date = int(float(message['message']['date']))
@@ -633,7 +615,7 @@ def process():
             karmacommands(options, texto, chat_id, message_id, who_un)
 
             # Process each word in the line received to search for karma operators
-            for word in texto.split():
+            for word in texto.lower().split():
                 if word[0] == "@":
                     # Remove @ from mentions for karma
                     word = word[1:]
@@ -687,14 +669,6 @@ def process():
     clearupdates(options, offset=lastupdateid + 1)
 
 # Main code
-# Check if we've the token required to access or exit
-if options.token:
-    token = options.token
-else:
-    log(options, facility="main", severity="ERROR", verbosity=0,
-        text="Token required for operation, please check https://core.telegram.org/bots")
-    sys.exit(1)
-
 
 # Initialize database access
 con = None
@@ -710,6 +684,19 @@ except lite.Error, e:
     sys.exit(1)
 
 # Database initialized
+
+# Check if we've the token required to access or exit
+if not config(options, key='token'):
+    if options.token:
+        token = options.token
+        setconfig(options, key='token', value=token)
+    else:
+        log(options, facility="main", severity="ERROR", verbosity=0, text="Token required for operation, please check https://core.telegram.org/bots")
+        sys.exit(1)
+else:
+    token = config(options, key='token')
+
+print token
 
 # Check operation mode and call process as required
 if options.daemon:
