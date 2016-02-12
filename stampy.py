@@ -233,6 +233,11 @@ def aliascommands(options,texto, chat_id, message_id, who_un):
                 value = word.split('=')[1]
                 text = "Setting alias for %s to %s" % (key, value)
                 sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                # Removing duplicates on karma DB and add the previous values
+                old=getkarma(options,key)
+                new=getkarma(options,value)
+                updatekarma(options, word=key, change=-old)
+                updatekarma(options, word=value, change=old)
                 createalias(options,word=key,value=value)
             if "~" in word:
                 key = word.split('~')[0]
