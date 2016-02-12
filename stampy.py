@@ -212,9 +212,6 @@ def telegramcommands(options, texto, chat_id, message_id, who_un):
         if case('/config'):
             configcommands(options, texto, chat_id, message_id, who_un)
             break
-        if case('/debug'):
-            debugcommands(options, texto, chat_id, message_id, who_un)
-            break
         if case():
             commandtext = None
 
@@ -445,21 +442,6 @@ def configcommands(options, texto, chat_id, message_id, who_un):
             if case():
                 break
 
-    return
-
-
-def debugcommands(options, texto, chat_id, message_id, who_un):
-    log(options, facility="debug", verbosity=9,
-        text="Command: %s by %s" % (texto, who_un))
-    if who_un == options.owner:
-        for word in texto.split(' '):
-            if "=" in word:
-                key = word.split('=')[0]
-                value = word.split('=')[1]
-                text = "Setting debug for %s to %s" % (key, value)
-                sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
-                if key == 'level':
-                    options.verbosity = value
     return
 
 
