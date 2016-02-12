@@ -5,6 +5,9 @@ Mostly everything :), initial steps are there for accessing URL
 - Consider having separate karma per group-id to have privacy on the topics discussed on each one (no leaks because of karma)
 - Initial load of karma points from older bot (possible separate script)
 - Implement banning of consecutive karma changes from same user for a period of time
+    - Implement list of known groups and list of known users
 - Implement /settings to store settings per chat [be silent, timeout for ban, etc]
+- Implement aliases so each time karma is updated for a specific word, it can increase or report on another
 - Implement statistics on total number of processed messages, different chats being used, last time active, etc
 - Implement uniform logging based on verbose setting for each module within stampy, timestamp, etc
+- Implement — as karma decrease (sometimes telegram client replaces -- for — and makes karma not being decrease as expected)
