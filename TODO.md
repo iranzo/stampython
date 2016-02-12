@@ -10,4 +10,3 @@ Mostly everything :), initial steps are there for accessing URL
 - Implement aliases so each time karma is updated for a specific word, it can increase or report on another
 - Implement statistics on total number of processed messages, different chats being used, last time active, etc
 - Implement uniform logging based on verbose setting for each module within stampy, timestamp, etc
-- Implement — as karma decrease (sometimes telegram client replaces -- for — and makes karma not being decrease as expected)

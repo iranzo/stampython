@@ -381,6 +381,11 @@ def process():
                     # Remove @ from mentions for karma
                     word = word[1:]
                 word = word.replace("'", '')
+                # Unicode — is sometimes provided by telegram cli, using that also as comparision
+                unidecrease = u"—"
+                if word[-1:] == unidecrease:
+                    word = word.replace(unidecrease, '--')
+
                 log(options, facility="main", verbosity=9,
                     text="Processing word %s sent by id %s with username %s (%s %s)" % (word, who_id, who_un, who_gn, who_ln))
                 if len(word) >= 4:
