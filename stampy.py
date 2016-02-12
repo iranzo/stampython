@@ -41,8 +41,8 @@ p.add_option('-v', "--verbosity", dest="verbosity",
 p.add_option('-u', "--url", dest="url",
              help="Define URL for accessing bot API",
              default="https://api.telegram.org/bot")
-p.add_option('-c', '--control', dest='control',
-             help="Define chat_id for monitoring service", default=None)
+p.add_option('-o', '--owner', dest='owner',
+             help="Define owner username for monitoring service", default="iranzo")
 p.add_option('-d', '--daemon', dest='daemon', help="Run as daemon",
              default=False, action="store_true")
 
@@ -142,7 +142,33 @@ def createdb(options):
     # Create database if it doesn't exist
     cur.execute('CREATE TABLE karma(word TEXT, value INT)')
     cur.execute('CREATE TABLE alias(key TEXT, value TEXT)')
+    cur.execute('CREATE TABLE config(key TEXT, value TEXT)')
     return
+
+
+def getconfig(options, key):
+    string = (key, )
+    sql = "SELECT * FROM config WHERE key='%s'" % string
+    cur.execute(sql)
+    value = cur.fetchone()
+
+    try:
+        # Get value from SQL query
+        value = value[1]
+
+    except:
+        # Value didn't exist before, return 0
+        value = 0
+
+    return value
+
+
+def saveconfig(options, key, value):
+    if value:
+        sql = "UPDATE config SET value = '%s' WHERE key = '%s'" % (value, key)
+    cur.execute(sql)
+    con.commit()
+    return value
 
 
 def createkarma(options, word):
@@ -193,7 +219,7 @@ def telegramcommands(options, texto, chat_id, message_id, who_un):
     if commandtext:
         sendmessage(options, chat_id=chat_id, text=commandtext,
                     reply_to_message_id=message_id)
-        log(options, facility="telegramcommands", verbosity=9,
+        log(options, facility="commands", verbosity=9,
             text="Command: %s" % word)
     return
 
@@ -203,6 +229,7 @@ def getalias(options, word):
     sql = "SELECT * FROM alias WHERE key='%s'" % string
     cur.execute(sql)
     value = cur.fetchone()
+    log(options, facility="alias", verbosity=9, text="getalias: %s" % word)
 
     try:
         # Get value from SQL query
@@ -218,19 +245,56 @@ def getalias(options, word):
 def createalias(options, word, value):
     sql = "INSERT INTO alias VALUES('%s','%s')" % (word, value)
     cur.execute(sql)
+    log(options, facility="alias", verbosity=9, text="createalias: %s=%s" % (word, value))
     return con.commit()
 
 
 def deletealias(options, word):
     sql = "DELETE FROM alias WHERE key='%s'" % word
     cur.execute(sql)
+    log(options, facility="alias", verbosity=9, text="rmalias: %s" % word)
     return con.commit()
 
 
+def listalias(options, word=False):
+    if word:
+        # if word is provided, return the alais for that word
+        string = (word,)
+        sql = "SELECT * FROM alias WHERE key='%s'" % string
+        cur.execute(sql)
+        value = cur.fetchone()
+
+        try:
+            # Get value from SQL query
+            value = value[1]
+
+        except:
+            # Value didn't exist before, return 0 value
+            value = 0
+        text = "%s has an alias %s" % (word, value)
+
+    else:
+        sql = "select * from alias ORDER BY key DESC"
+
+        text = "Defined aliases:\n"
+        line = 0
+        for item in cur.execute(sql):
+            try:
+                value = item[1]
+                word = item[0]
+                line += 1
+                text += "%s. %s (%s)\n" % (line, word, value)
+            except:
+                continue
+    log(options, facility="alias", verbosity=9,
+        text="Returning aliases %s for word %s" % (text, word))
+    return text
+
+
 def aliascommands(options, texto, chat_id, message_id, who_un):
-    log(options, facility="aliascommands", verbosity=9,
+    log(options, facility="alias", verbosity=9,
         text="Command: %s by %s" % (texto, who_un))
-    if who_un == "iranzo":
+    if who_un == options.owner:
         for word in texto.split(' '):
             if "=" in word:
                 key = word.split('=')[0]
@@ -247,13 +311,15 @@ def aliascommands(options, texto, chat_id, message_id, who_un):
                 text = "Deleting alias for %s" % key
                 sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
                 deletealias(options, word=key)
+            if "%" in word:
+                listalias(options, word)
     return
 
 
 def debugcommands(options, texto, chat_id, message_id, who_un):
-    log(options, facility="debugcommands", verbosity=9,
+    log(options, facility="debug", verbosity=9,
         text="Command: %s by %s" % (texto, who_un))
-    if who_un == "iranzo":
+    if who_un == options.owner:
         for word in texto.split(' '):
             if "=" in word:
                 key = word.split('=')[0]
