@@ -720,7 +720,7 @@ def process():
         if chat_id:
             updatestats(type="chat", id=chat_id, name=chat_name, date=date, count=0)
         if who_ln:
-            name = "%s %s (%s)" % (who_gn, who_ln, who_un)
+            name = "%s %s (@%s)" % (who_gn, who_ln, who_un)
             updatestats(type="user", id=who_id, name=name, date=date, count=0)
 
         # Update last message id to later clear it from the server
