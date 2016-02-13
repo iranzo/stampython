@@ -497,7 +497,8 @@ def showstats(type=False):
         try:
             (type, id, name, date, count) = item
             line += 1
-            text += "%s. Type: %s ID: %s(%s) Date: %s Count: %s\n" % (line, type, id, name, date, count)
+            datefor=datetime.datetime.fromtimestamp(int(date)).strftime('%Y-%m-%d %H:%M:%S')
+            text += "%s. Type: %s ID: %s(%s) Date: %s Count: %s\n" % (line, type, id, name, datefor, count)
         except:
             continue
     log(facility="stats", verbosity=9,
