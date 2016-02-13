@@ -75,10 +75,10 @@ class Switch(object):
 
 def createdb():
     # Create database if it doesn't exist
-    cur.execute('CREATE TABLE karma(word TEXT, value INT)')
-    cur.execute('CREATE TABLE alias(key TEXT, value TEXT)')
-    cur.execute('CREATE TABLE config(key TEXT, value TEXT)')
-    cur.execute('CREATE TABLE stats(type TEXT, id INT, name TEXT, date TEXT, count INT)')
+    cur.execute('CREATE TABLE karma(word TEXT, value INT);')
+    cur.execute('CREATE TABLE alias(key TEXT, value TEXT);')
+    cur.execute('CREATE TABLE config(key TEXT, value TEXT);')
+    cur.execute('CREATE TABLE stats(type TEXT, id INT, name TEXT, date TEXT, count INT);')
     return
 
 
@@ -820,6 +820,11 @@ else:
 if not config(key='url'):
     if options.url:
         setconfig(key='url', value=options.url)
+        
+# Check if we've owner defined in DB or on cli and store
+if not config(key='owner):
+    if options.owner:
+        setconfig(key='owner', value=options.owner)
 
 # Check operation mode and call process as required
 if options.daemon or config(key='daemon'):
