@@ -486,7 +486,10 @@ def configcommands(texto, chat_id, message_id, who_un):
 
 
 def showstats(type=False):
-    sql = "select * from stats ORDER BY type DESC"
+    if type:
+        sql = "select * from stats WHERE type='%s' ORDER BY type DESC" % type
+    else:
+        sql = "select * from stats ORDER BY type DESC"
 
     text = "Defined stats:\n"
     line = 0
