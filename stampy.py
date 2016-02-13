@@ -334,10 +334,10 @@ def deleteconfig(word):
     return con.commit()
 
 
-def showconfig(word=False):
-    if word:
+def showconfig(key=False):
+    if key:
         # if word is provided, return the alais for that word
-        string = (word,)
+        string = (key,)
         sql = "SELECT * FROM config WHERE key='%s'" % string
         cur.execute(sql)
         value = cur.fetchone()
@@ -349,7 +349,7 @@ def showconfig(word=False):
         except:
             # Value didn't exist before, return 0 value
             value = 0
-        text = "%s has a value of %s" % (word, value)
+        text = "%s has a value of %s" % (key, value)
 
     else:
         sql = "select * from config ORDER BY key DESC"
@@ -359,13 +359,13 @@ def showconfig(word=False):
         for item in cur.execute(sql):
             try:
                 value = item[1]
-                word = item[0]
+                key = item[0]
                 line += 1
-                text += "%s. %s (%s)\n" % (line, word, value)
+                text += "%s. %s (%s)\n" % (line, key, value)
             except:
                 continue
     log(facility="config", verbosity=9,
-        text="Returning config %s for word %s" % (text, word))
+        text="Returning config %s for key %s" % (text, key))
     return text
 
 
