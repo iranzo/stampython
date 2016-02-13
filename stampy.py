@@ -207,44 +207,40 @@ def putkarma(word, value):
     con.commit()
     return value
 
+
 def getstats(type=None, id=0, name=None, date=None, count=0):
-    string = (id,)
     sql = "SELECT * FROM stats WHERE id='%s' AND type='%s';" % (id, type)
     cur.execute(sql)
-    
+
     try:
         value = cur.fetchone()
     except:
         value = False
-    
+
     if value:
-        (type, id, name, date, count) =  value
-    print "GETSTATS TYPE %s, id %s, name %s, date %s, count %s" % (type, id, name, date, count)
+        (type, id, name, date, count) = value
+    log(facility="getstats", verbosity=9, text="value")
     return value
 
+
 def updatestats(type=None, id=0, name=None, date=None, count=0):
-    print "######### UPDATESTATS #########"
-    print id, name
-    
     try:
         value = getstats(type=type, id=id)
-        count = value[4] +1
+        count = value[4] + 1
         old_id = value[1]
     except:
         value = False
         old_id = False
-    
-    
+
     if not value:
-        print "INSERT"
         sql = "INSERT INTO stats VALUES ('%s', '%s', '%s', '%s', '%s');" % (type, id, name, date, count)
-        print sql
     if old_id != 0 and type:
-        print "UPDATE"
-        sql = "UPDATE stats SET type='%s', name='%s', date='%s', count='%s'  WHERE id = '%s';" % (type, name, date, count, id)
-        print sql
+        sql = "UPDATE stats SET type='%s', name='%s', date='%s', count='%s'  WHERE id = '%s';" % (
+        type, name, date, count, id)
+    log(facility="updatestats", verbosity=9, text="value")
     cur.execute(sql)
     return con.commit()
+
 
 def telegramcommands(texto, chat_id, message_id, who_un):
     # Process lines for commands in the first word of the line (Telegram)
@@ -271,7 +267,7 @@ def telegramcommands(texto, chat_id, message_id, who_un):
             break
         if case('/stats'):
             statscommands(texto, chat_id, message_id, who_un)
-            break            
+            break
         if case():
             commandtext = None
 
@@ -408,8 +404,6 @@ def showconfig(key=False):
     log(facility="config", verbosity=9,
         text="Returning config %s for key %s" % (text, key))
     return text
-    
-    
 
 
 def aliascommands(texto, chat_id, message_id, who_un):
@@ -490,6 +484,7 @@ def configcommands(texto, chat_id, message_id, who_un):
 
     return
 
+
 def showstats(type=False):
     sql = "select * from stats ORDER BY type DESC"
 
@@ -505,8 +500,8 @@ def showstats(type=False):
     log(facility="stats", verbosity=9,
         text="Returning stats %s for type %s" % (text, type))
     return text
-    
-    
+
+
 def statscommands(texto, chat_id, message_id, who_un):
     log(facility="stats", verbosity=9,
         text="Command: %s by %s" % (texto, who_un))
@@ -527,7 +522,7 @@ def statscommands(texto, chat_id, message_id, who_un):
             if case():
                 break
 
-    return    
+    return
 
 
 def karmacommands(texto, chat_id, message_id):
@@ -681,7 +676,7 @@ def process():
         # Count messages in each batch
         count += 1
         update_id = message['update_id']
-        
+
         try:
             chat_id = message['message']['chat']['id']
             chat_name = message['message']['chat']['title']
@@ -799,7 +794,7 @@ if options.database:
     setconfig(key='database', value=options.database)
 
 if not config(key='sleep'):
-    setconfig(key='sleep',value=10)
+    setconfig(key='sleep', value=10)
 
 # Check if we've the token required to access or exit
 if not config(key='token'):
