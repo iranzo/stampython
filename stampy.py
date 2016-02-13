@@ -87,7 +87,7 @@ con = None
 try:
     con = lite.connect(options.database)
     cur = con.cursor()
-    cur.execute("SELECT * FROM karma WHERE word='stampy'")
+    cur.execute("SELECT * FROM config WHERE key='token';")
     data = cur.fetchone()
 
 except lite.Error, e:
