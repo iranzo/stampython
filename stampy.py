@@ -161,7 +161,7 @@ def createdb():
     cur.execute('CREATE TABLE karma(word TEXT, value INT)')
     cur.execute('CREATE TABLE alias(key TEXT, value TEXT)')
     cur.execute('CREATE TABLE config(key TEXT, value TEXT)')
-    # cur.execute('CREATE TABLE stats(id TEXT, value TEXT)')
+    cur.execute('CREATE TABLE stats(type TEXT, id INT, name TEXT, date TEXT)')
     return
 
 
@@ -207,6 +207,29 @@ def putkarma(word, value):
     con.commit()
     return value
 
+def getstats(type=None, id=0, name=None, date=None):
+    #cur.execute('CREATE TABLE stats(type TEXT, id INT, name TEXT, date TEXT)')
+    string = (key,)
+    sql = "SELECT * FROM stats WHERE key='%s'" % id
+    cur.execute(sql)
+    value = cur.fetchone()
+    try:
+        # Get value from SQL query
+        value = value[1]
+    except:
+        # Value didn't exist before, return 0
+        value = False
+    return value
+
+def updatestats(type=None, id=0, name=None, date=None):
+    #cur.execute('CREATE TABLE stats(type TEXT, id INT, name TEXT, date TEXT)')
+    # FIXME
+    if not getstats(type=type, id=id):
+        sql = "INSERT INTO stats VALUES ('%s', '%s', '%s', '%s')" % (type, id, name, date)
+    if id != 0 and type:
+        sql = "UPDATE stats SET type='%s', id='%s', name='%s', date='%s' WHERE id = '%s'" % (type, id, name, date)
+    cur.execute(sql)
+    return con.commit()
 
 def telegramcommands(texto, chat_id, message_id, who_un):
     # Process lines for commands in the first word of the line (Telegram)
@@ -624,6 +647,12 @@ def process():
 
         except:
             who_un = None
+
+        # Update stats on the message being processed
+        if chat_id:
+            updatestats(type="chat", id=chat_id, name=chat_name, date=date)
+        if who_id:
+            updatestats(type="user", id=who_id, name=who_gn, date=date)
 
         # Update last message id to later clear it from the server
         if update_id > lastupdateid:
