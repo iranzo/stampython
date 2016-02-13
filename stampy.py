@@ -227,7 +227,7 @@ def updatestats(type=None, id=0, name=None, date=None):
     if not getstats(type=type, id=id):
         sql = "INSERT INTO stats VALUES ('%s', '%s', '%s', '%s')" % (type, id, name, date)
     if id != 0 and type:
-        sql = "UPDATE stats SET type='%s', id='%s', name='%s', date='%s' WHERE id = '%s'" % (type, id, name, date)
+        sql = "UPDATE stats SET type='%s', name='%s', date='%s' WHERE id = '%s'" % (type, name, date)
     cur.execute(sql)
     return con.commit()
 
