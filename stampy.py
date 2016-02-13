@@ -822,7 +822,7 @@ if not config(key='url'):
         setconfig(key='url', value=options.url)
         
 # Check if we've owner defined in DB or on cli and store
-if not config(key='owner):
+if not config(key='owner'):
     if options.owner:
         setconfig(key='owner', value=options.owner)
 
