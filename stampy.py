@@ -72,6 +72,22 @@ class Switch(object):
         else:
             return False
 
+# Initialize database access
+con = None
+try:
+    con = lite.connect(options.database)
+    cur = con.cursor()
+    cur.execute("SELECT * FROM karma WHERE word='stampy'")
+    data = cur.fetchone()
+
+except lite.Error, e:
+    createdb()
+    log(facility="main", verbosity=0, text="Error %s:" % e.args[0])
+    sys.exit(1)
+
+
+# Database initialized
+
 
 # Function definition
 def sendmessage(chat_id=0, text="", reply_to_message_id=None,
@@ -679,20 +695,9 @@ def process():
 
 # Main code
 
-# Initialize database access
-con = None
-try:
-    con = lite.connect(options.database)
-    cur = con.cursor()
-    cur.execute("SELECT * FROM karma WHERE word='stampy'")
-    data = cur.fetchone()
-
-except lite.Error, e:
-    createdb()
-    log(facility="main", verbosity=0, text="Error %s:" % e.args[0])
-    sys.exit(1)
-
-# Database initialized
+# Set database name in config
+if options.database:
+    setconfig(key='database', value=options.database)
 
 # Check if we've the token required to access or exit
 if not config(key='token'):
