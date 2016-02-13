@@ -143,6 +143,7 @@ def createdb(options):
     cur.execute('CREATE TABLE karma(word TEXT, value INT)')
     cur.execute('CREATE TABLE alias(key TEXT, value TEXT)')
     cur.execute('CREATE TABLE config(key TEXT, value TEXT)')
+    # cur.execute('CREATE TABLE stats(id TEXT, value TEXT)')
     return
 
 
@@ -300,6 +301,8 @@ def listalias(options, word=False):
 
 
 def setconfig(options, word, value):
+    if config(options, key=word):
+            deleteconfig(options, word)
     sql = "INSERT INTO config VALUES('%s','%s')" % (word, value)
     cur.execute(sql)
     log(options, facility="config", verbosity=9, text="createalias: %s=%s" % (word, value))
@@ -695,8 +698,6 @@ if not config(options, key='token'):
         sys.exit(1)
 else:
     token = config(options, key='token')
-
-print token
 
 # Check operation mode and call process as required
 if options.daemon:
