@@ -48,6 +48,7 @@ p.add_option('-d', '--daemon', dest='daemon', help="Run as daemon",
 
 (options, args) = p.parse_args()
 
+
 # Implement switch from http://code.activestate.com/recipes/410692/
 
 
@@ -73,9 +74,9 @@ class Switch(object):
 
 
 # Function definition
-def sendmessage(options, chat_id=0, text="", reply_to_message_id=None,
+def sendmessage(chat_id=0, text="", reply_to_message_id=None,
                 disable_web_page_preview=True):
-    url = "%s%s/sendMessage" % (options.url, options.token)
+    url = "%s%s/sendMessage" % (config(key='url'), config(key='token'))
     message = "%s?chat_id=%s&text=%s" % (url, chat_id,
                                          urllib.quote_plus(text.encode('utf8'))
                                          )
@@ -83,13 +84,13 @@ def sendmessage(options, chat_id=0, text="", reply_to_message_id=None,
         message += "&reply_to_message_id=%s" % reply_to_message_id
     if disable_web_page_preview:
         message += "&disable_web_page_preview=1"
-    log(options, facility="sendmessage", verbosity=3,
+    log(facility="sendmessage", verbosity=3,
         text="Sending message: %s" % text)
     return json.load(urllib.urlopen(message))
 
 
-def getupdates(options, offset=0, limit=100):
-    url = "%s%s/getUpdates" % (options.url, options.token)
+def getupdates(offset=0, limit=100):
+    url = "%s%s/getUpdates" % (config(key='url'), config(key='token'))
     message = "%s?" % url
     if offset != 0:
         message += "offset=%s&" % offset
@@ -99,30 +100,30 @@ def getupdates(options, offset=0, limit=100):
     except:
         result = []
     for item in result:
-        log(options, facility="getupdates", verbosity=9,
+        log(facility="getupdates", verbosity=9,
             text="Getting updates and returning: %s" % item)
         yield item
 
 
-def clearupdates(options, offset):
-    url = "%s%s/getUpdates" % (options.url, options.token)
+def clearupdates(offset):
+    url = "%s%s/getUpdates" % (config(key='url'), config(key='token'))
     message = "%s?" % url
     message += "offset=%s&" % offset
     try:
         result = json.load(urllib.urlopen(message))
     except:
         result = None
-    log(options, facility="clearupdates", verbosity=9, text="Clearing messages")
+    log(facility="clearupdates", verbosity=9, text="Clearing messages")
     return result
 
 
-def updatekarma(options, word=None, change=0):
-    value = getkarma(options, word=word)
-    return putkarma(options, word, value + change)
+def updatekarma(word=None, change=0):
+    value = getkarma(word=word)
+    return putkarma(word, value + change)
 
 
-def getkarma(options, word):
-    string = (word, )
+def getkarma(word):
+    string = (word,)
     sql = "SELECT * FROM karma WHERE word='%s'" % string
     cur.execute(sql)
     value = cur.fetchone()
@@ -138,7 +139,7 @@ def getkarma(options, word):
     return value
 
 
-def createdb(options):
+def createdb():
     # Create database if it doesn't exist
     cur.execute('CREATE TABLE karma(word TEXT, value INT)')
     cur.execute('CREATE TABLE alias(key TEXT, value TEXT)')
@@ -147,8 +148,8 @@ def createdb(options):
     return
 
 
-def config(options, key):
-    string = (key, )
+def config(key):
+    string = (key,)
     sql = "SELECT * FROM config WHERE key='%s'" % string
     cur.execute(sql)
     value = cur.fetchone()
@@ -164,23 +165,23 @@ def config(options, key):
     return value
 
 
-def saveconfig(options, key, value):
+def saveconfig(key, value):
     if value:
         sql = "UPDATE config SET value = '%s' WHERE key = '%s'" % (value, key)
-    cur.execute(sql)
-    con.commit()
+        cur.execute(sql)
+        con.commit()
     return value
 
 
-def createkarma(options, word):
+def createkarma(word):
     sql = "INSERT INTO karma VALUES('%s',0)" % word
     cur.execute(sql)
     return con.commit()
 
 
-def putkarma(options, word, value):
-    if getkarma(options, word) == 0:
-        createkarma(options, word)
+def putkarma(word, value):
+    if getkarma(word) == 0:
+        createkarma(word)
     if value != 0:
         sql = "UPDATE karma SET value = '%s' WHERE word = '%s'" % (value, word)
     else:
@@ -190,7 +191,7 @@ def putkarma(options, word, value):
     return value
 
 
-def telegramcommands(options, texto, chat_id, message_id, who_un):
+def telegramcommands(texto, chat_id, message_id, who_un):
     # Process lines for commands in the first word of the line (Telegram)
     word = texto.split()[0]
     commandtext = None
@@ -208,29 +209,29 @@ def telegramcommands(options, texto, chat_id, message_id, who_un):
             commandtext = "This bot does not use start or stop commands, it automatically checks for karma operands"
             break
         if case('/alias'):
-            aliascommands(options, texto, chat_id, message_id, who_un)
+            aliascommands(texto, chat_id, message_id, who_un)
             break
         if case('/config'):
-            configcommands(options, texto, chat_id, message_id, who_un)
+            configcommands(texto, chat_id, message_id, who_un)
             break
         if case():
             commandtext = None
 
     # If any of above commands did match, send command
     if commandtext:
-        sendmessage(options, chat_id=chat_id, text=commandtext,
+        sendmessage(chat_id=chat_id, text=commandtext,
                     reply_to_message_id=message_id)
-        log(options, facility="commands", verbosity=9,
+        log(facility="commands", verbosity=9,
             text="Command: %s" % word)
     return
 
 
-def getalias(options, word):
-    string = (word, )
+def getalias(word):
+    string = (word,)
     sql = "SELECT * FROM alias WHERE key='%s'" % string
     cur.execute(sql)
     value = cur.fetchone()
-    log(options, facility="alias", verbosity=9, text="getalias: %s" % word)
+    log(facility="alias", verbosity=9, text="getalias: %s" % word)
 
     try:
         # Get value from SQL query
@@ -242,30 +243,30 @@ def getalias(options, word):
 
     # We can define recursive aliases, so this will return the ultimate one
     if value:
-        return getalias(options, word=value)
+        return getalias(word=value)
     return word
 
 
-def createalias(options, word, value):
-    if getalias(options, value) == word:
-        log(options, facility="alias", verbosity=9, text="createalias: circular reference %s=%s" % (word, value))
+def createalias(word, value):
+    if getalias(value) == word:
+        log(facility="alias", verbosity=9, text="createalias: circular reference %s=%s" % (word, value))
     else:
-        if not getalias(options, word):
+        if not getalias(word):
             sql = "INSERT INTO alias VALUES('%s','%s')" % (word, value)
             cur.execute(sql)
-            log(options, facility="alias", verbosity=9, text="createalias: %s=%s" % (word, value))
+            log(facility="alias", verbosity=9, text="createalias: %s=%s" % (word, value))
             return con.commit()
     return False
 
 
-def deletealias(options, word):
+def deletealias(word):
     sql = "DELETE FROM alias WHERE key='%s'" % word
     cur.execute(sql)
-    log(options, facility="alias", verbosity=9, text="rmalias: %s" % word)
+    log(facility="alias", verbosity=9, text="rmalias: %s" % word)
     return con.commit()
 
 
-def listalias(options, word=False):
+def listalias(word=False):
     if word:
         # if word is provided, return the alais for that word
         string = (word,)
@@ -295,28 +296,28 @@ def listalias(options, word=False):
                 text += "%s. %s (%s)\n" % (line, word, value)
             except:
                 continue
-    log(options, facility="alias", verbosity=9,
+    log(facility="alias", verbosity=9,
         text="Returning aliases %s for word %s" % (text, word))
     return text
 
 
-def setconfig(options, word, value):
-    if config(options, key=word):
-            deleteconfig(options, word)
-    sql = "INSERT INTO config VALUES('%s','%s')" % (word, value)
+def setconfig(key, value):
+    if config(key=key):
+        deleteconfig(key)
+    sql = "INSERT INTO config VALUES('%s','%s')" % (key, value)
     cur.execute(sql)
-    log(options, facility="config", verbosity=9, text="createalias: %s=%s" % (word, value))
+    log(facility="config", verbosity=9, text="createalias: %s=%s" % (key, value))
     return con.commit()
 
 
-def deleteconfig(options, word):
+def deleteconfig(word):
     sql = "DELETE FROM config WHERE key='%s'" % word
     cur.execute(sql)
-    log(options, facility="config", verbosity=9, text="rmalias: %s" % word)
+    log(facility="config", verbosity=9, text="rmalias: %s" % word)
     return con.commit()
 
 
-def showconfig(options, word=False):
+def showconfig(word=False):
     if word:
         # if word is provided, return the alais for that word
         string = (word,)
@@ -346,16 +347,16 @@ def showconfig(options, word=False):
                 text += "%s. %s (%s)\n" % (line, word, value)
             except:
                 continue
-    log(options, facility="config", verbosity=9,
+    log(facility="config", verbosity=9,
         text="Returning config %s for word %s" % (text, word))
     return text
 
 
-def aliascommands(options, texto, chat_id, message_id, who_un):
-    log(options, facility="alias", verbosity=9,
+def aliascommands(texto, chat_id, message_id, who_un):
+    log(facility="alias", verbosity=9,
         text="Command: %s by %s" % (texto, who_un))
-    if who_un == config(options, 'owner'):
-        log(options, facility="alias", verbosity=9,
+    if who_un == config('owner'):
+        log(facility="alias", verbosity=9,
             text="Command: %s by %s" % (texto, who_un))
         command = texto.split(' ')[1]
         try:
@@ -365,14 +366,14 @@ def aliascommands(options, texto, chat_id, message_id, who_un):
 
         for case in Switch(command):
             if case('list'):
-                text = listalias(options, word)
-                sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                text = listalias(word)
+                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
                 break
             if case('delete'):
                 key = word
                 text = "Deleting alias for %s" % key
-                sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
-                deletealias(options, word=key)
+                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                deletealias(word=key)
                 break
             if case():
                 word = texto.split(' ')[1]
@@ -380,21 +381,22 @@ def aliascommands(options, texto, chat_id, message_id, who_un):
                     key = word.split('=')[0]
                     value = word.split('=')[1]
                     text = "Setting alias for %s to %s" % (key, value)
-                    sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                    sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id,
+                                disable_web_page_preview=True)
                     # Removing duplicates on karma DB and add the previous values
-                    old = getkarma(options, key)
-                    updatekarma(options, word=key, change=-old)
-                    updatekarma(options, word=value, change=old)
-                    createalias(options, word=key, value=value)
+                    old = getkarma(key)
+                    updatekarma(word=key, change=-old)
+                    updatekarma(word=value, change=old)
+                    createalias(word=key, value=value)
 
     return
 
 
-def configcommands(options, texto, chat_id, message_id, who_un):
-    log(options, facility="config", verbosity=9,
+def configcommands(texto, chat_id, message_id, who_un):
+    log(facility="config", verbosity=9,
         text="Command: %s by %s" % (texto, who_un))
-    if who_un == config(options, 'owner'):
-        log(options, facility="config", verbosity=9,
+    if who_un == config('owner'):
+        log(facility="config", verbosity=9,
             text="Command: %s by %s" % (texto, who_un))
         command = texto.split(' ')[1]
         try:
@@ -404,24 +406,25 @@ def configcommands(options, texto, chat_id, message_id, who_un):
 
         for case in Switch(command):
             if case('show'):
-                text = showconfig(options, word)
-                sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
-                showconfig(options, word)
+                text = showconfig(word)
+                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                showconfig(word)
                 break
             if case('delete'):
                 key = word
                 text = "Deleting config for %s" % key
-                sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
-                deleteconfig(options, word=key)
+                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                deleteconfig(word=key)
                 break
             if case('set'):
                 word = texto.split(' ')[2]
                 if "=" in word:
                     key = word.split('=')[0]
                     value = word.split('=')[1]
-                    setconfig(options, word=key, value=value)
+                    setconfig(key=key, value=value)
                     text = "Setting config for %s to %s" % (key, value)
-                    sendmessage(options, chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                    sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id,
+                                disable_web_page_preview=True)
                 break
             if case():
                 break
@@ -429,7 +432,7 @@ def configcommands(options, texto, chat_id, message_id, who_un):
     return
 
 
-def karmacommands(options, texto, chat_id, message_id, who_un):
+def karmacommands(texto, chat_id, message_id):
     # Process lines for commands in the first word of the line (Telegram commands)
     word = texto.split()[0]
     commandtext = None
@@ -441,30 +444,30 @@ def karmacommands(options, texto, chat_id, message_id, who_un):
                 word = texto.split()[1]
             except:
                 word = None
-            commandtext = rank(options, word)
+            commandtext = rank(word)
             break
         if case('srank'):
             try:
                 word = texto.split()[1]
             except:
                 word = None
-            commandtext = srank(options, word)
+            commandtext = srank(word)
             break
         if case():
             commandtext = None
 
     # If any of above cases did a match, send command
     if commandtext:
-        sendmessage(options, chat_id=chat_id, text=commandtext,
+        sendmessage(chat_id=chat_id, text=commandtext,
                     reply_to_message_id=message_id)
-        log(options, facility="karmacommands", verbosity=9,
-                              text="karmacommand:  %s" % word)
+        log(facility="karmacommands", verbosity=9,
+            text="karmacommand:  %s" % word)
     return
 
 
-def rank(options, word=None):
-    if getalias(options, word):
-        word = getalias(options, word)
+def rank(word=None):
+    if getalias(word):
+        word = getalias(word)
     if word:
         # if word is provided, return the rank value for that word
         string = (word,)
@@ -495,18 +498,18 @@ def rank(options, word=None):
                 text += "%s. %s (%s)\n" % (line, word, value)
             except:
                 continue
-    log(options, facility="rank", verbosity=9,
+    log(facility="rank", verbosity=9,
         text="Returning karma %s for word %s" % (text, word))
     return text
 
 
-def srank(options, word=None):
-    if getalias(options, word):
-        word = getalias(options, word)
+def srank(word=None):
+    if getalias(word):
+        word = getalias(word)
     text = ""
     if word is None:
         # If no word is provided to srank, call rank instead
-        text = rank(options, word)
+        text = rank(word)
     else:
         string = "%" + word + "%"
         sql = "SELECT * FROM karma WHERE word LIKE '%s' LIMIT 10" % string
@@ -518,30 +521,29 @@ def srank(options, word=None):
                 text += "%s: (%s)\n" % (word, value)
             except:
                 continue
-    log(options, facility="srank", verbosity=9,
+    log(facility="srank", verbosity=9,
         text="Returning srank for word: %s" % word)
     return text
 
 
-def log(options, facility=options.database, severity="INFO", verbosity=0, text=""):
+def log(facility=config(key='database'), severity="INFO", verbosity=0, text=""):
     when = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
-    if config(options, 'verbosity') >= verbosity:
-        print "%s %s : %s : %s : %s" % (when, options.database, facility, severity, text)
+    if config('verbosity') >= verbosity:
+        print "%s %s : %s : %s : %s" % (when, config(key='database'), facility, severity, text)
     return
 
 
-def sendsticker(options, chat_id=0, sticker="", text="", reply_to_message_id="", reply_markup=""):
-    url = "%s%s/sendSticker" % (options.url, options.token)
+def sendsticker(chat_id=0, sticker="", text="", reply_to_message_id=""):
+    url = "%s%s/sendSticker" % (config(key='url'), config(key='token'))
     message = "%s?chat_id=%s" % (url, chat_id)
     message = "%s&sticker=%s" % (message, sticker)
     if reply_to_message_id:
         message += "&reply_to_message_id=%s" % reply_to_message_id
-    log(options, facility="sendsticker", verbosity=3, text="Sending sticker: %s" % text)
+    log(facility="sendsticker", verbosity=3, text="Sending sticker: %s" % text)
     return json.load(urllib.urlopen(message))
 
 
-def stampy(options, chat_id="", karma=0, reply_to_message_id=False):
-
+def stampy(chat_id="", karma=0):
     karma = "%s" % karma
     # Sticker definitions for each rank
     x00 = "BQADBAADYwAD17FYAAEidrCCUFH7AgI"
@@ -562,7 +564,7 @@ def stampy(options, chat_id="", karma=0, reply_to_message_id=False):
     text = "Sticker for %s karma points" % karma
 
     if sticker != "":
-        sendsticker(options, chat_id=chat_id, sticker=sticker, text="%s" % text)
+        sendsticker(chat_id=chat_id, sticker=sticker, text="%s" % text)
     return
 
 
@@ -570,14 +572,14 @@ def process():
     # Main code for processing the karma updates
     date = 0
     lastupdateid = 0
-    log(options, facility="main", verbosity=0,
+    log(facility="main", verbosity=0,
         text="Initial message at %s" % date)
     texto = ""
     error = False
     count = 0
 
     # Process each message available in URL and search for karma operators
-    for message in getupdates(options):
+    for message in getupdates():
         # Count messages in each batch
         count += 1
         update_id = message['update_id']
@@ -612,10 +614,10 @@ def process():
 
         if not error:
             # Search for telegram commands
-            telegramcommands(options, texto, chat_id, message_id, who_un)
+            telegramcommands(texto, chat_id, message_id, who_un)
 
             # Search for karma commands
-            karmacommands(options, texto, chat_id, message_id, who_un)
+            karmacommands(texto, chat_id, message_id)
 
             # Process each word in the line received to search for karma operators
             for word in texto.lower().split():
@@ -628,25 +630,28 @@ def process():
                 if word[-1:] == unidecrease:
                     word = word.replace(unidecrease, '--')
 
-                log(options, facility="main", verbosity=9,
-                    text="Processing word %s sent by id %s with username %s (%s %s)" % (word, who_id, who_un, who_gn, who_ln))
+                log(facility="main", verbosity=9,
+                    text="Processing word %s sent by id %s with username %s (%s %s)" % (
+                    word, who_id, who_un, who_gn, who_ln))
                 if len(word) >= 4:
                     # Determine karma change and apply it
                     change = 0
                     if "++" == word[-2:]:
-                        log(options, facility="main", verbosity=1,
-                            text="++ Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)" % (word, chat_id, message_id, chat_name, who_id, who_un, who_gn, who_ln))
+                        log(facility="main", verbosity=1,
+                            text="++ Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)" % (
+                            word, chat_id, message_id, chat_name, who_id, who_un, who_gn, who_ln))
                         change = 1
                     if "--" == word[-2:]:
-                        log(options, facility="main", verbosity=1,
-                            text="-- Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)" % (word, chat_id, message_id, chat_name, who_id, who_un, who_gn, who_ln))
+                        log(facility="main", verbosity=1,
+                            text="-- Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)" % (
+                            word, chat_id, message_id, chat_name, who_id, who_un, who_gn, who_ln))
                         change = -1
                     if change != 0:
                         # Remove last two characters from word (++ or --)
                         word = word[0:-2]
-                        if getalias(options, word):
-                            word = getalias(options, word)
-                        karma = updatekarma(options, word=word, change=change)
+                        if getalias(word):
+                            word = getalias(word)
+                        karma = updatekarma(word=word, change=change)
                         if karma != 0:
                             # Karma has changed, report back
                             text = "%s now has %s karma points." % (word, karma)
@@ -655,21 +660,22 @@ def process():
                             text = "%s now has no Karma and has been garbage collected." % word
                         # Send originating user for karma change a reply with
                         # the new value
-                        sendmessage(options, chat_id=chat_id, text=text,
+                        sendmessage(chat_id=chat_id, text=text,
                                     reply_to_message_id=message_id)
-                        stampy(options, chat_id=chat_id, karma=karma, reply_to_message_id=message_id)
+                        stampy(chat_id=chat_id, karma=karma)
 
-    log(options, facility="main", verbosity=0,
+    log(facility="main", verbosity=0,
         text="Last processed message at: %s" % date)
-    log(options, facility="main", verbosity=0,
+    log(facility="main", verbosity=0,
         text="Last processed update_id : %s" % lastupdateid)
-    log(options, facility="main", verbosity=0,
+    log(facility="main", verbosity=0,
         text="Last processed text: %s" % texto)
-    log(options, facility="main", verbosity=0,
+    log(facility="main", verbosity=0,
         text="Number of messages in this batch: %s" % count)
 
     # clear updates (marking messages as read)
-    clearupdates(options, offset=lastupdateid + 1)
+    clearupdates(offset=lastupdateid + 1)
+
 
 # Main code
 
@@ -682,31 +688,38 @@ try:
     data = cur.fetchone()
 
 except lite.Error, e:
-    createdb(options)
-    log(options, facility="main", verbosity=0, text="Error %s:" % e.args[0])
+    createdb()
+    log(facility="main", verbosity=0, text="Error %s:" % e.args[0])
     sys.exit(1)
 
 # Database initialized
 
 # Check if we've the token required to access or exit
-if not config(options, key='token'):
+if not config(key='token'):
     if options.token:
         token = options.token
-        setconfig(options, key='token', value=token)
+        setconfig(key='token', value=token)
     else:
-        log(options, facility="main", severity="ERROR", verbosity=0, text="Token required for operation, please check https://core.telegram.org/bots")
+        log(facility="main", severity="ERROR", verbosity=0,
+            text="Token required for operation, please check https://core.telegram.org/bots")
         sys.exit(1)
 else:
-    token = config(options, key='token')
+    token = config(key='token')
+
+# Check if we've URL defined on DB or on cli and store
+if not config(key='url'):
+    if options.url:
+        setconfig(key='url', value=options.url)
 
 # Check operation mode and call process as required
-if options.daemon:
-    log(options, facility="main", verbosity=0, text="Running in daemon mode")
+if options.daemon or config(key='daemon'):
+    setconfig(key='daemon', value=True)
+    log(facility="main", verbosity=0, text="Running in daemon mode")
     while 1 > 0:
         process()
         sleep(10)
 else:
-    log(options, facility="main", verbosity=0,
+    log(facility="main", verbosity=0,
         text="Running in one-shoot mode")
     process()
 
