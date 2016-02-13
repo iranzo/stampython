@@ -322,14 +322,14 @@ def setconfig(key, value):
         deleteconfig(key)
     sql = "INSERT INTO config VALUES('%s','%s')" % (key, value)
     cur.execute(sql)
-    log(facility="config", verbosity=9, text="createalias: %s=%s" % (key, value))
+    log(facility="config", verbosity=9, text="setconfig: %s=%s" % (key, value))
     return con.commit()
 
 
 def deleteconfig(word):
     sql = "DELETE FROM config WHERE key='%s'" % word
     cur.execute(sql)
-    log(facility="config", verbosity=9, text="rmalias: %s" % word)
+    log(facility="config", verbosity=9, text="rmconfig: %s" % word)
     return con.commit()
 
 
