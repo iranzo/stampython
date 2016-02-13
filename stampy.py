@@ -236,7 +236,7 @@ def updatestats(type=None, id=0, name=None, date=None, count=0):
         sql = "INSERT INTO stats VALUES ('%s', '%s', '%s', '%s', '%s');" % (type, id, name, date, count)
     if old_id != 0 and type:
         sql = "UPDATE stats SET type='%s', name='%s', date='%s', count='%s'  WHERE id = '%s';" % (
-        type, name, date, count, id)
+            type, name, date, count, id)
     log(facility="updatestats", verbosity=9, text="value")
     cur.execute(sql)
     return con.commit()
@@ -497,7 +497,7 @@ def showstats(type=False):
         try:
             (type, id, name, date, count) = item
             line += 1
-            datefor=datetime.datetime.fromtimestamp(int(date)).strftime('%Y-%m-%d %H:%M:%S')
+            datefor = datetime.datetime.fromtimestamp(int(date)).strftime('%Y-%m-%d %H:%M:%S')
             text += "%s. Type: %s ID: %s(%s) Date: %s Count: %s\n" % (line, type, id, name, datefor, count)
         except:
             continue
