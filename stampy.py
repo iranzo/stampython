@@ -161,7 +161,7 @@ def createdb():
     cur.execute('CREATE TABLE karma(word TEXT, value INT)')
     cur.execute('CREATE TABLE alias(key TEXT, value TEXT)')
     cur.execute('CREATE TABLE config(key TEXT, value TEXT)')
-    cur.execute('CREATE TABLE stats(type TEXT, id INT, name TEXT, date TEXT)')
+    cur.execute('CREATE TABLE stats(type TEXT, id INT, name TEXT, date TEXT, count INT)')
     return
 
 
@@ -207,30 +207,42 @@ def putkarma(word, value):
     con.commit()
     return value
 
-def getstats(type=None, id=0, name=None, date=None):
-    #cur.execute('CREATE TABLE stats(type TEXT, id INT, name TEXT, date TEXT)')
+def getstats(type=None, id=0, name=None, date=None, count=0):
     string = (id,)
-    sql = "SELECT * FROM stats WHERE id='%s'" % id
+    sql = "SELECT * FROM stats WHERE id='%s' AND type='%s';" % (id, type)
     cur.execute(sql)
-    value = cur.fetchone()
-    print ############################
-    print value
-    # type, id, name, date
+    
     try:
-        # Get value from SQL query
-        value = value[1]
+        value = cur.fetchone()
     except:
-        # Value didn't exist before, return 0
         value = False
+    
+    if value:
+        (type, id, name, date, count) =  value
+    print "GETSTATS TYPE %s, id %s, name %s, date %s, count %s" % (type, id, name, date, count)
     return value
 
-def updatestats(type=None, id=0, name=None, date=None):
-    #cur.execute('CREATE TABLE stats(type TEXT, id INT, name TEXT, date TEXT)')
-    # FIXME
-    if not getstats(type=type, id=id):
-        sql = "INSERT INTO stats VALUES ('%s', '%s', '%s', '%s')" % (type, id, name, date)
-    if id != 0 and type:
-        sql = "UPDATE stats SET type='%s', name='%s', date='%s' WHERE id = '%s'" % (type, name, date, id)
+def updatestats(type=None, id=0, name=None, date=None, count=0):
+    print "######### UPDATESTATS #########"
+    print id, name
+    
+    try:
+        value = getstats(type=type, id=id)
+        count = value[4] +1
+        old_id = value[1]
+    except:
+        value = False
+        old_id = False
+    
+    
+    if not value:
+        print "INSERT"
+        sql = "INSERT INTO stats VALUES ('%s', '%s', '%s', '%s', '%s');" % (type, id, name, date, count)
+        print sql
+    if old_id != 0 and type:
+        print "UPDATE"
+        sql = "UPDATE stats SET type='%s', name='%s', date='%s', count='%s'  WHERE id = '%s';" % (type, name, date, count, id)
+        print sql
     cur.execute(sql)
     return con.commit()
 
@@ -257,6 +269,9 @@ def telegramcommands(texto, chat_id, message_id, who_un):
         if case('/config'):
             configcommands(texto, chat_id, message_id, who_un)
             break
+        if case('/stats'):
+            statscommands(texto, chat_id, message_id, who_un)
+            break            
         if case():
             commandtext = None
 
@@ -311,7 +326,7 @@ def deletealias(word):
 
 def listalias(word=False):
     if word:
-        # if word is provided, return the alais for that word
+        # if word is provided, return the alias for that word
         string = (word,)
         sql = "SELECT * FROM alias WHERE key='%s'" % string
         cur.execute(sql)
@@ -362,7 +377,7 @@ def deleteconfig(word):
 
 def showconfig(key=False):
     if key:
-        # if word is provided, return the alais for that word
+        # if word is provided, return the config for that key
         string = (key,)
         sql = "SELECT * FROM config WHERE key='%s'" % string
         cur.execute(sql)
@@ -393,6 +408,8 @@ def showconfig(key=False):
     log(facility="config", verbosity=9,
         text="Returning config %s for key %s" % (text, key))
     return text
+    
+    
 
 
 def aliascommands(texto, chat_id, message_id, who_un):
@@ -451,7 +468,6 @@ def configcommands(texto, chat_id, message_id, who_un):
             if case('show'):
                 text = showconfig(word)
                 sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
-                showconfig(word)
                 break
             if case('delete'):
                 key = word
@@ -473,6 +489,45 @@ def configcommands(texto, chat_id, message_id, who_un):
                 break
 
     return
+
+def showstats(type=False):
+    sql = "select * from stats ORDER BY type DESC"
+
+    text = "Defined stats:\n"
+    line = 0
+    for item in cur.execute(sql):
+        try:
+            (type, id, name, date, count) = item
+            line += 1
+            text += "%s. Type: %s ID: %s(%s) Date: %s Count: %s\n" % (line, type, id, name, date, count)
+        except:
+            continue
+    log(facility="stats", verbosity=9,
+        text="Returning stats %s for type %s" % (text, type))
+    return text
+    
+    
+def statscommands(texto, chat_id, message_id, who_un):
+    log(facility="stats", verbosity=9,
+        text="Command: %s by %s" % (texto, who_un))
+    if who_un == config('owner'):
+        log(facility="stats", verbosity=9,
+            text="Command: %s by %s" % (texto, who_un))
+        command = texto.split(' ')[1]
+        try:
+            key = texto.split(' ')[2]
+        except:
+            key = ""
+
+        for case in Switch(command):
+            if case('show'):
+                text = showstats(key)
+                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                break
+            if case():
+                break
+
+    return    
 
 
 def karmacommands(texto, chat_id, message_id):
@@ -626,17 +681,28 @@ def process():
         # Count messages in each batch
         count += 1
         update_id = message['update_id']
+        
+        try:
+            chat_id = message['message']['chat']['id']
+            chat_name = message['message']['chat']['title']
+        except:
+            chat_id = False
+            chat_name = False
+
         try:
             texto = message['message']['text']
-            chat_id = message['message']['chat']['id']
             message_id = int(message['message']['message_id'])
             date = int(float(message['message']['date']))
-            chat_name = message['message']['chat']['title']
             who_gn = message['message']['from']['first_name']
             who_id = message['message']['from']['id']
 
         except:
             error = True
+            who_id = False
+            who_gn = False
+            date = False
+            message_id = False
+            texto = False
 
         try:
             who_ln = message['message']['from']['last_name']
@@ -653,9 +719,9 @@ def process():
 
         # Update stats on the message being processed
         if chat_id:
-            updatestats(type="chat", id=chat_id, name=chat_name, date=date)
+            updatestats(type="chat", id=chat_id, name=chat_name, date=date, count=0)
         if who_id:
-            updatestats(type="user", id=who_id, name=who_gn, date=date)
+            updatestats(type="user", id=who_id, name=who_gn, date=date, count=0)
 
         # Update last message id to later clear it from the server
         if update_id > lastupdateid:
@@ -732,6 +798,9 @@ def process():
 if options.database:
     setconfig(key='database', value=options.database)
 
+if not config(key='sleep'):
+    setconfig(key='sleep',value=10)
+
 # Check if we've the token required to access or exit
 if not config(key='token'):
     if options.token:
@@ -755,7 +824,7 @@ if options.daemon or config(key='daemon'):
     log(facility="main", verbosity=0, text="Running in daemon mode")
     while 1 > 0:
         process()
-        sleep(10)
+        sleep(int(config(key='sleep')))
 else:
     log(facility="main", verbosity=0,
         text="Running in one-shoot mode")
