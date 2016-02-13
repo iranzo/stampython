@@ -213,6 +213,9 @@ def getstats(type=None, id=0, name=None, date=None):
     sql = "SELECT * FROM stats WHERE id='%s'" % id
     cur.execute(sql)
     value = cur.fetchone()
+    print ############################
+    print value
+    # type, id, name, date
     try:
         # Get value from SQL query
         value = value[1]
