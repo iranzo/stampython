@@ -210,7 +210,7 @@ def putkarma(word, value):
 def getstats(type=None, id=0, name=None, date=None):
     #cur.execute('CREATE TABLE stats(type TEXT, id INT, name TEXT, date TEXT)')
     string = (key,)
-    sql = "SELECT * FROM stats WHERE key='%s'" % id
+    sql = "SELECT * FROM stats WHERE id='%s'" % id
     cur.execute(sql)
     value = cur.fetchone()
     try:
