@@ -72,6 +72,7 @@ class Switch(object):
         else:
             return False
 
+
 # Initialize database access
 con = None
 try:
@@ -648,19 +649,19 @@ def process():
 
                 log(facility="main", verbosity=9,
                     text="Processing word %s sent by id %s with username %s (%s %s)" % (
-                    word, who_id, who_un, who_gn, who_ln))
+                        word, who_id, who_un, who_gn, who_ln))
                 if len(word) >= 4:
                     # Determine karma change and apply it
                     change = 0
                     if "++" == word[-2:]:
                         log(facility="main", verbosity=1,
                             text="++ Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)" % (
-                            word, chat_id, message_id, chat_name, who_id, who_un, who_gn, who_ln))
+                                word, chat_id, message_id, chat_name, who_id, who_un, who_gn, who_ln))
                         change = 1
                     if "--" == word[-2:]:
                         log(facility="main", verbosity=1,
                             text="-- Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)" % (
-                            word, chat_id, message_id, chat_name, who_id, who_un, who_gn, who_ln))
+                                word, chat_id, message_id, chat_name, who_id, who_un, who_gn, who_ln))
                         change = -1
                     if change != 0:
                         # Remove last two characters from word (++ or --)
