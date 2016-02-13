@@ -73,6 +73,15 @@ class Switch(object):
             return False
 
 
+def createdb():
+    # Create database if it doesn't exist
+    cur.execute('CREATE TABLE karma(word TEXT, value INT)')
+    cur.execute('CREATE TABLE alias(key TEXT, value TEXT)')
+    cur.execute('CREATE TABLE config(key TEXT, value TEXT)')
+    cur.execute('CREATE TABLE stats(type TEXT, id INT, name TEXT, date TEXT, count INT)')
+    return
+
+
 # Initialize database access
 con = None
 try:
@@ -156,13 +165,7 @@ def getkarma(word):
     return value
 
 
-def createdb():
-    # Create database if it doesn't exist
-    cur.execute('CREATE TABLE karma(word TEXT, value INT)')
-    cur.execute('CREATE TABLE alias(key TEXT, value TEXT)')
-    cur.execute('CREATE TABLE config(key TEXT, value TEXT)')
-    cur.execute('CREATE TABLE stats(type TEXT, id INT, name TEXT, date TEXT, count INT)')
-    return
+
 
 
 def config(key):
