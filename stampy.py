@@ -92,7 +92,7 @@ try:
 
 except lite.Error, e:
     createdb()
-    print "Error %s:" % e.args[0])
+    print "Error %s:" % e.args[0]
     sys.exit(1)
 
 
