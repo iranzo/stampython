@@ -686,9 +686,12 @@ def process():
 
         try:
             chat_id = message['message']['chat']['id']
-            chat_name = message['message']['chat']['title']
         except:
             chat_id = False
+
+        try:
+            chat_name = message['message']['chat']['title']
+        except:
             chat_name = False
 
         try:
