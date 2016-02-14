@@ -10,13 +10,13 @@ Check more information about [Telegram Bots](https://core.telegram.org/bots/).
 - On first execution it will create database and start filling values
 
 ## Test
-- I've a copy running on <openshift.redhat.com> at <http://stampy-iranzo.rhcloud.com/> with the name `redken_bot`. Invite it to your channels if you want to give it a try or click <https://telegram.me/redken_bot>.
+- I've a copy running on <openshift.redhat.com> at <http://stampy-iranzo.rhcloud.com/> with the name `@redken_bot`. Invite it to your channels if you want to give it a try or click <https://telegram.me/redken_bot>.
 
 ## Usage
 - word++ to add karma
 - word-- to remove karma
 
-## Extra commands
+## Extra commands only for owner user
 ### Configuration
 The bot, once token has been used and owner set via commandline, will store that information in the database, so you can control it from a chat window
 
@@ -30,7 +30,7 @@ The bot stores stats on users/chats, remembering the chat/user name and last tim
  
 ### Alias
 Bot allows to setup alias, so when karma is given to a word, it will instead add it to a different one (and report that one)
-- `/alias key=value` Will create a new alias, so each time key++ is used, it will instead do value++
+- `/alias key=value` Will create a new alias, so each time `key++` is used, it will instead do value++
     - This operation, sums the previous karma of `key` and `value` and stores it in value so no karma is lost
     - Recursive aliases can be defined, so doing:
         - `/alias lettuce=vegetable`
