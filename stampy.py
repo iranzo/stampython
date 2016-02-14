@@ -150,7 +150,7 @@ def updatekarma(word=None, change=0):
 
 def getkarma(word):
     string = (word,)
-    sql = "SELECT * FROM karma WHERE word='%s'" % string
+    sql = "SELECT * FROM karma WHERE word='%s';" % string
     cur.execute(sql)
     value = cur.fetchone()
 
@@ -170,7 +170,7 @@ def getkarma(word):
 
 def config(key):
     string = (key,)
-    sql = "SELECT * FROM config WHERE key='%s'" % string
+    sql = "SELECT * FROM config WHERE key='%s';" % string
     cur.execute(sql)
     value = cur.fetchone()
 
@@ -187,14 +187,14 @@ def config(key):
 
 def saveconfig(key, value):
     if value:
-        sql = "UPDATE config SET value = '%s' WHERE key = '%s'" % (value, key)
+        sql = "UPDATE config SET value = '%s' WHERE key = '%s';" % (value, key)
         cur.execute(sql)
         con.commit()
     return value
 
 
 def createkarma(word):
-    sql = "INSERT INTO karma VALUES('%s',0)" % word
+    sql = "INSERT INTO karma VALUES('%s',0);" % word
     cur.execute(sql)
     return con.commit()
 
@@ -203,9 +203,9 @@ def putkarma(word, value):
     if getkarma(word) == 0:
         createkarma(word)
     if value != 0:
-        sql = "UPDATE karma SET value = '%s' WHERE word = '%s'" % (value, word)
+        sql = "UPDATE karma SET value = '%s' WHERE word = '%s';" % (value, word)
     else:
-        sql = "DELETE FROM karma WHERE  word = '%s'" % word
+        sql = "DELETE FROM karma WHERE  word = '%s';" % word
     cur.execute(sql)
     con.commit()
     return value
@@ -235,8 +235,8 @@ def updatestats(type=None, id=0, name=None, date=None, count=0):
         value = False
         old_id = False
 
-    if not value:
-        sql = "INSERT INTO stats VALUES ('%s', '%s', '%s', '%s', '%s');" % (type, id, name, date, count)
+    # Asume value doesn't exist, then set to update if it does
+    sql = "INSERT INTO stats VALUES ('%s', '%s', '%s', '%s', '%s');" % (type, id, name, date, count)
     if old_id != 0 and type:
         sql = "UPDATE stats SET type='%s', name='%s', date='%s', count='%s'  WHERE id = '%s';" % (
             type, name, date, count, id)
@@ -285,7 +285,7 @@ def telegramcommands(texto, chat_id, message_id, who_un):
 
 def getalias(word):
     string = (word,)
-    sql = "SELECT * FROM alias WHERE key='%s'" % string
+    sql = "SELECT * FROM alias WHERE key='%s';" % string
     cur.execute(sql)
     value = cur.fetchone()
     log(facility="alias", verbosity=9, text="getalias: %s" % word)
@@ -309,7 +309,7 @@ def createalias(word, value):
         log(facility="alias", verbosity=9, text="createalias: circular reference %s=%s" % (word, value))
     else:
         if not getalias(word):
-            sql = "INSERT INTO alias VALUES('%s','%s')" % (word, value)
+            sql = "INSERT INTO alias VALUES('%s','%s');" % (word, value)
             cur.execute(sql)
             log(facility="alias", verbosity=9, text="createalias: %s=%s" % (word, value))
             return con.commit()
@@ -317,7 +317,7 @@ def createalias(word, value):
 
 
 def deletealias(word):
-    sql = "DELETE FROM alias WHERE key='%s'" % word
+    sql = "DELETE FROM alias WHERE key='%s';" % word
     cur.execute(sql)
     log(facility="alias", verbosity=9, text="rmalias: %s" % word)
     return con.commit()
@@ -327,7 +327,7 @@ def listalias(word=False):
     if word:
         # if word is provided, return the alias for that word
         string = (word,)
-        sql = "SELECT * FROM alias WHERE key='%s'" % string
+        sql = "SELECT * FROM alias WHERE key='%s';" % string
         cur.execute(sql)
         value = cur.fetchone()
 
@@ -341,7 +341,7 @@ def listalias(word=False):
         text = "%s has an alias %s" % (word, value)
 
     else:
-        sql = "select * from alias ORDER BY key DESC"
+        sql = "select * from alias ORDER BY key DESC;"
 
         text = "Defined aliases:\n"
         line = 0
@@ -361,14 +361,14 @@ def listalias(word=False):
 def setconfig(key, value):
     if config(key=key):
         deleteconfig(key)
-    sql = "INSERT INTO config VALUES('%s','%s')" % (key, value)
+    sql = "INSERT INTO config VALUES('%s','%s');" % (key, value)
     cur.execute(sql)
     log(facility="config", verbosity=9, text="setconfig: %s=%s" % (key, value))
     return con.commit()
 
 
 def deleteconfig(word):
-    sql = "DELETE FROM config WHERE key='%s'" % word
+    sql = "DELETE FROM config WHERE key='%s';" % word
     cur.execute(sql)
     log(facility="config", verbosity=9, text="rmconfig: %s" % word)
     return con.commit()
@@ -378,7 +378,7 @@ def showconfig(key=False):
     if key:
         # if word is provided, return the config for that key
         string = (key,)
-        sql = "SELECT * FROM config WHERE key='%s'" % string
+        sql = "SELECT * FROM config WHERE key='%s';" % string
         cur.execute(sql)
         value = cur.fetchone()
 
@@ -392,7 +392,7 @@ def showconfig(key=False):
         text = "%s has a value of %s" % (key, value)
 
     else:
-        sql = "select * from config ORDER BY key DESC"
+        sql = "select * from config ORDER BY key DESC;"
 
         text = "Defined configurations:\n"
         line = 0
@@ -490,9 +490,9 @@ def configcommands(texto, chat_id, message_id, who_un):
 
 def showstats(type=False):
     if type:
-        sql = "select * from stats WHERE type='%s' ORDER BY type DESC" % type
+        sql = "select * from stats WHERE type='%s' ORDER BY type DESC;" % type
     else:
-        sql = "select * from stats ORDER BY type DESC"
+        sql = "select * from stats ORDER BY type DESC;"
 
     text = "Defined stats:\n"
     line = 0
@@ -571,7 +571,7 @@ def rank(word=None):
     if word:
         # if word is provided, return the rank value for that word
         string = (word,)
-        sql = "SELECT * FROM karma WHERE word='%s'" % string
+        sql = "SELECT * FROM karma WHERE word='%s';" % string
         cur.execute(sql)
         value = cur.fetchone()
 
@@ -612,7 +612,7 @@ def srank(word=None):
         text = rank(word)
     else:
         string = "%" + word + "%"
-        sql = "SELECT * FROM karma WHERE word LIKE '%s' LIMIT 10" % string
+        sql = "SELECT * FROM karma WHERE word LIKE '%s' LIMIT 10;" % string
 
         for item in cur.execute(sql):
             try:
