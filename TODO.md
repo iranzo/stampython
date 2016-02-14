@@ -6,7 +6,7 @@ Mostly everything :), initial steps are there for accessing URL
 - Initial load of karma points from older bot (possible separate script)
 - Implement banning of consecutive karma changes from same user for a period of time
     - Implement list of known groups and list of known users
-- Implement statistics on total number of processed messages, different chats being used, last time active, etc
 - Implement uniform logging based on verbose setting for each module within stampy, timestamp, etc
 - Implement config in database, so once the token has been set, it can be stored on database and retrieve it from there, as well as owner for alias control, etc
     - Implement /settings to store settings per chat [be silent, timeout for ban, etc]
+- Implement deletion of old stats for users/groups to not clutter database
