@@ -497,7 +497,7 @@ def quotecommands(texto, chat_id, message_id, who_un):
             except:
                 nick = False
             try:
-                (quoteid, username, date, quote) = getquote(id=False, username=nick)
+                (quoteid, username, date, quote) = getquote(username=nick)
                 datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
                 text = '"%s" -- @%s, %s (quote id %s)' % (quote, username, datefor, quoteid)
             except:
@@ -511,7 +511,7 @@ def quotecommands(texto, chat_id, message_id, who_un):
     return
 
 
-def getquote(id=False, username=False):
+def getquote(username=False):
     if username:
         string = (username,)
         sql = "SELECT * FROM quote WHERE username='%s' ORDER BY RANDOM() LIMIT 1;" % string
@@ -532,7 +532,7 @@ def getquote(id=False, username=False):
         quote = False
 
     if quoteid:
-        return (quoteid, username, date, quote)
+        return quoteid, username, date, quote
 
     return False
 
