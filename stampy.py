@@ -464,50 +464,51 @@ def aliascommands(texto, chat_id, message_id, who_un):
 def quotecommands(texto, chat_id, message_id, who_un):
     log(facility="quote", verbosity=9,
         text="Command: %s by %s" % (texto, who_un))
-    if who_un == config('owner'):
-        log(facility="quote", verbosity=9,
-            text="Command: %s by %s" % (texto, who_un))
-        # We might be have been given no command, just /quote
-        try:
-            command = texto.split(' ')[1]
-        except:
-            command = False
+    log(facility="quote", verbosity=9,
+        text="Command: %s by %s" % (texto, who_un))
+    # We might be have been given no command, just /quote
+    try:
+        command = texto.split(' ')[1]
+    except:
+        command = False
 
-        for case in Switch(command):
-            # cur.execute('CREATE TABLE quote(id AUTOINCREMENT, name TEXT, date TEXT, text TEXT;')
-            if case('add'):
-                who_quote = texto.split(' ')[2]
-                date = time.time()
-                quote = str.join(" ", texto.split(' ')[3:])
-                result = addquote(username=who_quote, date=date, text=quote)
-                text = "Quote %s added" % result
-                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
-                break
-            if case('del'):
-                if who_un == config(key='owner'):
-                    id_todel = texto.split(' ')[2]
-                    text = "Deleting quote id %s" % id_todel
-                    sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id,
-                                disable_web_page_preview=True)
-                    deletequote(id=id_todel)
-                break
-            if case():
-                # We're just given the nick (or not), so find quote for it
-                try:
-                    nick = texto.split(' ')[1]
-                except:
-                    nick=False
-                try:
-                    (quoteid, username, date, quote) = getquote(id=False, username=nick)
-                    datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
-                    text = '"%s" -- @%s, %s (quote id %s)' % (quote, username, datefor, quoteid)
-                except:
-                    if nick:
-                        text = "No quote recorded for %s" % nick
-                    else:
-                        text = "No quote found"
-                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
-    return
+    for case in Switch(command):
+        # cur.execute('CREATE TABLE quote(id AUTOINCREMENT, name TEXT, date TEXT, text TEXT;')
+        if case('add'):
+            who_quote = texto.split(' ')[2]
+            date = time.time()
+            quote = str.join(" ", texto.split(' ')[3:])
+            result = addquote(username=who_quote, date=date, text=quote)
+            text = "Quote %s added" % result
+            sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+            break
+        if case('del'):
+            if who_un == config(key='owner'):
+                id_todel = texto.split(' ')[2]
+                text = "Deleting quote id %s" % id_todel
+                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id,
+                            disable_web_page_preview=True)
+                deletequote(id=id_todel)
+            break
+        if case():
+            # We're just given the nick (or not), so find quote for it
+            try:
+                nick = texto.split(' ')[1]
+            except:
+                nick = False
+            try:
+                (quoteid, username, date, quote) = getquote(id=False, username=nick)
+                datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
+                text = '"%s" -- @%s, %s (quote id %s)' % (quote, username, datefor, quoteid)
+            except:
+                if nick:
+                    text = "No quote recorded for %s" % nick
+                else:
+                    text = "No quote found"
+            sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+
+
+return
 
 
 def getquote(id=False, username=False):
@@ -515,7 +516,7 @@ def getquote(id=False, username=False):
         string = (username,)
         sql = "SELECT * FROM quote WHERE username='%s' ORDER BY RANDOM() LIMIT 1;" % string
     else:
-        sql ="SELECT * FROM quote ORDER BY RANDOM() LIMIT 1;"
+        sql = "SELECT * FROM quote ORDER BY RANDOM() LIMIT 1;"
     cur.execute(sql)
     value = cur.fetchone()
     log(facility="quote", verbosity=9, text="getquote: %s" % username)
