@@ -501,10 +501,11 @@ def quotecommands(texto, chat_id, message_id, who_un):
                     (quoteid, username, date, quote) = getquote(id=False, username=nick)
                     datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
                     text = '"%s" -- %s, %s [%s] (quote id %s)' % (quote, username, datefor, username, quoteid)
-                    # (4, u'iranzo', u'1455566307.95', u'El caballo blanco de Santiago era blanco')
-                    # ""karim: tengo muchisimas ganas de ir a Paris, y seria una pasada hacerlo contigo, pero lo de la PoC tiene que ser ya "" -- jramirez, 2014-02-18 06:03:01 [12396]
                 except:
-                    text = "No quote recorded for %s" % nick
+                    if nick:
+                        text = "No quote recorded for %s" % nick
+                    else:
+                        text = "No quote found"
                 sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
     return
 
