@@ -79,6 +79,7 @@ def createdb():
     cur.execute('CREATE TABLE alias(key TEXT, value TEXT);')
     cur.execute('CREATE TABLE config(key TEXT, value TEXT);')
     cur.execute('CREATE TABLE stats(type TEXT, id INT, name TEXT, date TEXT, count INT);')
+    cur.execute('CREATE TABLE quote(id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, date TEXT, text TEXT);')
     return
 
 
@@ -163,9 +164,6 @@ def getkarma(word):
         value = 0
 
     return value
-
-
-
 
 
 def config(key):
@@ -267,6 +265,9 @@ def telegramcommands(texto, chat_id, message_id, who_un):
             break
         if case('/config'):
             configcommands(texto, chat_id, message_id, who_un)
+            break
+        if case('/quote'):
+            quotecommands(texto, chat_id, message_id, who_un)
             break
         if case('/stats'):
             statscommands(texto, chat_id, message_id, who_un)
@@ -449,6 +450,94 @@ def aliascommands(texto, chat_id, message_id, who_un):
     return
 
 
+def quotecommands(texto, chat_id, message_id, who_un):
+    log(facility="quote", verbosity=9,
+        text="Command: %s by %s" % (texto, who_un))
+    if who_un == config('owner'):
+        log(facility="quote", verbosity=9,
+            text="Command: %s by %s" % (texto, who_un))
+        command = texto.split(' ')[1]
+
+        for case in Switch(command):
+            # cur.execute('CREATE TABLE quote(id AUTOINCREMENT, name TEXT, date TEXT, text TEXT;')
+            if case('add'):
+                who_quote = texto.split(' ')[2]
+                date = time.time()
+                quote = str.join(" ", texto.split(' ')[3:])
+                result = addquote(username=who_quote, date=date, text=quote)
+                text = "Quote %s added" % result
+                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                break
+            if case('del'):
+                if who_un == config(key='owner'):
+                    id_todel = texto.split(' ')[2]
+                    text = "Deleting quote id %s" % id_todel
+                    sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                    deletequote(id=id_todel)
+                break
+            if case():
+                # We're just given the nick, so find quote for it
+                nick = texto.split(' ')[1]
+                try:
+                    (quoteid, username, date, quote) = getquote(id=False, username=nick)
+                    datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
+                    text = '"%s" -- %s, %s [%s] (quote id %s)' % (quote, username, datefor, username, quoteid)
+                    # (4, u'iranzo', u'1455566307.95', u'El caballo blanco de Santiago era blanco')
+                    # ""karim: tengo muchisimas ganas de ir a Paris, y seria una pasada hacerlo contigo, pero lo de la PoC tiene que ser ya "" -- jramirez, 2014-02-18 06:03:01 [12396]
+                except:
+                    text = "No quote recorded for %s" % nick
+                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+    return
+
+
+def getquote(id=False, username=False):
+    # FIXME
+    # cur.execute('CREATE TABLE quote(id AUTOINCREMENT, username TEXT, date TEXT, text TEXT;')
+    string = (username,)
+    sql = "SELECT * FROM quote WHERE username='%s' ORDER BY RANDOM() LIMIT 1;" % string
+    print "getquote"
+    print sql
+    cur.execute(sql)
+    value = cur.fetchone()
+    log(facility="quote", verbosity=9, text="getquote: %s" % username)
+    print "QUOTEGET"
+    print value
+    try:
+        # Get value from SQL query
+        (quoteid, username, date, quote) = value
+
+    except:
+        # Value didn't exist before, return 0
+        quoteid = False
+        username = False
+        date = False
+        quote = False
+
+    if quoteid:
+        return (quoteid, username, date, quote)
+
+    return False
+
+
+def addquote(username=False, date=False, text=False):
+    sql = "INSERT INTO quote(username, date, text) VALUES('%s','%s', '%s');" % (username, date, text)
+    cur.execute(sql)
+    log(facility="quote", verbosity=9, text="createquote: %s=%s on %s" % (username, text, date))
+    # Retrieve last id
+    sql = "select last_insert_rowid();"
+    cur.execute(sql)
+    lastrowid = cur.fetchone()[0]
+    con.commit()
+    return lastrowid
+
+
+def deletequote(id=False):
+    sql = "DELETE FROM quote WHERE id='%s';" % id
+    cur.execute(sql)
+    log(facility="quote", verbosity=9, text="deletequote: %s" % id)
+    return con.commit()
+
+
 def configcommands(texto, chat_id, message_id, who_un):
     log(facility="config", verbosity=9,
         text="Command: %s by %s" % (texto, who_un))
@@ -500,7 +589,7 @@ def showstats(type=False):
         try:
             (type, id, name, date, count) = item
             line += 1
-            datefor = datetime.datetime.fromtimestamp(int(date)).strftime('%Y-%m-%d %H:%M:%S')
+            datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
             text += "%s. Type: %s ID: %s(%s) Date: %s Count: %s\n" % (line, type, id, name, datefor, count)
         except:
             continue
@@ -823,7 +912,7 @@ else:
 if not config(key='url'):
     if options.url:
         setconfig(key='url', value=options.url)
-        
+
 # Check if we've owner defined in DB or on cli and store
 if not config(key='owner'):
     if options.owner:
