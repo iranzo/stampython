@@ -508,7 +508,7 @@ def quotecommands(texto, chat_id, message_id, who_un):
             sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
 
 
-return
+    return
 
 
 def getquote(id=False, username=False):
