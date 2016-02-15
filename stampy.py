@@ -165,9 +165,6 @@ def getkarma(word):
     return value
 
 
-
-
-
 def config(key):
     string = (key,)
     sql = "SELECT * FROM config WHERE key='%s';" % string
@@ -254,6 +251,17 @@ def telegramcommands(texto, chat_id, message_id, who_un):
             commandtext = "To use this bot use word++ or word-- to increment or decrement karma, a new message will be sent providing the new total\n\n"
             commandtext += "Use rank word or rank to get value for actual word or top 10 rankings\n\n"
             commandtext += "Use srank word to search for similar words already ranked\n\n"
+            commandtext += "Use /quote add <id> <text> to add a quote for that username\n\n"
+            commandtext += "Use /quote <id> to get a random quote from that username\n\n"
+            if config(key='owner') == who_un:
+                commandtext += "Use /quote del <quoteid> to remove a quote\n\n"
+                commandtext += "Use /alias <key>=<value> to assign an alias for karma\n\n"
+                commandtext += "Use /alias list to list aliases\n\n"
+                commandtext += "Use /alias delete <key> to remove an alias\n\n"
+                commandtext += "Use /stats <user|chat> to get stats on last usage\n\n"
+                commandtext += "Use /config show to get a list of defined config settings\n\n"
+                commandtext += "Use /config set <key>=<value> to define a value for key\n\n"
+                commandtext += "Use /config delete <key> to delete key\n\n"
             commandtext += "Learn more about this bot in https://github.com/iranzo/stampython"
             break
         if case('/start'):
@@ -823,7 +831,7 @@ else:
 if not config(key='url'):
     if options.url:
         setconfig(key='url', value=options.url)
-        
+
 # Check if we've owner defined in DB or on cli and store
 if not config(key='owner'):
     if options.owner:

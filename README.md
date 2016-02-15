@@ -23,6 +23,7 @@ The bot, once token has been used and owner set via commandline, will store that
 - `/config show` will list actual defined settings
 - `/config set var=value` will set one of those settings with a new value
     - As of this writing (verbosity, url for api, token, sleep timeout, owner, database, run in daemon mode)
+- `/config delete var` will delete that variable from configuration.
 
 ### Stats
 The bot stores stats on users/chats, remembering the chat/user name and last time seen so it can be later used for purging data not being accessed in a while
