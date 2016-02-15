@@ -13,8 +13,11 @@ Check more information about [Telegram Bots](https://core.telegram.org/bots/).
 - I've a copy running on <openshift.redhat.com> at <http://stampy-iranzo.rhcloud.com/> with the name `@redken_bot`. Invite it to your channels if you want to give it a try or click <https://telegram.me/redken_bot>.
 
 ## Usage
-- word++ to add karma
-- word-- to remove karma
+- `word++` to add karma
+- `word--` to remove karma
+- `/quote add username text` to add a quote for given username with the following text as message
+- `/quote username` to retrieve a random quote for that username.
+
 
 ## Extra commands only for owner user
 ### Configuration
@@ -28,7 +31,7 @@ The bot, once token has been used and owner set via commandline, will store that
 ### Stats
 The bot stores stats on users/chats, remembering the chat/user name and last time seen so it can be later used for purging data not being accessed in a while
 - `/stats show (user|chat)` will list the list of users/chats and time of last update
- 
+
 ### Alias
 Bot allows to setup alias, so when karma is given to a word, it will instead add it to a different one (and report that one)
 - `/alias key=value` Will create a new alias, so each time `key++` is used, it will instead do value++
@@ -39,3 +42,6 @@ Bot allows to setup alias, so when karma is given to a word, it will instead add
         - `lettuce++` will give karma to `food`.
 - `/alias list` Will show current defined aliases
 - `/alias delete key` will delete a previously defined alias so each word gets karma on its own
+
+### quote
+- `/quote del id` to remove a specific quote id from database
