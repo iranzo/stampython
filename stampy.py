@@ -467,7 +467,11 @@ def quotecommands(texto, chat_id, message_id, who_un):
     if who_un == config('owner'):
         log(facility="quote", verbosity=9,
             text="Command: %s by %s" % (texto, who_un))
-        command = texto.split(' ')[1]
+        # We might be have been given no command, just /quote
+        try:
+            command = texto.split(' ')[1]
+        except:
+            command = False
 
         for case in Switch(command):
             # cur.execute('CREATE TABLE quote(id AUTOINCREMENT, name TEXT, date TEXT, text TEXT;')
