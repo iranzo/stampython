@@ -488,8 +488,11 @@ def quotecommands(texto, chat_id, message_id, who_un):
                     deletequote(id=id_todel)
                 break
             if case():
-                # We're just given the nick, so find quote for it
-                nick = texto.split(' ')[1]
+                # We're just given the nick (or not), so find quote for it
+                try:
+                    nick = texto.split(' ')[1]
+                except:
+                    nick=False
                 try:
                     (quoteid, username, date, quote) = getquote(id=False, username=nick)
                     datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
