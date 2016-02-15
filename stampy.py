@@ -483,7 +483,8 @@ def quotecommands(texto, chat_id, message_id, who_un):
                 if who_un == config(key='owner'):
                     id_todel = texto.split(' ')[2]
                     text = "Deleting quote id %s" % id_todel
-                    sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True)
+                    sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id,
+                                disable_web_page_preview=True)
                     deletequote(id=id_todel)
                 break
             if case():
@@ -502,17 +503,14 @@ def quotecommands(texto, chat_id, message_id, who_un):
 
 
 def getquote(id=False, username=False):
-    # FIXME
-    # cur.execute('CREATE TABLE quote(id AUTOINCREMENT, username TEXT, date TEXT, text TEXT;')
-    string = (username,)
-    sql = "SELECT * FROM quote WHERE username='%s' ORDER BY RANDOM() LIMIT 1;" % string
-    print "getquote"
-    print sql
+    if username:
+        string = (username,)
+        sql = "SELECT * FROM quote WHERE username='%s' ORDER BY RANDOM() LIMIT 1;" % string
+    else:
+        sql ="SELECT * FROM quote ORDER BY RANDOM() LIMIT 1;"
     cur.execute(sql)
     value = cur.fetchone()
     log(facility="quote", verbosity=9, text="getquote: %s" % username)
-    print "QUOTEGET"
-    print value
     try:
         # Get value from SQL query
         (quoteid, username, date, quote) = value
