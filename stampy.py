@@ -500,7 +500,7 @@ def quotecommands(texto, chat_id, message_id, who_un):
                 try:
                     (quoteid, username, date, quote) = getquote(id=False, username=nick)
                     datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
-                    text = '"%s" -- %s, %s [%s] (quote id %s)' % (quote, username, datefor, username, quoteid)
+                    text = '"%s" -- @%s, %s (quote id %s)' % (quote, username, datefor, quoteid)
                 except:
                     if nick:
                         text = "No quote recorded for %s" % nick
