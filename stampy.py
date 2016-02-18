@@ -676,7 +676,7 @@ def rank(word=False):
         except:
             # Value didn't exist before, return 0 value
             value = 0
-        text = "%s has %s karma points." % (word, value)
+        text = "`%s` has `%s` karma points." % (word, value)
 
     else:
         # if word is not provided, return top 10 words with top karma
