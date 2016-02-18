@@ -781,6 +781,7 @@ def process():
             texto = message['message']['text']
             message_id = int(message['message']['message_id'])
             date = int(float(message['message']['date']))
+            datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
             who_gn = message['message']['from']['first_name']
             who_id = message['message']['from']['id']
 
@@ -789,6 +790,7 @@ def process():
             who_id = False
             who_gn = False
             date = False
+            datefor = False
             message_id = False
             texto = False
 
@@ -807,10 +809,10 @@ def process():
 
         # Update stats on the message being processed
         if chat_id:
-            updatestats(type="chat", id=chat_id, name=chat_name, date=date)
+            updatestats(type="chat", id=chat_id, name=chat_name, date=datefor)
         if who_ln:
             name = "%s %s (@%s)" % (who_gn, who_ln, who_un)
-            updatestats(type="user", id=who_id, name=name, date=date)
+            updatestats(type="user", id=who_id, name=name, date=datefor)
 
         # Update last message id to later clear it from the server
         if update_id > lastupdateid:
