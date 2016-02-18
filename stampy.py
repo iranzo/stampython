@@ -808,7 +808,7 @@ def process():
             who_un = False
 
         # Update stats on the message being processed
-        if chat_id:
+        if chat_id and chat_name:
             updatestats(type="chat", id=chat_id, name=chat_name, date=datefor)
         if who_ln:
             name = "%s %s (@%s)" % (who_gn, who_ln, who_un)
