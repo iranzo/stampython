@@ -436,7 +436,10 @@ def aliascommands(texto, chat_id, message_id, who_un):
     if who_un == config('owner'):
         log(facility="alias", verbosity=9,
             text="Command: %s by Owner: %s" % (texto, who_un))
-        command = texto.split(' ')[1]
+        try:
+            command = texto.split(' ')[1]
+        except:
+            command = False
         try:
             word = texto.split(' ')[2]
         except:
@@ -572,7 +575,11 @@ def configcommands(texto, chat_id, message_id, who_un):
     if who_un == config('owner'):
         log(facility="config", verbosity=9,
             text="Command: %s by %s" % (texto, who_un))
-        command = texto.split(' ')[1]
+        try:
+            command = texto.split(' ')[1]
+        except:
+            command = False
+
         try:
             word = texto.split(' ')[2]
         except:
@@ -627,7 +634,12 @@ def statscommands(texto, chat_id, message_id, who_un):
     if who_un == config('owner'):
         log(facility="stats", verbosity=9,
             text="Command: %s by %s" % (texto, who_un))
-        command = texto.split(' ')[1]
+
+        try:
+            command = texto.split(' ')[1]
+        except:
+            command = False
+
         try:
             key = texto.split(' ')[2]
         except:
