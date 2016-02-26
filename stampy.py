@@ -110,9 +110,7 @@ def dbsql(sql=False):
             worked = True
         except:
             worked = False
-    if worked:
-        log(facility="dbsql", verbosity=9, text="SQL execution succeed: %s" % sql)
-    else:
+    if not worked:
         log(facility="dbsql", verbosity=3, text="Error on SQL execution: %s" % sql)
 
     return worked
@@ -251,6 +249,9 @@ def updatestats(type=False, id=0, name=False, date=False):
     try:
         value = getstats(type=type, id=id)
         count = value[4] + 1
+        type = (type,)
+        id = (id,)
+        name = (name,)
     except:
         value = False
         count = 0
