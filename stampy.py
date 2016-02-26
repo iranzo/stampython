@@ -101,9 +101,25 @@ except lite.Error, e:
 
 # Database initialized
 
-
 # Function definition
-def sendmessage(chat_id=0, text="", reply_to_message_id=False, disable_web_page_preview=True, parse_mode=False, extra=False):
+def dbsql(sql=False):
+    if sql:
+        try:
+            cur.execute(sql)
+            con.commit()
+            worked = True
+        except:
+            worked = False
+    if worked:
+        log(facility="dbsql", verbosity=9, text="SQL execution succeed: %s" % sql)
+    else:
+        log(facility="dbsql", verbosity=3, text="Error on SQL execution: %s" % sql)
+
+    return worked
+
+
+def sendmessage(chat_id=0, text="", reply_to_message_id=False, disable_web_page_preview=True, parse_mode=False,
+                extra=False):
     url = "%s%s/sendMessage" % (config(key='url'), config(key='token'))
     message = "%s?chat_id=%s&text=%s" % (url, chat_id,
                                          urllib.quote_plus(text.encode('utf-8'))
@@ -157,7 +173,7 @@ def updatekarma(word=False, change=0):
 def getkarma(word):
     string = (word,)
     sql = "SELECT * FROM karma WHERE word='%s';" % string
-    cur.execute(sql)
+    dbsql(sql)
     value = cur.fetchone()
 
     try:
@@ -174,7 +190,7 @@ def getkarma(word):
 def config(key):
     string = (key,)
     sql = "SELECT * FROM config WHERE key='%s';" % string
-    cur.execute(sql)
+    dbsql(sql)
     value = cur.fetchone()
 
     try:
@@ -191,15 +207,13 @@ def config(key):
 def saveconfig(key, value):
     if value:
         sql = "UPDATE config SET value = '%s' WHERE key = '%s';" % (value, key)
-        cur.execute(sql)
-        con.commit()
+        dbsql(sql)
     return value
 
 
 def createkarma(word):
     sql = "INSERT INTO karma VALUES('%s',0);" % word
-    cur.execute(sql)
-    return con.commit()
+    return dbsql(sql)
 
 
 def putkarma(word, value):
@@ -209,14 +223,13 @@ def putkarma(word, value):
         sql = "UPDATE karma SET value = '%s' WHERE word = '%s';" % (value, word)
     else:
         sql = "DELETE FROM karma WHERE  word = '%s';" % word
-    cur.execute(sql)
-    con.commit()
+    dbsql(sql)
     return value
 
 
 def getstats(type=False, id=0, name=False, date=False, count=0):
     sql = "SELECT * FROM stats WHERE id='%s' AND type='%s';" % (id, type)
-    cur.execute(sql)
+    dbsql(sql)
     try:
         value = cur.fetchone()
     except:
@@ -228,7 +241,8 @@ def getstats(type=False, id=0, name=False, date=False, count=0):
         value = False
     if not count:
         count = 0
-    log(facility="getstats", verbosity=9, text="values: type:%s, id:%s, name:%s, date:%s, count:%s" % (type, id, name, date, count))
+    log(facility="getstats", verbosity=9,
+        text="values: type:%s, id:%s, name:%s, date:%s, count:%s" % (type, id, name, date, count))
 
     return value
 
@@ -246,10 +260,13 @@ def updatestats(type=False, id=0, name=False, date=False):
     if value:
         sql = "UPDATE stats SET type='%s',name='%s',date='%s',count='%s' WHERE id='%s';" % (
             type, name, date, count, id)
-    log(facility="updatestats", verbosity=9, text="values: type:%s, id:%s, name:%s, date:%s, count:%s" % (type, id, name, date, count))
+    log(facility="updatestats", verbosity=9,
+        text="values: type:%s, id:%s, name:%s, date:%s, count:%s" % (type, id, name, date, count))
     if id:
-        cur.execute(sql)
-        con.commit()
+        try:
+            dbsql(sql)
+        except:
+            print "ERROR on updatestats"
     return
 
 
@@ -307,7 +324,7 @@ def telegramcommands(texto, chat_id, message_id, who_un):
 def getalias(word):
     string = (word,)
     sql = "SELECT * FROM alias WHERE key='%s';" % string
-    cur.execute(sql)
+    dbsql(sql)
     value = cur.fetchone()
     log(facility="alias", verbosity=9, text="getalias: %s" % word)
 
@@ -331,17 +348,15 @@ def createalias(word, value):
     else:
         if not getalias(word) or getalias(word) == word:
             sql = "INSERT INTO alias VALUES('%s','%s');" % (word, value)
-            cur.execute(sql)
             log(facility="alias", verbosity=9, text="createalias: %s=%s" % (word, value))
-            return con.commit()
+            return dbsql(sql)
     return False
 
 
 def deletealias(word):
     sql = "DELETE FROM alias WHERE key='%s';" % word
-    cur.execute(sql)
     log(facility="alias", verbosity=9, text="rmalias: %s" % word)
-    return con.commit()
+    return dbsql(sql)
 
 
 def listalias(word=False):
@@ -349,7 +364,7 @@ def listalias(word=False):
         # if word is provided, return the alias for that word
         string = (word,)
         sql = "SELECT * FROM alias WHERE key='%s';" % string
-        cur.execute(sql)
+        dbsql(sql)
         value = cur.fetchone()
 
         try:
@@ -363,7 +378,7 @@ def listalias(word=False):
 
     else:
         sql = "select * from alias ORDER BY key DESC;"
-        cur.execute(sql)
+        dbsql(sql)
         text = "Defined aliases:\n"
         table = from_db_cursor(cur)
         text = "%s\n```%s```" % (text, table.get_string())
@@ -376,16 +391,14 @@ def setconfig(key, value):
     if config(key=key):
         deleteconfig(key)
     sql = "INSERT INTO config VALUES('%s','%s');" % (key, value)
-    cur.execute(sql)
     log(facility="config", verbosity=9, text="setconfig: %s=%s" % (key, value))
-    return con.commit()
+    return dbsql(sql)
 
 
 def deleteconfig(word):
     sql = "DELETE FROM config WHERE key='%s';" % word
-    cur.execute(sql)
     log(facility="config", verbosity=9, text="rmconfig: %s" % word)
-    return con.commit()
+    return dbsql(sql)
 
 
 def showconfig(key=False):
@@ -393,7 +406,7 @@ def showconfig(key=False):
         # if word is provided, return the config for that key
         string = (key,)
         sql = "SELECT * FROM config WHERE key='%s';" % string
-        cur.execute(sql)
+        dbsql(sql)
         value = cur.fetchone()
 
         try:
@@ -407,7 +420,7 @@ def showconfig(key=False):
 
     else:
         sql = "select * from config ORDER BY key DESC;"
-        cur.execute(sql)
+        dbsql(sql)
         text = "Defined configurations:\n"
         table = from_db_cursor(cur)
         text = "%s\n```%s```" % (text, table.get_string())
@@ -431,12 +444,14 @@ def aliascommands(texto, chat_id, message_id, who_un):
         for case in Switch(command):
             if case('list'):
                 text = listalias(word)
-                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True, parse_mode="Markdown")
+                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+                            parse_mode="Markdown")
                 break
             if case('delete'):
                 key = word
                 text = "Deleting alias for `%s`" % key
-                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True, parse_mode="Markdown")
+                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+                            parse_mode="Markdown")
                 deletealias(word=key)
                 break
             if case():
@@ -475,7 +490,8 @@ def quotecommands(texto, chat_id, message_id, who_un):
             quote = str.join(" ", texto.split(' ')[3:])
             result = addquote(username=who_quote, date=date, text=quote)
             text = "Quote `%s` added" % result
-            sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True, parse_mode="Markdown")
+            sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+                        parse_mode="Markdown")
             break
         if case('del'):
             if who_un == config(key='owner'):
@@ -500,7 +516,8 @@ def quotecommands(texto, chat_id, message_id, who_un):
                     text = "No quote recorded for `%s`" % nick
                 else:
                     text = "No quote found"
-            sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True, parse_mode="Markdown")
+            sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+                        parse_mode="Markdown")
 
     return
 
@@ -511,7 +528,7 @@ def getquote(username=False):
         sql = "SELECT * FROM quote WHERE username='%s' ORDER BY RANDOM() LIMIT 1;" % string
     else:
         sql = "SELECT * FROM quote ORDER BY RANDOM() LIMIT 1;"
-    cur.execute(sql)
+    dbsql(sql)
     value = cur.fetchone()
     log(facility="quote", verbosity=9, text="getquote: %s" % username)
     try:
@@ -533,21 +550,19 @@ def getquote(username=False):
 
 def addquote(username=False, date=False, text=False):
     sql = "INSERT INTO quote(username, date, text) VALUES('%s','%s', '%s');" % (username, date, text)
-    cur.execute(sql)
+    dbsql(sql)
     log(facility="quote", verbosity=9, text="createquote: %s=%s on %s" % (username, text, date))
     # Retrieve last id
     sql = "select last_insert_rowid();"
-    cur.execute(sql)
+    dbsql(sql)
     lastrowid = cur.fetchone()[0]
-    con.commit()
     return lastrowid
 
 
 def deletequote(id=False):
     sql = "DELETE FROM quote WHERE id='%s';" % id
-    cur.execute(sql)
     log(facility="quote", verbosity=9, text="deletequote: %s" % id)
-    return con.commit()
+    return dbsql(sql)
 
 
 def configcommands(texto, chat_id, message_id, who_un):
@@ -565,12 +580,14 @@ def configcommands(texto, chat_id, message_id, who_un):
         for case in Switch(command):
             if case('show'):
                 text = showconfig(word)
-                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True, parse_mode="Markdown")
+                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+                            parse_mode="Markdown")
                 break
             if case('delete'):
                 key = word
                 text = "Deleting config for `%s`" % key
-                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True, parse_mode="Markdown")
+                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+                            parse_mode="Markdown")
                 deleteconfig(word=key)
                 break
             if case('set'):
@@ -594,7 +611,7 @@ def showstats(type=False):
         sql = "select * from stats WHERE type='%s' ORDER BY count DESC" % type
     else:
         sql = "select * from stats ORDER BY count DESC"
-    cur.execute(sql)
+    dbsql(sql)
     table = from_db_cursor(cur)
     text = "Defined stats:\n"
     text = "%s\n```%s```" % (text, table.get_string())
@@ -618,7 +635,8 @@ def statscommands(texto, chat_id, message_id, who_un):
         for case in Switch(command):
             if case('show'):
                 text = showstats(key)
-                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True, parse_mode="Markdown")
+                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+                            parse_mode="Markdown")
                 break
             if case():
                 break
@@ -666,7 +684,7 @@ def rank(word=False):
         # if word is provided, return the rank value for that word
         string = (word,)
         sql = "SELECT * FROM karma WHERE word='%s';" % string
-        cur.execute(sql)
+        dbsql(sql)
         value = cur.fetchone()
 
         try:
@@ -683,7 +701,7 @@ def rank(word=False):
         sql = "select * from karma ORDER BY value DESC LIMIT 10;"
 
         text = "Global rankings:\n"
-        cur.execute(sql)
+        dbsql(sql)
         table = from_db_cursor(cur)
         text = "%s\n```%s```" % (text, table.get_string())
     log(facility="rank", verbosity=9,
@@ -701,7 +719,7 @@ def srank(word=False):
     else:
         string = "%" + word + "%"
         sql = "SELECT * FROM karma WHERE word LIKE '%s' LIMIT 10;" % string
-        cur.execute(sql)
+        dbsql(sql)
         table = from_db_cursor(cur)
         text = "%s\n```%s```" % (text, table.get_string())
     log(facility="srank", verbosity=9,
