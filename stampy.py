@@ -364,7 +364,7 @@ def listalias(word=False):
     if word:
         # if word is provided, return the alias for that word
         string = (word,)
-        sql = "SELECT * FROM alias WHERE key='%s';" % string
+        sql = "SELECT * FROM alias WHERE key='%s' ORDER by key ASC;" % string
         dbsql(sql)
         value = cur.fetchone()
 
@@ -378,7 +378,7 @@ def listalias(word=False):
         text = "%s has an alias %s" % (word, value)
 
     else:
-        sql = "select * from alias ORDER BY key DESC;"
+        sql = "select * from alias ORDER BY key ASC;"
         dbsql(sql)
         text = "Defined aliases:\n"
         table = from_db_cursor(cur)
@@ -420,7 +420,7 @@ def showconfig(key=False):
         text = "%s has a value of %s" % (key, value)
 
     else:
-        sql = "select * from config ORDER BY key DESC;"
+        sql = "select * from config ORDER BY key ASC;"
         dbsql(sql)
         text = "Defined configurations:\n"
         table = from_db_cursor(cur)
