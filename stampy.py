@@ -21,6 +21,7 @@ import sqlite3 as lite
 import sys
 import time
 import datetime
+import string
 from time import sleep
 from prettytable import from_db_cursor
 
@@ -118,7 +119,31 @@ def dbsql(sql=False):
 
 def sendmessage(chat_id=0, text="", reply_to_message_id=False, disable_web_page_preview=True, parse_mode=False,
                 extra=False):
-    url = "%s%s/sendMessage" % (config(key='url'), config(key='token'))
+    url = "%s%s/sendMessage" % (config(key="url"), config(key='token'))
+    lines = text.split("\n")
+    maxlines = 15
+    if len(lines) > maxlines:
+        # message might be too big for single message (max 4K)
+        if "```" in text:
+            markdown = True
+        else:
+            markdown = False
+
+        texto = string.join(lines[0:maxlines], "\n")
+        if markdown:
+            texto = "%s```" % texto
+
+        # Send first batch
+        sendmessage(chat_id=chat_id, text=texto, reply_to_message_id=reply_to_message_id,
+                    disable_web_page_preview=disable_web_page_preview, parse_mode=parse_mode, extra=extra)
+        # Send remaining batch
+        texto = string.join(lines[maxlines:], "\n")
+        if markdown:
+            texto = "```%s" % texto
+        sendmessage(chat_id=chat_id, text=texto, reply_to_message_id=False,
+                    disable_web_page_preview=disable_web_page_preview, parse_mode=parse_mode, extra=extra)
+        return
+
     message = "%s?chat_id=%s&text=%s" % (url, chat_id,
                                          urllib.quote_plus(text.encode('utf-8'))
                                          )
@@ -130,9 +155,18 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False, disable_web_page_
         message += "&parse_mode=%s" % parse_mode
     if extra:
         message += "&%s" % extra
+
+    code = False
+    while not code:
+        result = json.load(urllib.urlopen(message))
+        code = result['ok']
+        log(facility="sendmessage", verbosity=3, severity="ERROR",
+            text="ERROR sending message: Code: %s : Text: %s" % (code, result))
+
+        sleep(1)
     log(facility="sendmessage", verbosity=3,
-        text="Sending message: %s" % text)
-    return json.load(urllib.urlopen(message))
+        text="Sending message: Code: %s : Text: %s" % (code, text))
+    return
 
 
 def getupdates(offset=0, limit=100):
