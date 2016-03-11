@@ -6,4 +6,3 @@
 - Implement banning of consecutive karma changes from same user for a period of time
     - Implement /settings to store settings per chat [be silent, timeout for ban, etc]
 - Implement deletion of old stats for users/groups to not clutter database
-- For stats, config, etc use paginator for more than 10 results to avoid messages not to be delivered.
