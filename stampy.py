@@ -496,7 +496,7 @@ def aliascommands(texto, chat_id, message_id, who_un):
                 word = texto.split(' ')[1]
                 if "=" in word:
                     key = word.split('=')[0]
-                    value = word.split('=')[1]
+                    value = texto.split('=')[1:][0]
                     text = "Setting alias for `%s` to `%s`" % (key, value)
                     sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id,
                                 disable_web_page_preview=True, parse_mode="Markdown")
@@ -921,19 +921,20 @@ def process():
                         # Remove last two characters from word (++ or --)
                         word = word[0:-2]
                         if getalias(word):
-                            word = getalias(word)
-                        karma = updatekarma(word=word, change=change)
-                        if karma != 0:
-                            # Karma has changed, report back
-                            text = "`%s` now has `%s` karma points." % (word, karma)
-                        else:
-                            # New karma is 0
-                            text = "`%s` now has no Karma and has been garbage collected." % word
-                        # Send originating user for karma change a reply with
-                        # the new value
-                        sendmessage(chat_id=chat_id, text=text,
-                                    reply_to_message_id=message_id, parse_mode="Markdown")
-                        stampy(chat_id=chat_id, karma=karma)
+                            word = getalias(word).split(" ")
+                        for item in word:
+                            karma = updatekarma(word=item, change=change)
+                            if karma != 0:
+                                # Karma has changed, report back
+                                text = "`%s` now has `%s` karma points." % (item, karma)
+                            else:
+                                # New karma is 0
+                                text = "`%s` now has no Karma and has been garbage collected." % item
+                            # Send originating user for karma change a reply with
+                            # the new value
+                            sendmessage(chat_id=chat_id, text=text,
+                                        reply_to_message_id=message_id, parse_mode="Markdown")
+                            stampy(chat_id=chat_id, karma=karma)
 
     log(facility="main", verbosity=0,
         text="Last processed message at: %s" % date)
