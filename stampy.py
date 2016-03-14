@@ -923,6 +923,8 @@ def process():
                         if getalias(word):
                             word = getalias(word).split(" ")
                         for item in word:
+                            if getalias(item):
+                                item = getalias(item)
                             karma = updatekarma(word=item, change=change)
                             if karma != 0:
                                 # Karma has changed, report back
