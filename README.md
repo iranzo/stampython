@@ -40,6 +40,9 @@ Bot allows to setup alias, so when karma is given to a word, it will instead add
         - `/alias lettuce=vegetable`
         - `/alias vegetable=food`
         - `lettuce++` will give karma to `food`.
+    - Alias can be defined to groups of words so, it can be defined to have:
+        - `/alias friday=tgif tfsmif`
+        - `friday++` will increase karma on `tgif` and `tfsmif`.
 - `/alias list` Will show current defined aliases
 - `/alias delete key` will delete a previously defined alias so each word gets karma on its own
 
