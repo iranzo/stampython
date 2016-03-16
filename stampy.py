@@ -365,7 +365,7 @@ def getstats(type=False, id=0, name=False, date=False, count=0):
         value = False
     if not count:
         count = 0
-    log.debug(msg="values: type:%s, id:%s, name:%s, date:%s, count:%s" % (type, id, name, date, count))
+    logger.debug(msg="values: type:%s, id:%s, name:%s, date:%s, count:%s" % (type, id, name, date, count))
 
     return value
 
@@ -384,12 +384,13 @@ def updatestats(type=False, id=0, name=False, date=False):
     try:
         value = getstats(type=type, id=id)
         count = value[4] + 1
-        type = type
-        id = id
-        name = name
     except:
         value = False
         count = 0
+
+    type = type
+    id = id
+    name = name
 
     # Asume value doesn't exist, then set to update if it does
     sql = "INSERT INTO stats VALUES('%s', '%s', '%s', '%s', '%s');" % (type, id, name, date, count)
