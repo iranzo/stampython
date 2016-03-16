@@ -420,6 +420,10 @@ def telegramcommands(texto, chat_id, message_id, who_un):
 
     # Process lines for commands in the first word of the line (Telegram)
     word = texto.split()[0]
+    if "@" in word:
+        # If the message is directed as /help@bot, remove that part
+        word = word.split("@")[0]
+
     commandtext = False
     for case in Switch(word):
         if case('/help'):
