@@ -407,6 +407,24 @@ def updatestats(type=False, id=0, name=False, date=False):
     return
 
 
+def getchatmemberscount(chat_id=False):
+    """
+    Get number of users in the actual chat_id
+    :param chat_id:
+    :return:
+    """
+
+    logger = logging.getLogger(__name__)
+    url = "%s%s/getChatMembersCount?chat_id=%s" % (config(key='url'), config(key='token'), chat_id)
+    try:
+        result = str(json.load(urllib.urlopen(url))['result'])
+    except:
+        result = 0
+
+    logger.info(msg="Chat id %s users %s" % (chat_id, result))
+    return result
+
+
 def telegramcommands(texto, chat_id, message_id, who_un):
     """
     Processes telegram commands in message texts (/help, etc)
@@ -771,6 +789,7 @@ def getquote(username=False):
         return quoteid, username, date, quote
 
     return False
+
 
 def addquote(username=False, date=False, text=False):
     """
