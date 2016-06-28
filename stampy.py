@@ -1204,7 +1204,11 @@ def process():
                         word = word[0:-2]
                         if getalias(word):
                             word = getalias(word).split(" ")
+			karmas = []
                         for item in word:
+			    if item in karmas:
+			        continue
+			    karmas.append(item)
                             if getalias(item):
                                 item = getalias(item)
                             karma = updatekarma(word=item, change=change)
