@@ -1175,50 +1175,63 @@ def process():
             # Search for karma commands
             karmacommands(texto, chat_id, message_id)
 
+            text_to_process = texto.lower().replace("'", "").replace("@", "").split(" ")
+
             # Process each word in the line received to search for karma operators
-            for word in texto.lower().split():
-                if word[0] == "@":
-                    # Remove @ from mentions for karma
-                    word = word[1:]
-                word = word.replace("'", '')
+
+            wordadd = []
+            worddel = []
+
+            for word in text_to_process:
                 # Unicode — is sometimes provided by telegram cli, using that also as comparision
                 unidecrease = u"—"
-                if word[-1:] == unidecrease:
+
+                if unidecrease in word:
                     word = word.replace(unidecrease, '--')
 
-                logger.debug(msg="Processing word %s sent by id %s with username %s (%s %s)" % (
-                    word, who_id, who_un, who_gn, who_ln))
-                if len(word) >= 4:
-                    # Determine karma change and apply it
-                    change = 0
-                    if "++" == word[-2:]:
-                        logger.debug(msg="++ Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)" % (
-                            word, chat_id, message_id, chat_name, who_id, who_un, who_gn, who_ln))
-                        change = 1
-                    if "--" == word[-2:]:
-                        logger.debug(msg="-- Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)" % (
-                            word, chat_id, message_id, chat_name, who_id, who_un, who_gn, who_ln))
-                        change = -1
-                    if change != 0:
-                        # Remove last two characters from word (++ or --)
-                        word = word[0:-2]
+                if "++" in word or "--" in word:
+                    logger.debug(msg="Processing word %s sent by id %s with username %s (%s %s)" % (
+                                     word, who_id, who_un, who_gn, who_ln))
+
+                    # This should help to avoid duplicate karma operations in the same message
+                    oper = ""
+                    if len(word) >= 4:
+                        oper = word[-2:]
+                        word = word[:-2]
                         if getalias(word):
                             word = getalias(word).split(" ")
                         for item in word:
                             if getalias(item):
                                 item = getalias(item)
-                            karma = updatekarma(word=item, change=change)
-                            if karma != 0:
-                                # Karma has changed, report back
-                                text = "`%s` now has `%s` karma points." % (item, karma)
-                            else:
-                                # New karma is 0
-                                text = "`%s` now has no Karma and has been garbage collected." % item
-                            # Send originating user for karma change a reply with
-                            # the new value
-                            sendmessage(chat_id=chat_id, text=text,
-                                        reply_to_message_id=message_id, parse_mode="Markdown")
-                            stampy(chat_id=chat_id, karma=karma)
+                            if oper == "++" and item not in wordadd:
+                                wordadd.append(item)
+                            if oper == "--" and item not in worddel:
+                                worddel.append(item)
+            for word in wordadd + worddel:
+                change = 0
+                if word in wordadd:
+                    change = change + 1
+                    oper = "++"
+                if word in worddel:
+                    change = change - 1
+                    oper = "--"
+
+                if change != 0:
+                    logger.debug(msg="%s Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)" % (
+                        oper, word, chat_id, message_id, chat_name, who_id, who_un, who_gn, who_ln))
+
+                    karma = updatekarma(word=word, change=change)
+                    if karma != 0:
+                        # Karma has changed, report back
+                        text = "`%s` now has `%s` karma points." % (word, karma)
+                    else:
+                        # New karma is 0
+                        text = "`%s` now has no Karma and has been garbage collected." % word
+
+                    # Send originating user for karma change a reply with
+                    # the new value
+                    sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, parse_mode="Markdown")
+                    stampy(chat_id=chat_id, karma=karma)
 
     logger.info(msg="Last processed message at: %s" % date)
     logger.debug(msg="Last processed update_id : %s" % lastupdateid)
