@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/iranzo/stampython.svg?branch=master)](https://travis-ci.org/iranzo/stampython)
+
 ## Introduction
 Attempt to create a python script that monitors a telegram bot URL and replies to commands for adding/removing karma.
 
