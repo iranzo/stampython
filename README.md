@@ -1,3 +1,5 @@
+# Stampython: A Telegram bot for karma accounting
+
 [![Build Status](https://travis-ci.org/iranzo/stampython.svg?branch=master)](https://travis-ci.org/iranzo/stampython)
 
 ## Introduction
