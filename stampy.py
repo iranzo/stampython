@@ -392,7 +392,7 @@ def updatestats(type=False, id=0, name=False, date=False):
     id = id
     name = name
 
-    # Asume value doesn't exist, then set to update if it does
+    # Assume value doesn't exist, then set to update if it does
     sql = "INSERT INTO stats VALUES('%s', '%s', '%s', '%s', '%s');" % (type, id, name, date, count)
     if value:
         sql = "UPDATE stats SET type='%s',name='%s',date='%s',count='%s' WHERE id='%s';" % (
@@ -1183,7 +1183,7 @@ def process():
             worddel = []
 
             for word in text_to_process:
-                # Unicode — is sometimes provided by telegram cli, using that also as comparision
+                # Unicode — is sometimes provided by telegram cli, using that also as comparison
                 unidecrease = u"—"
 
                 if unidecrease in word:
