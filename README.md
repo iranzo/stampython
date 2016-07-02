@@ -1,6 +1,8 @@
 # Stampython: A Telegram bot for karma accounting
 
 [![Build Status](https://travis-ci.org/iranzo/stampython.svg?branch=master)](https://travis-ci.org/iranzo/stampython)
+[![Code Climate](https://codeclimate.com/github/iranzo/stampython/badges/gpa.svg)](https://codeclimate.com/github/iranzo/stampython)
+[![Pypi](http://img.shields.io/pypi/v/stampython.svg)](https://pypi.python.org/pypi/stampython/)
 
 ## Introduction
 Attempt to create a python script that monitors a telegram bot URL and replies to commands for adding/removing karma.
