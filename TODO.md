@@ -7,3 +7,5 @@
 - Initial load of karma points from older bot (possible separate script)
 - Implement banning of consecutive karma changes from same user for a period of time
     - Implement /settings to store settings per chat [be silent, timeout for ban, etc]
+- Implement setting karma each time a word is written (or word regexp) for bussiness bingo-like events
+
