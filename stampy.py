@@ -1374,5 +1374,8 @@ def main():
 
 if __name__ == "__main__":
     # Set name to the database being used to allow multibot execution
-    __name__ = config(key="database").split(".")[0]
+    if config(key="database"):
+        __name__ = config(key="database").split(".")[0]
+    else:
+        __name__ = "stampy"
     main()
