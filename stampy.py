@@ -1377,5 +1377,6 @@ if __name__ == "__main__":
     if config(key="database"):
         __name__ = config(key="database").split(".")[0]
     else:
+        setconfig(key="database", value='stampy')
         __name__ = "stampy"
     main()
