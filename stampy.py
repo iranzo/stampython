@@ -86,6 +86,7 @@ def createdb():
     """
     cur.execute('CREATE TABLE karma(word TEXT, value INT);')
     cur.execute('CREATE TABLE alias(key TEXT, value TEXT);')
+    cur.execute('CREATE TABLE autokarma(key TEXT, value TEXT);')
     cur.execute('CREATE TABLE config(key TEXT, value TEXT);')
     cur.execute('CREATE TABLE stats(type TEXT, id INT, name TEXT, date TEXT, count INT);')
     cur.execute('CREATE TABLE quote(id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, date TEXT, text TEXT);')
@@ -432,7 +433,7 @@ def telegramcommands(texto, chat_id, message_id, who_un):
     :param chat_id:  chat to answer to
     :param message_id: message to reply to
     :param who_un: username of user providing the command
-    :return:
+    :return: True if any telegramcommands where processed , False if no telegramcommands were present
     """
 
     logger = logging.getLogger(__name__)
@@ -444,6 +445,7 @@ def telegramcommands(texto, chat_id, message_id, who_un):
         word = word.split("@")[0]
 
     commandtext = False
+    retv=False
     for case in Switch(word):
         if case('/help'):
             commandtext = "To use this bot use `word++` or `word--` to increment or decrement karma, a new message will be sent providing the new total\n\n"
@@ -460,25 +462,39 @@ def telegramcommands(texto, chat_id, message_id, who_un):
                 commandtext += "Use `/config show` to get a list of defined config settings\n"
                 commandtext += "Use `/config set <key>=<value>` to define a value for key\n"
                 commandtext += "Use `/config delete <key>` to delete key\n\n"
+                commandtext += "Use `/autok <key>=<value>` to autokarma value every time key is in the conversation. Multiple values for same key can be added\n\n"
+                commandtext += "Use `/autok delete <key>=<value>` to delete autokarma <value> for <key>\n\n"
+                commandtext += "Use `/autok list` to list autokarma <key> <value> pairs\n\n"
             commandtext += "Learn more about this bot in [https://github.com/iranzo/stampython](https://github.com/iranzo/stampython)"
+            retv=True
             break
         if case('/start'):
             commandtext = "This bot does not use start or stop commands, it automatically checks for karma operands"
+            retv=True
             break
         if case('/stop'):
             commandtext = "This bot does not use start or stop commands, it automatically checks for karma operands"
+            retv=True
             break
         if case('/alias'):
             aliascommands(texto, chat_id, message_id, who_un)
+            retv=True
             break
         if case('/config'):
             configcommands(texto, chat_id, message_id, who_un)
+            retv=True
             break
         if case('/quote'):
             quotecommands(texto, chat_id, message_id, who_un)
+            retv=True
             break
         if case('/stats'):
             statscommands(texto, chat_id, message_id, who_un)
+            retv=True
+            break
+        if case('/autok'):
+            autokcommands(texto, chat_id, message_id, who_un)
+            retv=True
             break
         if case():
             commandtext = False
@@ -487,8 +503,40 @@ def telegramcommands(texto, chat_id, message_id, who_un):
     if commandtext:
         sendmessage(chat_id=chat_id, text=commandtext, reply_to_message_id=message_id, parse_mode="Markdown")
         logger.debug(msg="Command: %s" % word)
-    return
+    return retv
 
+def listautok(word=False):
+    """
+    Lists the autok pairs defined for a word, or all the autok
+    :param word: word to return value for or everything
+    :return: table with autok stored
+    """
+
+    logger = logging.getLogger(__name__)
+    if word:
+        # if word is provided, return the alias for that word
+        string = (word,)
+        sql = "SELECT * FROM autokarma WHERE key='%s' ORDER by key ASC;" % string
+        dbsql(sql)
+
+        try:
+            # Get value from SQL query
+            text = "Defined autokarma triggers for word %s:\n" % word
+            table = from_db_cursor(cur)
+            text = "%s\n```%s```" % (text, table.get_string())
+
+        except:
+            # Value didn't exist before
+            text = "%s has no trigger autokarma" % word
+
+    else:
+        sql = "select * from autokarma ORDER BY key ASC;"
+        dbsql(sql)
+        text = "Defined autokarma triggers:\n"
+        table = from_db_cursor(cur)
+        text = "%s\n```%s```" % (text, table.get_string())
+    logger.debug(msg="Returning autokarma %s for word %s" % (text, word))
+    return text
 
 def getalias(word):
     """
@@ -517,6 +565,49 @@ def getalias(word):
         return getalias(word=value)
     return word
 
+def getautok(key, value):
+    """
+    Get autok for a key value pair in case it's defined
+    :param key: key to search autok
+    :param value: value to search autok
+    :return: True if existing or False if not
+    """
+
+    logger = logging.getLogger(__name__)
+    sql = "SELECT * FROM autokarma WHERE key='%s' and value='%s';" % (key, value)
+    dbsql(sql)
+    svalue = cur.fetchone()
+    logger.debug(msg="getautok: %s - %s" % (key, value))
+
+    try:
+        # Get value from SQL query
+        svalue = value[1]
+
+    except:
+        # Value didn't exist before, return 0
+        svalue = False
+
+    # We can define recursive aliases, so this will return the ultimate one
+    if svalue:
+        return True
+    return False
+
+def createautok(word, value):
+    """
+    Creates an autokarma trigger for a word
+    :param word: word to use as base for the autokarma
+    :param value: values to set as autokarma
+    :return:
+    """
+
+    logger = logging.getLogger(__name__)
+    if getautok(word, value) == False:
+        logger.error(msg="createautok: autok pair %s - %s already exists" % (word, value))
+    else:
+        sql = "INSERT INTO autokarma VALUES('%s','%s');" % (word, value)
+        logger.debug(msg="createautok: %s=%s" % (word, value))
+        return dbsql(sql)
+    return False
 
 def createalias(word, value):
     """
@@ -535,6 +626,19 @@ def createalias(word, value):
             logger.debug(msg="createalias: %s=%s" % (word, value))
             return dbsql(sql)
     return False
+
+def deleteautok(key, value):
+    """
+    Deletes a key - value pair from autokarma TABLE
+    :param key:  key to delete
+    :param value: value to delete
+    :return:
+    """
+
+    logger = logging.getLogger(__name__)
+    sql = "DELETE FROM autokarma WHERE key='%s' and value='%s';" % (key, value)
+    logger.debug(msg="rmautok: %s=%s" % (key,value))
+    return dbsql(sql)
 
 
 def deletealias(word):
@@ -644,6 +748,58 @@ def showconfig(key=False):
         text = "%s\n```%s```" % (text, table.get_string())
     logger.debug(msg="Returning config %s for key %s" % (text, key))
     return text
+
+def autokcommands(texto, chat_id, message_id, who_un):
+    """
+    Processes autok commands in the message texts
+    :param texto: text of the message
+    :param chat_id:  chat_ID
+    :param message_id: message_ID to reply to
+    :param who_un: username sending the request
+    :return:
+    """
+
+    logger = logging.getLogger(__name__)
+    logger.debug(msg="Command: %s by %s" % (texto, who_un))
+    if who_un == config('owner'):
+        logger.debug(msg="Command: %s by Owner: %s" % (texto, who_un))
+        try:
+            command = texto.split(' ')[1]
+        except:
+            command = False
+        try:
+            word = texto.split(' ')[2]
+        except:
+            word = ""
+
+        for case in Switch(command):
+            if case('list'):
+                text = listautok(word)
+                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+                            parse_mode="Markdown")
+                break
+            if case('delete'):
+                word = texto.split(' ')[2]
+                if "=" in word:
+                    key = word.split('=')[0]
+                    value = texto.split('=')[1:][0]
+                text = "Deleting autokarma pair for `%s - %s`" % (key, value)
+                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+                            parse_mode="Markdown")
+                deleteautok(key=key,value=value)
+                break
+            if case():
+                word = texto.split(' ')[1]
+                if "=" in word:
+                    key = word.split('=')[0]
+                    value = texto.split('=')[1:][0]
+                    text = "Setting autokarma for `%s` triggers `%s++`" % (key, value)
+                    sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id,
+                                disable_web_page_preview=True, parse_mode="Markdown")
+                    createautok(word=key, value=value)
+
+    return
+
 
 
 def aliascommands(texto, chat_id, message_id, who_un):
@@ -1169,13 +1325,14 @@ def process():
         logger.debug(msg=messageline)
 
         if not error:
-            # Search for telegram commands
-            telegramcommands(texto, chat_id, message_id, who_un)
+            # Search for telegram commands and if any dissable text processing
+            if telegramcommands(texto, chat_id, message_id, who_un):
+                text_to_process=""
+            else:
+                text_to_process = texto.lower().replace("'", "").replace("@", "").split(" ")
 
             # Search for karma commands
             karmacommands(texto, chat_id, message_id)
-
-            text_to_process = texto.lower().replace("'", "").replace("@", "").split(" ")
 
             # Process each word in the line received to search for karma operators
 
@@ -1188,6 +1345,30 @@ def process():
 
                 if unidecrease in word:
                     word = word.replace(unidecrease, '--')
+
+                # Select all autokarma keys from DB
+                sql = "SELECT distinct key FROM autokarma;"
+                dbsql(sql)
+                value = cur.fetchall()
+                logger.debug(msg="Select all the following AUTOKARMA keys : %s" % str(value))
+
+                #for each autokarma key we chech if included in word to increase his value karma
+                for autok in value:
+                    if unidecrease in autok:
+                        autok = autok.replace(unidecrease, '--')
+                    logger.debug(msg="Dealing with AUTOKARMA key :%s" % str(autok))
+                    if autok[0] in word:
+                        string = (autok[0],)
+                        sql = "SELECT value FROM autokarma where key='%s';" % string
+                        logger.debug(msg=sql)
+                        dbsql(sql)
+                        autov = cur.fetchall()
+                        for valuei in autov:
+                            if unidecrease in valuei:
+                                valuei = valuei.replace(unidecrease, '--')
+                            wordadd.append(valuei[0])
+                            logger.debug(msg="%s word found, processing %s auto-karma increase" % (autok[0], valuei[0]))
+                            sendmessage(chat_id=chat_id, text="%s triggers %s++ autokarma" % (autok[0], valuei[0]), reply_to_message_id=message_id, parse_mode="Markdown")
 
                 if "++" in word or "--" in word:
                     logger.debug(msg="Processing word %s sent by id %s with username %s (%s %s)" % (
