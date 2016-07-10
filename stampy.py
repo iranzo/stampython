@@ -445,7 +445,7 @@ def telegramcommands(texto, chat_id, message_id, who_un):
         word = word.split("@")[0]
 
     commandtext = False
-    retv=False
+    retv = False
     for case in Switch(word):
         if case('/help'):
             commandtext = "To use this bot use `word++` or `word--` to increment or decrement karma, a new message will be sent providing the new total\n\n"
@@ -466,35 +466,35 @@ def telegramcommands(texto, chat_id, message_id, who_un):
                 commandtext += "Use `/autok delete <key>=<value>` to delete autokarma <value> for <key>\n\n"
                 commandtext += "Use `/autok list` to list autokarma <key> <value> pairs\n\n"
             commandtext += "Learn more about this bot in [https://github.com/iranzo/stampython](https://github.com/iranzo/stampython)"
-            retv=True
+            retv = True
             break
         if case('/start'):
             commandtext = "This bot does not use start or stop commands, it automatically checks for karma operands"
-            retv=True
+            retv = True
             break
         if case('/stop'):
             commandtext = "This bot does not use start or stop commands, it automatically checks for karma operands"
-            retv=True
+            retv = True
             break
         if case('/alias'):
             aliascommands(texto, chat_id, message_id, who_un)
-            retv=True
+            retv = True
             break
         if case('/config'):
             configcommands(texto, chat_id, message_id, who_un)
-            retv=True
+            retv = True
             break
         if case('/quote'):
             quotecommands(texto, chat_id, message_id, who_un)
-            retv=True
+            retv = True
             break
         if case('/stats'):
             statscommands(texto, chat_id, message_id, who_un)
-            retv=True
+            retv = True
             break
         if case('/autok'):
             autokcommands(texto, chat_id, message_id, who_un)
-            retv=True
+            retv = True
             break
         if case():
             commandtext = False
@@ -504,6 +504,7 @@ def telegramcommands(texto, chat_id, message_id, who_un):
         sendmessage(chat_id=chat_id, text=commandtext, reply_to_message_id=message_id, parse_mode="Markdown")
         logger.debug(msg="Command: %s" % word)
     return retv
+
 
 def listautok(word=False):
     """
@@ -538,6 +539,7 @@ def listautok(word=False):
     logger.debug(msg="Returning autokarma %s for word %s" % (text, word))
     return text
 
+
 def getalias(word):
     """
     Get alias for a word in case it's defined
@@ -564,6 +566,7 @@ def getalias(word):
     if value:
         return getalias(word=value)
     return word
+
 
 def getautok(key, value):
     """
@@ -592,6 +595,7 @@ def getautok(key, value):
         return True
     return False
 
+
 def createautok(word, value):
     """
     Creates an autokarma trigger for a word
@@ -608,6 +612,7 @@ def createautok(word, value):
         logger.debug(msg="createautok: %s=%s" % (word, value))
         return dbsql(sql)
     return False
+
 
 def createalias(word, value):
     """
@@ -627,6 +632,7 @@ def createalias(word, value):
             return dbsql(sql)
     return False
 
+
 def deleteautok(key, value):
     """
     Deletes a key - value pair from autokarma TABLE
@@ -637,7 +643,7 @@ def deleteautok(key, value):
 
     logger = logging.getLogger(__name__)
     sql = "DELETE FROM autokarma WHERE key='%s' and value='%s';" % (key, value)
-    logger.debug(msg="rmautok: %s=%s" % (key,value))
+    logger.debug(msg="rmautok: %s=%s" % (key, value))
     return dbsql(sql)
 
 
@@ -749,6 +755,7 @@ def showconfig(key=False):
     logger.debug(msg="Returning config %s for key %s" % (text, key))
     return text
 
+
 def autokcommands(texto, chat_id, message_id, who_un):
     """
     Processes autok commands in the message texts
@@ -786,7 +793,7 @@ def autokcommands(texto, chat_id, message_id, who_un):
                 text = "Deleting autokarma pair for `%s - %s`" % (key, value)
                 sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
                             parse_mode="Markdown")
-                deleteautok(key=key,value=value)
+                deleteautok(key=key, value=value)
                 break
             if case():
                 word = texto.split(' ')[1]
@@ -799,7 +806,6 @@ def autokcommands(texto, chat_id, message_id, who_un):
                     createautok(word=key, value=value)
 
     return
-
 
 
 def aliascommands(texto, chat_id, message_id, who_un):
@@ -1327,7 +1333,7 @@ def process():
         if not error:
             # Search for telegram commands and if any dissable text processing
             if telegramcommands(texto, chat_id, message_id, who_un):
-                text_to_process=""
+                text_to_process = ""
             else:
                 text_to_process = texto.lower().replace("'", "").replace("@", "").split(" ")
 
@@ -1352,7 +1358,7 @@ def process():
                 value = cur.fetchall()
                 logger.debug(msg="Select all the following AUTOKARMA keys : %s" % str(value))
 
-                #for each autokarma key we chech if included in word to increase his value karma
+                # for each autokarma key we chech if included in word to increase his value karma
                 for autok in value:
                     if unidecrease in autok:
                         autok = autok.replace(unidecrease, '--')
