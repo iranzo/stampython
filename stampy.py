@@ -1374,7 +1374,6 @@ def process():
                                 valuei = valuei.replace(unidecrease, '--')
                             wordadd.append(valuei[0])
                             logger.debug(msg="%s word found, processing %s auto-karma increase" % (autok[0], valuei[0]))
-                            sendmessage(chat_id=chat_id, text="%s triggers %s++ autokarma" % (autok[0], valuei[0]), reply_to_message_id=message_id, parse_mode="Markdown")
 
                 if "++" in word or "--" in word:
                     logger.debug(msg="Processing word %s sent by id %s with username %s (%s %s)" % (
