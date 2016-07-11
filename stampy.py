@@ -790,10 +790,14 @@ def autokcommands(texto, chat_id, message_id, who_un):
                 if "=" in word:
                     key = word.split('=')[0]
                     value = texto.split('=')[1:][0]
-                text = "Deleting autokarma pair for `%s - %s`" % (key, value)
-                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+                    text = "Deleting autokarma pair for `%s - %s`" % (key, value)
+                    sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
                             parse_mode="Markdown")
-                deleteautok(key=key, value=value)
+                    deleteautok(key=key, value=value)
+                else:
+                    text = "Deleting autokarma requires following syntax /autok delete <key>=<value>.\n\nPlease use /help for more info"
+                    sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+                            parse_mode="Markdown")
                 break
             if case():
                 word = texto.split(' ')[1]
@@ -1374,7 +1378,6 @@ def process():
                                 valuei = valuei.replace(unidecrease, '--')
                             wordadd.append(valuei[0])
                             logger.debug(msg="%s word found, processing %s auto-karma increase" % (autok[0], valuei[0]))
-                            sendmessage(chat_id=chat_id, text="%s triggers %s++ autokarma" % (autok[0], valuei[0]), reply_to_message_id=message_id, parse_mode="Markdown")
 
                 if "++" in word or "--" in word:
                     logger.debug(msg="Processing word %s sent by id %s with username %s (%s %s)" % (
