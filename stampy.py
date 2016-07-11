@@ -40,13 +40,15 @@ p.add_option("-b", "--database", dest="database",
              help="database file for storing karma and last processed message",
              default="stampy.db")
 p.add_option('-v', "--verbosity", dest="verbosity",
-             help="Set verbosity level for messages while running/logging", default=0, type='choice',
+             help="Set verbosity level for messages while running/logging",
+             default=0, type='choice',
              choices=["info", "debug", "warn", "critical"])
 p.add_option('-u', "--url", dest="url",
              help="Define URL for accessing bot API",
              default="https://api.telegram.org/bot")
 p.add_option('-o', '--owner', dest='owner',
-             help="Define owner username for monitoring service", default="iranzo")
+             help="Define owner username for monitoring service",
+             default="iranzo")
 p.add_option('-d', '--daemon', dest='daemon', help="Run as daemon",
              default=False, action="store_true")
 
@@ -131,16 +133,18 @@ def dbsql(sql=False):
     return worked
 
 
-def sendmessage(chat_id=0, text="", reply_to_message_id=False, disable_web_page_preview=True, parse_mode=False,
+def sendmessage(chat_id=0, text="", reply_to_message_id=False,
+                disable_web_page_preview=True, parse_mode=False,
                 extra=False):
     """
     Sends a message to a chat
     :param chat_id: chat_id to receive the message
     :param text: message text
     :param reply_to_message_id: message_id to reply
-    :param disable_web_page_preview: do not expand links to include page preview
+    :param disable_web_page_preview: do not expand links to include preview
     :param parse_mode: use specific format (markdown, html)
-    :param extra: extra parameters to send (for future functions like keyboard_markup)
+    :param extra: extra parameters to send
+                 (for future functions like keyboard_markup)
     :return:
     """
 
@@ -160,19 +164,21 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False, disable_web_page_
             texto = "%s```" % texto
 
         # Send first batch
-        sendmessage(chat_id=chat_id, text=texto, reply_to_message_id=reply_to_message_id,
-                    disable_web_page_preview=disable_web_page_preview, parse_mode=parse_mode, extra=extra)
+        sendmessage(chat_id=chat_id, text=texto,
+                    reply_to_message_id=reply_to_message_id,
+                    disable_web_page_preview=disable_web_page_preview,
+                    parse_mode=parse_mode, extra=extra)
         # Send remaining batch
         texto = string.join(lines[maxlines:], "\n")
         if markdown:
             texto = "```%s" % texto
         sendmessage(chat_id=chat_id, text=texto, reply_to_message_id=False,
-                    disable_web_page_preview=disable_web_page_preview, parse_mode=parse_mode, extra=extra)
+                    disable_web_page_preview=disable_web_page_preview,
+                    parse_mode=parse_mode, extra=extra)
         return
 
-    message = "%s?chat_id=%s&text=%s" % (url, chat_id,
-                                         urllib.quote_plus(text.encode('utf-8'))
-                                         )
+    message = "%s?chat_id=%s&text=%s" % (
+              url, chat_id, urllib.quote_plus(text.encode('utf-8')))
     if reply_to_message_id:
         message += "&reply_to_message_id=%s" % reply_to_message_id
     if disable_web_page_preview:
@@ -186,7 +192,8 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False, disable_web_page_
     while not code:
         result = json.load(urllib.urlopen(message))
         code = result['ok']
-        logger.error(msg="ERROR sending message: Code: %s : Text: %s" % (code, result))
+        logger.error(msg="ERROR sending message: Code: %s : Text: %s" % (
+                         code, result))
         sleep(1)
     logger.debug(msg="Sending message: Code: %s : Text: %s" % (code, text))
     return
@@ -334,7 +341,8 @@ def putkarma(word, value):
     if getkarma(word) == 0:
         createkarma(word)
     if value != 0:
-        sql = "UPDATE karma SET value = '%s' WHERE word = '%s';" % (value, word)
+        sql = "UPDATE karma SET value = '%s' WHERE word = '%s';" % (
+              value, word)
     else:
         sql = "DELETE FROM karma WHERE  word = '%s';" % word
     dbsql(sql)
@@ -366,7 +374,8 @@ def getstats(type=False, id=0, name=False, date=False, count=0):
         value = False
     if not count:
         count = 0
-    logger.debug(msg="values: type:%s, id:%s, name:%s, date:%s, count:%s" % (type, id, name, date, count))
+    logger.debug(msg="values: type:%s, id:%s, name:%s, date:%s, count:%s" % (
+                     type, id, name, date, count))
 
     return value
 
@@ -394,11 +403,13 @@ def updatestats(type=False, id=0, name=False, date=False):
     name = name
 
     # Assume value doesn't exist, then set to update if it does
-    sql = "INSERT INTO stats VALUES('%s', '%s', '%s', '%s', '%s');" % (type, id, name, date, count)
+    sql = "INSERT INTO stats VALUES('%s', '%s', '%s', '%s', '%s');" % (
+          type, id, name, date, count)
     if value:
         sql = "UPDATE stats SET type='%s',name='%s',date='%s',count='%s' WHERE id='%s';" % (
             type, name, date, count, id)
-    logger.debug(msg="values: type:%s, id:%s, name:%s, date:%s, count:%s" % (type, id, name, date, count))
+    logger.debug(msg="values: type:%s, id:%s, name:%s, date:%s, count:%s" % (
+                     type, id, name, date, count))
 
     if id:
         try:
@@ -416,7 +427,9 @@ def getchatmemberscount(chat_id=False):
     """
 
     logger = logging.getLogger(__name__)
-    url = "%s%s/getChatMembersCount?chat_id=%s" % (config(key='url'), config(key='token'), chat_id)
+    url = "%s%s/getChatMembersCount?chat_id=%s" % (config(key='url'),
+                                                   config(key='token'),
+                                                   chat_id)
     try:
         result = str(json.load(urllib.urlopen(url))['result'])
     except:
@@ -433,7 +446,8 @@ def telegramcommands(texto, chat_id, message_id, who_un):
     :param chat_id:  chat to answer to
     :param message_id: message to reply to
     :param who_un: username of user providing the command
-    :return: True if any telegramcommands where processed , False if no telegramcommands were present
+    :return: True if any telegramcommands where processed,
+             False if no telegramcommands were present
     """
 
     logger = logging.getLogger(__name__)
@@ -448,32 +462,53 @@ def telegramcommands(texto, chat_id, message_id, who_un):
     retv = False
     for case in Switch(word):
         if case('/help'):
-            commandtext = "To use this bot use `word++` or `word--` to increment or decrement karma, a new message will be sent providing the new total\n\n"
-            commandtext += "Use `rank word` or `rank` to get value for actual word or top 10 rankings\n"
-            commandtext += "Use `srank word` to search for similar words already ranked\n\n"
-            commandtext += "Use `/quote add <id> <text>` to add a quote for that username\n"
-            commandtext += "Use `/quote <id>` to get a random quote from that username\n\n"
+            commandtext = "To use this bot use `word++` or `word--` to "
+            commandtext += "increment or decrement karma, a new message will"
+            commandtext += " be sent providing the new total\n\n"
+            commandtext += "Use `rank word` or `rank` to get value for actual "
+            commandtext += "word or top 10 rankings\n"
+            commandtext += "Use `srank word` to search for similar words"
+            commandtext += " already ranked\n\n"
+            commandtext += "Use `/quote add <id> <text>` to add a quote for"
+            commandtext += " that username\n"
+            commandtext += "Use `/quote <id>` to get a random quote from"
+            commandtext += " that username\n\n"
             if config(key='owner') == who_un:
-                commandtext += "Use `/quote del <quoteid>` to remove a quote\n\n"
-                commandtext += "Use `/alias <key>=<value>` to assign an alias for karma\n"
+                commandtext += "Use `/quote del <quoteid>` " \
+                               "to remove a quote\n\n"
+                commandtext += "Use `/alias <key>=<value>`" \
+                               " to assign an alias for karma\n"
                 commandtext += "Use `/alias list` to list aliases\n"
-                commandtext += "Use `/alias delete <key>` to remove an alias\n\n"
-                commandtext += "Use `/stats <user|chat>` to get stats on last usage\n\n"
-                commandtext += "Use `/config show` to get a list of defined config settings\n"
-                commandtext += "Use `/config set <key>=<value>` to define a value for key\n"
+                commandtext += "Use `/alias delete <key>` " \
+                               "to remove an alias\n\n"
+                commandtext += "Use `/stats <user|chat>` " \
+                               "to get stats on last usage\n\n"
+                commandtext += "Use `/config show` to get a list " \
+                               "of defined config settings\n"
+                commandtext += "Use `/config set <key>=<value>` to define" \
+                               " a value for key\n"
                 commandtext += "Use `/config delete <key>` to delete key\n\n"
-                commandtext += "Use `/autok <key>=<value>` to autokarma value every time key is in the conversation. Multiple values for same key can be added\n\n"
-                commandtext += "Use `/autok delete <key>=<value>` to delete autokarma <value> for <key>\n\n"
-                commandtext += "Use `/autok list` to list autokarma <key> <value> pairs\n\n"
-            commandtext += "Learn more about this bot in [https://github.com/iranzo/stampython](https://github.com/iranzo/stampython)"
+                commandtext += "Use `/autok <key>=<value>` to autokarma" \
+                               " value every time key is in" \
+                               " the conversation. "\
+                               "Multiple values for same key can be added\n\n"
+                commandtext += "Use `/autok delete <key>=<value>` to delete" \
+                               " autokarma <value> for <key>\n\n"
+                commandtext += "Use `/autok list` to list autokarma " \
+                               "<key> <value> pairs\n\n"
+            commandtext += "Learn more about this bot in " \
+                           "[https://github.com/iranzo/stampython]" \
+                           "(https://github.com/iranzo/stampython)"
             retv = True
             break
         if case('/start'):
-            commandtext = "This bot does not use start or stop commands, it automatically checks for karma operands"
+            commandtext = "This bot does not use start or stop commands,"
+            commandtext += " it automatically checks for karma operands"
             retv = True
             break
         if case('/stop'):
-            commandtext = "This bot does not use start or stop commands, it automatically checks for karma operands"
+            commandtext = "This bot does not use start or stop commands, "
+            commandtext += "it automatically checks for karma operands"
             retv = True
             break
         if case('/alias'):
@@ -501,7 +536,8 @@ def telegramcommands(texto, chat_id, message_id, who_un):
 
     # If any of above commands did match, send command
     if commandtext:
-        sendmessage(chat_id=chat_id, text=commandtext, reply_to_message_id=message_id, parse_mode="Markdown")
+        sendmessage(chat_id=chat_id, text=commandtext,
+                    reply_to_message_id=message_id, parse_mode="Markdown")
         logger.debug(msg="Command: %s" % word)
     return retv
 
@@ -517,7 +553,8 @@ def listautok(word=False):
     if word:
         # if word is provided, return the alias for that word
         string = (word,)
-        sql = "SELECT * FROM autokarma WHERE key='%s' ORDER by key ASC;" % string
+        sql = "SELECT * FROM autokarma WHERE key='%s' ORDER by key ASC;" % (
+              string)
         dbsql(sql)
 
         try:
@@ -577,7 +614,8 @@ def getautok(key, value):
     """
 
     logger = logging.getLogger(__name__)
-    sql = "SELECT * FROM autokarma WHERE key='%s' and value='%s';" % (key, value)
+    sql = "SELECT * FROM autokarma WHERE key='%s' and value='%s';" % (
+          key, value)
     dbsql(sql)
     svalue = cur.fetchone()
     logger.debug(msg="getautok: %s - %s" % (key, value))
@@ -605,8 +643,9 @@ def createautok(word, value):
     """
 
     logger = logging.getLogger(__name__)
-    if getautok(word, value) == False:
-        logger.error(msg="createautok: autok pair %s - %s already exists" % (word, value))
+    if not getautok(word, value):
+        logger.error(msg="createautok: autok pair %s - %s already exists" % (
+                         word, value))
     else:
         sql = "INSERT INTO autokarma VALUES('%s','%s');" % (word, value)
         logger.debug(msg="createautok: %s=%s" % (word, value))
@@ -624,7 +663,8 @@ def createalias(word, value):
 
     logger = logging.getLogger(__name__)
     if getalias(value) == word:
-        logger.error(msg="createalias: circular reference %s=%s" % (word, value))
+        logger.error(msg="createalias: circular reference %s=%s" % (
+                         word, value))
     else:
         if not getalias(word) or getalias(word) == word:
             sql = "INSERT INTO alias VALUES('%s','%s');" % (word, value)
@@ -782,7 +822,9 @@ def autokcommands(texto, chat_id, message_id, who_un):
         for case in Switch(command):
             if case('list'):
                 text = listautok(word)
-                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+                sendmessage(chat_id=chat_id, text=text,
+                            reply_to_message_id=message_id,
+                            disable_web_page_preview=True,
                             parse_mode="Markdown")
                 break
             if case('delete'):
@@ -790,23 +832,33 @@ def autokcommands(texto, chat_id, message_id, who_un):
                 if "=" in word:
                     key = word.split('=')[0]
                     value = texto.split('=')[1:][0]
-                    text = "Deleting autokarma pair for `%s - %s`" % (key, value)
-                    sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
-                            parse_mode="Markdown")
+                    text = "Deleting autokarma pair for `%s - %s`" % (
+                           key, value)
+                    sendmessage(chat_id=chat_id, text=text,
+                                reply_to_message_id=message_id,
+                                disable_web_page_preview=True,
+                                parse_mode="Markdown")
                     deleteautok(key=key, value=value)
                 else:
-                    text = "Deleting autokarma requires following syntax /autok delete <key>=<value>.\n\nPlease use /help for more info"
-                    sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
-                            parse_mode="Markdown")
+                    text = "Deleting autokarma requires following syntax"
+                    text += " /autok delete <key>=<value>.\n\n"
+                    text += "Please use /help for more info"
+                    sendmessage(chat_id=chat_id, text=text,
+                                reply_to_message_id=message_id,
+                                disable_web_page_preview=True,
+                                parse_mode="Markdown")
                 break
             if case():
                 word = texto.split(' ')[1]
                 if "=" in word:
                     key = word.split('=')[0]
                     value = texto.split('=')[1:][0]
-                    text = "Setting autokarma for `%s` triggers `%s++`" % (key, value)
-                    sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id,
-                                disable_web_page_preview=True, parse_mode="Markdown")
+                    text = "Setting autokarma for `%s` triggers `%s++`" % (
+                           key, value)
+                    sendmessage(chat_id=chat_id, text=text,
+                                reply_to_message_id=message_id,
+                                disable_web_page_preview=True,
+                                parse_mode="Markdown")
                     createautok(word=key, value=value)
 
     return
@@ -838,13 +890,17 @@ def aliascommands(texto, chat_id, message_id, who_un):
         for case in Switch(command):
             if case('list'):
                 text = listalias(word)
-                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+                sendmessage(chat_id=chat_id, text=text,
+                            reply_to_message_id=message_id,
+                            disable_web_page_preview=True,
                             parse_mode="Markdown")
                 break
             if case('delete'):
                 key = word
                 text = "Deleting alias for `%s`" % key
-                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+                sendmessage(chat_id=chat_id, text=text,
+                            reply_to_message_id=message_id,
+                            disable_web_page_preview=True,
                             parse_mode="Markdown")
                 deletealias(word=key)
                 break
@@ -854,9 +910,12 @@ def aliascommands(texto, chat_id, message_id, who_un):
                     key = word.split('=')[0]
                     value = texto.split('=')[1:][0]
                     text = "Setting alias for `%s` to `%s`" % (key, value)
-                    sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id,
-                                disable_web_page_preview=True, parse_mode="Markdown")
-                    # Removing duplicates on karma DB and add the previous values
+                    sendmessage(chat_id=chat_id, text=text,
+                                reply_to_message_id=message_id,
+                                disable_web_page_preview=True,
+                                parse_mode="Markdown")
+                    # Removing duplicates on karma DB and add
+                    # the previous values
                     old = getkarma(key)
                     updatekarma(word=key, change=-old)
                     updatekarma(word=value, change=old)
@@ -885,22 +944,27 @@ def quotecommands(texto, chat_id, message_id, who_un):
         command = False
 
     for case in Switch(command):
-        # cur.execute('CREATE TABLE quote(id AUTOINCREMENT, name TEXT, date TEXT, text TEXT;')
+        # cur.execute('CREATE TABLE quote(id AUTOINCREMENT, name TEXT,
+        # date TEXT, text TEXT;')
         if case('add'):
             who_quote = texto.split(' ')[2]
             date = time.time()
             quote = str.join(" ", texto.split(' ')[3:])
             result = addquote(username=who_quote, date=date, text=quote)
             text = "Quote `%s` added" % result
-            sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+            sendmessage(chat_id=chat_id, text=text,
+                        reply_to_message_id=message_id,
+                        disable_web_page_preview=True,
                         parse_mode="Markdown")
             break
         if case('del'):
             if who_un == config(key='owner'):
                 id_todel = texto.split(' ')[2]
                 text = "Deleting quote id `%s`" % id_todel
-                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id,
-                            disable_web_page_preview=True, parse_mode="Markdown")
+                sendmessage(chat_id=chat_id, text=text,
+                            reply_to_message_id=message_id,
+                            disable_web_page_preview=True,
+                            parse_mode="Markdown")
                 deletequote(id=id_todel)
             break
         if case():
@@ -912,13 +976,16 @@ def quotecommands(texto, chat_id, message_id, who_un):
             try:
                 (quoteid, username, date, quote) = getquote(username=nick)
                 datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
-                text = '`%s` -- `@%s`, %s (id %s)' % (quote, username, datefor, quoteid)
+                text = '`%s` -- `@%s`, %s (id %s)' % (
+                       quote, username, datefor, quoteid)
             except:
                 if nick:
                     text = "No quote recorded for `%s`" % nick
                 else:
                     text = "No quote found"
-            sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+            sendmessage(chat_id=chat_id, text=text,
+                        reply_to_message_id=message_id,
+                        disable_web_page_preview=True,
                         parse_mode="Markdown")
 
     return
@@ -967,7 +1034,8 @@ def addquote(username=False, date=False, text=False):
     """
 
     logger = logging.getLogger(__name__)
-    sql = "INSERT INTO quote(username, date, text) VALUES('%s','%s', '%s');" % (username, date, text)
+    sql = "INSERT INTO quote(username, date, text) VALUES('%s','%s', '%s');" % (
+          username, date, text)
     dbsql(sql)
     logger.debug(msg="createquote: %s=%s on %s" % (username, text, date))
     # Retrieve last id
@@ -1018,13 +1086,17 @@ def configcommands(texto, chat_id, message_id, who_un):
         for case in Switch(command):
             if case('show'):
                 text = showconfig(word)
-                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+                sendmessage(chat_id=chat_id, text=text,
+                            reply_to_message_id=message_id,
+                            disable_web_page_preview=True,
                             parse_mode="Markdown")
                 break
             if case('delete'):
                 key = word
                 text = "Deleting config for `%s`" % key
-                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+                sendmessage(chat_id=chat_id, text=text,
+                            reply_to_message_id=message_id,
+                            disable_web_page_preview=True,
                             parse_mode="Markdown")
                 deleteconfig(word=key)
                 break
@@ -1035,8 +1107,10 @@ def configcommands(texto, chat_id, message_id, who_un):
                     value = word.split('=')[1]
                     setconfig(key=key, value=value)
                     text = "Setting config for `%s` to `%s`" % (key, value)
-                    sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id,
-                                disable_web_page_preview=True, parse_mode="Markdown")
+                    sendmessage(chat_id=chat_id, text=text,
+                                reply_to_message_id=message_id,
+                                disable_web_page_preview=True,
+                                parse_mode="Markdown")
                 break
             if case():
                 break
@@ -1089,7 +1163,9 @@ def statscommands(texto, chat_id, message_id, who_un):
         for case in Switch(command):
             if case('show'):
                 text = showstats(key)
-                sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True,
+                sendmessage(chat_id=chat_id, text=text,
+                            reply_to_message_id=message_id,
+                            disable_web_page_preview=True,
                             parse_mode="Markdown")
                 break
             if case():
@@ -1108,7 +1184,8 @@ def karmacommands(texto, chat_id, message_id):
     """
 
     logger = logging.getLogger(__name__)
-    # Process lines for commands in the first word of the line (Telegram commands)
+    # Process lines for commands in the first
+    # word of the line (Telegram commands)
     word = texto.split()[0]
     commandtext = False
 
@@ -1255,7 +1332,8 @@ def stampy(chat_id="", karma=0):
 
 def process():
     """
-    This function processes the updates in the Updates URL at Telgram for finding commands, karma changes, config, etc
+    This function processes the updates in the Updates URL at Telgram
+    for finding commands, karma changes, config, etc
     """
 
     logger = logging.getLogger(__name__)
@@ -1344,13 +1422,15 @@ def process():
             # Search for karma commands
             karmacommands(texto, chat_id, message_id)
 
-            # Process each word in the line received to search for karma operators
+            # Process each word in the line received
+            # to search for karma operators
 
             wordadd = []
             worddel = []
 
             for word in text_to_process:
-                # Unicode — is sometimes provided by telegram cli, using that also as comparison
+                # Unicode — is sometimes provided by telegram cli,
+                # using that also as comparison
                 unidecrease = u"—"
 
                 if unidecrease in word:
@@ -1360,16 +1440,21 @@ def process():
                 sql = "SELECT distinct key FROM autokarma;"
                 dbsql(sql)
                 value = cur.fetchall()
-                logger.debug(msg="Select all the following AUTOKARMA keys : %s" % str(value))
+                msg = "Select all the following"
+                msg += " AUTOKARMA keys : %s" % str(value)
+                logger.debug(msg)
 
-                # for each autokarma key we chech if included in word to increase his value karma
+                # for each autokarma key we chech if included
+                # in word to increase his value karma
                 for autok in value:
                     if unidecrease in autok:
                         autok = autok.replace(unidecrease, '--')
-                    logger.debug(msg="Dealing with AUTOKARMA key :%s" % str(autok))
+                    msg = "Dealing with AUTOKARMA key :%s" % str(autok)
+                    logger.debug(msg)
                     if autok[0] in word:
                         string = (autok[0],)
-                        sql = "SELECT value FROM autokarma where key='%s';" % string
+                        sql = "SELECT value FROM autokarma where key='%s';" % (
+                              string)
                         logger.debug(msg=sql)
                         dbsql(sql)
                         autov = cur.fetchall()
@@ -1377,13 +1462,19 @@ def process():
                             if unidecrease in valuei:
                                 valuei = valuei.replace(unidecrease, '--')
                             wordadd.append(valuei[0])
-                            logger.debug(msg="%s word found, processing %s auto-karma increase" % (autok[0], valuei[0]))
+                            msg = "%s word found," % autok[0]
+                            msg += " processing %s auto-karma increase" % (
+                                   valuei[0])
+                            logger.debug(msg)
 
                 if "++" in word or "--" in word:
-                    logger.debug(msg="Processing word %s sent by id %s with username %s (%s %s)" % (
-                                     word, who_id, who_un, who_gn, who_ln))
+                    msg = "Processing word"
+                    msg += " %s sent by id %s with username %s (%s %s)" % (
+                           word, who_id, who_un, who_gn, who_ln)
+                    logger.debug(msg)
 
-                    # This should help to avoid duplicate karma operations in the same message
+                    # This should help to avoid duplicate karma operations
+                    # in the same message
                     oper = ""
                     if len(word) >= 4:
                         oper = word[-2:]
@@ -1400,27 +1491,35 @@ def process():
             for word in wordadd + worddel:
                 change = 0
                 if word in wordadd:
-                    change = change + 1
+                    change += 1
                     oper = "++"
                 if word in worddel:
-                    change = change - 1
+                    change -= 1
                     oper = "--"
 
                 if change != 0:
-                    logger.debug(msg="%s Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)" % (
-                        oper, word, chat_id, message_id, chat_name, who_id, who_un, who_gn, who_ln))
+                    msg = "%s Found in %s at %s with id %s (%s)," \
+                          " sent by id %s named %s (%s %s)" % (
+                              oper, word, chat_id, message_id,
+                              chat_name, who_id,
+                              who_un, who_gn, who_ln)
+                    logger.debug(msg)
 
                     karma = updatekarma(word=word, change=change)
                     if karma != 0:
                         # Karma has changed, report back
-                        text = "`%s` now has `%s` karma points." % (word, karma)
+                        text = "`%s` now has `%s` karma points." % (
+                               word, karma)
                     else:
                         # New karma is 0
-                        text = "`%s` now has no Karma and has been garbage collected." % word
+                        text = "`%s` now has no Karma and has" % word
+                        text += " been garbage collected."
 
                     # Send originating user for karma change a reply with
                     # the new value
-                    sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, parse_mode="Markdown")
+                    sendmessage(chat_id=chat_id, text=text,
+                                reply_to_message_id=message_id,
+                                parse_mode="Markdown")
                     stampy(chat_id=chat_id, karma=karma)
 
     logger.info(msg="Last processed message at: %s" % date)
@@ -1434,7 +1533,8 @@ def process():
 
 def loglevel():
     """
-    This functions stores or sets the proper log level based on the database configuration
+    This functions stores or sets the proper log level based on the
+    database configuration
     """
 
     logger = logging.getLogger(__name__)
@@ -1457,13 +1557,16 @@ def loglevel():
             # Default to DEBUG log level
             level = logging.DEBUG
 
-    # If logging level has changed, redefine in logger, database and send message
+    # If logging level has changed, redefine in logger,
+    # database and send message
     if logging.getLevelName(logger.level).lower() != config(key="verbosity"):
         logger.setLevel(level)
         logger.info(msg="Logging level set to %s" % config(key="verbosity"))
-        setconfig(key="verbosity", value=logging.getLevelName(logger.level).lower())
+        setconfig(key="verbosity",
+                  value=logging.getLevelName(logger.level).lower())
     else:
-        logger.debug(msg="Log level didn't changed from %s" % config(key="verbosity").lower())
+        logger.debug(msg="Log level didn't changed from %s" % (
+                         config(key="verbosity").lower()))
 
 
 def conflogging():
@@ -1476,7 +1579,8 @@ def conflogging():
     # Define logging settings
     if not config(key="verbosity"):
         if not options.verbosity:
-            # If we don't have defined command line value and it's not stored, use DEBUG
+            # If we don't have defined command line value and it's not stored,
+            # use DEBUG
             setconfig(key="verbosity", value="DEBUG")
         else:
             setconfig(key="verbosity", value=options.verbosity)
@@ -1528,7 +1632,9 @@ def main():
             token = options.token
             setconfig(key='token', value=token)
         else:
-            logger.critical(msg="Token required for operation, please check https://core.telegram.org/bots")
+            msg = "Token required for operation, please check"
+            msg += " https://core.telegram.org/bots"
+            logger.critical(msg)
             sys.exit(1)
     else:
         token = config(key='token')
