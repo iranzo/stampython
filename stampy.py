@@ -1417,7 +1417,7 @@ def process():
             if telegramcommands(texto, chat_id, message_id, who_un):
                 text_to_process = ""
             else:
-                text_to_process = texto.lower().replace("'", "").replace("@", "").split(" ")
+                text_to_process = texto.lower().replace("'", "").replace("@", "").replace("\n"," ").split(" ")
 
             # Search for karma commands
             karmacommands(texto, chat_id, message_id)
