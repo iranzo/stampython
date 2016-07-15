@@ -7,5 +7,7 @@
 - Initial load of karma points from older bot (possible separate script)
 - Implement banning of consecutive karma changes from same user for a period of time
     - Implement /settings to store settings per chat [be silent, timeout for ban, etc]
-- Implement setting karma each time a word is written (or word regexp) for bussiness bingo-like events
-
+- Implement 'highlight', so  when a bot is in a channel the user is, allow
+	that user to get a private notification from bot highlighting that
+	word to him. (This should require per-user settings and be limited
+	to group chats were user is in (getChatMember and https://core.telegram.org/bots/api#forwardmessage)
