@@ -8,6 +8,9 @@ from stampy.stampy import getkarma, updatekarma, putkarma, config, setconfig,\
 
 
 class TestStampy(TestCase):
+    def test_createdb(self):
+        createdb()
+        
     def test_setconfig(self):
         setconfig('token', '279488169:AAFqGVesZ-83n9sFxfLQxUUCVO8_8L3JNEU')
         setconfig('owner', 'iranzo')
