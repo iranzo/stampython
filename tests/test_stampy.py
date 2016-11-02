@@ -17,6 +17,7 @@ setconfig('token', '279488169:AAFqGVesZ-83n9sFxfLQxUUCVO8_8L3JNEU')
 setconfig('owner', 'iranzo')
 setconfig('url', 'https://api.telegram.org/bot')
 
+
 class TestStampy(TestCase):
     def test_owner(self):
         self.assertEqual(config('owner'), 'iranzo')
