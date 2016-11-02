@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 # Description: Bot for controlling karma on Telegram
-# Author: Pablo Iranzo Gomez (Pablo.Iranzo@gmail.com)
+# Author: Pablo Iranzo Gomez (Pabdatabaselo.Iranzo@gmail.com)
 #
 #
 # This program is free software; you can redistribute it and/or modify
@@ -110,8 +110,11 @@ try:
 except lite.Error, e:
     createdb()
     print "Error %s:" % e.args[0]
-    print "DB has been created, please, execute again"
-    sys.exit(1)
+    print "DB has been created, continuing"
+    con = lite.connect(options.database)
+    cur = con.cursor()
+    cur.execute("SELECT * FROM config WHERE key='token';")
+    data = cur.fetchone()
 
 
 # Database initialized
@@ -283,7 +286,7 @@ def getkarma(word):
     return value
 
 
-def config(key):
+def config(key, default=False):
     """
     Gets configuration from database for a given key
     :param key: key to get configuration for
@@ -301,8 +304,8 @@ def config(key):
         value = value[1]
 
     except:
-        # Value didn't exist before, return 0
-        value = False
+        # Value didn't exist before, return default or False
+        value = default
 
     return value
 
