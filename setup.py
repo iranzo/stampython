@@ -4,9 +4,9 @@
 from distutils.core import setup
 
 setup(
-    name='stampy',
-    version='0.4',
-    packages=['tests', 'stampy'],
+    name='stampython',
+    version='0.41',
+    packages=['stampy'],
     url='https://github.com/iranzo/stampython',
     license='GPL',
     author='Pablo Iranzo Gómez',
