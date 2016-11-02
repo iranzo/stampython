@@ -1,2 +1,4 @@
 exec
 .idea
+*.pyc
+.tox

@@ -1,20 +1,15 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from setuptools import setup
+from distutils.core import setup
 
-setup(name='stampython',
-      version='0.4',
-      description='Karma bot for Telegram',
-      url='http://github.com/iranzo/stampython',
-      author='Pablo Iranzo Gómez',
-      author_email='Pablo.Iranzo@gmail.com',
-      license='GPL',
-      scripts=['stampy.py'],
-      install_requires=[
-          'json',
-          'sqlite3',
-          'urllib',
-          'prettytable',
-      ],
-      zip_safe=False)
+setup(
+    name='stampy',
+    version='0.4',
+    packages=['tests', 'stampy'],
+    url='https://github.com/iranzo/stampython',
+    license='GPL',
+    author='Pablo Iranzo Gómez',
+    author_email='Pablo.Iranzo@gmail.com',
+    description='Telegram bot for controlling Karma'
+)
