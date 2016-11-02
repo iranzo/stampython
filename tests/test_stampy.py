@@ -4,18 +4,20 @@
 from unittest import TestCase
 
 from stampy.stampy import getkarma, updatekarma, putkarma, config, setconfig,\
-    sendmessage
+    sendmessage, createdb
 
+# Precreate DB for other operations to work
+try:
+    createdb()
+except:
+    pass
+
+# Define configuration for tests
+setconfig('token', '279488169:AAFqGVesZ-83n9sFxfLQxUUCVO8_8L3JNEU')
+setconfig('owner', 'iranzo')
+setconfig('url', 'https://api.telegram.org/bot')
 
 class TestStampy(TestCase):
-    def test_createdb(self):
-        createdb()
-        
-    def test_setconfig(self):
-        setconfig('token', '279488169:AAFqGVesZ-83n9sFxfLQxUUCVO8_8L3JNEU')
-        setconfig('owner', 'iranzo')
-        setconfig('url', 'https://api.telegram.org/bot')
-
     def test_owner(self):
         self.assertEqual(config('owner'), 'iranzo')
 
