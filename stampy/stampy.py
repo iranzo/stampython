@@ -90,8 +90,12 @@ def createdb():
     cur.execute('CREATE TABLE alias(key TEXT, value TEXT);')
     cur.execute('CREATE TABLE autokarma(key TEXT, value TEXT);')
     cur.execute('CREATE TABLE config(key TEXT, value TEXT);')
-    cur.execute('CREATE TABLE stats(type TEXT, id INT, name TEXT, date TEXT, count INT);')
-    cur.execute('CREATE TABLE quote(id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, date TEXT, text TEXT);')
+    cmd = 'CREATE TABLE stats(type TEXT, id INT, name TEXT, date TEXT, \
+          count INT);'
+    cur.execute(cmd)
+    cmd = 'CREATE TABLE quote(id INTEGER PRIMARY KEY AUTOINCREMENT,  \
+         username TEXT, date TEXT, text TEXT);'
+    cur.execute(cmd)
     return
 
 
@@ -120,6 +124,7 @@ def dbsql(sql=False):
     :return:
     """
     logger = logging.getLogger(__name__)
+    worked = False
     if sql:
         try:
             cur.execute(sql)
@@ -249,7 +254,7 @@ def updatekarma(word=False, change=0):
     :return:
     """
 
-    logger = logging.getLogger(__name__)
+    # logger = logging.getLogger(__name__)
     value = getkarma(word=word)
     return putkarma(word, value + change)
 
@@ -261,7 +266,7 @@ def getkarma(word):
     :return: karma of given word
     """
 
-    logger = logging.getLogger(__name__)
+    # logger = logging.getLogger(__name__)
     string = (word,)
     sql = "SELECT * FROM karma WHERE word='%s';" % string
     dbsql(sql)
@@ -285,7 +290,7 @@ def config(key):
     :return: value in database for that key
     """
 
-    logger = logging.getLogger(__name__)
+    # logger = logging.getLogger(__name__)
     string = (key,)
     sql = "SELECT * FROM config WHERE key='%s';" % string
     dbsql(sql)
@@ -310,7 +315,7 @@ def saveconfig(key, value):
     :return:
     """
 
-    logger = logging.getLogger(__name__)
+    # logger = logging.getLogger(__name__)
     if value:
         sql = "UPDATE config SET value = '%s' WHERE key = '%s';" % (value, key)
         dbsql(sql)
@@ -324,7 +329,7 @@ def createkarma(word):
     :return:
     """
 
-    logger = logging.getLogger(__name__)
+    # logger = logging.getLogger(__name__)
     sql = "INSERT INTO karma VALUES('%s',0);" % word
     return dbsql(sql)
 
@@ -337,7 +342,7 @@ def putkarma(word, value):
     :return:
     """
 
-    logger = logging.getLogger(__name__)
+    # logger = logging.getLogger(__name__)
     if getkarma(word) == 0:
         createkarma(word)
     if value != 0:
@@ -406,7 +411,8 @@ def updatestats(type=False, id=0, name=False, date=False):
     sql = "INSERT INTO stats VALUES('%s', '%s', '%s', '%s', '%s');" % (
           type, id, name, date, count)
     if value:
-        sql = "UPDATE stats SET type='%s',name='%s',date='%s',count='%s' WHERE id='%s';" % (
+        sql = "UPDATE stats SET type='%s',name='%s',date='%s',count='%s' \
+              WHERE id='%s';" % (
             type, name, date, count, id)
     logger.debug(msg="values: type:%s, id:%s, name:%s, date:%s, count:%s" % (
                      type, id, name, date, count))
@@ -617,7 +623,7 @@ def getautok(key, value):
     sql = "SELECT * FROM autokarma WHERE key='%s' and value='%s';" % (
           key, value)
     dbsql(sql)
-    svalue = cur.fetchone()
+    cur.fetchone()
     logger.debug(msg="getautok: %s - %s" % (key, value))
 
     try:
@@ -1001,7 +1007,8 @@ def getquote(username=False):
     logger = logging.getLogger(__name__)
     if username:
         string = (username,)
-        sql = "SELECT * FROM quote WHERE username='%s' ORDER BY RANDOM() LIMIT 1;" % string
+        sql = "SELECT * FROM quote WHERE username='%s' ORDER BY RANDOM() \
+              LIMIT 1;" % string
     else:
         sql = "SELECT * FROM quote ORDER BY RANDOM() LIMIT 1;"
     dbsql(sql)
@@ -1305,7 +1312,7 @@ def stampy(chat_id="", karma=0):
     :return:
     """
 
-    logger = logging.getLogger(__name__)
+    # logger = logging.getLogger(__name__)
     karma = "%s" % karma
     # Sticker definitions for each rank
     x00 = "BQADBAADYwAD17FYAAEidrCCUFH7AgI"
@@ -1490,6 +1497,7 @@ def process():
                                 worddel.append(item)
             for word in wordadd + worddel:
                 change = 0
+                oper = False
                 if word in wordadd:
                     change += 1
                     oper = "++"
@@ -1538,6 +1546,7 @@ def loglevel():
     """
 
     logger = logging.getLogger(__name__)
+    level = False
 
     for case in Switch(config(key="verbosity").lower()):
         # choices=["info", "debug", "warn", "critical"])
@@ -1588,7 +1597,8 @@ def conflogging():
     loglevel()
 
     # create formatter
-    formatter = logging.Formatter('%(asctime)s : %(name)s : %(funcName)s(%(lineno)d) : %(levelname)s : %(message)s')
+    formatter = logging.Formatter('%(asctime)s : %(name)s : \
+                %(funcName)s(%(lineno)d) : %(levelname)s : %(message)s')
 
     # create console handler and set level to debug
     console = logging.StreamHandler()
@@ -1636,8 +1646,6 @@ def main():
             msg += " https://core.telegram.org/bots"
             logger.critical(msg)
             sys.exit(1)
-    else:
-        token = config(key='token')
 
     # Check if we've URL defined on DB or on cli and store
     if not config(key='url'):
