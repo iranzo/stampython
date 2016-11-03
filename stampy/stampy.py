@@ -1454,7 +1454,7 @@ def process():
                 msg += " AUTOKARMA keys : %s" % str(value)
                 logger.debug(msg)
 
-                # for each autokarma key we chech if included
+                # for each autokarma key we check if included
                 # in word to increase his value karma
                 for autok in value:
                     if unidecrease in autok:
