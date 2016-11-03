@@ -1342,7 +1342,7 @@ def stampy(chat_id="", karma=0):
 
 def process():
     """
-    This function processes the updates in the Updates URL at Telgram
+    This function processes the updates in the Updates URL at Telegram
     for finding commands, karma changes, config, etc
     """
 
