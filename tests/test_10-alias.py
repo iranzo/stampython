@@ -67,7 +67,3 @@ class TestStampy(TestCase):
 
         self.assertEqual(getkarma('creilla'), 2)
         self.assertEqual(getkarma('patata'), 1)
-
-    def test_removekarma(self):
-        putkarma('patata', 0)
-        self.assertEqual(getkarma('patata'), 0)
