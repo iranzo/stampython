@@ -15,6 +15,7 @@ except:
 setconfig('token', '279488169:AAFqGVesZ-83n9sFxfLQxUUCVO8_8L3JNEU')
 setconfig('owner', 'iranzo')
 setconfig('url', 'https://api.telegram.org/bot')
+setconfig('verbosity', 'DEBUG')
 
 # Empty karma database in case it contained some leftover
 dbsql('DELETE from karma')
