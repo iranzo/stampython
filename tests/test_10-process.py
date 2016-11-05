@@ -24,4 +24,5 @@ text = [{u'message': {u'date': 1478361249, u'text': u'word++', u'from': {u'usern
 
 class TestStampy(TestCase):
     def test_process(self):
+        text = ""
         process(text)

@@ -4,9 +4,12 @@
 from unittest import TestCase
 
 from stampy.stampy import getkarma, updatekarma, putkarma
+from cleanup import clean
 
 
 class TestStampy(TestCase):
+    clean()
+
     def test_putkarma(self):
         putkarma('patata', 0)
         self.assertEqual(getkarma('patata'), 0)
