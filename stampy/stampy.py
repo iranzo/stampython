@@ -290,6 +290,7 @@ def config(key, default=False):
     """
     Gets configuration from database for a given key
     :param key: key to get configuration for
+    :param default: value to return for key if not define or False
     :return: value in database for that key
     """
 
@@ -1340,7 +1341,19 @@ def stampy(chat_id="", karma=0):
     return
 
 
-def process():
+def replace_all(text, dict):
+    """
+    Replaces text with the dict
+    :param text: Text to process
+    :param dict:  The dictionary of replacements
+    :return: the modified text
+    """
+    for i, j in dict.iteritems():
+        text = text.replace(i, j)
+    return text
+
+
+def process(messages):
     """
     This function processes the updates in the Updates URL at Telegram
     for finding commands, karma changes, config, etc
@@ -1359,8 +1372,20 @@ def process():
     error = False
     count = 0
 
+    # Unicode — is sometimes provided by telegram cli,
+    # using that also as comparison
+    unidecrease = u"—"
+
+    # Define dictionary for text replacements
+    dict = {
+        "'": "",
+        "@": "",
+        "\n": " ",
+        unidecrease: "--"
+    }
+
     # Process each message available in URL and search for karma operators
-    for message in getupdates():
+    for message in messages:
         # Count messages in each batch
         count += 1
         update_id = message['update_id']
@@ -1423,11 +1448,11 @@ def process():
         logger.debug(msg=messageline)
 
         if not error:
-            # Search for telegram commands and if any dissable text processing
+            # Search for telegram commands and if any disable text processing
             if telegramcommands(texto, chat_id, message_id, who_un):
                 text_to_process = ""
             else:
-                text_to_process = texto.lower().replace("'", "").replace("@", "").replace("\n", " ").split(" ")
+                text_to_process = replace_all(texto, dict).lower().split(" ")
 
             # Search for karma commands
             karmacommands(texto, chat_id, message_id)
@@ -1439,13 +1464,6 @@ def process():
             worddel = []
 
             for word in text_to_process:
-                # Unicode — is sometimes provided by telegram cli,
-                # using that also as comparison
-                unidecrease = u"—"
-
-                if unidecrease in word:
-                    word = word.replace(unidecrease, '--')
-
                 # Select all autokarma keys from DB
                 sql = "SELECT distinct key FROM autokarma;"
                 dbsql(sql)
@@ -1665,11 +1683,11 @@ def main():
         setconfig(key='daemon', value=True)
         logger.info(msg="Running in daemon mode")
         while 1 > 0:
-            process()
+            process(getupdates())
             sleep(int(config(key='sleep')))
     else:
         logger.info(msg="Running in one-shoot mode")
-        process()
+        process(getupdates())
 
     # Close database
     if con:
