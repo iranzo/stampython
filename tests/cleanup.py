@@ -20,5 +20,7 @@ def clean():
     # Empty karma database in case it contained some leftover
     dbsql('DELETE from karma')
     dbsql('DELETE from alias')
+    dbsql('DELETE from autokarma')
+    dbsql('DELETE from stats')
     dbsql('DELETE from quote')
     dbsql('UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME="quote"')
