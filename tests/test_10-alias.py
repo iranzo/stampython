@@ -18,6 +18,10 @@ class TestStampy(TestCase):
         putkarma('patata', 1)
         self.assertEqual(getkarma('patata'), 1)
 
+        # Alias doesn't get increased as the 'aliases' modifications are in
+        # process, not in the individual functions
+        self.assertEqual(getkarma('creilla'), 0)
+
     def test_removealias(self):
         deletealias('patata')
         self.assertEqual(getkarma('creilla'), 0)

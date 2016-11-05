@@ -349,6 +349,7 @@ def putkarma(word, value):
     # logger = logging.getLogger(__name__)
     if getkarma(word) == 0:
         createkarma(word)
+
     if value != 0:
         sql = "UPDATE karma SET value = '%s' WHERE word = '%s';" % (
               value, word)
@@ -677,6 +678,12 @@ def createalias(word, value):
                          word, value))
     else:
         if not getalias(word) or getalias(word) == word:
+            # Removing duplicates on karma DB and add
+            # the previous values
+            old = getkarma(word)
+            updatekarma(word=word, change=-old)
+            updatekarma(word=value, change=old)
+
             sql = "INSERT INTO alias VALUES('%s','%s');" % (word, value)
             logger.debug(msg="createalias: %s=%s" % (word, value))
             return dbsql(sql)
@@ -924,11 +931,6 @@ def aliascommands(texto, chat_id, message_id, who_un):
                                 reply_to_message_id=message_id,
                                 disable_web_page_preview=True,
                                 parse_mode="Markdown")
-                    # Removing duplicates on karma DB and add
-                    # the previous values
-                    old = getkarma(key)
-                    updatekarma(word=key, change=-old)
-                    updatekarma(word=value, change=old)
                     createalias(word=key, value=value)
 
     return
