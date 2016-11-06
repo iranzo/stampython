@@ -91,7 +91,7 @@ def createdb():
     cur.execute('CREATE TABLE autokarma(key TEXT, value TEXT);')
     cur.execute('CREATE TABLE config(key TEXT, value TEXT);')
     cmd = 'CREATE TABLE stats(type TEXT, id INT, name TEXT, date TEXT, \
-          count INT);'
+          count INT, memberid TEXT);'
     cur.execute(cmd)
     cmd = 'CREATE TABLE quote(id INTEGER PRIMARY KEY AUTOINCREMENT,  \
          username TEXT, date TEXT, text TEXT);'
@@ -258,8 +258,9 @@ def updatekarma(word=False, change=0):
     """
 
     # logger = logging.getLogger(__name__)
-    value = getkarma(word=word)
-    return putkarma(word, value + change)
+    value = getkarma(word=word) + change
+    putkarma(word, value)
+    return value
 
 
 def getkarma(word):
@@ -343,7 +344,7 @@ def putkarma(word, value):
     Updates value of karma for a word
     :param word: Word to update
     :param value: Value of karma to set
-    :return:
+    :return: sql execution
     """
 
     # logger = logging.getLogger(__name__)
@@ -355,11 +356,11 @@ def putkarma(word, value):
               value, word)
     else:
         sql = "DELETE FROM karma WHERE  word = '%s';" % word
-    dbsql(sql)
-    return value
+    return dbsql(sql)
 
 
-def getstats(type=False, id=0, name=False, date=False, count=0):
+def getstats(type=False, id=0, name=False, date=False, count=0,
+             oldmemberid=[]):
     """
     Gets statistics for specified element
     :param type: chat or user type to query
@@ -367,7 +368,7 @@ def getstats(type=False, id=0, name=False, date=False, count=0):
     :param name: full name
     :param date: date
     :param count: number of messages
-    :return:
+    :return: (type, id, name, date, count, memberid)
     """
 
     logger = logging.getLogger(__name__)
@@ -379,28 +380,39 @@ def getstats(type=False, id=0, name=False, date=False, count=0):
         value = False
 
     if value:
-        (type, id, name, date, count) = value
+        (type, id, name, date, count, oldmemberid) = value
+        try:
+            memberid = json.loads(oldmemberid)
+        except:
+            memberid = []
+
     if not type or not id or not name or not date:
         value = False
     if not count:
         count = 0
-    logger.debug(msg="values: type:%s, id:%s, name:%s, date:%s, count:%s" % (
-                     type, id, name, date, count))
 
-    return value
+    logger.debug(msg="values: type:%s, id:%s, name:%s, date:%s, count:%s, "
+                     "memberid:%s" % (type, id, name, date, count, memberid))
+
+    # Ensure we return the modified values
+    return (type, id, name, date, count, memberid)
 
 
-def updatestats(type=False, id=0, name=False, date=False):
+def updatestats(type=False, id=0, name=False, date=False, memberid=[]):
     """
     Updates count stats for a given type
     :param type: user or chat
     :param id: ID to update
     :param name: name of the chat of user
     :param date: date of the update
+    :param memberid: ID of the origin to add
+        chat_id if type='user'
+        user_id if type='chat'
     :return:
     """
 
     logger = logging.getLogger(__name__)
+
     try:
         value = getstats(type=type, id=id)
         count = value[4] + 1
@@ -408,19 +420,24 @@ def updatestats(type=False, id=0, name=False, date=False):
         value = False
         count = 0
 
-    type = type
-    id = id
-    name = name
-
-    # Assume value doesn't exist, then set to update if it does
-    sql = "INSERT INTO stats VALUES('%s', '%s', '%s', '%s', '%s');" % (
-          type, id, name, date, count)
     if value:
-        sql = "UPDATE stats SET type='%s',name='%s',date='%s',count='%s' \
-              WHERE id='%s';" % (
-            type, name, date, count, id)
-    logger.debug(msg="values: type:%s, id:%s, name:%s, date:%s, count:%s" % (
-                     type, id, name, date, count))
+        newmemberid = value[5]
+    else:
+        newmemberid = []
+
+    # Only add the id if it was not already stored
+    if memberid not in newmemberid:
+        newmemberid.append(memberid)
+
+    sql = "DELETE from stats where id='%s'" % id
+    dbsql(sql)
+
+    sql = "INSERT INTO stats VALUES('%s', '%s', '%s', '%s', '%s', '%s');" % (
+          type, id, name, date, count, json.dumps(newmemberid))
+
+    logger.debug(msg="values: type:%s, id:%s, name:%s, date:%s, count:%s, "
+                     "memberid: %s" % (type, id, name, date, count,
+                                       newmemberid))
 
     if id:
         try:
@@ -433,8 +450,8 @@ def updatestats(type=False, id=0, name=False, date=False):
 def getchatmemberscount(chat_id=False):
     """
     Get number of users in the actual chat_id
-    :param chat_id:
-    :return:
+    :param chat_id: Channel ID to query for the number of users
+    :return: number of members in chat ID.
     """
 
     logger = logging.getLogger(__name__)
@@ -448,6 +465,75 @@ def getchatmemberscount(chat_id=False):
 
     logger.info(msg="Chat id %s users %s" % (chat_id, result))
     return result
+
+
+def getoutofchat(chat_id=False):
+    """
+    Use API call to get the bot out of chats
+    :param: chat_id: Channel ID to leave
+    """
+
+    logger = logging.getLogger(__name__)
+    url = "%s%s/leaveChat?chat_id=%s" % (config(key='url'),
+                                         config(key='token'),
+                                         chat_id)
+    try:
+        result = str(json.load(urllib.urlopen(url))['result'])
+    except:
+        result = 0
+
+    logger.info(msg="Chat id %s left" % chat_id)
+    return result
+
+
+def dochatcleanup(chat_id=False, maxage=365):
+    """
+    Checks on the stats database the date of the last update in the chat
+    :param chat_id: Channel ID to query in database
+    """
+
+    # TODO(iranzo): write function
+
+    if chat_id:
+        sql = "SELECT * FROM stats WHERE type='chat' and id=%s" % chat_id
+    else:
+        sql = "SELECT * FROM stats WHERE type='chat'"
+
+    dbsql(sql)
+    chatids = []
+
+    for row in cur.fetchone():
+        id = row[1]
+        print id
+        chatids.append(id)
+
+    if chat_id:
+        (type, id, name, date, count, memberid) = getstats(type='chat',
+                                                           id=chat_id)
+    chatdate = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
+    now = datetime.datetime.now()
+
+    if (now - chatdate).days > maxage:
+        print "CHAT ID %s is going to be purged" % chat_id
+        # The last update was older than maxage days ago, get out of chat and
+        #  remove karma
+        # getoutofchat(chat_id)
+
+        # Remove channel stats
+        # sql = "DELETE from stats where id='%s' % chat_id"
+        # dbsql(sql)
+
+        # Remove users membership that had that channel id
+        sql = "SELECT * FROM stats WHERE type='user' and memberid LIKE " \
+              "'%%%s%%';" % chat_id
+        dbsql(sql)
+
+        for line in cur.fetchone():
+            (type, id, name, date, count, memberid) = line
+            print "LINE for user %s and memberid: %s will be deleted" % (
+                name, memberid)
+
+    return
 
 
 def telegramcommands(texto, chat_id, message_id, who_un):
@@ -492,7 +578,7 @@ def telegramcommands(texto, chat_id, message_id, who_un):
                 commandtext += "Use `/alias list` to list aliases\n"
                 commandtext += "Use `/alias delete <key>` " \
                                "to remove an alias\n\n"
-                commandtext += "Use `/stats <user|chat>` " \
+                commandtext += "Use `/stats show <user|chat>` " \
                                "to get stats on last usage\n\n"
                 commandtext += "Use `/config show` to get a list " \
                                "of defined config settings\n"
@@ -1181,6 +1267,10 @@ def statscommands(texto, chat_id, message_id, who_un):
                             disable_web_page_preview=True,
                             parse_mode="Markdown")
                 break
+            if case('purge'):
+                dochatcleanup(maxage=365)
+
+                break
             if case():
                 break
 
@@ -1350,6 +1440,7 @@ def replace_all(text, dict):
     :param dict:  The dictionary of replacements
     :return: the modified text
     """
+
     for i, j in dict.iteritems():
         text = text.replace(i, j)
     return text
@@ -1434,12 +1525,14 @@ def process(messages):
 
         # Update stats on the message being processed
         if chat_id and chat_name:
-            updatestats(type="chat", id=chat_id, name=chat_name, date=datefor)
+            updatestats(type="chat", id=chat_id, name=chat_name,
+                        date=datefor, memberid=who_id)
 
         name = "%s %s (@%s)" % (who_gn, who_ln, who_un)
 
         if who_ln:
-            updatestats(type="user", id=who_id, name=name, date=datefor)
+            updatestats(type="user", id=who_id, name=name, date=datefor,
+                        memberid=chat_id)
 
         # Update last message id to later clear it from the server
         if update_id > lastupdateid:
