@@ -499,13 +499,14 @@ def dochatcleanup(chat_id=False, maxage=365):
     else:
         sql = "SELECT * FROM stats WHERE type='chat'"
 
-    dbsql(sql)
     chatids = []
+    cur.execute(sql)
 
     for row in cur.fetchone():
         id = row[1]
         print id
         chatids.append(id)
+    print chatids
 
     if chat_id:
         (type, id, name, date, count, memberid) = getstats(type='chat',
@@ -578,6 +579,8 @@ def telegramcommands(texto, chat_id, message_id, who_un):
                 commandtext += "Use `/alias list` to list aliases\n"
                 commandtext += "Use `/alias delete <key>` " \
                                "to remove an alias\n\n"
+                commandtext += "Use `skarma word=value` " \
+                               "to establish karma of a word\n\n"
                 commandtext += "Use `/stats show <user|chat>` " \
                                "to get stats on last usage\n\n"
                 commandtext += "Use `/config show` to get a list " \
@@ -1307,6 +1310,21 @@ def karmacommands(texto, chat_id, message_id):
             except:
                 word = False
             commandtext = srank(word)
+            break
+        if case('skarma'):
+            try:
+                word = texto.split()[1]
+            except:
+                word = False
+            if "=" in word:
+                key = word.split('=')[0]
+                value = texto.split('=')[1:][0]
+                text = "Setting karma for `%s` to `%s`" % (key, value)
+                sendmessage(chat_id=chat_id, text=text,
+                            reply_to_message_id=message_id,
+                            disable_web_page_preview=True,
+                            parse_mode="Markdown")
+                putkarma(word=key, value=value)
             break
         if case():
             commandtext = False
