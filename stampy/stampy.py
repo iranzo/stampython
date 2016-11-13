@@ -359,8 +359,7 @@ def putkarma(word, value):
     return dbsql(sql)
 
 
-def getstats(type=False, id=0, name=False, date=False, count=0,
-             oldmemberid=[]):
+def getstats(type=False, id=0, name=False, date=False, count=0):
     """
     Gets statistics for specified element
     :param type: chat or user type to query
@@ -386,8 +385,6 @@ def getstats(type=False, id=0, name=False, date=False, count=0,
         except:
             memberid = []
 
-    if not type or not id or not name or not date:
-        value = False
     if not count:
         count = 0
 
@@ -395,7 +392,7 @@ def getstats(type=False, id=0, name=False, date=False, count=0,
                      "memberid:%s" % (type, id, name, date, count, memberid))
 
     # Ensure we return the modified values
-    return (type, id, name, date, count, memberid)
+    return type, id, name, date, count, memberid
 
 
 def updatestats(type=False, id=0, name=False, date=False, memberid=[]):
@@ -502,38 +499,35 @@ def dochatcleanup(chat_id=False, maxage=365):
     chatids = []
     cur.execute(sql)
 
-    for row in cur.fetchone():
-        id = row[1]
-        print id
-        chatids.append(id)
+    for row in cur:
+        chatid = row[1]
+        print chatid
+        chatids.append(chatid)
     print chatids
 
-    if chat_id:
+    for chatid in chatids:
         (type, id, name, date, count, memberid) = getstats(type='chat',
-                                                           id=chat_id)
-    chatdate = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
-    now = datetime.datetime.now()
+                                                           id=chatid)
+        chatdate = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
+        now = datetime.datetime.now()
 
-    if (now - chatdate).days > maxage:
-        print "CHAT ID %s is going to be purged" % chat_id
-        # The last update was older than maxage days ago, get out of chat and
-        #  remove karma
-        # getoutofchat(chat_id)
+        if (now - chatdate).days > maxage:
+            print "CHAT ID %s is going to be purged" % chat_id
+            # The last update was older than maxage days ago, get out of chat and
+            #  remove karma
+            # getoutofchat(chat_id)
 
-        # Remove channel stats
-        # sql = "DELETE from stats where id='%s' % chat_id"
-        # dbsql(sql)
+            # Remove channel stats
+            # sql = "DELETE from stats where id='%s' % chat_id"
+            # dbsql(sql)
 
-        # Remove users membership that had that channel id
-        sql = "SELECT * FROM stats WHERE type='user' and memberid LIKE " \
-              "'%%%s%%';" % chat_id
-        dbsql(sql)
+            # Remove users membership that had that channel id
+            sql = "SELECT * FROM stats WHERE type='user' and memberid LIKE '%%%s%%';" % chat_id
+            dbsql(sql)
 
-        for line in cur.fetchone():
-            (type, id, name, date, count, memberid) = line
-            print "LINE for user %s and memberid: %s will be deleted" % (
-                name, memberid)
-
+            for line in cur:
+                (type, id, name, date, count, memberid) = line
+                print "LINE for user %s and memberid: %s will be deleted" % (name, memberid)
     return
 
 
@@ -1616,7 +1610,7 @@ def process(messages):
 
                     # This should help to avoid duplicate karma operations
                     # in the same message
-                    oper = ""
+
                     if len(word) >= 4:
                         oper = word[-2:]
                         word = word[:-2]
