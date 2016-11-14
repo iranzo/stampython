@@ -487,9 +487,8 @@ def dochatcleanup(chat_id=False, maxage=365):
     """
     Checks on the stats database the date of the last update in the chat
     :param chat_id: Channel ID to query in database
+    :param maxage: defines maximum number of days to allow chats to be non updated
     """
-
-    # TODO(iranzo): write function
 
     if chat_id:
         sql = "SELECT * FROM stats WHERE type='chat' and id=%s" % chat_id
@@ -501,33 +500,38 @@ def dochatcleanup(chat_id=False, maxage=365):
 
     for row in cur:
         chatid = row[1]
-        print chatid
         chatids.append(chatid)
-    print chatids
 
     for chatid in chatids:
         (type, id, name, date, count, memberid) = getstats(type='chat',
                                                            id=chatid)
-        chatdate = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
+        if date and (date != "False"):
+                chatdate = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
+        else:
+            chatdate = datetime.datetime.now()
+
         now = datetime.datetime.now()
 
         if (now - chatdate).days > maxage:
-            print "CHAT ID %s is going to be purged" % chat_id
+            print "CHAT ID %s is going to be purged" % chatid
             # The last update was older than maxage days ago, get out of chat and
             #  remove karma
             # getoutofchat(chat_id)
 
             # Remove channel stats
-            # sql = "DELETE from stats where id='%s' % chat_id"
+            # sql = "DELETE from stats where id='%s' % chatid"
             # dbsql(sql)
 
             # Remove users membership that had that channel id
-            sql = "SELECT * FROM stats WHERE type='user' and memberid LIKE '%%%s%%';" % chat_id
+            sql = "SELECT * FROM stats WHERE type='user' and memberid LIKE '%%%s%%';" % chatid
             dbsql(sql)
 
             for line in cur:
                 (type, id, name, date, count, memberid) = line
                 print "LINE for user %s and memberid: %s will be deleted" % (name, memberid)
+                memberid.remove(chatid)
+                # Update stats entry in database without the removed chat
+                updatestats(type=type, id=id, name=name, date=date, memberid=memberid)
     return
 
 
