@@ -5,6 +5,10 @@ from stampy.stampy import setconfig, createdb, dbsql
 
 
 def clean():
+    """
+    Cleans the most common databases to allow a start fresh scenario
+    :return:
+    """
     # Precreate DB for other operations to work
     try:
         createdb()
