@@ -594,6 +594,7 @@ def telegramcommands(texto, chat_id, message_id, who_un):
                                " autokarma <value> for <key>\n\n"
                 commandtext += "Use `/autok list` to list autokarma " \
                                "<key> <value> pairs\n\n"
+                commandtext += "Use `/quit` to exit daemon mode\n"
             commandtext += "Learn more about this bot in " \
                            "[https://github.com/iranzo/stampython]" \
                            "(https://github.com/iranzo/stampython)"
@@ -629,6 +630,11 @@ def telegramcommands(texto, chat_id, message_id, who_un):
             autokcommands(texto, chat_id, message_id, who_un)
             retv = True
             break
+        if case('/quit'):
+            # Disable running as daemon to ensure we're exiting the loop
+            if config(key='owner') == who_un:
+                setconfig('daemon', False)
+            retv = True
         if case():
             commandtext = False
 
@@ -1793,7 +1799,7 @@ def main():
     if options.daemon or config(key='daemon'):
         setconfig(key='daemon', value=True)
         logger.info(msg="Running in daemon mode")
-        while 1 > 0:
+        while config(key='daemon') == 'True':
             process(getupdates())
             sleep(int(config(key='sleep')))
     else:

@@ -60,3 +60,7 @@ Bot allows to setup alias, so when karma is given to a word, it will instead add
 
 ### quote
 - `/quote del id` to remove a specific quote id from database
+
+
+### quit
+- `/quit` will exit daemon mode
