@@ -1,1 +1,4 @@
 prettytable
+dateutil
+requests
+lxml

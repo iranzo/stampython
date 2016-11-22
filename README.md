@@ -23,6 +23,7 @@ Check more information about [Telegram Bots](https://core.telegram.org/bots/).
 - `word--` to remove karma
 - `/quote add username text` to add a quote for given username with the following text as message
 - `/quote username` to retrieve a random quote for that username.
+- `/dilbert <date>` to retrieve Dilbert's strip for today or supplied date (today if error parsing)
 
 
 ## Extra commands only for owner user
@@ -37,6 +38,9 @@ The bot, once token has been used and owner set via commandline, will store that
 ### Stats
 The bot stores stats on users/chats, remembering the chat/user name and last time seen so it can be later used for purging data not being accessed in a while
 - `/stats show (user|chat)` will list the list of users/chats and time of last update
+
+### Karma
+- `/skarma word=value` will set specified word to the karma value provided.
 
 ### Auto-karma triggers
 Bot allows to trigger auto-karma events, so when keyword is given, it will trigger an event to increase karma value for other words

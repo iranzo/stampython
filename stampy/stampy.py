@@ -25,6 +25,9 @@ import time
 import urllib
 from time import sleep
 
+import dateutil.parser
+import requests
+from lxml import html
 from prettytable import from_db_cursor
 
 description = """
@@ -569,6 +572,8 @@ def telegramcommands(texto, chat_id, message_id, who_un):
             commandtext += " that username\n"
             commandtext += "Use `/quote <id>` to get a random quote from"
             commandtext += " that username\n\n"
+            commandtext += "Use `/dilbert <date>` to get Dilbert's comic "
+            commandtext += "strip for date or today\n\n"
             if config(key='owner') == who_un:
                 commandtext += "Use `/quote del <quoteid>` " \
                                "to remove a quote\n\n"
@@ -635,6 +640,11 @@ def telegramcommands(texto, chat_id, message_id, who_un):
             if config(key='owner') == who_un:
                 setconfig('daemon', False)
             retv = True
+        if case('/dilbert'):
+            dilbertcommands(texto, chat_id, message_id, who_un)
+            retv = True
+            break
+
         if case():
             commandtext = False
 
@@ -1096,6 +1106,34 @@ def quotecommands(texto, chat_id, message_id, who_un):
     return
 
 
+def dilbertcommands(texto, chat_id, message_id, who_un):
+    """
+    Searches for commands related to dilbert
+    :param texto: text of the message
+    :param chat_id:  chat_ID
+    :param message_id: message_ID to reply to
+    :param who_un: username sending the request
+    :return:
+    """
+
+    logger = logging.getLogger(__name__)
+    logger.debug(msg="Command: %s by %s" % (texto, who_un))
+
+    # We might be have been given no command, just /dilbert
+    try:
+        date = texto.split(' ')[1]
+    except:
+        date = False
+
+    if date:
+        try:
+            # Parse date or if in error, use today
+            date = dateutil.parser.parse(date)
+        except:
+            date = datetime.datetime.now()
+    return dilbert(chat_id=chat_id, date=date, reply_to_message_id=message_id)
+
+
 def getquote(username=False):
     """
     Gets quote for a specified username or a random one
@@ -1422,6 +1460,47 @@ def sendsticker(chat_id=0, sticker="", text="", reply_to_message_id=""):
     return json.load(urllib.urlopen(message))
 
 
+def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
+    """
+    Sends an image to chat_id as a reply to a message received
+    :param chat_id: ID of the chat
+    :param image: image URI
+    :param text: Additional text or caption
+    :param reply_to_message_id:
+    :return:
+    """
+
+    logger = logging.getLogger(__name__)
+    url = "%s%s/sendPhoto" % (config(key='url'), config(key='token'))
+    message = "%s?chat_id=%s" % (url, chat_id)
+    message = "%s&photo=%s" % (message, image)
+    if reply_to_message_id:
+        message += "&reply_to_message_id=%s" % reply_to_message_id
+    if text:
+        message += "&caption=%s" % text
+    logger.debug(msg="Sending image: %s" % text)
+    return json.load(urllib.urlopen(message))
+
+
+def dilbert(chat_id=-1001066352913, date=datetime.datetime.now(), reply_to_message_id=""):
+    """
+    Sends Dilbert strip for the date provided
+    :param chat_id: chat to send image to
+    :param date: date to get the strip from that day
+    :param reply_to_message_id: Id of the message to send reply to
+    :return:
+    """
+    # http://dilbert.com/strip/2016-11-22
+    url = "http://dilbert.com/strip/%s-%s-%s" % (date.year, date.month, date.day)
+
+    page = requests.get(url)
+    tree = html.fromstring(page.content)
+    imgsrc = tree.xpath('//img[@class="img-responsive img-comic"]/@src')[0]
+    imgtxt = tree.xpath('//img[@class="img-responsive img-comic"]/@alt')[0]
+
+    return sendimage(chat_id=chat_id, image=imgsrc, text=imgtxt, reply_to_message_id=reply_to_message_id)
+
+
 def stampy(chat_id="", karma=0):
     """
     Returns a sticker for big karma values
@@ -1543,7 +1622,7 @@ def process(messages):
             who_un = message['message']['from']['username']
 
         except:
-            who_un = False
+            who_un = ""
 
         # Update stats on the message being processed
         if chat_id and chat_name:
