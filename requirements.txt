@@ -1,4 +1,4 @@
 prettytable
-dateutil
+python-dateutil
 requests
 lxml

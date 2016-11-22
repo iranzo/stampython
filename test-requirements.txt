@@ -1,3 +1,6 @@
 prettytable
 coverage
 nose
+python-dateutil
+requests
+lxml
