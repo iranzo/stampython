@@ -4,7 +4,6 @@
 # Description: Bot for controlling karma on Telegram
 # Author: Pablo Iranzo Gomez (Pabdatabaselo.Iranzo@gmail.com)
 #
-#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, version 2 of the License.
@@ -1123,14 +1122,20 @@ def dilbertcommands(texto, chat_id, message_id, who_un):
     try:
         date = texto.split(' ')[1]
     except:
-        date = False
+        date = ""
 
-    if date:
-        try:
-            # Parse date or if in error, use today
-            date = dateutil.parser.parse(date)
-        except:
-            date = datetime.datetime.now()
+    try:
+        # Parse date or if in error, use today
+        date = dateutil.parser.parse(date)
+
+        # Force checking if valid date
+        day = date.day
+        month = date.month
+        year = date.year
+        date = datetime.datetime(year=year, month=month, day=day)
+    except:
+        date = datetime.datetime.now()
+
     return dilbert(chat_id=chat_id, date=date, reply_to_message_id=message_id)
 
 
@@ -1491,6 +1496,7 @@ def dilbert(chat_id=-1001066352913, date=datetime.datetime.now(), reply_to_messa
     :return:
     """
     # http://dilbert.com/strip/2016-11-22
+
     url = "http://dilbert.com/strip/%s-%s-%s" % (date.year, date.month, date.day)
 
     page = requests.get(url)
