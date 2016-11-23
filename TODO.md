@@ -5,13 +5,17 @@
         - Move the 10 seconds to be a maximum, allowing to
          store/retrieve the number of messages in average and adapt to
          time of the day and rate
-- Consider having separate karma per group-id to have privacy on the
+- Implement having separate karma per group-id to have privacy on the
   topics discussed on each one (no leaks because of karma)
 - Implement deletion of old stats for users/groups to not clutter
   database
+    - Implementing function for cleanup
 - Implement api 2.1 for checking the list of users/admins in group and
   validate if no other users in group, then leave it automatically and
   purge stats
+    - Couldn't find a way to get the list of users directly, right
+      now is being stored in database and functions to do cleanup are
+      in progress
 - Initial load of karma points from older bot (possible separate script)
 - Implement banning of consecutive karma changes from same user for a
   period of time
