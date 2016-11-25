@@ -3,17 +3,18 @@
 
 from unittest import TestCase
 
-from stampy.stampy import getquote, addquote, deletequote
+import stampy.plugin.quote
 
 
 class TestStampy(TestCase):
     def test_addquote(self):
-        self.assertEqual(addquote('iranzo', 'now', 'Test'), 1)
+        # Last row was 0 before insert
+        self.assertEqual(stampy.plugin.quote.addquote('iranzo', 'now', 'Test'), 0)
 
     def test_getquote(self):
-        self.assertEqual(getquote(),
+        self.assertEqual(stampy.plugin.quote.getquote(),
                          (1, 'iranzo', 'now', 'Test'))
 
     def test_removequote(self):
-        deletequote(id=1)
-        self.assertEqual(getquote(), False)
+        stampy.plugin.quote.deletequote(id=1)
+        self.assertEqual(stampy.plugin.quote.getquote(), False)

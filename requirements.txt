@@ -1,3 +1,4 @@
+apscheduler
 prettytable
 python-dateutil
 requests

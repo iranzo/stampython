@@ -3,9 +3,9 @@
 
 from unittest import TestCase
 
-from stampy.stampy import sendmessage
+import stampy.stampy
 
 
 class TestStampy(TestCase):
     def test_sendmessage(self):
-        sendmessage(chat_id="-158164217", text="UT test")
+        stampy.stampy.sendmessage(chat_id="-158164217", text="UT test")

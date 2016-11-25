@@ -3,12 +3,11 @@
 
 from unittest import TestCase
 
-from stampy.stampy import config
-
-from cleanup import clean
+import cleanup
+import stampy.plugin.config
 
 
 class TestStampy(TestCase):
     def test_owner(self):
-        clean()
-        self.assertEqual(config('owner'), 'iranzo')
+        cleanup.clean()
+        self.assertEqual(stampy.plugin.config.config('owner'), 'iranzo')

@@ -3,24 +3,24 @@
 
 from unittest import TestCase
 
-from stampy.stampy import getkarma, updatekarma, putkarma
-from cleanup import clean
+import stampy.plugin.karma
+import cleanup
 
 
 class TestStampy(TestCase):
-    clean()
+    cleanup.clean()
 
     def test_putkarma(self):
-        putkarma('patata', 0)
-        self.assertEqual(getkarma('patata'), 0)
+        stampy.plugin.karma.putkarma('patata', 0)
+        self.assertEqual(stampy.plugin.karma.getkarma('patata'), 0)
 
     def test_getkarma(self):
-        self.assertEqual(getkarma('patata'), 0)
+        self.assertEqual(stampy.plugin.karma.getkarma('patata'), 0)
 
     def test_updatekarmaplus(self):
-        updatekarma('patata', 2)
-        self.assertEqual(getkarma('patata'), 2)
+        stampy.plugin.karma.updatekarma('patata', 2)
+        self.assertEqual(stampy.plugin.karma.getkarma('patata'), 2)
 
     def test_updatekarmarem(self):
-        updatekarma('patata', -1)
-        self.assertEqual(getkarma('patata'), 1)
+        stampy.plugin.karma.updatekarma('patata', -1)
+        self.assertEqual(stampy.plugin.karma.getkarma('patata'), 1)

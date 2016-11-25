@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 # Description: Bot for controlling karma on Telegram
-# Author: Pablo Iranzo Gomez (Pabdatabaselo.Iranzo@gmail.com)
+# Author: Pablo Iranzo Gomez (Pablo.Iranzo@gmail.com)
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,14 +20,14 @@ import optparse
 import sqlite3 as lite
 import string
 import sys
-import time
 import urllib
 from time import sleep
 
-import dateutil.parser
-import requests
-from lxml import html
-from prettytable import from_db_cursor
+from apscheduler.schedulers.background import BackgroundScheduler
+
+import plugins
+import plugin.config
+
 
 description = """
 Stampy is a script for controlling Karma via Telegram.org bot api
@@ -55,6 +55,11 @@ p.add_option('-d', '--daemon', dest='daemon', help="Run as daemon",
              default=False, action="store_true")
 
 (options, args) = p.parse_args()
+
+
+# Set scheduler
+scheduler = BackgroundScheduler()
+scheduler.start()
 
 
 # Implement switch from http://code.activestate.com/recipes/410692/
@@ -88,6 +93,8 @@ def createdb():
     Create database if it doesn't exist
     :return:
     """
+    con = lite.connect(options.database)
+    cur = con.cursor()
     cur.execute('CREATE TABLE karma(word TEXT, value INT);')
     cur.execute('CREATE TABLE alias(key TEXT, value TEXT);')
     cur.execute('CREATE TABLE autokarma(key TEXT, value TEXT);')
@@ -101,26 +108,6 @@ def createdb():
     return
 
 
-# Initialize database access
-con = False
-try:
-    con = lite.connect(options.database)
-    cur = con.cursor()
-    cur.execute("SELECT * FROM config WHERE key='token';")
-    data = cur.fetchone()
-
-except lite.Error, e:
-    createdb()
-    print "Error %s:" % e.args[0]
-    print "DB has been created, continuing"
-    con = lite.connect(options.database)
-    cur = con.cursor()
-    cur.execute("SELECT * FROM config WHERE key='token';")
-    data = cur.fetchone()
-
-
-# Database initialized
-
 # Function definition
 def dbsql(sql=False):
     """
@@ -129,6 +116,26 @@ def dbsql(sql=False):
     :return:
     """
     logger = logging.getLogger(__name__)
+
+    # Initialize database access
+    con = False
+    try:
+        con = lite.connect(options.database)
+        cur = con.cursor()
+        cur.execute("SELECT * FROM config WHERE key='token';")
+        cur.fetchone()
+
+    except lite.Error, e:
+        createdb()
+        logger.debug(msg="Error %s:" % e.args[0])
+        logger.debug(msg="DB has been created, continuing")
+        con = lite.connect(options.database)
+        cur = con.cursor()
+        cur.execute("SELECT * FROM config WHERE key='token';")
+        cur.fetchone()
+
+    # Database initialized
+
     worked = False
     if sql:
         try:
@@ -140,7 +147,7 @@ def dbsql(sql=False):
     if not worked:
         logger.critical(msg="Error on SQL execution: %s" % sql)
 
-    return worked
+    return cur
 
 
 def sendmessage(chat_id=0, text="", reply_to_message_id=False,
@@ -159,7 +166,8 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
     """
 
     logger = logging.getLogger(__name__)
-    url = "%s%s/sendMessage" % (config(key="url"), config(key='token'))
+    url = "%s%s/sendMessage" % (plugin.config.config(key="url"),
+                                plugin.config.config(key='token'))
     lines = text.split("\n")
     maxlines = 15
     if len(lines) > maxlines:
@@ -218,7 +226,8 @@ def getupdates(offset=0, limit=100):
     """
 
     logger = logging.getLogger(__name__)
-    url = "%s%s/getUpdates" % (config(key='url'), config(key='token'))
+    url = "%s%s/getUpdates" % (plugin.config.config(key='url'),
+                               plugin.config.config(key='token'))
     message = "%s?" % url
     if offset != 0:
         message += "offset=%s&" % offset
@@ -240,7 +249,7 @@ def clearupdates(offset):
     """
 
     logger = logging.getLogger(__name__)
-    url = "%s%s/getUpdates" % (config(key='url'), config(key='token'))
+    url = "%s%s/getUpdates" % (plugin.config.config(key='url'), plugin.config.config(key='token'))
     message = "%s?" % url
     message += "offset=%s&" % offset
     try:
@@ -249,292 +258,6 @@ def clearupdates(offset):
         result = False
     logger.info(msg="Clearing messages")
     return result
-
-
-def updatekarma(word=False, change=0):
-    """
-    Updates karma for a word
-    :param word:  Word to update
-    :param change:  Change in karma
-    :return:
-    """
-
-    # logger = logging.getLogger(__name__)
-    value = getkarma(word=word) + change
-    putkarma(word, value)
-    return value
-
-
-def getkarma(word):
-    """
-    Gets karma for a word
-    :param word: word to get karma for
-    :return: karma of given word
-    """
-
-    # logger = logging.getLogger(__name__)
-    string = (word,)
-    sql = "SELECT * FROM karma WHERE word='%s';" % string
-    dbsql(sql)
-    value = cur.fetchone()
-
-    try:
-        # Get value from SQL query
-        value = value[1]
-
-    except:
-        # Value didn't exist before, return 0
-        value = 0
-
-    return value
-
-
-def config(key, default=False):
-    """
-    Gets configuration from database for a given key
-    :param key: key to get configuration for
-    :param default: value to return for key if not define or False
-    :return: value in database for that key
-    """
-
-    # logger = logging.getLogger(__name__)
-    string = (key,)
-    sql = "SELECT * FROM config WHERE key='%s';" % string
-    dbsql(sql)
-    value = cur.fetchone()
-
-    try:
-        # Get value from SQL query
-        value = value[1]
-
-    except:
-        # Value didn't exist before, return default or False
-        value = default
-
-    return value
-
-
-def saveconfig(key, value):
-    """
-    Saves configuration for a given key to a defined value
-    :param key: key to save
-    :param value: value to store
-    :return:
-    """
-
-    # logger = logging.getLogger(__name__)
-    if value:
-        sql = "UPDATE config SET value = '%s' WHERE key = '%s';" % (value, key)
-        dbsql(sql)
-    return value
-
-
-def createkarma(word):
-    """
-    Creates a new word in karma database
-    :param word: word to create
-    :return:
-    """
-
-    # logger = logging.getLogger(__name__)
-    sql = "INSERT INTO karma VALUES('%s',0);" % word
-    return dbsql(sql)
-
-
-def putkarma(word, value):
-    """
-    Updates value of karma for a word
-    :param word: Word to update
-    :param value: Value of karma to set
-    :return: sql execution
-    """
-
-    # logger = logging.getLogger(__name__)
-    if getkarma(word) == 0:
-        createkarma(word)
-
-    if value != 0:
-        sql = "UPDATE karma SET value = '%s' WHERE word = '%s';" % (
-              value, word)
-    else:
-        sql = "DELETE FROM karma WHERE  word = '%s';" % word
-    return dbsql(sql)
-
-
-def getstats(type=False, id=0, name=False, date=False, count=0):
-    """
-    Gets statistics for specified element
-    :param type: chat or user type to query
-    :param id: identifier for user or chat
-    :param name: full name
-    :param date: date
-    :param count: number of messages
-    :return: (type, id, name, date, count, memberid)
-    """
-
-    logger = logging.getLogger(__name__)
-    sql = "SELECT * FROM stats WHERE id='%s' AND type='%s';" % (id, type)
-    dbsql(sql)
-    try:
-        value = cur.fetchone()
-    except:
-        value = False
-
-    if value:
-        (type, id, name, date, count, oldmemberid) = value
-        try:
-            memberid = json.loads(oldmemberid)
-        except:
-            memberid = []
-
-    if not count:
-        count = 0
-
-    logger.debug(msg="values: type:%s, id:%s, name:%s, date:%s, count:%s, "
-                     "memberid:%s" % (type, id, name, date, count, memberid))
-
-    # Ensure we return the modified values
-    return type, id, name, date, count, memberid
-
-
-def updatestats(type=False, id=0, name=False, date=False, memberid=[]):
-    """
-    Updates count stats for a given type
-    :param type: user or chat
-    :param id: ID to update
-    :param name: name of the chat of user
-    :param date: date of the update
-    :param memberid: ID of the origin to add
-        chat_id if type='user'
-        user_id if type='chat'
-    :return:
-    """
-
-    logger = logging.getLogger(__name__)
-
-    try:
-        value = getstats(type=type, id=id)
-        count = value[4] + 1
-    except:
-        value = False
-        count = 0
-
-    if value:
-        newmemberid = value[5]
-    else:
-        newmemberid = []
-
-    # Only add the id if it was not already stored
-    if memberid not in newmemberid:
-        newmemberid.append(memberid)
-
-    sql = "DELETE from stats where id='%s'" % id
-    dbsql(sql)
-
-    sql = "INSERT INTO stats VALUES('%s', '%s', '%s', '%s', '%s', '%s');" % (
-          type, id, name, date, count, json.dumps(newmemberid))
-
-    logger.debug(msg="values: type:%s, id:%s, name:%s, date:%s, count:%s, "
-                     "memberid: %s" % (type, id, name, date, count,
-                                       newmemberid))
-
-    if id:
-        try:
-            dbsql(sql)
-        except:
-            print "ERROR on updatestats"
-    return
-
-
-def getchatmemberscount(chat_id=False):
-    """
-    Get number of users in the actual chat_id
-    :param chat_id: Channel ID to query for the number of users
-    :return: number of members in chat ID.
-    """
-
-    logger = logging.getLogger(__name__)
-    url = "%s%s/getChatMembersCount?chat_id=%s" % (config(key='url'),
-                                                   config(key='token'),
-                                                   chat_id)
-    try:
-        result = str(json.load(urllib.urlopen(url))['result'])
-    except:
-        result = 0
-
-    logger.info(msg="Chat id %s users %s" % (chat_id, result))
-    return result
-
-
-def getoutofchat(chat_id=False):
-    """
-    Use API call to get the bot out of chats
-    :param: chat_id: Channel ID to leave
-    """
-
-    logger = logging.getLogger(__name__)
-    url = "%s%s/leaveChat?chat_id=%s" % (config(key='url'),
-                                         config(key='token'),
-                                         chat_id)
-    try:
-        result = str(json.load(urllib.urlopen(url))['result'])
-    except:
-        result = 0
-
-    logger.info(msg="Chat id %s left" % chat_id)
-    return result
-
-
-def dochatcleanup(chat_id=False, maxage=365):
-    """
-    Checks on the stats database the date of the last update in the chat
-    :param chat_id: Channel ID to query in database
-    :param maxage: defines maximum number of days to allow chats to be non updated
-    """
-
-    if chat_id:
-        sql = "SELECT * FROM stats WHERE type='chat' and id=%s" % chat_id
-    else:
-        sql = "SELECT * FROM stats WHERE type='chat'"
-
-    chatids = []
-    cur.execute(sql)
-
-    for row in cur:
-        chatid = row[1]
-        chatids.append(chatid)
-
-    for chatid in chatids:
-        (type, id, name, date, count, memberid) = getstats(type='chat',
-                                                           id=chatid)
-        if date and (date != "False"):
-                chatdate = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
-        else:
-            chatdate = datetime.datetime.now()
-
-        now = datetime.datetime.now()
-
-        if (now - chatdate).days > maxage:
-            print "CHAT ID %s is going to be purged" % chatid
-            # The last update was older than maxage days ago, get out of chat and
-            #  remove karma
-            # getoutofchat(chat_id)
-
-            # Remove channel stats
-            # sql = "DELETE from stats where id='%s' % chatid"
-            # dbsql(sql)
-
-            # Remove users membership that had that channel id
-            sql = "SELECT * FROM stats WHERE type='user' and memberid LIKE '%%%s%%';" % chatid
-            dbsql(sql)
-
-            for line in cur:
-                (type, id, name, date, count, memberid) = line
-                print "LINE for user %s and memberid: %s will be deleted" % (name, memberid)
-                memberid.remove(chatid)
-                # Update stats entry in database without the removed chat
-                updatestats(type=type, id=id, name=name, date=date, memberid=memberid)
-    return
 
 
 def telegramcommands(texto, chat_id, message_id, who_un):
@@ -551,7 +274,11 @@ def telegramcommands(texto, chat_id, message_id, who_un):
     logger = logging.getLogger(__name__)
 
     # Process lines for commands in the first word of the line (Telegram)
-    word = texto.split()[0]
+    if texto:
+        word = texto.split()[0]
+    else:
+        texto = ""
+        word = ""
     if "@" in word:
         # If the message is directed as /help@bot, remove that part
         word = word.split("@")[0]
@@ -560,49 +287,11 @@ def telegramcommands(texto, chat_id, message_id, who_un):
     retv = False
     for case in Switch(word):
         if case('/help'):
-            commandtext = "To use this bot use `word++` or `word--` to "
-            commandtext += "increment or decrement karma, a new message will"
-            commandtext += " be sent providing the new total\n\n"
-            commandtext += "Use `rank word` or `rank` to get value for actual "
-            commandtext += "word or top 10 rankings\n"
-            commandtext += "Use `srank word` to search for similar words"
-            commandtext += " already ranked\n\n"
-            commandtext += "Use `/quote add <id> <text>` to add a quote for"
-            commandtext += " that username\n"
-            commandtext += "Use `/quote <id>` to get a random quote from"
-            commandtext += " that username\n\n"
-            commandtext += "Use `/dilbert <date>` to get Dilbert's comic "
-            commandtext += "strip for date or today\n\n"
-            if config(key='owner') == who_un:
-                commandtext += "Use `/quote del <quoteid>` " \
-                               "to remove a quote\n\n"
-                commandtext += "Use `/alias <key>=<value>`" \
-                               " to assign an alias for karma\n"
-                commandtext += "Use `/alias list` to list aliases\n"
-                commandtext += "Use `/alias delete <key>` " \
-                               "to remove an alias\n\n"
-                commandtext += "Use `skarma word=value` " \
-                               "to establish karma of a word\n\n"
-                commandtext += "Use `/stats show <user|chat>` " \
-                               "to get stats on last usage\n\n"
-                commandtext += "Use `/config show` to get a list " \
-                               "of defined config settings\n"
-                commandtext += "Use `/config set <key>=<value>` to define" \
-                               " a value for key\n"
-                commandtext += "Use `/config delete <key>` to delete key\n\n"
-                commandtext += "Use `/autok <key>=<value>` to autokarma" \
-                               " value every time key is in" \
-                               " the conversation. "\
-                               "Multiple values for same key can be added\n\n"
-                commandtext += "Use `/autok delete <key>=<value>` to delete" \
-                               " autokarma <value> for <key>\n\n"
-                commandtext += "Use `/autok list` to list autokarma " \
-                               "<key> <value> pairs\n\n"
+            if plugin.config.config(key='owner') == who_un:
                 commandtext += "Use `/quit` to exit daemon mode\n"
-            commandtext += "Learn more about this bot in " \
-                           "[https://github.com/iranzo/stampython]" \
-                           "(https://github.com/iranzo/stampython)"
-            retv = True
+                commandtext += "Learn more about this bot in " \
+                               "[https://github.com/iranzo/stampython]" \
+                               "(https://github.com/iranzo/stampython)"
             break
         if case('/start'):
             commandtext = "This bot does not use start or stop commands,"
@@ -614,35 +303,11 @@ def telegramcommands(texto, chat_id, message_id, who_un):
             commandtext += "it automatically checks for karma operands"
             retv = True
             break
-        if case('/alias'):
-            aliascommands(texto, chat_id, message_id, who_un)
-            retv = True
-            break
-        if case('/config'):
-            configcommands(texto, chat_id, message_id, who_un)
-            retv = True
-            break
-        if case('/quote'):
-            quotecommands(texto, chat_id, message_id, who_un)
-            retv = True
-            break
-        if case('/stats'):
-            statscommands(texto, chat_id, message_id, who_un)
-            retv = True
-            break
-        if case('/autok'):
-            autokcommands(texto, chat_id, message_id, who_un)
-            retv = True
-            break
         if case('/quit'):
             # Disable running as daemon to ensure we're exiting the loop
-            if config(key='owner') == who_un:
-                setconfig('daemon', False)
+            if plugin.config.config(key='owner') == who_un:
+                plugin.config.setconfig('daemon', False)
             retv = True
-        if case('/dilbert'):
-            dilbertcommands(texto, chat_id, message_id, who_un)
-            retv = True
-            break
 
         if case():
             commandtext = False
@@ -653,796 +318,6 @@ def telegramcommands(texto, chat_id, message_id, who_un):
                     reply_to_message_id=message_id, parse_mode="Markdown")
         logger.debug(msg="Command: %s" % word)
     return retv
-
-
-def listautok(word=False):
-    """
-    Lists the autok pairs defined for a word, or all the autok
-    :param word: word to return value for or everything
-    :return: table with autok stored
-    """
-
-    logger = logging.getLogger(__name__)
-    if word:
-        # if word is provided, return the alias for that word
-        string = (word,)
-        sql = "SELECT * FROM autokarma WHERE key='%s' ORDER by key ASC;" % (
-              string)
-        dbsql(sql)
-
-        try:
-            # Get value from SQL query
-            text = "Defined autokarma triggers for word %s:\n" % word
-            table = from_db_cursor(cur)
-            text = "%s\n```%s```" % (text, table.get_string())
-
-        except:
-            # Value didn't exist before
-            text = "%s has no trigger autokarma" % word
-
-    else:
-        sql = "select * from autokarma ORDER BY key ASC;"
-        dbsql(sql)
-        text = "Defined autokarma triggers:\n"
-        table = from_db_cursor(cur)
-        text = "%s\n```%s```" % (text, table.get_string())
-    logger.debug(msg="Returning autokarma %s for word %s" % (text, word))
-    return text
-
-
-def getalias(word):
-    """
-    Get alias for a word in case it's defined
-    :param word: word to search alias
-    :return: alias if existing or word if not
-    """
-
-    logger = logging.getLogger(__name__)
-    string = (word,)
-    sql = "SELECT * FROM alias WHERE key='%s';" % string
-    dbsql(sql)
-    value = cur.fetchone()
-    logger.debug(msg="getalias: %s" % word)
-
-    try:
-        # Get value from SQL query
-        value = value[1]
-
-    except:
-        # Value didn't exist before, return 0
-        value = False
-
-    # We can define recursive aliases, so this will return the ultimate one
-    if value:
-        return getalias(word=value)
-    return word
-
-
-def getautok(key, value):
-    """
-    Get autok for a key value pair in case it's defined
-    :param key: key to search autok
-    :param value: value to search autok
-    :return: True if existing or False if not
-    """
-
-    logger = logging.getLogger(__name__)
-    sql = "SELECT * FROM autokarma WHERE key='%s' and value='%s';" % (
-          key, value)
-    dbsql(sql)
-    cur.fetchone()
-    logger.debug(msg="getautok: %s - %s" % (key, value))
-
-    try:
-        # Get value from SQL query
-        svalue = value[1]
-
-    except:
-        # Value didn't exist before, return 0
-        svalue = False
-
-    # We can define recursive aliases, so this will return the ultimate one
-    if svalue:
-        return True
-    return False
-
-
-def createautok(word, value):
-    """
-    Creates an autokarma trigger for a word
-    :param word: word to use as base for the autokarma
-    :param value: values to set as autokarma
-    :return:
-    """
-
-    logger = logging.getLogger(__name__)
-    if not getautok(word, value):
-        logger.error(msg="createautok: autok pair %s - %s already exists" % (
-                         word, value))
-    else:
-        sql = "INSERT INTO autokarma VALUES('%s','%s');" % (word, value)
-        logger.debug(msg="createautok: %s=%s" % (word, value))
-        return dbsql(sql)
-    return False
-
-
-def createalias(word, value):
-    """
-    Creates an alias for a word
-    :param word: word to use as base for the alias
-    :param value: values to set as alias
-    :return:
-    """
-
-    logger = logging.getLogger(__name__)
-    if getalias(value) == word:
-        logger.error(msg="createalias: circular reference %s=%s" % (
-                         word, value))
-    else:
-        if not getalias(word) or getalias(word) == word:
-            # Removing duplicates on karma DB and add
-            # the previous values
-            old = getkarma(word)
-            updatekarma(word=word, change=-old)
-            updatekarma(word=value, change=old)
-
-            sql = "INSERT INTO alias VALUES('%s','%s');" % (word, value)
-            logger.debug(msg="createalias: %s=%s" % (word, value))
-            return dbsql(sql)
-    return False
-
-
-def deleteautok(key, value):
-    """
-    Deletes a key - value pair from autokarma TABLE
-    :param key:  key to delete
-    :param value: value to delete
-    :return:
-    """
-
-    logger = logging.getLogger(__name__)
-    sql = "DELETE FROM autokarma WHERE key='%s' and value='%s';" % (key, value)
-    logger.debug(msg="rmautok: %s=%s" % (key, value))
-    return dbsql(sql)
-
-
-def deletealias(word):
-    """
-    Deletes a word from the alias database
-    :param word:  word to delete
-    :return:
-    """
-
-    logger = logging.getLogger(__name__)
-    sql = "DELETE FROM alias WHERE key='%s';" % word
-    logger.debug(msg="rmalias: %s" % word)
-    return dbsql(sql)
-
-
-def listalias(word=False):
-    """
-    Lists the alias defined for a word, or all the aliases
-    :param word: word to return value for or everything
-    :return: table with alias stored
-    """
-
-    logger = logging.getLogger(__name__)
-    if word:
-        # if word is provided, return the alias for that word
-        string = (word,)
-        sql = "SELECT * FROM alias WHERE key='%s' ORDER by key ASC;" % string
-        dbsql(sql)
-        value = cur.fetchone()
-
-        try:
-            # Get value from SQL query
-            value = value[1]
-
-        except:
-            # Value didn't exist before, return 0 value
-            value = 0
-        text = "%s has an alias %s" % (word, value)
-
-    else:
-        sql = "select * from alias ORDER BY key ASC;"
-        dbsql(sql)
-        text = "Defined aliases:\n"
-        table = from_db_cursor(cur)
-        text = "%s\n```%s```" % (text, table.get_string())
-    logger.debug(msg="Returning aliases %s for word %s" % (text, word))
-    return text
-
-
-def setconfig(key, value):
-    """
-    Sets a config parameter in database
-    :param key: key to update
-    :param value: value to store
-    :return:
-    """
-
-    logger = logging.getLogger(__name__)
-    if config(key=key):
-        deleteconfig(key)
-    sql = "INSERT INTO config VALUES('%s','%s');" % (key, value)
-    logger.debug(msg="setconfig: %s=%s" % (key, value))
-    return dbsql(sql)
-
-
-def deleteconfig(word):
-    """
-    Deletes a config parameter in database
-    :param word: key to remove
-    :return:
-    """
-
-    logger = logging.getLogger(__name__)
-    sql = "DELETE FROM config WHERE key='%s';" % word
-    logger.debug(msg="rmconfig: %s" % word)
-    return dbsql(sql)
-
-
-def showconfig(key=False):
-    """
-    Shows configuration in database for a key or all values
-    :param key: key to return value for
-    :return: Value stored
-    """
-    logger = logging.getLogger(__name__)
-    if key:
-        # if word is provided, return the config for that key
-        string = (key,)
-        sql = "SELECT * FROM config WHERE key='%s';" % string
-        dbsql(sql)
-        value = cur.fetchone()
-
-        try:
-            # Get value from SQL query
-            value = value[1]
-
-        except:
-            # Value didn't exist before, return 0 value
-            value = 0
-        text = "%s has a value of %s" % (key, value)
-
-    else:
-        sql = "select * from config ORDER BY key ASC;"
-        dbsql(sql)
-        text = "Defined configurations:\n"
-        table = from_db_cursor(cur)
-        text = "%s\n```%s```" % (text, table.get_string())
-    logger.debug(msg="Returning config %s for key %s" % (text, key))
-    return text
-
-
-def autokcommands(texto, chat_id, message_id, who_un):
-    """
-    Processes autok commands in the message texts
-    :param texto: text of the message
-    :param chat_id:  chat_ID
-    :param message_id: message_ID to reply to
-    :param who_un: username sending the request
-    :return:
-    """
-
-    logger = logging.getLogger(__name__)
-    logger.debug(msg="Command: %s by %s" % (texto, who_un))
-    if who_un == config('owner'):
-        logger.debug(msg="Command: %s by Owner: %s" % (texto, who_un))
-        try:
-            command = texto.split(' ')[1]
-        except:
-            command = False
-        try:
-            word = texto.split(' ')[2]
-        except:
-            word = ""
-
-        for case in Switch(command):
-            if case('list'):
-                text = listautok(word)
-                sendmessage(chat_id=chat_id, text=text,
-                            reply_to_message_id=message_id,
-                            disable_web_page_preview=True,
-                            parse_mode="Markdown")
-                break
-            if case('delete'):
-                word = texto.split(' ')[2]
-                if "=" in word:
-                    key = word.split('=')[0]
-                    value = texto.split('=')[1:][0]
-                    text = "Deleting autokarma pair for `%s - %s`" % (
-                           key, value)
-                    sendmessage(chat_id=chat_id, text=text,
-                                reply_to_message_id=message_id,
-                                disable_web_page_preview=True,
-                                parse_mode="Markdown")
-                    deleteautok(key=key, value=value)
-                else:
-                    text = "Deleting autokarma requires following syntax"
-                    text += " /autok delete <key>=<value>.\n\n"
-                    text += "Please use /help for more info"
-                    sendmessage(chat_id=chat_id, text=text,
-                                reply_to_message_id=message_id,
-                                disable_web_page_preview=True,
-                                parse_mode="Markdown")
-                break
-            if case():
-                word = texto.split(' ')[1]
-                if "=" in word:
-                    key = word.split('=')[0]
-                    value = texto.split('=')[1:][0]
-                    text = "Setting autokarma for `%s` triggers `%s++`" % (
-                           key, value)
-                    sendmessage(chat_id=chat_id, text=text,
-                                reply_to_message_id=message_id,
-                                disable_web_page_preview=True,
-                                parse_mode="Markdown")
-                    createautok(word=key, value=value)
-
-    return
-
-
-def aliascommands(texto, chat_id, message_id, who_un):
-    """
-    Processes alias commands in the message texts
-    :param texto: text of the message
-    :param chat_id:  chat_ID
-    :param message_id: message_ID to reply to
-    :param who_un: username sending the request
-    :return:
-    """
-
-    logger = logging.getLogger(__name__)
-    logger.debug(msg="Command: %s by %s" % (texto, who_un))
-    if who_un == config('owner'):
-        logger.debug(msg="Command: %s by Owner: %s" % (texto, who_un))
-        try:
-            command = texto.split(' ')[1]
-        except:
-            command = False
-        try:
-            word = texto.split(' ')[2]
-        except:
-            word = ""
-
-        for case in Switch(command):
-            if case('list'):
-                text = listalias(word)
-                sendmessage(chat_id=chat_id, text=text,
-                            reply_to_message_id=message_id,
-                            disable_web_page_preview=True,
-                            parse_mode="Markdown")
-                break
-            if case('delete'):
-                key = word
-                text = "Deleting alias for `%s`" % key
-                sendmessage(chat_id=chat_id, text=text,
-                            reply_to_message_id=message_id,
-                            disable_web_page_preview=True,
-                            parse_mode="Markdown")
-                deletealias(word=key)
-                break
-            if case():
-                word = texto.split(' ')[1]
-                if "=" in word:
-                    key = word.split('=')[0]
-                    value = texto.split('=')[1:][0]
-                    text = "Setting alias for `%s` to `%s`" % (key, value)
-                    sendmessage(chat_id=chat_id, text=text,
-                                reply_to_message_id=message_id,
-                                disable_web_page_preview=True,
-                                parse_mode="Markdown")
-                    createalias(word=key, value=value)
-
-    return
-
-
-def quotecommands(texto, chat_id, message_id, who_un):
-    """
-    Searches for commands related to quotes
-    :param texto: text of the message
-    :param chat_id:  chat_ID
-    :param message_id: message_ID to reply to
-    :param who_un: username sending the request
-    :return:
-    """
-
-    logger = logging.getLogger(__name__)
-    logger.debug(msg="Command: %s by %s" % (texto, who_un))
-
-    # We might be have been given no command, just /quote
-    try:
-        command = texto.split(' ')[1]
-    except:
-        command = False
-
-    for case in Switch(command):
-        # cur.execute('CREATE TABLE quote(id AUTOINCREMENT, name TEXT,
-        # date TEXT, text TEXT;')
-        if case('add'):
-            who_quote = texto.split(' ')[2]
-            date = time.time()
-            quote = str.join(" ", texto.split(' ')[3:])
-            result = addquote(username=who_quote, date=date, text=quote)
-            text = "Quote `%s` added" % result
-            sendmessage(chat_id=chat_id, text=text,
-                        reply_to_message_id=message_id,
-                        disable_web_page_preview=True,
-                        parse_mode="Markdown")
-            break
-        if case('del'):
-            if who_un == config(key='owner'):
-                id_todel = texto.split(' ')[2]
-                text = "Deleting quote id `%s`" % id_todel
-                sendmessage(chat_id=chat_id, text=text,
-                            reply_to_message_id=message_id,
-                            disable_web_page_preview=True,
-                            parse_mode="Markdown")
-                deletequote(id=id_todel)
-            break
-        if case():
-            # We're just given the nick (or not), so find quote for it
-            try:
-                nick = texto.split(' ')[1]
-            except:
-                nick = False
-            try:
-                (quoteid, username, date, quote) = getquote(username=nick)
-                datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
-                text = '`%s` -- `@%s`, %s (id %s)' % (
-                       quote, username, datefor, quoteid)
-            except:
-                if nick:
-                    text = "No quote recorded for `%s`" % nick
-                else:
-                    text = "No quote found"
-            sendmessage(chat_id=chat_id, text=text,
-                        reply_to_message_id=message_id,
-                        disable_web_page_preview=True,
-                        parse_mode="Markdown")
-
-    return
-
-
-def dilbertcommands(texto, chat_id, message_id, who_un):
-    """
-    Searches for commands related to dilbert
-    :param texto: text of the message
-    :param chat_id:  chat_ID
-    :param message_id: message_ID to reply to
-    :param who_un: username sending the request
-    :return:
-    """
-
-    logger = logging.getLogger(__name__)
-    logger.debug(msg="Command: %s by %s" % (texto, who_un))
-
-    # We might be have been given no command, just /dilbert
-    try:
-        date = texto.split(' ')[1]
-    except:
-        date = ""
-
-    try:
-        # Parse date or if in error, use today
-        date = dateutil.parser.parse(date)
-
-        # Force checking if valid date
-        day = date.day
-        month = date.month
-        year = date.year
-        date = datetime.datetime(year=year, month=month, day=day)
-    except:
-        date = datetime.datetime.now()
-
-    return dilbert(chat_id=chat_id, date=date, reply_to_message_id=message_id)
-
-
-def getquote(username=False):
-    """
-    Gets quote for a specified username or a random one
-    :param username: username to get quote for
-    :return: text for the quote or empty
-    """
-
-    logger = logging.getLogger(__name__)
-    if username:
-        string = (username,)
-        sql = "SELECT * FROM quote WHERE username='%s' ORDER BY RANDOM() \
-              LIMIT 1;" % string
-    else:
-        sql = "SELECT * FROM quote ORDER BY RANDOM() LIMIT 1;"
-    dbsql(sql)
-    value = cur.fetchone()
-    logger.debug(msg="getquote: %s" % username)
-    try:
-        # Get value from SQL query
-        (quoteid, username, date, quote) = value
-
-    except:
-        # Value didn't exist before, return 0
-        quoteid = False
-        username = False
-        date = False
-        quote = False
-
-    if quoteid:
-        return quoteid, username, date, quote
-
-    return False
-
-
-def addquote(username=False, date=False, text=False):
-    """
-    Adds a quote for a specified username
-    :param username: username to store quote for
-    :param date: date when quote was added
-    :param text: text of the quote
-    :return: returns quote ID entry in database
-    """
-
-    logger = logging.getLogger(__name__)
-    sql = "INSERT INTO quote(username, date, text) VALUES('%s','%s', '%s');" % (
-          username, date, text)
-    dbsql(sql)
-    logger.debug(msg="createquote: %s=%s on %s" % (username, text, date))
-    # Retrieve last id
-    sql = "select last_insert_rowid();"
-    dbsql(sql)
-    lastrowid = cur.fetchone()[0]
-    return lastrowid
-
-
-def deletequote(id=False):
-    """
-    Deletes quote from the database
-    :param id: ID of the quote to remove
-    :return:
-    """
-
-    logger = logging.getLogger(__name__)
-    sql = "DELETE FROM quote WHERE id='%s';" % id
-    logger.debug(msg="deletequote: %s" % id)
-    return dbsql(sql)
-
-
-def configcommands(texto, chat_id, message_id, who_un):
-    """
-    Processes configuration commands in the message
-    :param texto: text of the message
-    :param chat_id: chat_id originating the request
-    :param message_id: message_id to reply to
-    :param who_un: username of the originator
-    :return:
-    """
-
-    logger = logging.getLogger(__name__)
-
-    # Only users defined as 'owner' can perform commands
-    if who_un == config('owner'):
-        logger.debug(msg="Command: %s by %s" % (texto, who_un))
-        try:
-            command = texto.split(' ')[1]
-        except:
-            command = False
-
-        try:
-            word = texto.split(' ')[2]
-        except:
-            word = ""
-
-        for case in Switch(command):
-            if case('show'):
-                text = showconfig(word)
-                sendmessage(chat_id=chat_id, text=text,
-                            reply_to_message_id=message_id,
-                            disable_web_page_preview=True,
-                            parse_mode="Markdown")
-                break
-            if case('delete'):
-                key = word
-                text = "Deleting config for `%s`" % key
-                sendmessage(chat_id=chat_id, text=text,
-                            reply_to_message_id=message_id,
-                            disable_web_page_preview=True,
-                            parse_mode="Markdown")
-                deleteconfig(word=key)
-                break
-            if case('set'):
-                word = texto.split(' ')[2]
-                if "=" in word:
-                    key = word.split('=')[0]
-                    value = word.split('=')[1]
-                    setconfig(key=key, value=value)
-                    text = "Setting config for `%s` to `%s`" % (key, value)
-                    sendmessage(chat_id=chat_id, text=text,
-                                reply_to_message_id=message_id,
-                                disable_web_page_preview=True,
-                                parse_mode="Markdown")
-                break
-            if case():
-                break
-
-    return
-
-
-def showstats(type=False):
-    """
-    Shows stats for defined type or all if missing
-    :param type: user or chat or empy for combined
-    :return: table with the results
-    """
-    logger = logging.getLogger(__name__)
-    if type:
-        sql = "select * from stats WHERE type='%s' ORDER BY count DESC" % type
-    else:
-        sql = "select * from stats ORDER BY count DESC"
-    dbsql(sql)
-    table = from_db_cursor(cur)
-    text = "Defined stats:\n"
-    text = "%s\n```%s```" % (text, table.get_string())
-    logger.debug(msg="Returning stats %s" % text)
-    return text
-
-
-def statscommands(texto, chat_id, message_id, who_un):
-    """
-    Processes stats commands in the messages
-    :param texto: message to process
-    :param chat_id: Chat_ID from the request
-    :param message_id: message_id to reply to
-    :param who_un: originating user for the request
-    :return:
-    """
-
-    logger = logging.getLogger(__name__)
-    if who_un == config('owner'):
-        logger.debug(msg="Owner Stat: %s by %s" % (texto, who_un))
-        try:
-            command = texto.split(' ')[1]
-        except:
-            command = False
-
-        try:
-            key = texto.split(' ')[2]
-        except:
-            key = ""
-
-        for case in Switch(command):
-            if case('show'):
-                text = showstats(key)
-                sendmessage(chat_id=chat_id, text=text,
-                            reply_to_message_id=message_id,
-                            disable_web_page_preview=True,
-                            parse_mode="Markdown")
-                break
-            if case('purge'):
-                dochatcleanup(maxage=365)
-
-                break
-            if case():
-                break
-
-    return
-
-
-def karmacommands(texto, chat_id, message_id):
-    """
-    Finds for commands affecting karma in messages
-    :param texto: message to analyze
-    :param chat_id: chat_id originating the request
-    :param message_id: message_id to reply to
-    :return:
-    """
-
-    logger = logging.getLogger(__name__)
-    # Process lines for commands in the first
-    # word of the line (Telegram commands)
-    word = texto.split()[0]
-    commandtext = False
-
-    # Check first word for commands
-    for case in Switch(word):
-        if case('rank'):
-            try:
-                word = texto.split()[1]
-            except:
-                word = False
-            commandtext = rank(word)
-            break
-        if case('srank'):
-            try:
-                word = texto.split()[1]
-            except:
-                word = False
-            commandtext = srank(word)
-            break
-        if case('skarma'):
-            try:
-                word = texto.split()[1]
-            except:
-                word = False
-            if "=" in word:
-                key = word.split('=')[0]
-                value = texto.split('=')[1:][0]
-                text = "Setting karma for `%s` to `%s`" % (key, value)
-                sendmessage(chat_id=chat_id, text=text,
-                            reply_to_message_id=message_id,
-                            disable_web_page_preview=True,
-                            parse_mode="Markdown")
-                putkarma(word=key, value=value)
-            break
-        if case():
-            commandtext = False
-
-    # If any of above cases did a match, send command
-    if commandtext:
-        sendmessage(chat_id=chat_id, text=commandtext,
-                    reply_to_message_id=message_id, parse_mode="Markdown")
-        logger.debug(msg="karmacommand:  %s" % word)
-    return
-
-
-def rank(word=False):
-    """
-    Outputs rank for word or top 10
-    :param word: word to return rank for
-    :return:
-    """
-
-    logger = logging.getLogger(__name__)
-    if getalias(word):
-        word = getalias(word)
-    if word:
-        # if word is provided, return the rank value for that word
-        string = (word,)
-        sql = "SELECT * FROM karma WHERE word='%s';" % string
-        dbsql(sql)
-        value = cur.fetchone()
-
-        try:
-            # Get value from SQL query
-            value = value[1]
-
-        except:
-            # Value didn't exist before, return 0 value
-            value = 0
-        text = "`%s` has `%s` karma points." % (word, value)
-
-    else:
-        # if word is not provided, return top 10 words with top karma
-        sql = "select * from karma ORDER BY value DESC LIMIT 10;"
-
-        text = "Global rankings:\n"
-        dbsql(sql)
-        table = from_db_cursor(cur)
-        text = "%s\n```%s```" % (text, table.get_string())
-    logger.debug(msg="Returning karma %s for word %s" % (text, word))
-    return text
-
-
-def srank(word=False):
-    """
-    Search for rank for word
-    :param word: word to search in database
-    :return: table with the values for srank
-    """
-    logger = logging.getLogger(__name__)
-    if getalias(word):
-        word = getalias(word)
-    text = ""
-    if word is False:
-        # If no word is provided to srank, call rank instead
-        text = rank(word)
-    else:
-        string = "%" + word + "%"
-        sql = "SELECT * FROM karma WHERE word LIKE '%s' LIMIT 10;" % string
-        dbsql(sql)
-        table = from_db_cursor(cur)
-        text = "%s\n```%s```" % (text, table.get_string())
-    logger.debug(msg="Returning srank for word: %s" % word)
-    return text
 
 
 def sendsticker(chat_id=0, sticker="", text="", reply_to_message_id=""):
@@ -1456,7 +331,7 @@ def sendsticker(chat_id=0, sticker="", text="", reply_to_message_id=""):
     """
 
     logger = logging.getLogger(__name__)
-    url = "%s%s/sendSticker" % (config(key='url'), config(key='token'))
+    url = "%s%s/sendSticker" % (plugin.config.config(key='url'), plugin.config.config(key='token'))
     message = "%s?chat_id=%s" % (url, chat_id)
     message = "%s&sticker=%s" % (message, sticker)
     if reply_to_message_id:
@@ -1476,7 +351,7 @@ def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
     """
 
     logger = logging.getLogger(__name__)
-    url = "%s%s/sendPhoto" % (config(key='url'), config(key='token'))
+    url = "%s%s/sendPhoto" % (plugin.config.config(key='url'), plugin.config.config(key='token'))
     message = "%s?chat_id=%s" % (url, chat_id)
     message = "%s&photo=%s" % (message, image)
     if reply_to_message_id:
@@ -1485,59 +360,6 @@ def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
         message += "&caption=%s" % text
     logger.debug(msg="Sending image: %s" % text)
     return json.load(urllib.urlopen(message))
-
-
-def dilbert(chat_id=-1001066352913, date=datetime.datetime.now(), reply_to_message_id=""):
-    """
-    Sends Dilbert strip for the date provided
-    :param chat_id: chat to send image to
-    :param date: date to get the strip from that day
-    :param reply_to_message_id: Id of the message to send reply to
-    :return:
-    """
-    # http://dilbert.com/strip/2016-11-22
-
-    url = "http://dilbert.com/strip/%s-%s-%s" % (date.year, date.month, date.day)
-
-    page = requests.get(url)
-    tree = html.fromstring(page.content)
-    imgsrc = tree.xpath('//img[@class="img-responsive img-comic"]/@src')[0]
-    imgtxt = tree.xpath('//img[@class="img-responsive img-comic"]/@alt')[0]
-
-    return sendimage(chat_id=chat_id, image=imgsrc, text=imgtxt, reply_to_message_id=reply_to_message_id)
-
-
-def stampy(chat_id="", karma=0):
-    """
-    Returns a sticker for big karma values
-    :param chat_id:
-    :param karma:
-    :return:
-    """
-
-    # logger = logging.getLogger(__name__)
-    karma = "%s" % karma
-    # Sticker definitions for each rank
-    x00 = "BQADBAADYwAD17FYAAEidrCCUFH7AgI"
-    x000 = "BQADBAADZQAD17FYAAEeeRNtkOWfBAI"
-    x0000 = "BQADBAADZwAD17FYAAHHuNL2oLuShwI"
-    x00000 = "BQADBAADaQAD17FYAAHzIBRZeY4uNAI"
-
-    sticker = ""
-    if karma[-5:] == "00000":
-        sticker = x00000
-    elif karma[-4:] == "0000":
-        sticker = x0000
-    elif karma[-3:] == "000":
-        sticker = x000
-    elif karma[-2:] == "00":
-        sticker = x00
-
-    text = "Sticker for %s karma points" % karma
-
-    if sticker != "":
-        sendsticker(chat_id=chat_id, sticker=sticker, text="%s" % text)
-    return
 
 
 def replace_all(text, dict):
@@ -1551,6 +373,70 @@ def replace_all(text, dict):
     for i, j in dict.iteritems():
         text = text.replace(i, j)
     return text
+
+
+def getmsgdetail(message):
+    """
+    Gets message details and returns them as dict
+    :param message: message to get details from
+    :return: message details as dict
+    """
+
+    update_id = message['update_id']
+
+    try:
+        chat_id = message['message']['chat']['id']
+    except:
+        chat_id = ""
+
+    try:
+        chat_name = message['message']['chat']['title']
+    except:
+        chat_name = ""
+
+    try:
+        text = message['message']['text']
+    except:
+        text = ""
+
+    try:
+        message_id = int(message['message']['message_id'])
+        date = int(float(message['message']['date']))
+        datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
+        who_gn = message['message']['from']['first_name']
+        who_id = message['message']['from']['id']
+        error = False
+    except:
+        error = True
+        who_id = ""
+        who_gn = ""
+        date = ""
+        datefor = ""
+        message_id = ""
+
+    try:
+        who_ln = message['message']['from']['last_name']
+    except:
+        who_ln = ""
+
+    # Some user might not have username defined so this
+    # was failing and message was ignored
+    try:
+        who_un = message['message']['from']['username']
+    except:
+        who_un = ""
+
+    name = "%s %s (@%s)" % (who_gn, who_ln, who_un)
+
+    # args = ('name', 'chat_id', 'chat_name', 'date', 'datefor', 'error', 'message_id',
+    #         'text', 'update_id', 'who_gn', 'who_id', 'who_ln', 'who_un')
+    # vals = dict((k, v) for (k, v) in locals().iteritems() if k in args)
+
+    vals = {"name": name, "chat_id": chat_id, "chat_name": chat_name, "date": date, "datefor": datefor, "error": error,
+            "message_id": message_id, "text": text, "update_id": update_id, "who_gn": who_gn, "who_id": who_id,
+            "who_ln": who_ln, "who_un": who_un}
+
+    return vals
 
 
 def process(messages):
@@ -1569,189 +455,29 @@ def process(messages):
     lastupdateid = 0
     logger.info(msg="Initial message at %s" % date)
     texto = ""
-    error = False
     count = 0
-
-    # Unicode — is sometimes provided by telegram cli,
-    # using that also as comparison
-    unidecrease = u"—"
-
-    # Define dictionary for text replacements
-    dict = {
-        "'": "",
-        "@": "",
-        "\n": " ",
-        unidecrease: "--"
-    }
 
     # Process each message available in URL and search for karma operators
     for message in messages:
         # Count messages in each batch
         count += 1
-        update_id = message['update_id']
 
-        try:
-            chat_id = message['message']['chat']['id']
-        except:
-            chat_id = False
+        # Call plugins to process message
+        for i in plugins.getPlugins():
+            logger.debug(msg="Processing plugin: %s" % i["name"])
+            plug = plugins.loadPlugin(i)
+            plug.run(message=message)
 
-        try:
-            chat_name = message['message']['chat']['title']
-        except:
-            chat_name = False
-
-        try:
-            texto = message['message']['text']
-            message_id = int(message['message']['message_id'])
-            date = int(float(message['message']['date']))
-            datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
-            who_gn = message['message']['from']['first_name']
-            who_id = message['message']['from']['id']
-
-        except:
-            error = True
-            who_id = False
-            who_gn = False
-            date = False
-            datefor = False
-            message_id = False
-            texto = False
-
-        try:
-            who_ln = message['message']['from']['last_name']
-        except:
-            who_ln = False
-
-        # Some user might not have username defined so this
-        # was failing and message was ignored
-        try:
-            who_un = message['message']['from']['username']
-
-        except:
-            who_un = ""
-
-        # Update stats on the message being processed
-        if chat_id and chat_name:
-            updatestats(type="chat", id=chat_id, name=chat_name,
-                        date=datefor, memberid=who_id)
-
-        name = "%s %s (@%s)" % (who_gn, who_ln, who_un)
-
-        if who_ln:
-            updatestats(type="user", id=who_id, name=name, date=datefor,
-                        memberid=chat_id)
+        msgdetail = getmsgdetail(message)
 
         # Update last message id to later clear it from the server
-        if update_id > lastupdateid:
-            lastupdateid = update_id
+        if msgdetail["update_id"] > lastupdateid:
+            lastupdateid = msgdetail["update_id"]
 
         # Write the line for debug
-        messageline = "TEXT: %s : %s : %s" % (chat_name, name, texto)
+        messageline = "TEXT: %s : %s : %s" % (msgdetail["chat_name"], msgdetail["name"], msgdetail["text"])
+        texto = msgdetail["text"]
         logger.debug(msg=messageline)
-
-        if not error:
-            # Search for telegram commands and if any disable text processing
-            if telegramcommands(texto, chat_id, message_id, who_un):
-                text_to_process = ""
-            else:
-                text_to_process = replace_all(texto, dict).lower().split(" ")
-
-            # Search for karma commands
-            karmacommands(texto, chat_id, message_id)
-
-            # Process each word in the line received
-            # to search for karma operators
-
-            wordadd = []
-            worddel = []
-
-            for word in text_to_process:
-                # Select all autokarma keys from DB
-                sql = "SELECT distinct key FROM autokarma;"
-                dbsql(sql)
-                value = cur.fetchall()
-                msg = "Select all the following"
-                msg += " AUTOKARMA keys : %s" % str(value)
-                logger.debug(msg)
-
-                # for each autokarma key we check if included
-                # in word to increase his value karma
-                for autok in value:
-                    if unidecrease in autok:
-                        autok = autok.replace(unidecrease, '--')
-                    msg = "Dealing with AUTOKARMA key :%s" % str(autok)
-                    logger.debug(msg)
-                    if autok[0] in word:
-                        string = (autok[0],)
-                        sql = "SELECT value FROM autokarma where key='%s';" % (
-                              string)
-                        logger.debug(msg=sql)
-                        dbsql(sql)
-                        autov = cur.fetchall()
-                        for valuei in autov:
-                            if unidecrease in valuei:
-                                valuei = valuei.replace(unidecrease, '--')
-                            wordadd.append(valuei[0])
-                            msg = "%s word found," % autok[0]
-                            msg += " processing %s auto-karma increase" % (
-                                   valuei[0])
-                            logger.debug(msg)
-
-                if "++" in word or "--" in word:
-                    msg = "Processing word"
-                    msg += " %s sent by id %s with username %s (%s %s)" % (
-                           word, who_id, who_un, who_gn, who_ln)
-                    logger.debug(msg)
-
-                    # This should help to avoid duplicate karma operations
-                    # in the same message
-
-                    if len(word) >= 4:
-                        oper = word[-2:]
-                        word = word[:-2]
-                        if getalias(word):
-                            word = getalias(word).split(" ")
-                        for item in word:
-                            if getalias(item):
-                                item = getalias(item)
-                            if oper == "++" and item not in wordadd:
-                                wordadd.append(item)
-                            if oper == "--" and item not in worddel:
-                                worddel.append(item)
-            for word in wordadd + worddel:
-                change = 0
-                oper = False
-                if word in wordadd:
-                    change += 1
-                    oper = "++"
-                if word in worddel:
-                    change -= 1
-                    oper = "--"
-
-                if change != 0:
-                    msg = "%s Found in %s at %s with id %s (%s)," \
-                          " sent by id %s named %s (%s %s)" % (
-                              oper, word, chat_id, message_id,
-                              chat_name, who_id,
-                              who_un, who_gn, who_ln)
-                    logger.debug(msg)
-
-                    karma = updatekarma(word=word, change=change)
-                    if karma != 0:
-                        # Karma has changed, report back
-                        text = "`%s` now has `%s` karma points." % (
-                               word, karma)
-                    else:
-                        # New karma is 0
-                        text = "`%s` now has no Karma and has" % word
-                        text += " been garbage collected."
-
-                    # Send originating user for karma change a reply with
-                    # the new value
-                    sendmessage(chat_id=chat_id, text=text,
-                                reply_to_message_id=message_id,
-                                parse_mode="Markdown")
-                    stampy(chat_id=chat_id, karma=karma)
 
     logger.info(msg="Last processed message at: %s" % date)
     logger.debug(msg="Last processed update_id : %s" % lastupdateid)
@@ -1771,7 +497,7 @@ def loglevel():
     logger = logging.getLogger(__name__)
     level = False
 
-    for case in Switch(config(key="verbosity").lower()):
+    for case in Switch(plugin.config.config(key="verbosity").lower()):
         # choices=["info", "debug", "warn", "critical"])
         if case('debug'):
             level = logging.DEBUG
@@ -1791,14 +517,14 @@ def loglevel():
 
     # If logging level has changed, redefine in logger,
     # database and send message
-    if logging.getLevelName(logger.level).lower() != config(key="verbosity"):
+    if logging.getLevelName(logger.level).lower() != plugin.config.config(key="verbosity"):
         logger.setLevel(level)
-        logger.info(msg="Logging level set to %s" % config(key="verbosity"))
-        setconfig(key="verbosity",
-                  value=logging.getLevelName(logger.level).lower())
+        logger.info(msg="Logging level set to %s" % plugin.config.config(key="verbosity"))
+        plugin.config.setconfig(key="verbosity",
+                                value=logging.getLevelName(logger.level).lower())
     else:
         logger.debug(msg="Log level didn't changed from %s" % (
-                         config(key="verbosity").lower()))
+                         plugin.config.config(key="verbosity").lower()))
 
 
 def conflogging():
@@ -1809,19 +535,18 @@ def conflogging():
     logger = logging.getLogger(__name__)
 
     # Define logging settings
-    if not config(key="verbosity"):
+    if not plugin.config.config(key="verbosity"):
         if not options.verbosity:
             # If we don't have defined command line value and it's not stored,
             # use DEBUG
-            setconfig(key="verbosity", value="DEBUG")
+            plugin.config.setconfig(key="verbosity", value="DEBUG")
         else:
-            setconfig(key="verbosity", value=options.verbosity)
+            plugin.config.setconfig(key="verbosity", value=options.verbosity)
 
     loglevel()
 
     # create formatter
-    formatter = logging.Formatter('%(asctime)s : %(name)s : \
-                %(funcName)s(%(lineno)d) : %(levelname)s : %(message)s')
+    formatter = logging.Formatter('%(asctime)s : %(name)s : %(funcName)s(%(lineno)d) : %(levelname)s : %(message)s')
 
     # create console handler and set level to debug
     console = logging.StreamHandler()
@@ -1830,7 +555,7 @@ def conflogging():
     logger.addHandler(console)
 
     # create file logger
-    filename = '%s.log' % config(key='database').split(".")[0]
+    filename = '%s.log' % plugin.config.config(key='database').split(".")[0]
 
     file = logging.FileHandler(filename)
     file.setLevel(logging.DEBUG)
@@ -1848,22 +573,23 @@ def main():
     # Main code
     logger = logging.getLogger(__name__)
 
-    conflogging()
-
     # Set database name in config
     if options.database:
-        setconfig(key='database', value=options.database)
+        plugin.config.setconfig(key='database', value=options.database)
+
+    if not logger.handlers:
+        conflogging()
 
     logger.info(msg="Started execution")
 
-    if not config(key='sleep'):
-        setconfig(key='sleep', value=10)
+    if not plugin.config.config(key='sleep'):
+        plugin.config.setconfig(key='sleep', value=10)
 
     # Check if we've the token required to access or exit
-    if not config(key='token'):
+    if not plugin.config.config(key='token'):
         if options.token:
             token = options.token
-            setconfig(key='token', value=token)
+            plugin.config.setconfig(key='token', value=token)
         else:
             msg = "Token required for operation, please check"
             msg += " https://core.telegram.org/bots"
@@ -1871,29 +597,32 @@ def main():
             sys.exit(1)
 
     # Check if we've URL defined on DB or on cli and store
-    if not config(key='url'):
+    if not plugin.config.config(key='url'):
         if options.url:
-            setconfig(key='url', value=options.url)
+            plugin.config.setconfig(key='url', value=options.url)
 
     # Check if we've owner defined in DB or on cli and store
-    if not config(key='owner'):
+    if not plugin.config.config(key='owner'):
         if options.owner:
-            setconfig(key='owner', value=options.owner)
+            plugin.config.setconfig(key='owner', value=options.owner)
+
+    # Initialize modules
+    for i in plugins.getPlugins():
+        logger.debug(msg="Processing plugin initialization: %s" % i["name"])
+        plug = plugins.loadPlugin(i)
+        plug.init()
 
     # Check operation mode and call process as required
-    if options.daemon or config(key='daemon'):
-        setconfig(key='daemon', value=True)
+    if options.daemon or plugin.config.config(key='daemon'):
+        plugin.config.setconfig(key='daemon', value=True)
         logger.info(msg="Running in daemon mode")
-        while config(key='daemon') == 'True':
+        while plugin.config.config(key='daemon') == 'True':
             process(getupdates())
-            sleep(int(config(key='sleep')))
+            sleep(int(plugin.config.config(key='sleep')))
     else:
         logger.info(msg="Running in one-shoot mode")
         process(getupdates())
 
-    # Close database
-    if con:
-        con.close()
     logger.info(msg="Stopped execution")
     logging.shutdown()
     sys.exit(0)
@@ -1901,9 +630,9 @@ def main():
 
 if __name__ == "__main__":
     # Set name to the database being used to allow multibot execution
-    if config(key="database"):
-        __name__ = config(key="database").split(".")[0]
+    if plugin.config.config(key="database"):
+        __name__ = plugin.config.config(key="database").split(".")[0]
     else:
-        setconfig(key="database", value='stampy')
+        plugin.config.setconfig(key="database", value='stampy')
         __name__ = "stampy"
     main()

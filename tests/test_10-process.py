@@ -3,7 +3,7 @@
 
 from unittest import TestCase
 
-from stampy.stampy import process
+import stampy.stampy
 
 true = True
 
@@ -25,4 +25,4 @@ text = [{u'message': {u'date': 1478361249, u'text': u'word++', u'from': {u'usern
 class TestStampy(TestCase):
     def test_process(self):
         text = ""
-        process(text)
+        stampy.stampy.process(text)

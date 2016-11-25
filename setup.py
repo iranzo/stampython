@@ -5,7 +5,7 @@ from distutils.core import setup
 
 setup(
     name='stampython',
-    version='0.41',
+    version='0.50',
     packages=['stampy'],
     url='https://github.com/iranzo/stampython',
     license='GPL',

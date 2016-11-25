@@ -26,6 +26,3 @@
   that word to him. (This should require per-user settings and be
   limited to group chats were user is in (getChatMember and
   https://core.telegram.org/bots/api#forwardmessage)
-- Try to modularize the karma and autok to be in separate functions,
-  so pre-writen text can be provided to the functions to validate with
-  unittesting skipping telegram server interaction

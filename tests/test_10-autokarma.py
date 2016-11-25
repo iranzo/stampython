@@ -3,15 +3,15 @@
 
 from unittest import TestCase
 
-from stampy.stampy import createautok, getautok, deleteautok
+import stampy.plugin.autokarma
 
 
 class TestStampy(TestCase):
     def test_createautok(self):
-        self.assertEqual(createautok('transcod', 'chupito'), True)
+        self.assertEqual(stampy.plugin.autokarma.createautok('transcod', 'chupito'), True)
 
     def test_getautok(self):
-        self.assertEqual(getautok('transcod', 'chupito'), True)
+        self.assertEqual(stampy.plugin.autokarma.getautok('transcod', 'chupito'), True)
 
     def test_removeautok(self):
-        self.assertEqual(deleteautok('transcod', 'chupito'), True)
+        self.assertEqual(stampy.plugin.autokarma.deleteautok('transcod', 'chupito'), True)
