@@ -40,7 +40,7 @@ def help(message):  # do not edit this line
     :param message: message to process
     :return: help text
     """
-    commandtext = "To use this bot use `word++` or `word--` to "
+    commandtext = "Use `word++` or `word--` to "
     commandtext += "increment or decrement karma, a new message will"
     commandtext += " be sent providing the new total\n\n"
     commandtext += "Use `rank word` or `rank` to get value for actual "

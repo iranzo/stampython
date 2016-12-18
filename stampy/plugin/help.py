@@ -38,6 +38,7 @@ def help(message):  # do not edit this line
     :return: help text
     """
     commandtext = "Use `/help` to display commands help\n\n"
+    commandtext += "Read about announcements at https://telegram.me/stampynews\n\n"
     return commandtext
 
 

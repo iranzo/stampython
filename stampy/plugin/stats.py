@@ -163,6 +163,10 @@ def updatestats(type=False, id=0, name=False, date=False, memberid=[]):
     # Only add the id if it was not already stored
     if memberid not in newmemberid:
         newmemberid.append(memberid)
+    if 'False' in newmemberid:
+        newmemberid.remove('False')
+    if False in newmemberid:
+        newmemberid.remove(False)
 
     sql = "DELETE from stats where id='%s'" % id
     stampy.stampy.dbsql(sql)

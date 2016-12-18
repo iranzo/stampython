@@ -101,14 +101,6 @@ def autokcommands(message):
                                               disable_web_page_preview=True,
                                               parse_mode="Markdown")
                     deleteautok(key=key, value=value)
-                else:
-                    text = "Deleting autokarma requires following syntax"
-                    text += " /autok delete <key>=<value>.\n\n"
-                    text += "Please use /help for more info"
-                    stampy.stampy.sendmessage(chat_id=chat_id, text=text,
-                                              reply_to_message_id=message_id,
-                                              disable_web_page_preview=True,
-                                              parse_mode="Markdown")
                 break
             if case():
                 word = texto.split(' ')[1]
@@ -198,28 +190,27 @@ def listautok(word=False):
     """
 
     logger = logging.getLogger(__name__)
-    if word:
-        # if word is provided, return the alias for that word
+    wordtext = ""
+
+    if not word:
+        sql = "select * from autokarma ORDER BY key ASC;"
+    else:
         string = (word,)
         sql = "SELECT * FROM autokarma WHERE key='%s' ORDER by key ASC;" % (
               string)
-        cur = stampy.stampy.dbsql(sql)
+        wordtext = "for word %s" % word
 
-        try:
-            # Get value from SQL query
-            text = "Defined autokarma triggers for word %s:\n" % word
-            table = from_db_cursor(cur)
+    cur = stampy.stampy.dbsql(sql)
+
+    try:
+        # Get value from SQL query
+        text = "Defined autokarma triggers %s:\n" % wordtext
+        table = from_db_cursor(cur)
             text = "%s\n```%s```" % (text, table.get_string())
 
-        except:
-            # Value didn't exist before
-            text = "%s has no trigger autokarma" % word
+    except:
+        # Value didn't exist before
+        text = "%s has no trigger autokarma" % word
 
-    else:
-        sql = "select * from autokarma ORDER BY key ASC;"
-        cur = stampy.stampy.dbsql(sql)
-        text = "Defined autokarma triggers:\n"
-        table = from_db_cursor(cur)
-        text = "%s\n```%s```" % (text, table.get_string())
     logger.debug(msg="Returning autokarma %s for word %s" % (text, word))
     return text

@@ -9,6 +9,8 @@ Attempt to create a python script that monitors a telegram bot URL and replies t
 
 Check more information about [Telegram Bots](https://core.telegram.org/bots/).
 
+News about the program, new features, etc at <https://telegram.me/stampynews>.
+
 ## Important
 - The bot will need to have access to all of your messages in order to find the words with "++" or "--"
 

@@ -24,8 +24,8 @@ def getPlugins():
 
     possibleplugins = os.listdir(PluginFolder)
     for i in possibleplugins:
-        if i != "__init__.py" and i[-3::] == ".py":
-            i = i[:-3]
+        if i != "__init__.py" and os.path.splitext(i)[1] == ".py":
+            i = os.path.splitext(i)[0]
         try:
             info = imp.find_module(i, [PluginFolder])
         except:
