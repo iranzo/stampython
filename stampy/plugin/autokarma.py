@@ -101,7 +101,7 @@ def autokcommands(message):
                                               disable_web_page_preview=True,
                                               parse_mode="Markdown")
                     deleteautok(key=key, value=value)
-                break
+
             if case():
                 word = texto.split(' ')[1]
                 if "=" in word:
@@ -118,33 +118,26 @@ def autokcommands(message):
     return
 
 
-def getautok(key, value):
+def getautok(key):
     """
     Get autok for a key value pair in case it's defined
     :param key: key to search autok
-    :param value: value to search autok
     :return: True if existing or False if not
     """
 
     logger = logging.getLogger(__name__)
-    sql = "SELECT * FROM autokarma WHERE key='%s' and value='%s';" % (
-          key, value)
+    sql = "SELECT * FROM autokarma WHERE key='%s';" % key
     cur = stampy.stampy.dbsql(sql)
-    cur.fetchone()
+    data = cur.fetchall()
+    print data
+    value = []
+    for row in data:
+        # Fill valid values
+        value.append(row[1][0])
+
     logger.debug(msg="getautok: %s - %s" % (key, value))
 
-    try:
-        # Get value from SQL query
-        svalue = value[1]
-
-    except:
-        # Value didn't exist before, return 0
-        svalue = False
-
-    # We can define recursive aliases, so this will return the ultimate one
-    if svalue:
-        return True
-    return False
+    return value
 
 
 def createautok(word, value):
@@ -156,7 +149,7 @@ def createautok(word, value):
     """
 
     logger = logging.getLogger(__name__)
-    if not getautok(word, value):
+    if not value in getautok(word):
         logger.error(msg="createautok: autok pair %s - %s already exists" % (
                          word, value))
     else:
@@ -206,7 +199,7 @@ def listautok(word=False):
         # Get value from SQL query
         text = "Defined autokarma triggers %s:\n" % wordtext
         table = from_db_cursor(cur)
-            text = "%s\n```%s```" % (text, table.get_string())
+        text = "%s\n```%s```" % (text, table.get_string())
 
     except:
         # Value didn't exist before
