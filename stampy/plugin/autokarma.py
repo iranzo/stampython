@@ -10,6 +10,7 @@ from prettytable import from_db_cursor
 
 import stampy.stampy
 import stampy.plugin.config
+import stampy.plugin.karma
 
 
 def init():
@@ -30,6 +31,8 @@ def run(message):  # do not edit this line
     if text:
         if text.split()[0] == "/autok":
             autokcommands(message)
+        autokarmawords(message)
+
     return
 
 
@@ -122,7 +125,7 @@ def getautok(key):
     """
     Get autok for a key value pair in case it's defined
     :param key: key to search autok
-    :return: True if existing or False if not
+    :return: list of values
     """
 
     logger = logging.getLogger(__name__)
@@ -133,9 +136,30 @@ def getautok(key):
     value = []
     for row in data:
         # Fill valid values
-        value.append(row[1][0])
+        value.append(row[1])
 
     logger.debug(msg="getautok: %s - %s" % (key, value))
+
+    return value
+
+
+def getautokeywords():
+    """
+    Get autokeywords
+    :return: List of autokeywords
+    """
+
+    logger = logging.getLogger(__name__)
+    sql = "SELECT distinct key FROM autokarma;"
+    cur = stampy.stampy.dbsql(sql)
+    data = cur.fetchall()
+    print data
+    value = []
+    for row in data:
+        # Fill valid values
+        value.append(row[0])
+
+    logger.debug(msg="getautokeywords: %s" % value)
 
     return value
 
@@ -149,7 +173,7 @@ def createautok(word, value):
     """
 
     logger = logging.getLogger(__name__)
-    if not value in getautok(word):
+    if value in getautok(word):
         logger.error(msg="createautok: autok pair %s - %s already exists" % (
                          word, value))
     else:
@@ -207,3 +231,91 @@ def listautok(word=False):
 
     logger.debug(msg="Returning autokarma %s for word %s" % (text, word))
     return text
+
+
+def autokarmawords(message):
+    """
+    Finds for commands affecting karma in messages
+    :param message: message to process
+    :return:
+    """
+
+    msgdetail = stampy.stampy.getmsgdetail(message)
+
+    texto = msgdetail["text"]
+
+    logger = logging.getLogger(__name__)
+    # Process lines for commands in the first
+    # word of the line (Telegram commands)
+    word = texto.split()[0]
+
+    # Process each word in the line received
+    # to search for karma operators
+
+    wordadd = []
+    worddel = []
+
+    # Unicode — is sometimes provided by telegram cli,
+    # using that also as comparison
+    unidecrease = u"—"
+
+    # Define dictionary for text replacements
+    dict = {
+        "'": "",
+        "@": "",
+        "\n": " ",
+        unidecrease: "--"
+    }
+
+    if not msgdetail["error"] and msgdetail["text"]:
+        # Search for telegram commands and if any disable text processing
+        text_to_process = stampy.stampy.replace_all(msgdetail["text"], dict).lower().split(" ")
+    else:
+        text_to_process = ""
+
+    keywords = getautokeywords()
+    for word in text_to_process:
+        if word in keywords:
+            values = getautok(word)
+            print "~~~~~~~~~~~~~~~~~~~~~"
+            print values
+            for autok in values:
+                wordadd.append(autok)
+            msg = "%s word found," % word
+            msg += " processing %s auto-karma increase" % (values)
+            logger.debug(msg)
+
+    for word in wordadd + worddel:
+        change = 0
+        oper = False
+        if word in wordadd:
+            change += 1
+            oper = "++"
+        if word in worddel:
+            change -= 1
+            oper = "--"
+
+        if change != 0:
+            msg = "%s Found in %s at %s with id %s (%s)," \
+                  " sent by id %s named %s (%s %s)" % (
+                      oper, word, msgdetail["chat_id"], msgdetail["message_id"],
+                      msgdetail["chat_name"], msgdetail["who_id"],
+                      msgdetail["who_un"], msgdetail["who_gn"], msgdetail["who_ln"])
+            logger.debug(msg)
+
+            karma = stampy.plugin.karma.updatekarma(word=word, change=change)
+            if karma != 0:
+                # Karma has changed, report back
+                text = "`%s` now has `%s` karma points." % (
+                    word, karma)
+            else:
+                # New karma is 0
+                text = "`%s` now has no Karma and has" % word
+                text += " been garbage collected."
+
+            # Send originating user for karma change a reply with
+            # the new value
+            stampy.stampy.sendmessage(chat_id=msgdetail["chat_id"], text=text,
+                                      reply_to_message_id=msgdetail["message_id"],
+                                      parse_mode="Markdown")
+    return

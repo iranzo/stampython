@@ -215,19 +215,6 @@ def getkarma(word):
     return value
 
 
-def createkarma(word):
-    """
-    Creates a new word in karma database
-    :param word: word to create
-    :return:
-    """
-
-    # logger = logging.getLogger(__name__)
-    sql = "INSERT INTO karma VALUES('%s',0);" % word
-    stampy.stampy.dbsql(sql)
-    return
-
-
 def putkarma(word, value):
     """
     Updates value of karma for a word
@@ -236,16 +223,14 @@ def putkarma(word, value):
     :return: sql execution
     """
 
-    # logger = logging.getLogger(__name__)
-    if getkarma(word) == 0:
-        createkarma(word)
+    logger = logging.getLogger(__name__)
 
-    if value != 0:
-        sql = "UPDATE karma SET value = '%s' WHERE word = '%s';" % (
-              value, word)
-    else:
-        sql = "DELETE FROM karma WHERE  word = '%s';" % word
+    sql = "DELETE FROM karma WHERE  word = '%s';" % word
     stampy.stampy.dbsql(sql)
+    if value != 0:
+        sql = "INSERT INTO karma VALUES('%s','%s');" % (word, value)
+        stampy.stampy.dbsql(sql)
+
     return
 
 
@@ -316,7 +301,6 @@ def karmawords(message):
         unidecrease: "--"
     }
 
-    # TODO(iranzo): Find a way for other plugins not to interfere with commands
     if not msgdetail["error"] and msgdetail["text"]:
         # Search for telegram commands and if any disable text processing
         text_to_process = stampy.stampy.replace_all(msgdetail["text"], dict).lower().split(" ")
@@ -324,37 +308,6 @@ def karmawords(message):
         text_to_process = ""
 
     for word in text_to_process:
-        # Select all autokarma keys from DB
-        sql = "SELECT distinct key FROM autokarma;"
-        cur = stampy.stampy.dbsql(sql)
-        value = cur.fetchall()
-        msg = "Select all the following"
-        msg += " AUTOKARMA keys : %s" % str(value)
-        logger.debug(msg)
-
-        # for each autokarma key we check if included
-        # in word to increase his value karma
-        for autok in value:
-            if unidecrease in autok:
-                autok = autok.replace(unidecrease, '--')
-            msg = "Dealing with AUTOKARMA key :%s" % str(autok)
-            logger.debug(msg)
-            if autok[0] in word:
-                string = (autok[0],)
-                sql = "SELECT value FROM autokarma where key='%s';" % (
-                    string)
-                logger.debug(msg=sql)
-                cur = stampy.stampy.dbsql(sql)
-                autov = cur.fetchall()
-                for valuei in autov:
-                    if unidecrease in valuei:
-                        valuei = valuei.replace(unidecrease, '--')
-                    wordadd.append(valuei[0])
-                    msg = "%s word found," % autok[0]
-                    msg += " processing %s auto-karma increase" % (
-                        valuei[0])
-                    logger.debug(msg)
-
         if "++" in word or "--" in word:
             msg = "Processing word"
             msg += " %s sent by id %s with username %s (%s %s)" % (
