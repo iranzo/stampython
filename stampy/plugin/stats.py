@@ -273,9 +273,9 @@ def dochatcleanup(chat_id=False,
             #  remove karma
             texto = "Due to inactivity of more than %s days, this bot will " \
                     "exit the channel, please re-add in the future if needed" % maxage
-            stampy.stampy.sendmessage(chat_id, text=texto)
+            stampy.stampy.sendmessage(chatid, text=texto)
 
-            getoutofchat(chat_id)
+            getoutofchat(chatid)
 
             # Remove channel stats
             sql = "DELETE from stats where id='%s' % chatid"

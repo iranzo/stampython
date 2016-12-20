@@ -207,12 +207,19 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
         message += "&%s" % extra
 
     code = False
+    attempt = 0
     while not code:
         result = json.load(urllib.urlopen(message))
         code = result['ok']
         logger.error(msg="ERROR sending message: Code: %s : Text: %s" % (
                          code, result))
+        attempt = attempt + 1
         sleep(1)
+        # exit after 60 retries with 1 second delay each
+        if attempt > 60:
+            logger.error(msg="PERM ERROR sending message: Code: %s : Text: "
+                             "%s" % (code, result))
+            code = True
     logger.debug(msg="Sending message: Code: %s : Text: %s" % (code, text))
     return
 
