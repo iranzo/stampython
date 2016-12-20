@@ -359,10 +359,6 @@ def getall(message):
 
         if text and all:
             text += " ".join(all)
-            logger.debug(msg="##########################")
-            logger.debug(msg=text)
-            logger.debug(msg=text.encode('utf-8'))
-            logger.debug(msg=urllib.quote_plus(text.encode('utf-8')))
             stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                       reply_to_message_id=message_id,
                                       disable_web_page_preview=True)
