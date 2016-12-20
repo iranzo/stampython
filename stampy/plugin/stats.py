@@ -27,6 +27,8 @@ def init():
     """
     sched.add_job(dochatcleanup, 'interval', minutes=int(stampy.plugin.config.config('sleep')), id='dochatcleanup',
                   replace_existing=True)
+    sched.add_job(dousercleanup, 'interval', minutes=int(stampy.plugin.config.config('sleep')), id='dousercleanup',
+                  replace_existing=True)
 
     return
 
@@ -171,6 +173,8 @@ def updatestats(type=False, id=0, name=False, date=False, memberid=[]):
         newmemberid.append(memberid)
     if 'False' in newmemberid:
         newmemberid.remove('False')
+    if 'false' in newmemberid:
+        newmemberid.remove('false')
     if False in newmemberid:
         newmemberid.remove(False)
 
@@ -278,7 +282,7 @@ def dochatcleanup(chat_id=False,
             getoutofchat(chatid)
 
             # Remove channel stats
-            sql = "DELETE from stats where id='%s' % chatid"
+            sql = "DELETE from stats where id='%s';" % chatid
             cur = stampy.stampy.dbsql(sql)
 
             # Remove users membership that had that channel id
@@ -289,6 +293,62 @@ def dochatcleanup(chat_id=False,
                 (type, id, name, date, count, memberid) = line
                 logger.debug(msg="LINE for user %s and memberid: %s will be deleted" % (name, memberid))
                 memberid.remove(chatid)
+                # Update stats entry in database without the removed chat
+                updatestats(type=type, id=id, name=name, date=date, memberid=memberid)
+    return
+
+
+def dousercleanup(user_id=False,
+                  maxage=int(stampy.plugin.config.config("maxage",
+                                                         default=180))):
+    """
+    Checks on the stats database the date of the last update from the user
+    :param user_id: Channel ID to query in database
+    :param maxage: defines maximum number of days to allow chats to be inactive
+    """
+
+    logger = logging.getLogger(__name__)
+
+    if user_id:
+        sql = "SELECT * FROM stats WHERE type='user' and id=%s" % user_id
+    else:
+        sql = "SELECT * FROM stats WHERE type='user'"
+
+    userids = []
+    cur = stampy.stampy.dbsql(sql)
+
+    for row in cur:
+        userid = row[1]
+        userids.append(userid)
+
+    logger.debug(msg="Processing userids for cleanup: %s" % userids)
+
+    for userid in userids:
+        (type, id, name, date, count, memberid) = getstats(type='user',
+                                                           id=userid)
+        if date and (date != "False"):
+            chatdate = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
+        else:
+            chatdate = datetime.datetime.now()
+
+        now = datetime.datetime.now()
+
+        if (now - chatdate).days > maxage:
+            logger.debug(msg="USER ID %s with name %s and %s inactivity days is going to be purged" % (
+                userid, name, (now - chatdate).days))
+
+            # Remove channel stats
+            sql = "DELETE from stats where id='%s';" % userid
+            cur = stampy.stampy.dbsql(sql)
+
+            # Remove users membership that had that channel id
+            sql = "SELECT * FROM stats WHERE type='chat' and memberid LIKE '%%%s%%';" % userid
+            cur = stampy.stampy.dbsql(sql)
+
+            for line in cur:
+                (type, id, name, date, count, memberid) = line
+                logger.debug(msg="LINE for user %s and memberid: %s will be deleted" % (name, memberid))
+                memberid.remove(userid)
                 # Update stats entry in database without the removed chat
                 updatestats(type=type, id=id, name=name, date=date, memberid=memberid)
     return

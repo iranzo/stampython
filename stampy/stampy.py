@@ -211,8 +211,8 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
     while not code:
         result = json.load(urllib.urlopen(message))
         code = result['ok']
-        logger.error(msg="ERROR sending message: Code: %s : Text: %s" % (
-                         code, result))
+        logger.error(msg="ERROR (%s) sending message: Code: %s : Text: %s" % (
+                         attempt, code, result))
         attempt = attempt + 1
         sleep(1)
         # exit after 60 retries with 1 second delay each
