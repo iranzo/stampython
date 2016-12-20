@@ -2,3 +2,8 @@ exec
 .idea
 *.pyc
 .tox
+redken.sh
+stampy.db
+stampy.log
+redken.log
+redken.db

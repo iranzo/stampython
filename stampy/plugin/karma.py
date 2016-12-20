@@ -298,11 +298,6 @@ def karmaprocess(msgdetail):
         u"—": "--"
     }
 
-    logger.debug(msg="###############################")
-    logger.debug(msg=msgdetail["error"])
-    logger.debug(msg=msgdetail["text"])
-    logger.debug(msg="###############################")
-
     if not msgdetail["error"] and msgdetail["text"]:
         # Search for telegram commands and if any disable text processing
         text_to_process = stampy.stampy.replace_all(msgdetail["text"],
