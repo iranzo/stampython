@@ -11,6 +11,7 @@ from prettytable import from_db_cursor
 import stampy.stampy
 import stampy.plugin.config
 import stampy.plugin.karma
+import stampy.plugin.alias
 
 
 def init():
@@ -277,13 +278,18 @@ def autokarmawords(message):
     for word in text_to_process:
         if word in keywords:
             values = getautok(word)
-            print "~~~~~~~~~~~~~~~~~~~~~"
-            print values
-            for autok in values:
-                wordadd.append(autok)
             msg = "%s word found," % word
             msg += " processing %s auto-karma increase" % (values)
             logger.debug(msg)
+
+            for autok in values:
+                if stampy.plugin.alias.getalias(autok):
+                    autok = stampy.plugin.alias.getalias(autok).split(" ")
+                for item in autok:
+                    if stampy.plugin.alias.getalias(item):
+                        item = stampy.plugin.alias.getalias(item)
+                    if item not in wordadd:
+                        wordadd.append(item)
 
     for word in wordadd + worddel:
         change = 0
