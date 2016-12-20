@@ -52,6 +52,10 @@ def run(message):  # do not edit this line
     if text:
         if text.split()[0] == "/stats":
             statscommands(message)
+
+    if "@all" in text:
+        getall(message)
+
     return
 
 
@@ -62,10 +66,11 @@ def help(message):  # do not edit this line
     :return: help text
     """
 
-    commandtext = ""
+    commandtext = "Use `@all` to ping all users in a channel as long as " \
+                  "they have username defined in Telegram\n\n"
     if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
-        commandtext = "Use `/stats show <user|chat>` " \
-                      "to get stats on last usage\n\n"
+        commandtext += "Use `/stats show <user|chat>` " \
+                       "to get stats on last usage\n\n"
     return commandtext
 
 
@@ -76,6 +81,8 @@ def statscommands(message):
     :return:
     """
 
+    logger = logging.getLogger(__name__)
+
     msgdetail = stampy.stampy.getmsgdetail(message)
 
     texto = msgdetail["text"]
@@ -83,7 +90,6 @@ def statscommands(message):
     message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    logger = logging.getLogger(__name__)
     if who_un == stampy.plugin.config.config('owner'):
         logger.debug(msg="Owner Stat: %s by %s" % (texto, who_un))
         try:
@@ -273,7 +279,7 @@ def dochatcleanup(chat_id=False,
 
             # Remove channel stats
             sql = "DELETE from stats where id='%s' % chatid"
-            cur = dbsql(sql)
+            cur = stampy.stampy.dbsql(sql)
 
             # Remove users membership that had that channel id
             sql = "SELECT * FROM stats WHERE type='user' and memberid LIKE '%%%s%%';" % chatid
@@ -323,3 +329,41 @@ def getstats(type=False, id=0, name=False, date=False, count=0):
 
     # Ensure we return the modified values
     return type, id, name, date, count, memberid
+
+
+def getall(message):
+
+    logger = logging.getLogger(__name__)
+    msgdetail = stampy.stampy.getmsgdetail(message)
+
+    texto = msgdetail["text"]
+    chat_id = msgdetail["chat_id"]
+    message_id = msgdetail["message_id"]
+    who_un = msgdetail["who_un"]
+
+    if "@all" in texto:
+        logger.debug(msg="@All invoked")
+        text = "%s wanted to ping you: " % who_un
+
+        (type, id, name, date, count, members) = getstats(type='chat', id=chat_id)
+
+        all = []
+        for member in members:
+            (type, id, name, date, count, memberid) = getstats(type='user', id=member)
+            username = None
+            for each in name.split():
+                if "@" in each:
+                    username = each[1:-1]
+            if username:
+                all.append(username)
+
+        if text and all:
+            text += " ".join(all)
+            logger.debug(msg="##########################")
+            logger.debug(msg=text)
+            logger.debug(msg=text.encode('utf-8'))
+            logger.debug(msg=urllib.quote_plus(text.encode('utf-8')))
+            stampy.stampy.sendmessage(chat_id=chat_id, text=text,
+                                      reply_to_message_id=message_id,
+                                      disable_web_page_preview=True)
+    return
