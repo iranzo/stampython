@@ -182,6 +182,7 @@ def saveconfig(key, value):
     if value:
         sql = "UPDATE config SET value = '%s' WHERE key = '%s';" % (value, key)
         stampy.stampy.dbsql(sql)
+        logger.debug(msg="Updating config for %s with %s" % (key, value))
     return value
 
 

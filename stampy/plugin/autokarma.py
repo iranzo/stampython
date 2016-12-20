@@ -241,87 +241,22 @@ def autokarmawords(message):
     :return:
     """
 
-    msgdetail = stampy.stampy.getmsgdetail(message)
-
-    texto = msgdetail["text"]
-
     logger = logging.getLogger(__name__)
-    # Process lines for commands in the first
-    # word of the line (Telegram commands)
-    word = texto.split()[0]
 
-    # Process each word in the line received
-    # to search for karma operators
+    msgdetail = stampy.stampy.getmsgdetail(message)
+    text_to_process = msgdetail["text"].lower()
 
     wordadd = []
-    worddel = []
-
-    # Unicode — is sometimes provided by telegram cli,
-    # using that also as comparison
-    unidecrease = u"—"
-
-    # Define dictionary for text replacements
-    dict = {
-        "'": "",
-        "@": "",
-        "\n": " ",
-        unidecrease: "--"
-    }
-
-    if not msgdetail["error"] and msgdetail["text"]:
-        # Search for telegram commands and if any disable text processing
-        text_to_process = stampy.stampy.replace_all(msgdetail["text"], dict).lower().split(" ")
-    else:
-        text_to_process = ""
 
     keywords = getautokeywords()
-    for word in text_to_process:
-        if word in keywords:
-            values = getautok(word)
-            msg = "%s word found," % word
-            msg += " processing %s auto-karma increase" % (values)
-            logger.debug(msg)
+    for autok in keywords:
+        if autok in text_to_process:
+            # If trigger word is there, add the triggered action
+            wordadd.append(getautok(autok) + "++")
 
-            for autok in values:
-                if stampy.plugin.alias.getalias(autok):
-                    autok = stampy.plugin.alias.getalias(autok).split(" ")
-                for item in autok:
-                    if stampy.plugin.alias.getalias(item):
-                        item = stampy.plugin.alias.getalias(item)
-                    if item not in wordadd:
-                        wordadd.append(item)
+    # Reduce text in message to just the words we encountered to optimize
+    msgdetail["text"] = " ".join(wordadd)
+    logger.debug(msg="Autokarma words %s encountered for processing" % msgdetail["text"])
+    stampy.plugin.karma.karmaprocess(msgdetail)
 
-    for word in wordadd + worddel:
-        change = 0
-        oper = False
-        if word in wordadd:
-            change += 1
-            oper = "++"
-        if word in worddel:
-            change -= 1
-            oper = "--"
-
-        if change != 0:
-            msg = "%s Found in %s at %s with id %s (%s)," \
-                  " sent by id %s named %s (%s %s)" % (
-                      oper, word, msgdetail["chat_id"], msgdetail["message_id"],
-                      msgdetail["chat_name"], msgdetail["who_id"],
-                      msgdetail["who_un"], msgdetail["who_gn"], msgdetail["who_ln"])
-            logger.debug(msg)
-
-            karma = stampy.plugin.karma.updatekarma(word=word, change=change)
-            if karma != 0:
-                # Karma has changed, report back
-                text = "`%s` now has `%s` karma points." % (
-                    word, karma)
-            else:
-                # New karma is 0
-                text = "`%s` now has no Karma and has" % word
-                text += " been garbage collected."
-
-            # Send originating user for karma change a reply with
-            # the new value
-            stampy.stampy.sendmessage(chat_id=msgdetail["chat_id"], text=text,
-                                      reply_to_message_id=msgdetail["message_id"],
-                                      parse_mode="Markdown")
     return

@@ -61,13 +61,14 @@ def karmacommands(message):
     :return:
     """
 
+    logger = logging.getLogger(__name__)
+
     msgdetail = stampy.stampy.getmsgdetail(message)
 
     texto = msgdetail["text"]
     chat_id = msgdetail["chat_id"]
     message_id = msgdetail["message_id"]
 
-    logger = logging.getLogger(__name__)
     # Process lines for commands in the first
     # word of the line (Telegram commands)
     word = texto.split()[0]
@@ -185,9 +186,10 @@ def updatekarma(word=False, change=0):
     :return:
     """
 
-    # logger = logging.getLogger(__name__)
+    logger = logging.getLogger(__name__)
     value = getkarma(word=word) + change
     putkarma(word, value)
+    logger.debug(msg="Putting karma of %s to %s" % (value, word))
     return value
 
 
@@ -198,7 +200,7 @@ def getkarma(word):
     :return: karma of given word
     """
 
-    # logger = logging.getLogger(__name__)
+    logger = logging.getLogger(__name__)
     string = (word,)
     sql = "SELECT * FROM karma WHERE word='%s';" % string
     cur = stampy.stampy.dbsql(sql)
@@ -211,7 +213,7 @@ def getkarma(word):
     except:
         # Value didn't exist before, return 0
         value = 0
-
+    logger.debug(msg="Getting karma for %s: %s" % (word, value))
     return value
 
 
@@ -225,12 +227,13 @@ def putkarma(word, value):
 
     logger = logging.getLogger(__name__)
 
-    sql = "DELETE FROM karma WHERE  word = '%s';" % word
+    sql = "DELETE FROM karma WHERE word = '%s';" % word
     stampy.stampy.dbsql(sql)
     if value != 0:
         sql = "INSERT INTO karma VALUES('%s','%s');" % (word, value)
         stampy.stampy.dbsql(sql)
 
+    logger.debug(msg="Putting karma of %s to %s" % (value, word))
     return
 
 
@@ -242,7 +245,7 @@ def stampyphant(chat_id="", karma=0):
     :return:
     """
 
-    # logger = logging.getLogger(__name__)
+    logger = logging.getLogger(__name__)
     karma = "%s" % karma
     # Sticker definitions for each rank
     x00 = "BQADBAADYwAD17FYAAEidrCCUFH7AgI"
@@ -264,6 +267,7 @@ def stampyphant(chat_id="", karma=0):
 
     if sticker != "":
         stampy.stampy.sendsticker(chat_id=chat_id, sticker=sticker, text="%s" % text)
+        logger.debug(msg=text)
     return
 
 
@@ -273,62 +277,71 @@ def karmawords(message):
     :param message: message to process
     :return:
     """
+    karmaprocess(stampy.stampy.getmsgdetail(message))
+    return
 
-    msgdetail = stampy.stampy.getmsgdetail(message)
 
-    texto = msgdetail["text"]
+def karmaprocess(msgdetail):
+    """
+    Processes karma operators in text
+    :param msgdetail: message details as per getmsgdetail
+    :return:
+    """
 
     logger = logging.getLogger(__name__)
-    # Process lines for commands in the first
-    # word of the line (Telegram commands)
-    word = texto.split()[0]
 
-    # Process each word in the line received
-    # to search for karma operators
+    # Define dictionary for text replacements
+    dictionary = {
+        "'": "",
+        "@": "",
+        "\n": " ",
+        u"—": "--"
+    }
+
+    logger.debug(msg="###############################")
+    logger.debug(msg=msgdetail["error"])
+    logger.debug(msg=msgdetail["text"])
+    logger.debug(msg="###############################")
+
+    if not msgdetail["error"] and msgdetail["text"]:
+        # Search for telegram commands and if any disable text processing
+        text_to_process = stampy.stampy.replace_all(msgdetail["text"],
+                                                    dictionary).lower().split(
+            " ")
+    else:
+        text_to_process = ""
+
+    logger.debug(msg="Text to process: %s" % text_to_process)
 
     wordadd = []
     worddel = []
 
-    # Unicode — is sometimes provided by telegram cli,
-    # using that also as comparison
-    unidecrease = u"—"
+    # If operators are not there, exit faster
+    if "--" in text_to_process or "++" in " ".join(text_to_process):
+        logger.debug(msg="Text has karma operators")
+        for word in text_to_process:
+            if "++" in word or "--" in word:
+                msg = "Processing word"
+                msg += " %s sent by id %s with username %s (%s %s)" % (
+                    word, msgdetail["who_id"], msgdetail["who_un"], msgdetail["who_gn"], msgdetail["who_ln"])
+                logger.debug(msg)
 
-    # Define dictionary for text replacements
-    dict = {
-        "'": "",
-        "@": "",
-        "\n": " ",
-        unidecrease: "--"
-    }
+                # This should help to avoid duplicate karma operations
+                # in the same message
 
-    if not msgdetail["error"] and msgdetail["text"]:
-        # Search for telegram commands and if any disable text processing
-        text_to_process = stampy.stampy.replace_all(msgdetail["text"], dict).lower().split(" ")
-    else:
-        text_to_process = ""
+                if len(word) >= 4:
+                    oper = word[-2:]
+                    word = word[:-2]
+                    if stampy.plugin.alias.getalias(word):
+                        word = stampy.plugin.alias.getalias(word).split(" ")
+                    for item in word:
+                        if stampy.plugin.alias.getalias(item):
+                            item = stampy.plugin.alias.getalias(item)
+                        if oper == "++" and item not in wordadd:
+                            wordadd.append(item)
+                        if oper == "--" and item not in worddel:
+                            worddel.append(item)
 
-    for word in text_to_process:
-        if "++" in word or "--" in word:
-            msg = "Processing word"
-            msg += " %s sent by id %s with username %s (%s %s)" % (
-                word, msgdetail["who_id"], msgdetail["who_un"], msgdetail["who_gn"], msgdetail["who_ln"])
-            logger.debug(msg)
-
-            # This should help to avoid duplicate karma operations
-            # in the same message
-
-            if len(word) >= 4:
-                oper = word[-2:]
-                word = word[:-2]
-                if stampy.plugin.alias.getalias(word):
-                    word = stampy.plugin.alias.getalias(word).split(" ")
-                for item in word:
-                    if stampy.plugin.alias.getalias(item):
-                        item = stampy.plugin.alias.getalias(item)
-                    if oper == "++" and item not in wordadd:
-                        wordadd.append(item)
-                    if oper == "--" and item not in worddel:
-                        worddel.append(item)
     for word in wordadd + worddel:
         change = 0
         oper = False
@@ -363,5 +376,4 @@ def karmawords(message):
                                       reply_to_message_id=msgdetail["message_id"],
                                       parse_mode="Markdown")
             stampyphant(chat_id=msgdetail["chat_id"], karma=karma)
-
     return

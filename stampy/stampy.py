@@ -362,15 +362,15 @@ def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
     return json.load(urllib.urlopen(message))
 
 
-def replace_all(text, dict):
+def replace_all(text, dictionary):
     """
     Replaces text with the dict
     :param text: Text to process
-    :param dict:  The dictionary of replacements
+    :param dictionary:  The dictionary of replacements
     :return: the modified text
     """
 
-    for i, j in dict.iteritems():
+    for i, j in dictionary.iteritems():
         text = text.replace(i, j)
     return text
 

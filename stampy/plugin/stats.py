@@ -226,7 +226,8 @@ def getoutofchat(chat_id=False):
 
 
 def dochatcleanup(chat_id=False,
-                  maxage=int(stampy.plugin.config.config("maxage", default=365))):
+                  maxage=int(stampy.plugin.config.config("maxage",
+                                                         default=180))):
     """
     Checks on the stats database the date of the last update in the chat
     :param chat_id: Channel ID to query in database
@@ -266,13 +267,13 @@ def dochatcleanup(chat_id=False,
             #  remove karma
             texto = "Due to inactivity of more than %s days, this bot will " \
                     "exit the channel, please re-add in the future if needed" % maxage
-            # stampy.stampy.sendmessage(chat_id, text=texto)
+            stampy.stampy.sendmessage(chat_id, text=texto)
 
-            # getoutofchat(chat_id)
+            getoutofchat(chat_id)
 
             # Remove channel stats
-            # sql = "DELETE from stats where id='%s' % chatid"
-            # cur = dbsql(sql)
+            sql = "DELETE from stats where id='%s' % chatid"
+            cur = dbsql(sql)
 
             # Remove users membership that had that channel id
             sql = "SELECT * FROM stats WHERE type='user' and memberid LIKE '%%%s%%';" % chatid
@@ -281,10 +282,9 @@ def dochatcleanup(chat_id=False,
             for line in cur:
                 (type, id, name, date, count, memberid) = line
                 logger.debug(msg="LINE for user %s and memberid: %s will be deleted" % (name, memberid))
-                # memberid.remove(chatid)
+                memberid.remove(chatid)
                 # Update stats entry in database without the removed chat
-                # updatestats(type=type, id=id, name=name, date=date,
-                # memberid=memberid)
+                updatestats(type=type, id=id, name=name, date=date, memberid=memberid)
     return
 
 
