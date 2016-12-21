@@ -306,13 +306,13 @@ def karmaprocess(msgdetail):
     else:
         text_to_process = ""
 
-    logger.debug(msg="Text to process: %s" % text_to_process)
+    logger.debug(msg="Text to process: %s" % " ".join(text_to_process))
 
     wordadd = []
     worddel = []
 
     # If operators are not there, exit faster
-    if "--" in text_to_process or "++" in " ".join(text_to_process):
+    if "--" in " ".join(text_to_process) or "++" in " ".join(text_to_process):
         logger.debug(msg="Text has karma operators")
         for word in text_to_process:
             if "++" in word or "--" in word:

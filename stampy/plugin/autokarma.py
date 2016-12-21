@@ -236,7 +236,7 @@ def listautok(word=False):
 
 def autokarmawords(message):
     """
-    Finds for commands affecting karma in messages
+    Finds commands affecting autokarma in messages
     :param message: message to process
     :return:
     """
@@ -254,9 +254,10 @@ def autokarmawords(message):
             # If trigger word is there, add the triggered action
             wordadd.append(getautok(autok) + "++")
 
-    # Reduce text in message to just the words we encountered to optimize
-    msgdetail["text"] = " ".join(wordadd)
-    logger.debug(msg="Autokarma words %s encountered for processing" % msgdetail["text"])
-    stampy.plugin.karma.karmaprocess(msgdetail)
+    if wordadd:
+        # Reduce text in message to just the words we encountered to optimize
+        msgdetail["text"] = " ".join(wordadd)
+        logger.debug(msg="Autokarma words %s encountered for processing" % msgdetail["text"])
+        stampy.plugin.karma.karmaprocess(msgdetail)
 
     return

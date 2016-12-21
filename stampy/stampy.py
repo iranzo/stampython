@@ -389,29 +389,41 @@ def getmsgdetail(message):
     :return: message details as dict
     """
 
-    update_id = message['update_id']
-
     try:
-        chat_id = message['message']['chat']['id']
+        update_id = message['update_id']
     except:
-        chat_id = ""
+        update_id = ""
+
+    type = ""
 
     try:
-        chat_name = message['message']['chat']['title']
+        # Regular message
+        chat_id = message['message']['chat']['id']
+        type = "message"
+    except:
+        try:
+            # Message in a channel
+            chat_id = message['channel_post']['chat']['id']
+            type = "channel_post"
+        except:
+            chat_id = ""
+
+    try:
+        chat_name = message[type]['chat']['title']
     except:
         chat_name = ""
 
     try:
-        text = message['message']['text']
+        text = message[type]['text']
     except:
         text = ""
 
     try:
-        message_id = int(message['message']['message_id'])
-        date = int(float(message['message']['date']))
+        message_id = int(message[type]['message_id'])
+        date = int(float(message[type]['date']))
         datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
-        who_gn = message['message']['from']['first_name']
-        who_id = message['message']['from']['id']
+        who_gn = message[type]['from']['first_name']
+        who_id = message[type]['from']['id']
         error = False
     except:
         error = True
@@ -422,14 +434,14 @@ def getmsgdetail(message):
         message_id = ""
 
     try:
-        who_ln = message['message']['from']['last_name']
+        who_ln = message[type]['from']['last_name']
     except:
         who_ln = ""
 
     # Some user might not have username defined so this
     # was failing and message was ignored
     try:
-        who_un = message['message']['from']['username']
+        who_un = message[type]['from']['username']
     except:
         who_un = ""
 
@@ -441,7 +453,7 @@ def getmsgdetail(message):
 
     vals = {"name": name, "chat_id": chat_id, "chat_name": chat_name, "date": date, "datefor": datefor, "error": error,
             "message_id": message_id, "text": text, "update_id": update_id, "who_gn": who_gn, "who_id": who_id,
-            "who_ln": who_ln, "who_un": who_un}
+            "who_ln": who_ln, "who_un": who_un, "type": type}
 
     return vals
 
