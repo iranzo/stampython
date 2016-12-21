@@ -133,7 +133,6 @@ def getautok(key):
     sql = "SELECT * FROM autokarma WHERE key='%s';" % key
     cur = stampy.stampy.dbsql(sql)
     data = cur.fetchall()
-    print data
     value = []
     for row in data:
         # Fill valid values
