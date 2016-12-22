@@ -27,6 +27,7 @@ News about the program, new features, etc at <https://telegram.me/stampynews>.
 - `/quote username` to retrieve a random quote for that username.
 - `/dilbert <date>` to retrieve Dilbert's strip for today or supplied date (today if error parsing)
 - `@all` to ping all usernames for users in a channel
+- `stock <ticker>` to get trading quote for ticker in stock market
 
 ## Extra commands only for owner user
 ### Configuration
