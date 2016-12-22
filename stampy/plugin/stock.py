@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 # Description: Plugin for processing stock requests
-# Author: Javier Ramirez Molina (javilinux@gmail.com
+# Author: Javier Ramirez Molina (javilinux@gmail.com)
 # URL: https://github.com/javilinux/StockCurrency/blob/master/StockCurrency.py
 # Modified by: Pablo Iranzo Gomez (Pablo.Iranzo@gmail.com)
 
