@@ -115,8 +115,7 @@ def stock(message):
     text += "USD/EUR rate " + str(rate) + "\n"
     for ticker in stock:
         quote = c.get(ticker)
-        text += "%s Quote " % ticker + " " + quote["l_cur"] + " " + quote[
-            "c"] + " (%s%%)" % quote["cp"]
+        text += "%s Quote " % quote["t"] + " " + quote["l_cur"] + " " + quote["c"] + " (%s%%)" % quote["cp"]
         quoteUSD = float(quote["l_cur"])
         quoteEur = float(quoteUSD * rate)
         text += " (%s EUR)\n" % "{0:.2f}".format(quoteEur)
