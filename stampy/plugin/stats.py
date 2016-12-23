@@ -410,9 +410,10 @@ def getall(message):
         for member in members:
             (type, id, name, date, count, memberid) = getstats(type='user', id=member)
             username = None
-            for each in name.split():
-                if "@" in each:
-                    username = each[1:-1]
+            if name:
+                for each in name.split():
+                    if "@" in each:
+                        username = each[1:-1]
             if username:
                 all.append(username)
 
