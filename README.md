@@ -26,6 +26,10 @@ News about the program, new features, etc at <https://telegram.me/stampynews>.
 - `/quote add username text` to add a quote for given username with the following text as message
 - `/quote username` to retrieve a random quote for that username.
 - `/dilbert <date>` to retrieve Dilbert's strip for today or supplied date (today if error parsing)
+- `/mel <date>` to retrieve Mel's strip for today or supplied date (today 
+  or prior days as data is obtained from RSS feed)
+- `/obichero <date>` to retrieve O bichero's strip for today or supplied date 
+  (today or prior days as data is obtained from RSS feed)  
 - `@all` to ping all usernames for users in a channel
 - `stock <ticker>` to get trading quote for ticker in stock market
 
