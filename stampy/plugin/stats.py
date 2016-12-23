@@ -11,8 +11,9 @@ import urllib
 
 from prettytable import from_db_cursor
 
-import stampy.plugin.config
 import stampy.stampy
+import stampy.plugin.config
+import stampy.plugin.karma
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -403,8 +404,6 @@ def getall(message):
 
     if "@all" in texto:
         logger.debug(msg="@All invoked")
-        text = "%s wanted to ping you: " % who_un
-
         (type, id, name, date, count, members) = getstats(type='chat', id=chat_id)
 
         all = []
@@ -417,9 +416,20 @@ def getall(message):
             if username:
                 all.append(username)
 
-        if text and all:
-            text += " ".join(all)
-            stampy.stampy.sendmessage(chat_id=chat_id, text=text,
-                                      reply_to_message_id=message_id,
-                                      disable_web_page_preview=True)
+        if "@all++" in texto:
+            text = ""
+            newall = []
+            for each in all:
+                newall.append("%s++" % each)
+            text += " ".join(newall)
+            msgdetail["text"] = text
+            if newall and text:
+                stampy.plugin.karma.karmaprocess(msgdetail)
+        else:
+            text = "%s wanted to ping you: " % who_un
+            if text and all:
+                text += " ".join(all)
+                stampy.stampy.sendmessage(chat_id=chat_id, text=text,
+                                          reply_to_message_id=message_id,
+                                          disable_web_page_preview=True)
     return
