@@ -48,7 +48,7 @@ def run(message):  # do not edit this line
         updatestats(type="chat", id=msgdetail["chat_id"], name=msgdetail["chat_name"],
                     date=msgdetail["datefor"], memberid=msgdetail["who_id"])
 
-    if msgdetail["who_ln"]:
+    if msgdetail["name"]:
         updatestats(type="user", id=msgdetail["who_id"], name=msgdetail["name"], date=msgdetail["datefor"],
                     memberid=msgdetail["chat_id"])
 
