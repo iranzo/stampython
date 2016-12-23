@@ -364,7 +364,7 @@ def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
     if reply_to_message_id:
         message += "&reply_to_message_id=%s" % reply_to_message_id
     if text:
-        message += "&caption=%s" % text
+        message += "&caption=%s" % urllib.quote_plus(text.encode('utf-8'))
     logger.debug(msg="Sending image: %s" % text)
     return json.load(urllib.urlopen(message))
 
