@@ -48,7 +48,8 @@ def help(message):  # do not edit this line
     :return: help text
     """
     commandtext = "Use `/mel <date>` to get Mel's comic "
-    commandtext += "strip for date or today (must be on RSS feed)\n\n"
+    commandtext += "strip for date or today (must be on RSS feed) (" \
+                   "@tirademel)\n\n"
     return commandtext
 
 

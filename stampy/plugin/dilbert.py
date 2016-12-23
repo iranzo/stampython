@@ -50,7 +50,7 @@ def help(message):  # do not edit this line
     :return: help text
     """
     commandtext = "Use `/dilbert <date>` to get Dilbert's comic "
-    commandtext += "strip for date or today\n\n"
+    commandtext += "strip for date or today (@dilbertstrip)\n\n"
     return commandtext
 
 
