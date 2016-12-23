@@ -10,8 +10,12 @@ import logging
 import dateutil.parser
 import requests
 from lxml import html
+from apscheduler.schedulers.background import BackgroundScheduler
 
 import stampy.stampy
+
+sched = BackgroundScheduler()
+sched.start()
 
 
 def init():
@@ -19,6 +23,10 @@ def init():
     Initializes module
     :return:
     """
+
+    sched.add_job(dilbert, 'cron', id='dilbert', hour='9',
+                  replace_existing=True)
+
     return
 
 
