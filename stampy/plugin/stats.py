@@ -434,3 +434,19 @@ def getall(message):
                                           reply_to_message_id=message_id,
                                           disable_web_page_preview=True)
     return
+
+
+def pingchat(chatid):
+    """
+    Updates chat modification time
+    :param chatid: Chat to update in stats database
+    :return:
+    """
+    (type, id, name, date, count, memberid) = getstats(type='chat', id=chatid)
+    date = datetime.datetime.now()
+    datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d '
+                                                                    '%H:%M:%S')
+
+    updatestats(type="chat", id=chatid, name=name,
+                date=datefor, memberid=memberid)
+    return
