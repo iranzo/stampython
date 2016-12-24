@@ -12,6 +12,7 @@ from lxml import html
 from apscheduler.schedulers.background import BackgroundScheduler
 
 import stampy.stampy
+import stampy.plugin.stats
 
 sched = BackgroundScheduler()
 sched.start()
@@ -102,8 +103,11 @@ def mel(chat_id=-1001066091601, date=datetime.datetime.now(),
     """
 
     url = "http://elchistedemel.blogspot.com/feeds/posts/default"
-    feed = feedparser.parse(url)
 
+    # Ping chat ID to not have chat removed
+    stampy.plugin.stats.pingchat(chat_id)
+
+    feed = feedparser.parse(url)
     tira = []
     for item in reversed(feed["items"]):
         dateitem = dateutil.parser.parse(item["published"][:16])

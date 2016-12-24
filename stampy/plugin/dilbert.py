@@ -13,6 +13,7 @@ from lxml import html
 from apscheduler.schedulers.background import BackgroundScheduler
 
 import stampy.stampy
+import stampy.plugin.stats
 
 sched = BackgroundScheduler()
 sched.start()
@@ -24,7 +25,7 @@ def init():
     :return:
     """
 
-    sched.add_job(dilbert, 'cron', id='dilbert', hour='9',
+    sched.add_job(dilbert, 'cron', id='dilbert', hour='10',
                   replace_existing=True)
 
     return
@@ -103,6 +104,9 @@ def dilbert(chat_id=-1001066352913, date=datetime.datetime.now(), reply_to_messa
     # http://dilbert.com/strip/2016-11-22
 
     url = "http://dilbert.com/strip/%s-%s-%s" % (date.year, date.month, date.day)
+
+    # Ping chat ID to not have chat removed
+    stampy.plugin.stats.pingchat(chat_id)
 
     page = requests.get(url)
     tree = html.fromstring(page.content)
