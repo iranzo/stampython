@@ -93,7 +93,7 @@ def dilbertcommands(message):
     return dilbert(chat_id=chat_id, date=date, reply_to_message_id=message_id)
 
 
-def dilbert(chat_id=-1001066352913, date=datetime.datetime.now(), reply_to_message_id=""):
+def dilbert(chat_id=-1001066352913, date=False, reply_to_message_id=""):
     """
     Sends Dilbert strip for the date provided
     :param chat_id: chat to send image to
@@ -102,6 +102,9 @@ def dilbert(chat_id=-1001066352913, date=datetime.datetime.now(), reply_to_messa
     :return:
     """
     # http://dilbert.com/strip/2016-11-22
+
+    if not date:
+        datetime.datetime.now()
 
     url = "http://dilbert.com/strip/%s-%s-%s" % (date.year, date.month, date.day)
 

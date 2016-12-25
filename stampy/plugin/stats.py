@@ -442,11 +442,13 @@ def pingchat(chatid):
     :param chatid: Chat to update in stats database
     :return:
     """
+
+    logger = logging.getLogger(__name__)
     (type, id, name, date, count, memberid) = getstats(type='chat', id=chatid)
     date = datetime.datetime.now()
     datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d '
                                                                     '%H:%M:%S')
-
+    logger.debug(msg="Pinging chat %s: %name on %s" % (chatid, name, datefor))
     updatestats(type="chat", id=chatid, name=name,
                 date=datefor, memberid=memberid)
     return
