@@ -153,7 +153,6 @@ def getautokeywords():
     sql = "SELECT distinct key FROM autokarma;"
     cur = stampy.stampy.dbsql(sql)
     data = cur.fetchall()
-    print data
     value = []
     for row in data:
         # Fill valid values
