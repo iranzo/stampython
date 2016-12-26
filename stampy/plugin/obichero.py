@@ -93,7 +93,7 @@ def obicherocommands(message):
     return obichero(chat_id=chat_id, date=date, reply_to_message_id=message_id)
 
 
-def obichero(chat_id=-1001069507044, date=False, reply_to_message_id=""):
+def obichero(chat_id=-1001069507044, date=None, reply_to_message_id=""):
     """
     Sends Mel's strip for the date provided
     :param chat_id: chat to send image to
@@ -110,7 +110,7 @@ def obichero(chat_id=-1001069507044, date=False, reply_to_message_id=""):
     stampy.plugin.stats.pingchat(chat_id)
 
     if not date:
-        datetime.datetime.now()
+        date = datetime.datetime.now()
 
     feed = feedparser.parse(url)
     tira = []
