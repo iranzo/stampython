@@ -103,6 +103,9 @@ def obichero(chat_id=-1001069507044, date=False, reply_to_message_id=""):
     """
     url = "http://obichero.blogspot.com/feeds/posts/default"
 
+    # Website seems to be pushed in some strange way that makes
+    # old posts to be announced as new, causing old strips to be retrieved
+
     # Ping chat ID to not have chat removed
     stampy.plugin.stats.pingchat(chat_id)
 
@@ -113,14 +116,13 @@ def obichero(chat_id=-1001069507044, date=False, reply_to_message_id=""):
     tira = []
     for item in reversed(feed["items"]):
         dateitem = dateutil.parser.parse(item["published"][:16])
-        if date.year == dateitem.year and date.month == dateitem.month and \
-           date.day == dateitem.day:
+        if date.year == dateitem.year and date.month == dateitem.month and date.day == dateitem.day:
             tira.append(item)
 
-    for item in tira:
-        url = item['link']
-        tree = html.fromstring(item['summary'])
-        imgsrc = tree.xpath('//img/@src')[0]
-        imgtxt = item['title_detail']['value'] + "\n" + url + " - @obicherounofficial"
-        stampy.stampy.sendimage(chat_id=chat_id, image=imgsrc, text=imgtxt, reply_to_message_id=reply_to_message_id)
+    item = tira[-1]
+    url = item['link']
+    tree = html.fromstring(item['summary'])
+    imgsrc = tree.xpath('//img/@src')[0]
+    imgtxt = item['title_detail']['value'] + "\n" + url + " - @obicherounofficial"
+    stampy.stampy.sendimage(chat_id=chat_id, image=imgsrc, text=imgtxt, reply_to_message_id=reply_to_message_id)
     return
