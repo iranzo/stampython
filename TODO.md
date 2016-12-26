@@ -17,8 +17,6 @@
   that word to him. (This should require per-user settings and be
   limited to group chats were user is in (getChatMember and
   https://core.telegram.org/bots/api#forwardmessage)
-- Improve message handling so that not only 'chats' are processed but also 
-  channels in stats
 - Improve message handling so when a user joins/parts a channel the stats 
   table is updated with that event
 - Implement something similar to
