@@ -53,8 +53,8 @@ class CurrencyConverter:
     def convert(self, currencyf, currencyt):
         url = self.prefix + currencyf + "/" + currencyt + ".aspx"
         # split and strip
-        split1 = (': 1 %s = ') % 'United States Dollar'
-        strip1 = (' %s</h3>') % 'Euro'
+        split1 = ': 1 %s = ' % 'United States Dollar'
+        strip1 = ' %s</h3>' % 'Euro'
 
         rate = requests.get(url)
         a = float(rate.text.split(split1)[1].split(strip1)[0].strip())
