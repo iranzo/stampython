@@ -119,10 +119,11 @@ def obichero(chat_id=-1001069507044, date=False, reply_to_message_id=""):
         if date.year == dateitem.year and date.month == dateitem.month and date.day == dateitem.day:
             tira.append(item)
 
-    item = tira[-1]
-    url = item['link']
-    tree = html.fromstring(item['summary'])
-    imgsrc = tree.xpath('//img/@src')[0]
-    imgtxt = item['title_detail']['value'] + "\n" + url + " - @obicherounofficial"
-    stampy.stampy.sendimage(chat_id=chat_id, image=imgsrc, text=imgtxt, reply_to_message_id=reply_to_message_id)
+    if tira:
+        item = tira[-1]
+        url = item['link']
+        tree = html.fromstring(item['summary'])
+        imgsrc = tree.xpath('//img/@src')[0]
+        imgtxt = item['title_detail']['value'] + "\n" + url + " - @obicherounofficial"
+        stampy.stampy.sendimage(chat_id=chat_id, image=imgsrc, text=imgtxt, reply_to_message_id=reply_to_message_id)
     return
