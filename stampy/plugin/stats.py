@@ -142,7 +142,7 @@ def showstats(type=False):
     return text
 
 
-def updatestats(type=False, id=0, name=False, date=False, memberid=[]):
+def updatestats(type=False, id=0, name=False, date=False, memberid=None):
     """
     Updates count stats for a given type
     :param type: user or chat
@@ -178,6 +178,8 @@ def updatestats(type=False, id=0, name=False, date=False, memberid=[]):
         newmemberid.remove('false')
     if False in newmemberid:
         newmemberid.remove(False)
+    if "" in newmemberid:
+        newmemberid.remove("")
 
     sql = "DELETE from stats where id='%s'" % id
     stampy.stampy.dbsql(sql)
