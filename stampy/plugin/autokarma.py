@@ -250,7 +250,8 @@ def autokarmawords(message):
     for autok in keywords:
         if autok in text_to_process:
             # If trigger word is there, add the triggered action
-            wordadd.append(getautok(autok) + "++")
+            for word in getautok(autok):
+                wordadd.append(word + "++")
 
     if wordadd:
         # Reduce text in message to just the words we encountered to optimize
