@@ -62,6 +62,8 @@ def obicherocommands(message):
     :return:
     """
 
+    logger = logging.getLogger(__name__)
+
     msgdetail = stampy.stampy.getmsgdetail(message)
 
     texto = msgdetail["text"]
@@ -69,7 +71,6 @@ def obicherocommands(message):
     message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    logger = logging.getLogger(__name__)
     logger.debug(msg="Command: %s by %s" % (texto, who_un))
 
     # We might be have been given no command, just /dilbert
@@ -103,6 +104,8 @@ def obichero(chat_id=-1001069507044, date=None, reply_to_message_id=""):
     """
     url = "http://obichero.blogspot.com/feeds/posts/default"
 
+    logger = logging.getLogger(__name__)
+
     # Website seems to be pushed in some strange way that makes
     # old posts to be announced as new, causing old strips to be retrieved
 
@@ -118,6 +121,8 @@ def obichero(chat_id=-1001069507044, date=None, reply_to_message_id=""):
         dateitem = dateutil.parser.parse(item["published"][:16])
         if date.year == dateitem.year and date.month == dateitem.month and date.day == dateitem.day:
             tira.append(item)
+
+    logger.debug(msg="# of Comics for today: %s" % len(tira))
 
     if tira:
         item = tira[-1]

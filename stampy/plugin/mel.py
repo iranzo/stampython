@@ -61,6 +61,7 @@ def melcommands(message):
     :return:
     """
 
+    logger = logging.getLogger(__name__)
     msgdetail = stampy.stampy.getmsgdetail(message)
 
     texto = msgdetail["text"]
@@ -68,7 +69,6 @@ def melcommands(message):
     message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    logger = logging.getLogger(__name__)
     logger.debug(msg="Command: %s by %s" % (texto, who_un))
 
     # We might be have been given no command, just /dilbert
@@ -101,6 +101,8 @@ def mel(chat_id=-1001066091601, date=None, reply_to_message_id=""):
     :return:
     """
 
+    logger = logging.getLogger(__name__)
+
     url = "http://elchistedemel.blogspot.com/feeds/posts/default"
 
     # Ping chat ID to not have chat removed
@@ -116,6 +118,8 @@ def mel(chat_id=-1001066091601, date=None, reply_to_message_id=""):
         if date.year == dateitem.year and date.month == dateitem.month and \
            date.day == dateitem.day:
             tira.append(item)
+
+    logger.debug(msg="# of Comics for today: %s" % len(tira))
 
     for item in tira:
         url = item['link']

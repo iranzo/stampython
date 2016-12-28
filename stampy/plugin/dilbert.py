@@ -62,6 +62,8 @@ def dilbertcommands(message):
     :return:
     """
 
+    logger = logging.getLogger(__name__)
+
     msgdetail = stampy.stampy.getmsgdetail(message)
 
     texto = msgdetail["text"]
@@ -69,7 +71,6 @@ def dilbertcommands(message):
     message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    logger = logging.getLogger(__name__)
     logger.debug(msg="Command: %s by %s" % (texto, who_un))
 
     # We might be have been given no command, just /dilbert
@@ -103,6 +104,8 @@ def dilbert(chat_id=-1001066352913, date=None, reply_to_message_id=""):
     """
     # http://dilbert.com/strip/2016-11-22
 
+    logger = logging.getLogger(__name__)
+
     if not date:
         date = datetime.datetime.now()
 
@@ -110,6 +113,8 @@ def dilbert(chat_id=-1001066352913, date=None, reply_to_message_id=""):
 
     # Ping chat ID to not have chat removed
     stampy.plugin.stats.pingchat(chat_id)
+
+    logger.debug(msg="Dilbert comic found")
 
     page = requests.get(url)
     tree = html.fromstring(page.content)
