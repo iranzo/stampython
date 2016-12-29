@@ -26,9 +26,9 @@ def init():
     Initializes module
     :return:
     """
-    sched.add_job(dochatcleanup, 'interval', minutes=int(stampy.plugin.config.config('sleep')), id='dochatcleanup',
+    sched.add_job(dochatcleanup, 'interval', minutes=int(stampy.plugin.config.config('cleanup', 24 * 60)), id='dochatcleanup',
                   replace_existing=True)
-    sched.add_job(dousercleanup, 'interval', minutes=int(stampy.plugin.config.config('sleep')), id='dousercleanup',
+    sched.add_job(dousercleanup, 'interval', minutes=int(stampy.plugin.config.config('cleanup', 24 * 60)), id='dousercleanup',
                   replace_existing=True)
 
     return
