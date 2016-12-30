@@ -171,7 +171,11 @@ def updatestats(type=False, id=0, name=False, date=False, memberid=None):
 
     # Only add the id if it was not already stored
     if memberid not in newmemberid:
-        newmemberid.append(memberid)
+        if memberid is list:
+            newmemberid.extend(memberid)
+        else:
+            newmemberid.append(memberid)
+
     if 'False' in newmemberid:
         newmemberid.remove('False')
     if 'false' in newmemberid:
