@@ -13,6 +13,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 import stampy.stampy
 import stampy.plugin.stats
+import stampy.plugin.config
 
 sched = BackgroundScheduler()
 sched.start()
@@ -24,7 +25,7 @@ def init():
     :return:
     """
 
-    sched.add_job(mel, 'cron', id='mel', hour='11', replace_existing=True)
+    sched.add_job(mel, 'cron', id='mel', hour='12', replace_existing=True)
 
     return
 
@@ -39,6 +40,9 @@ def run(message):  # do not edit this line
     if text:
         if text.split()[0] == "/mel":
             melcommands(message=message)
+        if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
+            if text.split()[0] == "triggermel":
+                mel()
     return
 
 

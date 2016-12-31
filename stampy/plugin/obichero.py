@@ -13,6 +13,7 @@ from lxml import html
 
 import stampy.stampy
 import stampy.plugin.stats
+import stampy.plugin.config
 
 sched = BackgroundScheduler()
 sched.start()
@@ -40,6 +41,9 @@ def run(message):  # do not edit this line
     if text:
         if text.split()[0] == "/obichero":
             obicherocommands(message=message)
+        if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
+            if text.split()[0] == "triggerobichero":
+                obichero()
     return
 
 
