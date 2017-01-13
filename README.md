@@ -18,7 +18,7 @@ News about the program, new features, etc at <https://telegram.me/stampynews>.
 - On first execution it will create database and start filling values
 
 ## Test
-- I've a copy running on <openshift.redhat.com> at <http://stampy-iranzo.rhcloud.com/> with the name `@redken_bot`. Invite it to your channels if you want to give it a try or click <https://telegram.me/redken_bot>.
+- I've a copy running the name `@redken_bot`. Invite it to your channels if you want to give it a try or click <https://telegram.me/redken_bot>.
 
 ## Usage
 - `word++` to add karma
@@ -30,6 +30,8 @@ News about the program, new features, etc at <https://telegram.me/stampynews>.
   or prior days as data is obtained from RSS feed)
 - `/obichero <date>` to retrieve O bichero's strip for today or supplied date 
   (today or prior days as data is obtained from RSS feed)  
+- `/quico <date>` to retrieve Quico Jubilata's strip for today or suplied
+  date
 - `@all` to ping all usernames for users in a channel
 - `stock <ticker>` to get trading quote for ticker in stock market
 
@@ -75,3 +77,11 @@ Bot allows to setup alias, so when karma is given to a word, it will instead add
 
 ### quit
 - `/quit` will exit daemon mode
+
+
+## Donations
+
+The bot runs on my hardware which involves (HW, power, internet, etc), if
+you wish to collaborate, please, use <https://www.paypal.me/iranzop> for
+your donation.
+
