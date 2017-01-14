@@ -42,7 +42,7 @@ def help(message):  # do not edit this line
     :param message: message to process
     :return: help text
     """
-    commandtext = "Use `stock <ticker>` to get stock trading price"
+    commandtext = "Use `stock <ticker>` to get stock trading price\n\n"
     return commandtext
 
 
