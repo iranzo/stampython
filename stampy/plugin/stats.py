@@ -184,6 +184,8 @@ def updatestats(type=False, id=0, name=False, date=False, memberid=None):
         newmemberid.remove(False)
     if "" in newmemberid:
         newmemberid.remove("")
+    if [] in newmemberid:
+        newmemberid.remove([])
 
     sql = "DELETE from stats where id='%s'" % id
     stampy.stampy.dbsql(sql)
