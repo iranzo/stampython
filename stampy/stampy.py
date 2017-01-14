@@ -28,6 +28,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import plugins
 import plugin.config
 
+plugs = []
 
 description = """
 Stampy is a script for controlling Karma via Telegram.org bot api
@@ -482,10 +483,10 @@ def process(messages):
         count += 1
 
         # Call plugins to process message
-        for i in plugins.getPlugins():
-            logger.debug(msg="Processing plugin: %s" % i["name"])
-            plug = plugins.loadPlugin(i)
-            plug.run(message=message)
+        global plugs
+        for i in plugs:
+            logger.debug(msg="Processing plugin: %s" % i.__name__)
+            i.run(message=message)
 
         msgdetail = getmsgdetail(message)
 
@@ -626,10 +627,12 @@ def main():
             plugin.config.setconfig(key='owner', value=options.owner)
 
     # Initialize modules
+    global plugs
     for i in plugins.getPlugins():
         logger.debug(msg="Processing plugin initialization: %s" % i["name"])
-        plug = plugins.loadPlugin(i)
-        plug.init()
+        newplug = plugins.loadPlugin(i)
+        plugs.append(newplug)
+        newplug.init()
 
     # Check operation mode and call process as required
     if options.daemon or plugin.config.config(key='daemon'):

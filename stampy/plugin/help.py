@@ -62,9 +62,9 @@ def helpcommands(message):
     # TODO(iranzo) process code
     # Call plugins to process help messages
     commandtext = ""
-    for i in stampy.plugins.getPlugins():
-        plugin = stampy.plugins.loadPlugin(i)
-        commandtext += plugin.help(message=message)
+
+    for i in stampy.stampy.plugs:
+        commandtext += i.help(message=message)
 
     logger.debug(msg="Command: %s" % texto)
 
