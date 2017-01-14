@@ -122,8 +122,11 @@ def quico(chat_id=-1001093624011, date=None, reply_to_message_id=""):
 
     page = requests.get(url)
     tree = html.fromstring(page.content)
-    
-    imgsrc = "http://www.quicojubilata.com" + tree.xpath('//img[@class="img-responsive"]/@src')[0]
-    imgtxt = tree.xpath('//h1[@class="js-quickedit-page-title page-header"]/span')[0].text + "\n" + url + " - @quicostrip"
-    
-    return stampy.stampy.sendimage(chat_id=chat_id, image=imgsrc, text=imgtxt, reply_to_message_id=reply_to_message_id)
+
+    try:
+        imgsrc = "http://www.quicojubilata.com" + tree.xpath('//img[@class="img-responsive"]/@src')[0]
+        imgtxt = tree.xpath('//h1[@class="js-quickedit-page-title page-header"]/span')[0].text + "\n" + url + " - @quicostrip"
+        return stampy.stampy.sendimage(chat_id=chat_id, image=imgsrc, text=imgtxt, reply_to_message_id=reply_to_message_id)
+    except:
+        logger.debug(msg="No comic found yet")
+        return
