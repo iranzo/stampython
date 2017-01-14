@@ -3,6 +3,11 @@
 
 import stampy.stampy
 import stampy.plugin.config
+import stampy.plugins
+
+# As we're not executing stampy.main, initialize the plugins available to
+# process karma
+stampy.stampy.plugs = stampy.plugins.initplugins()
 
 
 def clean():

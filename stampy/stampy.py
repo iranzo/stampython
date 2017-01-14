@@ -628,11 +628,7 @@ def main():
 
     # Initialize modules
     global plugs
-    for i in plugins.getPlugins():
-        logger.debug(msg="Processing plugin initialization: %s" % i["name"])
-        newplug = plugins.loadPlugin(i)
-        plugs.append(newplug)
-        newplug.init()
+    plugs = plugins.initplugins()
 
     # Check operation mode and call process as required
     if options.daemon or plugin.config.config(key='daemon'):

@@ -44,3 +44,21 @@ def loadPlugin(plugin):
     :return: loader for plugin
     """
     return imp.load_module("stampy.stampy." + plugin["name"], *plugin["info"])
+
+
+def initplugins():
+    """
+    Initializes plugins
+    :return: list of plugin modules initialized
+    """
+
+    __name__ = 'stampy.stampy.plugins'
+    logger = logging.getLogger(__name__)
+
+    plugs = []
+    for i in getPlugins():
+        logger.debug(msg="Processing plugin initialization: %s" % i["name"])
+        newplug = loadPlugin(i)
+        plugs.append(newplug)
+        newplug.init()
+    return plugs
