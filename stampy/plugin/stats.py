@@ -422,7 +422,7 @@ def getall(message):
                 for each in name.split():
                     if "@" in each:
                         username = each[1:-1]
-            if username:
+            if username and username != "@":
                 all.append(username)
 
         if "@all++" in texto:
