@@ -27,7 +27,7 @@ def run(message):  # do not edit this line
     """
     text = stampy.stampy.getmsgdetail(message)["text"]
     if text:
-        if text.split()[0] == "/config":
+        if text.split()[0].lower() == "/config":
             configcommands(message)
     return
 

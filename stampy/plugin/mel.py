@@ -38,10 +38,10 @@ def run(message):  # do not edit this line
     """
     text = stampy.stampy.getmsgdetail(message)["text"]
     if text:
-        if text.split()[0] == "/mel":
+        if text.split()[0].lower() == "/mel":
             melcommands(message=message)
         if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
-            if text.split()[0] == "triggermel":
+            if text.split()[0].lower() == "triggermel":
                 mel()
     return
 

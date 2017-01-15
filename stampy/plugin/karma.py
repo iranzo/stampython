@@ -71,7 +71,7 @@ def karmacommands(message):
 
     # Process lines for commands in the first
     # word of the line (Telegram commands)
-    word = texto.split()[0]
+    word = texto.split()[0].lower()
     commandtext = False
 
     # Check first word for commands
