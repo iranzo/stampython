@@ -114,11 +114,14 @@ def stock(message):
     rate = d.convert("USD", "EUR")
     text += "USD/EUR rate " + str(rate) + "\n"
     for ticker in stock:
-        quote = c.get(ticker)
-        text += "%s Quote " % quote["t"] + " " + quote["l_cur"] + " " + quote["c"] + " (%s%%)" % quote["cp"]
-        quoteUSD = float(quote["l_cur"])
-        quoteEur = float(quoteUSD * rate)
-        text += " (%s EUR)\n" % "{0:.2f}".format(quoteEur)
+        try:
+          quote = c.get(ticker)
+          text += "%s Quote " % quote["t"] + " " + quote["l_cur"] + " " + quote["c"] + " (%s%%)" % quote["cp"]
+          quoteUSD = float(quote["l_cur"])
+          quoteEur = float(quoteUSD * rate)
+          text += " (%s EUR)\n" % "{0:.2f}".format(quoteEur)
+        except:
+          text += ""
 
     text += "```"
     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
