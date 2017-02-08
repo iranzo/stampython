@@ -27,9 +27,9 @@ def init():
     :return:
     """
     sched.add_job(dochatcleanup, 'interval', minutes=int(stampy.plugin.config.config('cleanup', 24 * 60)), id='dochatcleanup',
-                  replace_existing=True)
+                  replace_existing=True, misfire_grace_time=120)
     sched.add_job(dousercleanup, 'interval', minutes=int(stampy.plugin.config.config('cleanup', 24 * 60)), id='dousercleanup',
-                  replace_existing=True)
+                  replace_existing=True, misfire_grace_time=120)
 
     return
 

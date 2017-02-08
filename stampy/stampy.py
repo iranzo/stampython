@@ -547,12 +547,15 @@ def loglevel():
                          plugin.config.config(key="verbosity").lower()))
 
 
-def conflogging():
+def conflogging(target=None):
     """
     This function configures the logging handlers for console and file
     """
 
-    logger = logging.getLogger(__name__)
+    if target is None:
+        target = __name__
+
+    logger = logging.getLogger(target)
 
     # Define logging settings
     if not plugin.config.config(key="verbosity"):
@@ -599,6 +602,9 @@ def main():
 
     if not logger.handlers:
         conflogging()
+
+    # Configuring apscheduler logger
+    conflogging(target="apscheduler")
 
     logger.info(msg="Started execution")
 

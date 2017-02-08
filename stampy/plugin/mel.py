@@ -25,7 +25,8 @@ def init():
     :return:
     """
 
-    sched.add_job(mel, 'cron', id='mel', hour='13', replace_existing=True)
+    sched.add_job(mel, 'cron', id='mel', hour='13', replace_existing=True,
+                  misfire_grace_time=120)
 
     return
 

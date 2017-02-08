@@ -26,7 +26,7 @@ def init():
     """
 
     sched.add_job(obichero, 'cron', id='obichero', hour='15',
-                  replace_existing=True)
+                  replace_existing=True, misfire_grace_time=120)
 
     return
 
