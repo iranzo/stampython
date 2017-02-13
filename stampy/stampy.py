@@ -96,7 +96,7 @@ def createdb():
     """
     con = lite.connect(options.database)
     cur = con.cursor()
-    cur.execute('CREATE TABLE karma(word TEXT, value INT);')
+    cur.execute('CREATE TABLE karma(word TEXT, value INT, date TEXT);')
     cur.execute('CREATE TABLE alias(key TEXT, value TEXT);')
     cur.execute('CREATE TABLE autokarma(key TEXT, value TEXT);')
     cur.execute('CREATE TABLE config(key TEXT, value TEXT);')

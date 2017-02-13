@@ -5,7 +5,7 @@
 # Author: Pablo Iranzo Gomez (Pablo.Iranzo@gmail.com)
 
 import logging
-
+import datetime
 from prettytable import from_db_cursor
 
 import stampy.plugin.alias
@@ -226,11 +226,14 @@ def putkarma(word, value):
     """
 
     logger = logging.getLogger(__name__)
+    date = datetime.datetime.now()
+    datefor = date.strftime('%Y-%m-%d %H:%M:%S')
 
     sql = "DELETE FROM karma WHERE word = '%s';" % word
     stampy.stampy.dbsql(sql)
     if value != 0:
-        sql = "INSERT INTO karma VALUES('%s','%s');" % (word, value)
+        sql = "INSERT INTO karma VALUES('%s','%s', '%s');" % (word, value,
+                                                              datefor)
         stampy.stampy.dbsql(sql)
 
     logger.debug(msg="Putting karma of %s to %s" % (value, word))
