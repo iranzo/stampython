@@ -12,12 +12,20 @@ import stampy.plugin.alias
 import stampy.stampy
 import stampy.plugin.config
 
+from apscheduler.schedulers.background import BackgroundScheduler
+
+sched = BackgroundScheduler()
+sched.start()
+
 
 def init():
     """
     Initializes module
     :return:
     """
+    sched.add_job(dokarmacleanup, 'interval', minutes=int(stampy.plugin.config.config('cleanup', 24 * 60)), id='dokarmacleanup', replace_existing=True,
+                  misfire_grace_time=120)
+
     return
 
 
@@ -374,4 +382,48 @@ def karmaprocess(msgdetail):
                                       reply_to_message_id=msgdetail["message_id"],
                                       parse_mode="Markdown")
             stampyphant(chat_id=msgdetail["chat_id"], karma=karma)
+    return
+
+
+def dokarmacleanup(word=False,
+                   maxage=int(stampy.plugin.config.config("maxage",
+                                                          default=180))):
+    """
+    Checks on the karma database the date of the last update in the word
+    :param word: word to query in database
+    :param maxage: defines maximum number of days to allow chats to be inactive
+    """
+
+    logger = logging.getLogger(__name__)
+
+    if word:
+        sql = "SELECT * FROM karma WHERE word=%s" % word
+    else:
+        sql = "SELECT * FROM karma"
+
+    words = []
+    cur = stampy.stampy.dbsql(sql)
+
+    logger.debug(msg="Processing words for cleanup: %s" % words)
+
+    for row in cur:
+        # Process each word returned
+        word = row[0]
+        date = row[2]
+
+        if date and (date != "False"):
+            worddate = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
+        else:
+            worddate = datetime.datetime.now()
+
+        now = datetime.datetime.now()
+
+        if (now - worddate).days > maxage:
+            logger.debug(msg="Word %s and %s inactivity days is "
+                             "going to be purged" % (word, (now -
+                                                            worddate).days))
+
+            # Remove word from database
+            updatekarma(word=word, change=-row[1])
+
     return
