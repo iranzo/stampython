@@ -21,3 +21,4 @@
   table is updated with that event
 - Implement something similar to
   <https://supportex.net/blog/2011/09/rrd-python/> for graphing message activity
+- Implement cron to provide users messages based on schedule
