@@ -95,7 +95,7 @@ def configcommands(message):
                 deleteconfig(word=key)
                 break
             if case('set'):
-                word = texto.split(' ')[2]
+                word = " ".join(texto.split(' ')[2:])
                 if "=" in word:
                     key = word.split('=')[0]
                     value = word.split('=')[1]
