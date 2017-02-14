@@ -8,6 +8,7 @@
 import imp
 import os
 import logging
+import plugin.config
 
 PluginFolder = "./stampy/plugin"
 MainModule = "__init__"
@@ -19,6 +20,7 @@ def getPlugins():
     :return: list of plugins available
     """
 
+    __name__ = 'stampy.stampy.plugins'
     logger = logging.getLogger(__name__)
     plugins = []
 
@@ -31,8 +33,12 @@ def getPlugins():
         except:
             info = False
         if i and info:
-            logger.debug(msg="Plugging added: %s" % i)
-            plugins.append({"name": i, "info": info})
+            if i not in plugin.config.config(key='disabled_plugins',
+                                             default=''):
+                logger.debug(msg="Plugging added: %s" % i)
+                plugins.append({"name": i, "info": info})
+            else:
+                logger.debug(msg="Plugging disabled: %s" % i)
 
     return plugins
 
