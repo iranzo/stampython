@@ -1,0 +1,11 @@
+# encoding: utf-8
+#
+# Description: default settings to define in database for easy restoration
+# Author: Pablo Iranzo Gomez (Pablo.Iranzo@gmail.com)
+
+# List of commands to send to telegram to configure database in case a restore is needed
+
+/forward -1001066091601=-1001105187138
+/forward -1001066352913=-1001105187138
+/forward -1001069507044=-1001105187138
+/forward -1001093624011=-1001105187138
