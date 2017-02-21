@@ -30,5 +30,7 @@
 - Implement gconfig and config for global and channel config
 - Implement table for config with chatid and 'group_id' to tie several
   chats together i.r.t config
+  - Review whole config usage to separate between master admin and channel
+    admin
 - Implement handlers for plugins ('trigger', 'all', etc), so plugins are
   only called when there's data for them
