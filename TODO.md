@@ -23,8 +23,6 @@
   <https://supportex.net/blog/2011/09/rrd-python/> for graphing message
   activity
 - Implement cron to provide users messages based on schedule
-- Improve forward plugin to allow pairs, so for example, you can combine
-  all posts on the individual comic strips into one combined channel
 - Create a Business Bingo plugin that allows to define words that
   participate into the Bingo, keep track of the ones mentioned already
   and announce bingo Winner (last word completed) and clear the status
