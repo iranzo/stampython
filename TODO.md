@@ -17,8 +17,20 @@
   that word to him. (This should require per-user settings and be
   limited to group chats were user is in (getChatMember and
   https://core.telegram.org/bots/api#forwardmessage)
-- Improve message handling so when a user joins/parts a channel the stats 
+- Improve message handling so when a user joins/parts a channel the stats
   table is updated with that event
 - Implement something similar to
-  <https://supportex.net/blog/2011/09/rrd-python/> for graphing message activity
+  <https://supportex.net/blog/2011/09/rrd-python/> for graphing message
+  activity
 - Implement cron to provide users messages based on schedule
+- Improve forward plugin to allow pairs, so for example, you can combine
+  all posts on the individual comic strips into one combined channel
+- Create a Business Bingo plugin that allows to define words that
+  participate into the Bingo, keep track of the ones mentioned already
+  and announce bingo Winner (last word completed) and clear the status
+  to start a new round
+- Implement gconfig and config for global and channel config
+- Implement table for config with chatid and 'group_id' to tie several
+  chats together i.r.t config
+- Implement handlers for plugins ('trigger', 'all', etc), so plugins are
+  only called when there's data for them
