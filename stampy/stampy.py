@@ -106,6 +106,8 @@ def createdb():
     cmd = 'CREATE TABLE quote(id INTEGER PRIMARY KEY AUTOINCREMENT,  \
          username TEXT, date TEXT, text TEXT);'
     cur.execute(cmd)
+    cmd = 'CREATE TABLE forward(source TEXT, target TEXT);'
+    cur.execute(cmd)
     return
 
 

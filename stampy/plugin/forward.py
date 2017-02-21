@@ -10,9 +10,11 @@ import urllib
 from time import sleep
 
 from apscheduler.schedulers.background import BackgroundScheduler
+from prettytable import from_db_cursor
 
 import stampy.plugin.config
 import stampy.stampy
+
 
 sched = BackgroundScheduler()
 sched.start()
@@ -38,11 +40,14 @@ def run(message):  # do not edit this line
 
     msgdetail = stampy.stampy.getmsgdetail(message)
 
-    logger.debug(msg="Origin Chatid: %s, Forward Source: %s" % (msgdetail["chat_id"], str(stampy.plugin.config.config('forwardsource', "")).split()))
-    if str(msgdetail["chat_id"]) in str(stampy.plugin.config.config('forwardsource', "")).split():
-        for chat_id in str(stampy.plugin.config.config('forwardtarget', "")).split():
-            logger.debug(msg="Origin chatid: %s, Forward Target: %s" % (msgdetail["chat_id"], str(stampy.plugin.config.config('forwardtarget', "")).split()))
-            forwardmessage(message=message, target_chatid=chat_id)
+    text = msgdetail["text"]
+
+    for target in getforward(msgdetail["chat_id"]):
+        logger.debug(msg="Origin Chatid: %s, Forward Target: %s" % (msgdetail["chat_id"], target))
+        forwardmessage(message=message, target_chatid=target)
+    if text:
+        if text.split()[0].lower() == "/forward":
+            forwardcommands(message)
     return
 
 
@@ -55,12 +60,22 @@ def help(message):  # do not edit this line
 
     commandtext = ""
     if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
-        commandtext += "Set source and target chats with forwardsource and forwardtarget with ids of chats"
+        commandtext = "Use `/forward <source>=<target>`" \
+                      " to assign a forwarder\n"
+        commandtext += "Use `/forward list` to list forwards defined\n"
+        commandtext += "Use `/forward delete <source>=<target>` " \
+                       "to remove a forwarding\n\n"
     return commandtext
 
 
 def forwardmessage(message, target_chatid, disable_notification=False):
-
+    """
+    Forwards a message based on id/chatid to target chatid
+    :param message: Message to process (contaning all details)
+    :param target_chatid: Target chat_id to forward to
+    :param disable_notification: Do a silent forward
+    :return:
+    """
     logger = logging.getLogger(__name__)
     msgdetail = stampy.stampy.getmsgdetail(message)
 
@@ -82,7 +97,7 @@ def forwardmessage(message, target_chatid, disable_notification=False):
         code = result['ok']
         logger.error(msg="ERROR (%s) forwarding message: Code: %s : Text: %s" % (
             attempt, code, result))
-        attempt = attempt + 1
+        attempt += 1
         sleep(1)
         # exit after 60 retries with 1 second delay each
         if attempt > 60:
@@ -91,3 +106,150 @@ def forwardmessage(message, target_chatid, disable_notification=False):
             code = True
     logger.debug(msg="forwarding message: Code: %s : Text: %s" % (code, message))
     return
+
+
+def forwardcommands(message):
+    """
+    Processes forward commands in the message texts
+    :param message: Message to process
+    :return:
+    """
+
+    msgdetail = stampy.stampy.getmsgdetail(message)
+
+    texto = msgdetail["text"]
+    chat_id = msgdetail["chat_id"]
+    message_id = msgdetail["message_id"]
+    who_un = msgdetail["who_un"]
+
+    logger = logging.getLogger(__name__)
+    logger.debug(msg="Command: %s by %s" % (texto, who_un))
+    if who_un == stampy.plugin.config.config('owner'):
+        logger.debug(msg="Command: %s by Owner: %s" % (texto, who_un))
+        try:
+            command = texto.split(' ')[1]
+        except:
+            command = False
+        try:
+            source = texto.split(' ')[2].lower()
+        except:
+            source = ""
+
+        for case in stampy.stampy.Switch(command):
+            if case('list'):
+                text = listforward(source)
+                stampy.stampy.sendmessage(chat_id=chat_id, text=text,
+                                          reply_to_message_id=message_id,
+                                          disable_web_page_preview=True,
+                                          parse_mode="Markdown")
+                break
+            if case('delete'):
+                word = texto.split(' ')[2]
+                if "=" in word:
+                    source = word.split('=')[0]
+                    target = texto.split('=')[1:][0]
+                    text = "Deleting forward for `%s -> %s`" % (source, target)
+                    stampy.stampy.sendmessage(chat_id=chat_id, text=text,
+                                              reply_to_message_id=message_id,
+                                              disable_web_page_preview=True,
+                                              parse_mode="Markdown")
+                    deleteforward(source=source, target=target)
+                break
+            if case():
+                word = texto.split(' ')[1]
+                if "=" in word:
+                    source = word.split('=')[0]
+                    target = texto.split('=')[1:][0]
+                    text = "Setting forward for `%s` to `%s`" % (source, target)
+                    stampy.stampy.sendmessage(chat_id=chat_id, text=text,
+                                              reply_to_message_id=message_id,
+                                              disable_web_page_preview=True,
+                                              parse_mode="Markdown")
+                    createforward(source=source, target=target)
+    return
+
+
+def deleteforward(source, target):
+    """
+    Deletes a pair from forward database
+    :param source: chat_id for source
+    :param target: chat_id for target
+    :return:
+    """
+
+    logger = logging.getLogger(__name__)
+    sql = "DELETE FROM forward WHERE source='%s' AND target='%s';" % (source, target)
+    logger.debug(msg="rmforward: %s -> %s" % (source, target))
+    stampy.stampy.dbsql(sql)
+    return
+
+
+def listforward(source=False):
+    """
+    Lists the forwards defined for a source or all defined
+    :param source: chatid
+    :return: table with forwards defined
+    """
+
+    logger = logging.getLogger(__name__)
+    if source:
+        # if source is provided, return the forwards for that source
+        string = (source,)
+        sql = "SELECT * FROM forward WHERE source='%s' ORDER by source ASC;" % string
+        cur = stampy.stampy.dbsql(sql)
+        target = cur.fetchone()
+
+        try:
+            # Get value from SQL query
+            target = target[1]
+
+        except:
+            # Value didn't exist before, return 0 value
+            target = ""
+        text = "%s has a forward %s" % (source, target)
+
+    else:
+        sql = "select * from forward ORDER BY source ASC;"
+        cur = stampy.stampy.dbsql(sql)
+        text = "Defined forwards:\n"
+        table = from_db_cursor(cur)
+        text = "%s\n```%s```" % (text, table.get_string())
+    logger.debug(msg=text)
+    return text
+
+
+def createforward(source, target):
+    """
+    Creates a forward for specified source
+    :param source: chatid for source messages
+    :param target: chatid for destination messages
+    :return:
+    """
+
+    logger = logging.getLogger(__name__)
+    if getforward(source) == target:
+        logger.error(msg="createforward: circular reference %s=%s" % (
+                         source, target))
+    else:
+        sql = "INSERT INTO forward VALUES('%s','%s');" % (source, target)
+        logger.debug(msg="createforward: %s=%s" % (source, target))
+        stampy.stampy.dbsql(sql)
+        return
+    return False
+
+
+def getforward(source):
+    """
+    Get forwards for source if it's defined
+    :param source: chatid to search for
+    :return: target if existing or False if not
+    """
+
+    logger = logging.getLogger(__name__)
+    string = (source,)
+    sql = "SELECT target FROM forward WHERE source='%s';" % string
+    cur = stampy.stampy.dbsql(sql)
+    rows = cur.fetchall()
+    for target in rows:
+        logger.debug(msg="getforward: %s -> %s" % (source, target))
+        yield target[0]
