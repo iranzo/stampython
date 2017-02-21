@@ -27,6 +27,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 import plugins
 import plugin.config
+import plugin.forward
 
 plugs = []
 
@@ -223,6 +224,13 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
             logger.error(msg="PERM ERROR sending message: Code: %s : Text: "
                              "%s" % (code, result))
             code = True
+
+    # Forward for bot generated messages once that message has been sent
+    for target in plugin.forward.getforward(source=chat_id):
+        sendmessage(chat_id=target, text=text, reply_to_message_id=False,
+                    disable_web_page_preview=disable_web_page_preview,
+                    parse_mode=parse_mode, extra=extra)
+
     logger.debug(msg="Sending message: Code: %s : Text: %s" % (code, text))
     return
 
