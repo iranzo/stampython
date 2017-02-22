@@ -217,7 +217,7 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
         code = result['ok']
         logger.error(msg="ERROR (%s) sending message: Code: %s : Text: %s" % (
                          attempt, code, result))
-        attempt = attempt + 1
+        attempt += 1
         sleep(1)
         # exit after 60 retries with 1 second delay each
         if attempt > 60:
@@ -225,19 +225,10 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
                              "%s" % (code, result))
             code = True
 
-    forward = False
-    for i in plugs:
-        try:
-            if 'forward' in i.name:
-                forward = True
-        except:
-            continue
-    if forward:
-        # Forward for bot generated messages once that message has been sent
-        for target in plugin.forward.getforward(source=chat_id):
-            sendmessage(chat_id=target, text=text, reply_to_message_id=False,
-                        disable_web_page_preview=disable_web_page_preview,
-                        parse_mode=parse_mode, extra=extra)
+    sent = {"message": result['result']}
+
+    # Check if there's something to forward and do it
+    plugin.forward.forwardmessage(sent)
 
     logger.debug(msg="Sending message: Code: %s : Text: %s" % (code, text))
     return
@@ -363,21 +354,12 @@ def sendsticker(chat_id=0, sticker="", text="", reply_to_message_id=""):
     if reply_to_message_id:
         message += "&reply_to_message_id=%s" % reply_to_message_id
     logger.debug(msg="Sending sticker: %s" % text)
-    sent = json.load(urllib.urlopen(message))
 
-    # If forward plugin is enabled, process
-    forward = False
-    for i in plugs:
-        try:
-            if 'forward' in i.name:
-                forward = True
-        except:
-            continue
-    if forward:
-        mensaje = {}
-        mensaje["message"] = sent['result']
-        for target in plugin.forward.getforward(chat_id):
-            plugin.forward.forwardmessage(message=mensaje, target_chatid=target)
+    sent = {"message": json.load(urllib.urlopen(message))['result']}
+
+    # Check if there's something to forward and do it
+    plugin.forward.forwardmessage(sent)
+
     return
 
 
@@ -400,21 +382,10 @@ def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
     if text:
         message += "&caption=%s" % urllib.quote_plus(text.encode('utf-8'))
     logger.debug(msg="Sending image: %s" % text)
-    sent = json.load(urllib.urlopen(message))
+    sent = {"message": json.load(urllib.urlopen(message))['result']}
 
-    # If forward plugin is enabled, process
-    forward = False
-    for i in plugs:
-        try:
-            if 'forward' in i.name:
-                forward = True
-        except:
-            continue
-    if forward:
-        mensaje = {}
-        mensaje["message"] = sent['result']
-        for target in plugin.forward.getforward(chat_id):
-            plugin.forward.forwardmessage(message=mensaje, target_chatid=target)
+    # Check if there's something to forward and do it
+    plugin.forward.forwardmessage(sent)
     return
 
 
@@ -529,6 +500,9 @@ def process(messages):
     for message in messages:
         # Count messages in each batch
         count += 1
+
+        # Forward message if defined
+        plugin.forward.forwardmessage(message)
 
         # Call plugins to process message
         global plugs

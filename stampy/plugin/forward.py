@@ -9,15 +9,10 @@ import logging
 import urllib
 from time import sleep
 
-from apscheduler.schedulers.background import BackgroundScheduler
 from prettytable import from_db_cursor
 
 import stampy.plugin.config
 import stampy.stampy
-
-
-sched = BackgroundScheduler()
-sched.start()
 
 
 def init():
@@ -39,12 +34,8 @@ def run(message):  # do not edit this line
     logger = logging.getLogger(__name__)
 
     msgdetail = stampy.stampy.getmsgdetail(message)
-
     text = msgdetail["text"]
 
-    for target in getforward(msgdetail["chat_id"]):
-        logger.debug(msg="Origin Chatid: %s, Forward Target: %s" % (msgdetail["chat_id"], target))
-        forwardmessage(message=message, target_chatid=target)
     if text:
         if text.split()[0].lower() == "/forward":
             forwardcommands(message)
@@ -68,43 +59,52 @@ def help(message):  # do not edit this line
     return commandtext
 
 
-def forwardmessage(message, target_chatid, disable_notification=False):
+def forwardmessage(message):
     """
     Forwards a message based on id/chatid to target chatid
     :param message: Message to process (contaning all details)
-    :param target_chatid: Target chat_id to forward to
-    :param disable_notification: Do a silent forward
     :return:
     """
+
     logger = logging.getLogger(__name__)
-    msgdetail = stampy.stampy.getmsgdetail(message)
 
-    chat_id = msgdetail["chat_id"]
-    message_id = msgdetail["message_id"]
+    # If forward plugin is enabled, process
+    forward = False
+    for i in stampy.stampy.plugs:
+        try:
+            if 'forward' in i.__name__:
+                forward = True
+        except:
+            continue
+    if forward:
+        msgdetail = stampy.stampy.getmsgdetail(message)
+        chat_id = msgdetail["chat_id"]
+        message_id = msgdetail["message_id"]
 
-    url = "%s%s/forwardMessage" % (stampy.plugin.config.config(key="url"),
-                                   stampy.plugin.config.config(key='token'))
+        url = "%s%s/forwardMessage" % (stampy.plugin.config.config(key="url"),
+                                       stampy.plugin.config.config(key='token'))
 
-    message = "%s?chat_id=%s&from_chat_id=%s&message_id=%s" % (
-        url, target_chatid, chat_id, message_id)
-    if disable_notification:
-        message += "&disable_notification=%s" % disable_notification
+        for target in getforward(source=chat_id):
+            message = "%s?chat_id=%s&from_chat_id=%s&message_id=%s" % (
+                url, target, chat_id, message_id)
 
-    code = False
-    attempt = 0
-    while not code:
-        result = json.load(urllib.urlopen(message))
-        code = result['ok']
-        logger.error(msg="ERROR (%s) forwarding message: Code: %s : Text: %s" % (
-            attempt, code, result))
-        attempt += 1
-        sleep(1)
-        # exit after 60 retries with 1 second delay each
-        if attempt > 60:
-            logger.error(msg="PERM ERROR forwarding message: Code: %s : Text: "
-                             "%s" % (code, result))
-            code = True
-    logger.debug(msg="forwarding message: Code: %s : Text: %s" % (code, message))
+            code = False
+            attempt = 0
+            while not code:
+                result = json.load(urllib.urlopen(message))
+                code = result['ok']
+                logger.error(msg="ERROR (%s) forwarding message: Code: %s : Text: %s" % (
+                    attempt, code, result))
+                attempt += 1
+                sleep(1)
+                # exit after 60 retries with 1 second delay each
+                if attempt > 60:
+                    logger.error(msg="PERM ERROR forwarding message: Code: %s : Text: "
+                                     "%s" % (code, result))
+                    code = True
+            logger.debug(msg="forwarding message: Code: %s : Text: %s" % (code, message))
+    else:
+        logger.debug(msg="Forward plugin not enabled, skipping")
     return
 
 
