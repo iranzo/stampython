@@ -34,3 +34,5 @@
     admin
 - Implement handlers for plugins ('trigger', 'all', etc), so plugins are
   only called when there's data for them
+- Implement forward conditions so just some messages based on sender, or
+  text are sent
