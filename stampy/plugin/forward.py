@@ -38,6 +38,7 @@ def run(message):  # do not edit this line
 
     if text:
         if text.split()[0].lower() == "/forward":
+            logger.debug(msg="Processing forward commands")
             forwardcommands(message)
     return
 
