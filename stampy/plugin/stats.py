@@ -176,6 +176,8 @@ def updatestats(type=False, id=0, name=False, date=False, memberid=None):
         else:
             newmemberid.append(memberid)
 
+    newmemberid = stampy.stampy.getitems(newmemberid)
+
     if 'False' in newmemberid:
         newmemberid.remove('False')
     if 'false' in newmemberid:

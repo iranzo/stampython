@@ -225,10 +225,14 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
                              "%s" % (code, result))
             code = True
 
-    sent = {"message": result['result']}
+    try:
+        sent = {"message": result['result']}
+    except:
+        sent = False
 
-    # Check if there's something to forward and do it
-    plugin.forward.forwardmessage(sent)
+    if sent:
+        # Check if there's something to forward and do it
+        plugin.forward.forwardmessage(sent)
 
     logger.debug(msg="Sending message: Code: %s : Text: %s" % (code, text))
     return
@@ -528,6 +532,31 @@ def process(messages):
 
     # clear updates (marking messages as read)
     clearupdates(offset=lastupdateid + 1)
+
+
+def getitems(var):
+    """
+    Returns list of items even if provided args are lists of lists
+    :param var: list or value to pass
+    :return: unique list of values
+    """
+
+    logger = logging.getLogger(__name__)
+
+    result = []
+    if not isinstance(var, list):
+        result.append(var)
+    else:
+        for elem in var:
+            result.extend(getitems(elem))
+
+    # Do cleanup of duplicates
+    final = []
+    for elem in result:
+        if elem not in final:
+            final.append(elem)
+    logger.debug(msg="Final deduplicated list: %s" % final)
+    return final
 
 
 def loglevel():
