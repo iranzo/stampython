@@ -555,7 +555,10 @@ def getitems(var):
     for elem in result:
         if elem not in final:
             final.append(elem)
-    logger.debug(msg="Final deduplicated list: %s" % final)
+
+    # As we call recursively, don't log calls for just one ID
+    if len(final) > 1:
+        logger.debug(msg="Final deduplicated list: %s" % final)
     return final
 
 
