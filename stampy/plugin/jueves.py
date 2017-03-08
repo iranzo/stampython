@@ -96,7 +96,7 @@ def juevescommands(message):
     return jueves(chat_id=chat_id, date=date, reply_to_message_id=message_id)
 
 
-def jueves(chat_id=0, date=None, reply_to_message_id=""):
+def jueves(chat_id=-1001105187138, date=None, reply_to_message_id=""):
     """
     Sends El Jueves daily strip for the date provided
     :param chat_id: chat to send image to
