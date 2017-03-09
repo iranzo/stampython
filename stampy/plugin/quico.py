@@ -98,7 +98,7 @@ def quicocommands(message):
     return quico(chat_id=chat_id, date=date, reply_to_message_id=message_id)
 
 
-def quico(chat_id=-1001093624011, date=None, reply_to_message_id=""):
+def quico(chat_id=-1001105187138, date=None, reply_to_message_id=""):
     """
     Sends quico strip for the date provided
     :param chat_id: chat to send image to
@@ -125,7 +125,7 @@ def quico(chat_id=-1001093624011, date=None, reply_to_message_id=""):
 
     try:
         imgsrc = "http://www.quicojubilata.com" + tree.xpath('//img[@class="img-responsive"]/@src')[0]
-        imgtxt = tree.xpath('//h1[@class="js-quickedit-page-title page-header"]/span')[0].text + "\n" + url + " - @quicostrip"
+        imgtxt = tree.xpath('//h1[@class="js-quickedit-page-title page-header"]/span')[0].text + "\n" + url + " - @redken_strips"
         return stampy.stampy.sendimage(chat_id=chat_id, image=imgsrc, text=imgtxt, reply_to_message_id=reply_to_message_id)
     except:
         logger.debug(msg="No comic found yet")

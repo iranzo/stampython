@@ -60,7 +60,7 @@ def info(message):
     message_id = msgdetail["message_id"]
 
     text = "This is update *%s* " % msgdetail["update_id"]
-    text += "with is message id *%s*.\n" % msgdetail["message_id"]
+    text += "with message id *%s*.\n" % msgdetail["message_id"]
     text += "This has been sent on chat *%s*, named *%s* on *%s*\n" %\
             (msgdetail["chat_id"], msgdetail["chat_name"], msgdetail["datefor"])
     text += "This message was sent by user id *%s*, with given name *%s*, " \

@@ -97,7 +97,7 @@ def melcommands(message):
     return mel(chat_id=chat_id, date=date, reply_to_message_id=message_id)
 
 
-def mel(chat_id=-1001066091601, date=None, reply_to_message_id=""):
+def mel(chat_id=-1001105187138, date=None, reply_to_message_id=""):
     """
     Sends Mel's strip for the date provided
     :param chat_id: chat to send image to
@@ -130,6 +130,6 @@ def mel(chat_id=-1001066091601, date=None, reply_to_message_id=""):
         url = item['link']
         tree = html.fromstring(item['summary'])
         imgsrc = tree.xpath('//img/@src')[0]
-        imgtxt = item['title_detail']['value'] + "\n" + url + " - @tirademel"
+        imgtxt = item['title_detail']['value'] + "\n" + url + " - @redken_strips"
         stampy.stampy.sendimage(chat_id=chat_id, image=imgsrc, text=imgtxt, reply_to_message_id=reply_to_message_id)
     return
