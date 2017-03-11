@@ -23,13 +23,13 @@ sched.start()
 def init():
     """
     Initializes module
-    :return:
+    :return: List of triggers for plugin
     """
 
     sched.add_job(dilbert, 'cron', id='dilbert', hour='10',
                   replace_existing=True, misfire_grace_time=120)
 
-    return
+    return "/dilbert"
 
 
 def run(message):  # do not edit this line
@@ -42,9 +42,6 @@ def run(message):  # do not edit this line
     if text:
         if text.split()[0].lower() == "/dilbert":
             dilbertcommands(message=message)
-        if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
-            if text.split()[0].lower() == "triggerdilbert":
-                dilbert()
     return
 
 
@@ -55,7 +52,10 @@ def help(message):  # do not edit this line
     :return: help text
     """
     commandtext = "Use `/dilbert <date>` to get Dilbert's comic "
-    commandtext += "strip for date or today (@dilbertstrip)\n\n"
+    commandtext += "strip for date or today\n\n"
+    if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
+        commandtext = "Use `/dilbert trigger` to force sending actual " \
+                      "strip to channel\n\n"
     return commandtext
 
 
@@ -82,6 +82,11 @@ def dilbertcommands(message):
         date = texto.split(' ')[1]
     except:
         date = ""
+
+    if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"] and date == "trigger":
+        # We've been called to update the strip channel
+        return dilbert(chat_id=chat_id, date=date,
+                       reply_to_message_id=message_id)
 
     try:
         # Parse date or if in error, use today

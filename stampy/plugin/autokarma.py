@@ -17,9 +17,9 @@ import stampy.plugin.alias
 def init():
     """
     Initializes module
-    :return:
+    :return: List of triggers for plugin
     """
-    return
+    return "*"
 
 
 def run(message):  # do not edit this line

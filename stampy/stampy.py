@@ -30,6 +30,7 @@ import plugin.config
 import plugin.forward
 
 plugs = []
+plugtriggers = {}
 
 description = """
 Stampy is a script for controlling Karma via Telegram.org bot api
@@ -277,7 +278,7 @@ def clearupdates(offset):
         result = json.load(urllib.urlopen(message))
     except:
         result = False
-    logger.info(msg="Clearing messages")
+    logger.info(msg="Clearing messages at %s" % offset)
     return result
 
 
@@ -496,8 +497,6 @@ def process(messages):
     # Main code for processing the karma updates
     date = 0
     lastupdateid = 0
-    logger.info(msg="Initial message at %s" % date)
-    texto = ""
     count = 0
 
     # Process each message available in URL and search for karma operators
@@ -510,11 +509,20 @@ def process(messages):
 
         # Call plugins to process message
         global plugs
-        for i in plugs:
-            logger.debug(msg="Processing plugin: %s" % i.__name__)
-            i.run(message=message)
+        global plugtriggers
 
         msgdetail = getmsgdetail(message)
+        try:
+            command = msgdetail["text"].split()[0].lower()
+        except:
+            command = None
+
+        for i in plugs:
+            name = i.__name__.split(".")[-1]
+
+            if plugtriggers[name] == "*" or command == plugtriggers[name]:
+                logger.debug(msg="Processing plugin: %s" % name)
+                i.run(message=message)
 
         # Update last message id to later clear it from the server
         if msgdetail["update_id"] > lastupdateid:
@@ -522,16 +530,18 @@ def process(messages):
 
         # Write the line for debug
         messageline = "TEXT: %s : %s : %s" % (msgdetail["chat_name"], msgdetail["name"], msgdetail["text"])
-        texto = msgdetail["text"]
         logger.debug(msg=messageline)
 
-    logger.info(msg="Last processed message at: %s" % date)
-    logger.debug(msg="Last processed update_id : %s" % lastupdateid)
-    logger.debug(msg="Last processed text: %s" % texto)
-    logger.info(msg="Number of messages in this batch: %s" % count)
+    if date != 0:
+        logger.info(msg="Last processed message at: %s" % date)
+    if lastupdateid != 0:
+        logger.debug(msg="Last processed update_id : %s" % lastupdateid)
+    if count != 0:
+        logger.info(msg="Number of messages in this batch: %s" % count)
 
     # clear updates (marking messages as read)
-    clearupdates(offset=lastupdateid + 1)
+    if lastupdateid != 0:
+        clearupdates(offset=lastupdateid + 1)
 
 
 def getitems(var):
@@ -596,9 +606,6 @@ def loglevel():
         logger.info(msg="Logging level set to %s" % plugin.config.config(key="verbosity"))
         plugin.config.setconfig(key="verbosity",
                                 value=logging.getLevelName(logger.level).lower())
-    else:
-        logger.debug(msg="Log level didn't changed from %s" % (
-                         plugin.config.config(key="verbosity").lower()))
 
 
 def conflogging(target=None):
@@ -645,7 +652,7 @@ def conflogging(target=None):
 def main():
     """
     Main code for the bot
-    """
+si      """
 
     # Main code
     logger = logging.getLogger(__name__)
@@ -688,7 +695,10 @@ def main():
 
     # Initialize modules
     global plugs
-    plugs = plugins.initplugins()
+    global plugtriggers
+    plugs, plugtriggers = plugins.initplugins()
+
+    logger.debug(msg="Plug triggers reported: %s" % plugtriggers)
 
     # Check operation mode and call process as required
     if options.daemon or plugin.config.config(key='daemon'):

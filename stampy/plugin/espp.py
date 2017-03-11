@@ -14,9 +14,9 @@ import stampy.stampy
 def init():
     """
     Initializes module
-    :return:
+    :return: List of triggers for plugin
     """
-    return
+    return "/espp"
 
 
 def run(message):  # do not edit this line
@@ -38,7 +38,7 @@ def help(message):  # do not edit this line
     :param message: message to process
     :return: help text
     """
-    commandtext = "Use `espp <amount>` to get estimated espp earnings\n\n"
+    commandtext = "Use `/espp <amount>` to get estimated espp earnings\n\n"
     return commandtext
 
 

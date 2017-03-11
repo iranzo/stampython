@@ -22,13 +22,13 @@ sched.start()
 def init():
     """
     Initializes module
-    :return:
+    :return: List of triggers for plugin
     """
 
     sched.add_job(obichero, 'cron', id='obichero', hour='15',
                   replace_existing=True, misfire_grace_time=120)
 
-    return
+    return "/obichero"
 
 
 def run(message):  # do not edit this line
@@ -41,9 +41,6 @@ def run(message):  # do not edit this line
     if text:
         if text.split()[0].lower() == "/obichero":
             obicherocommands(message=message)
-        if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
-            if text.split()[0].lower() == "triggerobichero":
-                obichero()
     return
 
 
@@ -54,8 +51,10 @@ def help(message):  # do not edit this line
     :return: help text
     """
     commandtext = "Use `/obichero <date>` to get O bichero's comic "
-    commandtext += "strip for date or today (must be on RSS feed) (" \
-                   "@obicherounofficial)\n\n"
+    commandtext += "strip for date or today (must be on RSS feed)\n\n"
+    if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
+        commandtext = "Use `/obichero trigger` to force sending actual " \
+                      "strip to channel\n\n"
     return commandtext
 
 
@@ -82,6 +81,11 @@ def obicherocommands(message):
         date = texto.split(' ')[1]
     except:
         date = ""
+
+    if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"] and date == "trigger":
+        # We've been called to update the strip channel
+        return obichero(chat_id=chat_id, date=date,
+                        reply_to_message_id=message_id)
 
     try:
         # Parse date or if in error, use today

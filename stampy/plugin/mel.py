@@ -22,13 +22,13 @@ sched.start()
 def init():
     """
     Initializes module
-    :return:
+    :return: List of triggers for plugin
     """
 
     sched.add_job(mel, 'cron', id='mel', hour='13', replace_existing=True,
                   misfire_grace_time=120)
 
-    return
+    return "/mel"
 
 
 def run(message):  # do not edit this line
@@ -41,9 +41,6 @@ def run(message):  # do not edit this line
     if text:
         if text.split()[0].lower() == "/mel":
             melcommands(message=message)
-        if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
-            if text.split()[0].lower() == "triggermel":
-                mel()
     return
 
 
@@ -54,8 +51,10 @@ def help(message):  # do not edit this line
     :return: help text
     """
     commandtext = "Use `/mel <date>` to get Mel's comic "
-    commandtext += "strip for date or today (must be on RSS feed) (" \
-                   "@tirademel)\n\n"
+    commandtext += "strip for date or today (must be on RSS feed)\n\n"
+    if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
+        commandtext = "Use `/jueves trigger` to force sending actual " \
+                      "strip to channel\n\n"
     return commandtext
 
 
@@ -81,6 +80,11 @@ def melcommands(message):
         date = texto.split(' ')[1]
     except:
         date = ""
+
+    if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"] and date == "trigger":
+        # We've been called to update the strip channel
+        return mel(chat_id=chat_id, date=date,
+                   reply_to_message_id=message_id)
 
     try:
         # Parse date or if in error, use today

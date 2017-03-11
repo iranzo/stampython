@@ -7,7 +7,7 @@ import stampy.plugins
 
 # As we're not executing stampy.main, initialize the plugins available to
 # process karma
-stampy.stampy.plugs = stampy.plugins.initplugins()
+stampy.stampy.plugs, stampy.stampy.plugtriggers = stampy.plugins.initplugins()
 
 
 def clean():

@@ -62,9 +62,10 @@ def initplugins():
     logger = logging.getLogger(__name__)
 
     plugs = []
+    plugtriggers = {}
     for i in getPlugins():
         logger.debug(msg="Processing plugin initialization: %s" % i["name"])
         newplug = loadPlugin(i)
         plugs.append(newplug)
-        newplug.init()
-    return plugs
+        plugtriggers[i["name"]] = newplug.init()
+    return plugs, plugtriggers

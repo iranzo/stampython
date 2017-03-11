@@ -21,12 +21,12 @@ sched.start()
 def init():
     """
     Initializes module
-    :return:
+    :return: List of triggers for plugin
     """
     sched.add_job(dokarmacleanup, 'interval', minutes=int(stampy.plugin.config.config('cleanup', 24 * 60)), id='dokarmacleanup', replace_existing=True,
                   misfire_grace_time=120)
 
-    return
+    return "*"
 
 
 def run(message):  # do not edit this line

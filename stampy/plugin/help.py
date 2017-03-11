@@ -13,9 +13,9 @@ import stampy.stampy
 def init():
     """
     Initializes module
-    :return:
+    :return: List of triggers for plugin
     """
-    return
+    return "/help"
 
 
 def run(message):  # do not edit this line

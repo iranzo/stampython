@@ -24,14 +24,14 @@ sched.start()
 def init():
     """
     Initializes module
-    :return:
+    :return: List of triggers for plugin
     """
     sched.add_job(dochatcleanup, 'interval', minutes=int(stampy.plugin.config.config('cleanup', 24 * 60)), id='dochatcleanup',
                   replace_existing=True, misfire_grace_time=120)
     sched.add_job(dousercleanup, 'interval', minutes=int(stampy.plugin.config.config('cleanup', 24 * 60)), id='dousercleanup',
                   replace_existing=True, misfire_grace_time=120)
 
-    return
+    return "*"
 
 
 def run(message):  # do not edit this line
@@ -131,9 +131,10 @@ def showstats(type=False):
     """
     logger = logging.getLogger(__name__)
     if type:
-        sql = "select * from stats WHERE type='%s' ORDER BY count DESC" % type
+        sql = "select * from stats WHERE type='%s' ORDER BY count DESC LIMIT " \
+              "10" % type
     else:
-        sql = "select * from stats ORDER BY count DESC"
+        sql = "select * from stats ORDER BY count DESC LIMIT 10"
     cur = stampy.stampy.dbsql(sql)
     table = from_db_cursor(cur)
     text = "Defined stats:\n"
