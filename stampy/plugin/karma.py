@@ -391,7 +391,7 @@ def dokarmacleanup(word=False,
     """
     Checks on the karma database the date of the last update in the word
     :param word: word to query in database
-    :param maxage: defines maximum number of days to allow chats to be inactive
+    :param maxage: defines maximum number of days to allow karma to be inactive
     """
 
     logger = logging.getLogger(__name__)
