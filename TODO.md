@@ -16,6 +16,21 @@
             chats together i.r.t config
     - Review whole config usage to separate between master admin and channel
       admin and determine operations valid for one or both
+      - TODO:
+        - Create settings to store chat-specific values
+            - silent
+            - admin
+            - modulo
+            - link
+              - when two channels are linked, merge their karmas
+            - create default settings (isolated, etc)
+        - Create table to store chat-specific-settings
+        - Modify karma commands and database
+        - Modify quote commands and database
+        - Modify alias commands and database
+        - Modify autok commands and database
+        - Modify stock commands to get values from settings
+        - Modify espp commands to get values from settings
       
 ### Other
     - Initial load of karma points from older bot (possible separate script)
@@ -40,3 +55,7 @@
       to start a new round
     - Implement forward conditions so just some messages based on sender, or
       text are sent
+    - Implement version stored in database and migration scripts so
+      databases with old format can be automatically migrated to new
+      format by running those functions automatically
+    - Implement function to get bot out of one chat_id
