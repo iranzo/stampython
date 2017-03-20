@@ -20,10 +20,13 @@
         - Create settings to store chat-specific values
             - silent
             - admin
-            - modulo
+            - modulo (to just show karma every X points)
             - link
               - when two channels are linked, merge their karmas
-            - create default settings (isolated, etc)
+              - Set a procedure for ACK'ing the link from both source and
+                target channel unless set by owner or admin of both is the same
+            - isolated
+            - create default settings (isolated, etc) for new channels
         - Create table to store chat-specific-settings
         - Modify karma commands and database
         - Modify quote commands and database

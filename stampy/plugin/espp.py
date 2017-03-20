@@ -95,7 +95,11 @@ def espp(message):
     if monthly:
         stocks = float(int((monthly / rate) * 6 / reduced))
         text += "Estimated stocks: %s\n" % stocks
-        text += "Estimated earning: %s EUR" % "{0:.2f}".format((final - reduced) * stocks * rate)
+        earning = (final - reduced) * stocks * rate
+        text += "Estimated earning: %s EUR\n" % "{0:.2f}".format(earning)
+        total = monthly * 6 + earning
+        text += "Total amount deposited on sell: %s EUR\n" % "{0:.2f}".format(total)
+        text += "Estimated A.E.R. vs investment: %s %%" % "{0:.2f}".format(earning / (total - earning) * 100)
 
     text += "```"
     logger.debug(msg=text)
