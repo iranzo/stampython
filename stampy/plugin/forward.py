@@ -129,7 +129,7 @@ def forwardcommands(message):
         try:
             command = texto.split(' ')[1]
         except:
-            command = False
+            command = ""
         try:
             source = texto.split(' ')[2].lower()
         except:
@@ -156,7 +156,7 @@ def forwardcommands(message):
                     deleteforward(source=source, target=target)
                 break
             if case():
-                word = texto.split(' ')[1]
+                word = command
                 if "=" in word:
                     source = word.split('=')[0]
                     target = texto.split('=')[1:][0]
