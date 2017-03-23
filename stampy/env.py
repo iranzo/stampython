@@ -43,8 +43,6 @@ def run_migrations_offline():
     script output.
 
     """
-    # get the alembic section of the config file
-    ini_section = config.get_section(config.config_ini_section)
 
     # if a database path was provided, override the one in alembic.ini
     database = context.get_x_argument(as_dictionary=True).get('database')
@@ -82,7 +80,6 @@ def run_migrations_online():
         ini_section,
         prefix='sqlalchemy.',
         poolclass=pool.NullPool)
-
 
     with connectable.connect() as connection:
         context.configure(
