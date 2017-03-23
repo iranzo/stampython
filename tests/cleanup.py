@@ -17,7 +17,7 @@ def clean():
     """
     # Precreate DB for other operations to work
     try:
-        stampy.stampy.createdb()
+        stampy.stampy.createorupdatedb()
     except:
         pass
 

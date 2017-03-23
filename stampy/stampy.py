@@ -91,25 +91,25 @@ class Switch(object):
             return False
 
 
-def createdb():
+def createorupdatedb():
     """
-    Create database if it doesn't exist
+    Create database if it doesn't exist or upgrade it to head
     :return:
     """
-    con = lite.connect(options.database)
-    cur = con.cursor()
-    cur.execute('CREATE TABLE karma(word TEXT, value INT, date TEXT);')
-    cur.execute('CREATE TABLE alias(key TEXT, value TEXT);')
-    cur.execute('CREATE TABLE autokarma(key TEXT, value TEXT);')
-    cur.execute('CREATE TABLE config(key TEXT, value TEXT);')
-    cmd = 'CREATE TABLE stats(type TEXT, id INT, name TEXT, date TEXT, \
-          count INT, memberid TEXT);'
-    cur.execute(cmd)
-    cmd = 'CREATE TABLE quote(id INTEGER PRIMARY KEY AUTOINCREMENT,  \
-         username TEXT, date TEXT, text TEXT);'
-    cur.execute(cmd)
-    cmd = 'CREATE TABLE forward(source TEXT, target TEXT);'
-    cur.execute(cmd)
+
+    logger = logging.getLogger(__name__)
+
+    import alembic.config
+    alembicArgs = [
+        '-x', 'database=%s' % options.database, '--raiseerr',
+        'upgrade', 'head',
+    ]
+
+    logger.debug(msg="Using alembic to upgrade/create database to expected "
+                     "revision")
+
+    alembic.config.main(argv=alembicArgs)
+
     return
 
 
@@ -131,13 +131,11 @@ def dbsql(sql=False):
         cur.fetchone()
 
     except lite.Error, e:
-        createdb()
         logger.debug(msg="Error %s:" % e.args[0])
-        logger.debug(msg="DB has been created, continuing")
+        print "Error accessing database, creating..."
+        createorupdatedb()
         con = lite.connect(options.database)
         cur = con.cursor()
-        cur.execute("SELECT * FROM config WHERE key='token';")
-        cur.fetchone()
 
     # Database initialized
 
@@ -659,13 +657,17 @@ si      """
 
     # Set database name in config
     if options.database:
+        createorupdatedb()
         plugin.config.setconfig(key='database', value=options.database)
 
     if not logger.handlers:
         conflogging()
 
     # Configuring apscheduler logger
-    conflogging(target="apscheduler")
+    conflogging(target="scheduler")
+
+    # Configuring alembic logger
+    conflogging(target='alembic')
 
     logger.info(msg="Started execution")
 

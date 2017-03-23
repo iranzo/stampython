@@ -4,3 +4,5 @@ python-dateutil
 requests
 lxml
 feedparser
+alembic
+sqlalchemy
