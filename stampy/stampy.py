@@ -25,36 +25,35 @@ from time import sleep
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
+from i18n import _
 import plugins
 import plugin.config
 import plugin.forward
 
+
 plugs = []
 plugtriggers = {}
 
-description = """
-Stampy is a script for controlling Karma via Telegram.org bot api
-
-"""
+description = _('Stampy is a script for controlling Karma via Telegram.org bot api')
 
 # Option parsing
 p = optparse.OptionParser("stampy.py [arguments]", description=description)
 p.add_option("-t", "--token", dest="token",
-             help="API token for bot access to messages", default=False)
+             help=_("API token for bot access to messages"), default=False)
 p.add_option("-b", "--database", dest="database",
-             help="database file for storing karma and last processed message",
+             help=_("database file for storing karma and last processed message"),
              default="stampy.db")
 p.add_option('-v', "--verbosity", dest="verbosity",
-             help="Set verbosity level for messages while running/logging",
+             help=_("Set verbosity level for messages while running/logging"),
              default=0, type='choice',
              choices=["info", "debug", "warn", "critical"])
 p.add_option('-u', "--url", dest="url",
-             help="Define URL for accessing bot API",
+             help=_("Define URL for accessing bot API"),
              default="https://api.telegram.org/bot")
 p.add_option('-o', '--owner', dest='owner',
-             help="Define owner username for monitoring service",
+             help=_("Define owner username for monitoring service"),
              default="iranzo")
-p.add_option('-d', '--daemon', dest='daemon', help="Run as daemon",
+p.add_option('-d', '--daemon', dest='daemon', help=_("Run as daemon"),
              default=False, action="store_true")
 
 (options, args) = p.parse_args()
@@ -105,8 +104,8 @@ def createorupdatedb():
         'upgrade', 'head',
     ]
 
-    logger.debug(msg="Using alembic to upgrade/create database to expected "
-                     "revision")
+    logger.debug(msg=_("Using alembic to upgrade/create database to expected "
+                     "revision"))
 
     alembic.config.main(argv=alembicArgs)
 
@@ -132,7 +131,7 @@ def dbsql(sql=False):
 
     except lite.Error, e:
         logger.debug(msg="Error %s:" % e.args[0])
-        print "Error accessing database, creating..."
+        print _("Error accessing database, creating...")
         createorupdatedb()
         con = lite.connect(options.database)
         cur = con.cursor()
