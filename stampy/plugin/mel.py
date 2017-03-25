@@ -53,7 +53,7 @@ def help(message):  # do not edit this line
     commandtext = "Use `/mel <date>` to get Mel's comic "
     commandtext += "strip for date or today (must be on RSS feed)\n\n"
     if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
-        commandtext = "Use `/jueves trigger` to force sending actual " \
+        commandtext = "Use `/mel trigger` to force sending actual " \
                       "strip to channel\n\n"
     return commandtext
 
@@ -83,8 +83,7 @@ def melcommands(message):
 
     if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"] and date == "trigger":
         # We've been called to update the strip channel
-        return mel(chat_id=chat_id, date=date,
-                   reply_to_message_id=message_id)
+        return mel()
 
     try:
         # Parse date or if in error, use today

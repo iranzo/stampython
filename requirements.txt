@@ -6,3 +6,4 @@ lxml
 feedparser
 alembic
 sqlalchemy
+Babel
