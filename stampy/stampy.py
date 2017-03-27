@@ -105,7 +105,7 @@ def createorupdatedb():
     ]
 
     logger.debug(msg=_("Using alembic to upgrade/create database to expected "
-                     "revision"))
+                       "revision"))
 
     alembic.config.main(argv=alembicArgs)
 

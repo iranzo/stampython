@@ -18,4 +18,3 @@ setup(
               'init_catalog': babel.init_catalog,
               'update_catalog': babel.update_catalog},
 )
-
