@@ -9,6 +9,7 @@ import logging
 import stampy.plugin.config
 import stampy.plugin.stock
 import stampy.stampy
+from stampy.i18n import _
 
 
 def init():
@@ -38,7 +39,7 @@ def help(message):  # do not edit this line
     :param message: message to process
     :return: help text
     """
-    commandtext = "Use `/espp <amount>` to get estimated espp earnings\n\n"
+    commandtext = _("Use `/espp <amount>` to get estimated espp earnings\n\n")
     return commandtext
 
 
@@ -60,7 +61,7 @@ def espp(message):
     message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    logger.debug(msg="Command: %s by %s" % (texto, who_un))
+    logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
 
     # We might be have been given no command, just stock
     try:
@@ -72,13 +73,13 @@ def espp(message):
 
     text = "```\n"
     rate = d.convert("USD", "EUR")
-    text += "USD/EUR rate " + str(rate) + "\n"
+    text += _("USD/EUR rate ") + str(rate) + "\n"
     initial = float(stampy.plugin.config.config("espp", 0))
-    text += "Initial quote: %s USD\n" % initial
+    text += _("Initial quote: %s USD\n") % initial
     try:
         quote = c.get(ticker)
         final = float(quote["l_cur"])
-        text += "Actual quote: %s USD\n" % final
+        text += _("Actual quote: %s USD\n") % final
     except:
         final = initial
         text += ""
@@ -90,16 +91,16 @@ def espp(message):
 
     reduced = 0.85 * pricebuy
 
-    text += "Buy price: %s USD\n" % reduced
-    text += "Earning per unit: %s USD\n" % (final - reduced)
+    text += _("Buy price: %s USD\n") % reduced
+    text += _("Earning per unit: %s USD\n") % (final - reduced)
     if monthly:
         stocks = float(int((monthly / rate) * 6 / reduced))
-        text += "Estimated stocks: %s\n" % stocks
+        text += _("Estimated stocks: %s\n") % stocks
         earning = (final - reduced) * stocks * rate
-        text += "Estimated earning: %s EUR\n" % "{0:.2f}".format(earning)
+        text += _("Estimated earning: %s EUR\n") % "{0:.2f}".format(earning)
         total = monthly * 6 + earning
-        text += "Total amount deposited on sell: %s EUR\n" % "{0:.2f}".format(total)
-        text += "Estimated A.E.R. vs investment: %s %%" % "{0:.2f}".format(earning / (total - earning) * 100)
+        text += _("Total amount deposited on sell: %s EUR\n") % "{0:.2f}".format(total)
+        text += _("Estimated A.E.R. vs investment: %s %%") % "{0:.2f}".format(earning / (total - earning) * 100)
 
     text += "```"
     logger.debug(msg=text)

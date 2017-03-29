@@ -13,6 +13,7 @@ import requests
 
 import stampy.stampy
 import stampy.plugin.config
+from stampy.i18n import _
 
 
 def init():
@@ -42,7 +43,7 @@ def help(message):  # do not edit this line
     :param message: message to process
     :return: help text
     """
-    commandtext = "Use `stock <ticker>` to get stock trading price\n\n"
+    commandtext = _("Use `stock <ticker>` to get stock trading price\n\n")
     return commandtext
 
 
@@ -112,7 +113,7 @@ def stock(message):
 
     text = "```\n"
     rate = d.convert("USD", "EUR")
-    text += "USD/EUR rate " + str(rate) + "\n"
+    text += _("USD/EUR rate " + str(rate) + "\n")
     for ticker in stock:
         try:
             quote = c.get(ticker)

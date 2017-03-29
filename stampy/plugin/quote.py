@@ -10,6 +10,7 @@ import time
 
 import stampy.stampy
 import stampy.plugin.config
+from stampy.i18n import _
 
 
 def init():
@@ -39,13 +40,10 @@ def help(message):  # do not edit this line
     :param message: message to process
     :return: help text
     """
-    commandtext = "Use `/quote add <id> <text>` to add a quote for"
-    commandtext += " that username\n"
-    commandtext += "Use `/quote <id>` to get a random quote from"
-    commandtext += " that username\n\n"
+    commandtext = _("Use `/quote add <id> <text>` to add a quote for that username\n")
+    commandtext += _("Use `/quote <id>` to get a random quote from that username\n\n")
     if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
-        commandtext += "Use `/quote del <quoteid>` " \
-                       "to remove a quote\n\n"
+        commandtext += _("Use `/quote del <quoteid>` to remove a quote\n\n")
     return commandtext
 
 
@@ -80,7 +78,7 @@ def quotecommands(message):
             date = time.time()
             quote = str.join(" ", texto.split(' ')[3:])
             result = addquote(username=who_quote, date=date, text=quote)
-            text = "Quote `%s` added" % result
+            text = _("Quote `%s` added") % result
             stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                       reply_to_message_id=message_id,
                                       disable_web_page_preview=True,
@@ -89,7 +87,7 @@ def quotecommands(message):
         if case('del'):
             if who_un == stampy.plugin.config.config(key='owner'):
                 id_todel = texto.split(' ')[2]
-                text = "Deleting quote id `%s`" % id_todel
+                text = _("Deleting quote id `%s`") % id_todel
                 stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                           reply_to_message_id=message_id,
                                           disable_web_page_preview=True,
@@ -109,9 +107,9 @@ def quotecommands(message):
                        quote, username, datefor, quoteid)
             except:
                 if nick:
-                    text = "No quote recorded for `%s`" % nick
+                    text = _("No quote recorded for `%s`") % nick
                 else:
-                    text = "No quote found"
+                    text = _("No quote found")
             stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                       reply_to_message_id=message_id,
                                       disable_web_page_preview=True,
@@ -167,7 +165,7 @@ def addquote(username=False, date=False, text=False):
     sql = "INSERT INTO quote(username, date, text) VALUES('%s','%s', '%s');" % (
           username, date, text)
     cur = stampy.stampy.dbsql(sql)
-    logger.debug(msg="createquote: %s=%s on %s" % (username, text, date))
+    logger.debug(msg=_("createquote: %s=%s on %s") % (username, text, date))
     # Retrieve last id
     sql = "select last_insert_rowid();"
     cur = stampy.stampy.dbsql(sql)

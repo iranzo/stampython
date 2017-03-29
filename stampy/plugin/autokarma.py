@@ -12,6 +12,7 @@ import stampy.stampy
 import stampy.plugin.config
 import stampy.plugin.karma
 import stampy.plugin.alias
+from stampy.i18n import _
 
 
 def init():
@@ -46,14 +47,9 @@ def help(message):  # do not edit this line
 
     commandtext = ""
     if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
-        commandtext = "Use `/autok <key>=<value>` to autokarma" \
-                      " value every time key is in" \
-                      " the conversation. " \
-                      "Multiple values for same key can be added\n\n"
-        commandtext += "Use `/autok delete <key>=<value>` to delete" \
-                       " autokarma <value> for <key>\n\n"
-        commandtext += "Use `/autok list` to list autokarma " \
-                       "<key> <value> pairs\n\n"
+        commandtext = _("Use `/autok <key>=<value>` to autokarma value every time key is in the conversation. Multiple values for same key can be added\n\n")
+        commandtext += _("Use `/autok delete <key>=<value>` to delete autokarma <value> for <key>\n\n")
+        commandtext += _("Use `/autok list` to list autokarma <key> <value> pairs\n\n")
     return commandtext
 
 
@@ -72,10 +68,10 @@ def autokcommands(message):
     message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    logger.debug(msg="Command: %s by %s" % (texto, who_un))
+    logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
 
     if who_un == stampy.plugin.config.config('owner'):
-        logger.debug(msg="Command: %s by Owner: %s" % (texto, who_un))
+        logger.debug(msg=_("Command: %s by Owner: %s") % (texto, who_un))
         try:
             command = texto.split(' ')[1]
         except:
@@ -98,8 +94,7 @@ def autokcommands(message):
                 if "=" in word:
                     key = word.split('=')[0]
                     value = texto.split('=')[1:][0]
-                    text = "Deleting autokarma pair for `%s - %s`" % (
-                           key, value)
+                    text = _("Deleting autokarma pair for `%s - %s`") % (key, value)
                     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                               reply_to_message_id=message_id,
                                               disable_web_page_preview=True,
@@ -111,8 +106,7 @@ def autokcommands(message):
                 if "=" in word:
                     key = word.split('=')[0]
                     value = texto.split('=')[1:][0]
-                    text = "Setting autokarma for `%s` triggers `%s++`" % (
-                           key, value)
+                    text = _("Setting autokarma for `%s` triggers `%s++`") % (key, value)
                     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                               reply_to_message_id=message_id,
                                               disable_web_page_preview=True,
@@ -173,8 +167,7 @@ def createautok(word, value):
 
     logger = logging.getLogger(__name__)
     if value in getautok(word):
-        logger.error(msg="createautok: autok pair %s - %s already exists" % (
-                         word, value))
+        logger.error(msg=_("createautok: autok pair %s - %s already exists") % (word, value))
     else:
         sql = "INSERT INTO autokarma VALUES('%s','%s');" % (word, value)
         logger.debug(msg="createautok: %s=%s" % (word, value))
@@ -214,21 +207,21 @@ def listautok(word=False):
         string = (word,)
         sql = "SELECT * FROM autokarma WHERE key='%s' ORDER by key ASC;" % (
               string)
-        wordtext = "for word %s" % word
+        wordtext = _("for word %s") % word
 
     cur = stampy.stampy.dbsql(sql)
 
     try:
         # Get value from SQL query
-        text = "Defined autokarma triggers %s:\n" % wordtext
+        text = _("Defined autokarma triggers %s:\n") % wordtext
         table = from_db_cursor(cur)
         text = "%s\n```%s```" % (text, table.get_string())
 
     except:
         # Value didn't exist before
-        text = "%s has no trigger autokarma" % word
+        text = _("%s has no trigger autokarma") % word
 
-    logger.debug(msg="Returning autokarma %s for word %s" % (text, word))
+    logger.debug(msg=_("Returning autokarma %s for word %s") % (text, word))
     return text
 
 
@@ -256,7 +249,7 @@ def autokarmawords(message):
     if wordadd:
         # Reduce text in message to just the words we encountered to optimize
         msgdetail["text"] = " ".join(wordadd)
-        logger.debug(msg="Autokarma words %s encountered for processing" % msgdetail["text"])
+        logger.debug(msg=_("Autokarma words %s encountered for processing") % msgdetail["text"])
         stampy.plugin.karma.karmaprocess(msgdetail)
 
     return

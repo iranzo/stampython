@@ -147,7 +147,7 @@ def dbsql(sql=False):
         except:
             worked = False
     if not worked:
-        logger.critical(msg="Error on SQL execution: %s" % sql)
+        logger.critical(msg=_("Error on SQL execution: %s") % sql)
 
     return cur
 
@@ -213,14 +213,12 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
     while not code:
         result = json.load(urllib.urlopen(message))
         code = result['ok']
-        logger.error(msg="ERROR (%s) sending message: Code: %s : Text: %s" % (
-                         attempt, code, result))
+        logger.error(msg=_("ERROR (%s) sending message: Code: %s : Text: %s") % (attempt, code, result))
         attempt += 1
         sleep(1)
         # exit after 60 retries with 1 second delay each
         if attempt > 60:
-            logger.error(msg="PERM ERROR sending message: Code: %s : Text: "
-                             "%s" % (code, result))
+            logger.error(msg=_("PERM ERROR sending message: Code: %s : Text: %s") % (code, result))
             code = True
 
     try:
@@ -232,7 +230,7 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
         # Check if there's something to forward and do it
         plugin.forward.forwardmessage(sent)
 
-    logger.debug(msg="Sending message: Code: %s : Text: %s" % (code, text))
+    logger.debug(msg=_("Sending message: Code: %s : Text: %s") % (code, text))
     return
 
 
@@ -256,7 +254,7 @@ def getupdates(offset=0, limit=100):
     except:
         result = []
     for item in result:
-        logger.info(msg="Getting updates and returning: %s" % item)
+        logger.info(msg=_("Getting updates and returning: %s") % item)
         yield item
 
 
@@ -275,7 +273,7 @@ def clearupdates(offset):
         result = json.load(urllib.urlopen(message))
     except:
         result = False
-    logger.info(msg="Clearing messages at %s" % offset)
+    logger.info(msg=_("Clearing messages at %s") % offset)
     return result
 
 
@@ -307,19 +305,15 @@ def telegramcommands(texto, chat_id, message_id, who_un):
     for case in Switch(word):
         if case('/help'):
             if plugin.config.config(key='owner') == who_un:
-                commandtext += "Use `/quit` to exit daemon mode\n"
-                commandtext += "Learn more about this bot in " \
-                               "[https://github.com/iranzo/stampython]" \
-                               "(https://github.com/iranzo/stampython)"
+                commandtext += _("Use `/quit` to exit daemon mode\n")
+                commandtext += _("Learn more about this bot in [https://github.com/iranzo/stampython] (https://github.com/iranzo/stampython)")
             break
         if case('/start'):
-            commandtext = "This bot does not use start or stop commands,"
-            commandtext += " it automatically checks for karma operands"
+            commandtext = _("This bot does not use start or stop commands it automatically checks for karma operands")
             retv = True
             break
         if case('/stop'):
-            commandtext = "This bot does not use start or stop commands, "
-            commandtext += "it automatically checks for karma operands"
+            commandtext = _("This bot does not use start or stop commands, it automatically checks for karma operands")
             retv = True
             break
         if case('/quit'):
@@ -335,7 +329,7 @@ def telegramcommands(texto, chat_id, message_id, who_un):
     if commandtext:
         sendmessage(chat_id=chat_id, text=commandtext,
                     reply_to_message_id=message_id, parse_mode="Markdown")
-        logger.debug(msg="Command: %s" % word)
+        logger.debug(msg=_("Command: %s") % word)
     return retv
 
 
@@ -355,7 +349,7 @@ def sendsticker(chat_id=0, sticker="", text="", reply_to_message_id=""):
     message = "%s&sticker=%s" % (message, sticker)
     if reply_to_message_id:
         message += "&reply_to_message_id=%s" % reply_to_message_id
-    logger.debug(msg="Sending sticker: %s" % text)
+    logger.debug(msg=_("Sending sticker: %s") % text)
 
     sent = {"message": json.load(urllib.urlopen(message))['result']}
 
@@ -383,7 +377,7 @@ def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
         message += "&reply_to_message_id=%s" % reply_to_message_id
     if text:
         message += "&caption=%s" % urllib.quote_plus(text.encode('utf-8'))
-    logger.debug(msg="Sending image: %s" % text)
+    logger.debug(msg=_("Sending image: %s") % text)
     sent = {"message": json.load(urllib.urlopen(message))['result']}
 
     # Check if there's something to forward and do it
@@ -518,7 +512,7 @@ def process(messages):
             name = i.__name__.split(".")[-1]
 
             if plugtriggers[name] == "*" or command == plugtriggers[name]:
-                logger.debug(msg="Processing plugin: %s" % name)
+                logger.debug(msg=_("Processing plugin: %s") % name)
                 i.run(message=message)
 
         # Update last message id to later clear it from the server
@@ -526,15 +520,15 @@ def process(messages):
             lastupdateid = msgdetail["update_id"]
 
         # Write the line for debug
-        messageline = "TEXT: %s : %s : %s" % (msgdetail["chat_name"], msgdetail["name"], msgdetail["text"])
+        messageline = _("TEXT: %s : %s : %s") % (msgdetail["chat_name"], msgdetail["name"], msgdetail["text"])
         logger.debug(msg=messageline)
 
     if date != 0:
-        logger.info(msg="Last processed message at: %s" % date)
+        logger.info(msg=_("Last processed message at: %s") % date)
     if lastupdateid != 0:
-        logger.debug(msg="Last processed update_id : %s" % lastupdateid)
+        logger.debug(msg=_("Last processed update_id : %s") % lastupdateid)
     if count != 0:
-        logger.info(msg="Number of messages in this batch: %s" % count)
+        logger.info(msg=_("Number of messages in this batch: %s") % count)
 
     # clear updates (marking messages as read)
     if lastupdateid != 0:
@@ -565,7 +559,7 @@ def getitems(var):
 
     # As we call recursively, don't log calls for just one ID
     if len(final) > 1:
-        logger.debug(msg="Final deduplicated list: %s" % final)
+        logger.debug(msg=_("Final deduplicated list: %s") % final)
     return final
 
 
@@ -600,7 +594,7 @@ def loglevel():
     # database and send message
     if logging.getLevelName(logger.level).lower() != plugin.config.config(key="verbosity"):
         logger.setLevel(level)
-        logger.info(msg="Logging level set to %s" % plugin.config.config(key="verbosity"))
+        logger.info(msg=_("Logging level set to %s") % plugin.config.config(key="verbosity"))
         plugin.config.setconfig(key="verbosity",
                                 value=logging.getLevelName(logger.level).lower())
 
@@ -668,7 +662,7 @@ si      """
     # Configuring alembic logger
     conflogging(target='alembic')
 
-    logger.info(msg="Started execution")
+    logger.info(msg=_("Started execution"))
 
     if not plugin.config.config(key='sleep'):
         plugin.config.setconfig(key='sleep', value=10)
@@ -679,7 +673,7 @@ si      """
             token = options.token
             plugin.config.setconfig(key='token', value=token)
         else:
-            msg = "Token required for operation, please check"
+            msg = _("Token required for operation, please check")
             msg += " https://core.telegram.org/bots"
             logger.critical(msg)
             sys.exit(1)
@@ -699,20 +693,20 @@ si      """
     global plugtriggers
     plugs, plugtriggers = plugins.initplugins()
 
-    logger.debug(msg="Plug triggers reported: %s" % plugtriggers)
+    logger.debug(msg=_("Plug triggers reported: %s") % plugtriggers)
 
     # Check operation mode and call process as required
     if options.daemon or plugin.config.config(key='daemon'):
         plugin.config.setconfig(key='daemon', value=True)
-        logger.info(msg="Running in daemon mode")
+        logger.info(msg=_("Running in daemon mode"))
         while plugin.config.config(key='daemon') == 'True':
             process(getupdates())
             sleep(int(plugin.config.config(key='sleep')))
     else:
-        logger.info(msg="Running in one-shoot mode")
+        logger.info(msg=_("Running in one-shoot mode"))
         process(getupdates())
 
-    logger.info(msg="Stopped execution")
+    logger.info(msg=_("Stopped execution"))
     logging.shutdown()
     sys.exit(0)
 

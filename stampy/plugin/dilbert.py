@@ -15,6 +15,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import stampy.stampy
 import stampy.plugin.stats
 import stampy.plugin.config
+from stampy.i18n import _
 
 sched = BackgroundScheduler()
 sched.start()
@@ -51,11 +52,9 @@ def help(message):  # do not edit this line
     :param message: message to process
     :return: help text
     """
-    commandtext = "Use `/dilbert <date>` to get Dilbert's comic "
-    commandtext += "strip for date or today\n\n"
+    commandtext = _("Use `/dilbert <date>` to get Dilbert's comic strip for date or today\n\n")
     if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
-        commandtext = "Use `/dilbert trigger` to force sending actual " \
-                      "strip to channel\n\n"
+        commandtext = _("Use `/dilbert trigger` to force sending actual strip to channel\n\n")
     return commandtext
 
 
@@ -75,7 +74,7 @@ def dilbertcommands(message):
     message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    logger.debug(msg="Command: %s by %s" % (texto, who_un))
+    logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
 
     # We might be have been given no command, just /dilbert
     try:
@@ -123,7 +122,7 @@ def dilbert(chat_id=-1001066352913, date=None, reply_to_message_id=""):
     # Ping chat ID to not have chat removed
     stampy.plugin.stats.pingchat(chat_id)
 
-    logger.debug(msg="Dilbert comic found")
+    logger.debug(msg=_("Dilbert comic found"))
 
     page = requests.get(url)
     tree = html.fromstring(page.content)

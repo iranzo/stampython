@@ -8,6 +8,7 @@ import logging
 
 import stampy.plugins
 import stampy.stampy
+from stampy.i18n import _
 
 
 def init():
@@ -37,8 +38,8 @@ def help(message):  # do not edit this line
     :param message: message to process
     :return: help text
     """
-    commandtext = "Use `/help` to display commands help\n\n"
-    commandtext += "Read about announcements at https://telegram.me/stampynews\n\n"
+    commandtext = _("Use `/help` to display commands help\n\n")
+    commandtext += _("Read about announcements at https://telegram.me/stampynews\n\n")
     return commandtext
 
 
@@ -57,7 +58,7 @@ def helpcommands(message):
     who_un = msgdetail["who_un"]
 
     logger = logging.getLogger(__name__)
-    logger.debug(msg="Command: %s by %s" % (texto, who_un))
+    logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
 
     # TODO(iranzo) process code
     # Call plugins to process help messages
@@ -66,7 +67,7 @@ def helpcommands(message):
     for i in stampy.stampy.plugs:
         commandtext += i.help(message=message)
 
-    logger.debug(msg="Command: %s" % texto)
+    logger.debug(msg=_("Command: %s") % texto)
 
     return stampy.stampy.sendmessage(chat_id=chat_id, text=commandtext,
                                      reply_to_message_id=message_id,

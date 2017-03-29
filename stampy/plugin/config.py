@@ -9,6 +9,7 @@ import logging
 from prettytable import from_db_cursor
 
 import stampy.stampy
+from stampy.i18n import _
 
 
 def init():
@@ -41,11 +42,9 @@ def help(message):  # do not edit this line
 
     commandtext = ""
     if config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
-        commandtext = "Use `/config show` to get a list " \
-                      "of defined config settings\n"
-        commandtext += "Use `/config set <key>=<value>` to define" \
-                       " a value for key\n"
-        commandtext += "Use `/config delete <key>` to delete key\n\n"
+        commandtext = _("Use `/config show` to get a list of defined config settings\n")
+        commandtext += _("Use `/config set <key>=<value>` to define a value for key\n")
+        commandtext += _("Use `/config delete <key>` to delete key\n\n")
     return commandtext
 
 
@@ -66,7 +65,7 @@ def configcommands(message):
 
     # Only users defined as 'owner' can perform commands
     if who_un == config('owner'):
-        logger.debug(msg="Command: %s by %s" % (texto, who_un))
+        logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
         try:
             command = texto.split(' ')[1]
         except:
@@ -87,7 +86,7 @@ def configcommands(message):
                 break
             if case('delete'):
                 key = word
-                text = "Deleting config for `%s`" % key
+                text = _("Deleting config for `%s`") % key
                 stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                           reply_to_message_id=message_id,
                                           disable_web_page_preview=True,
@@ -100,7 +99,7 @@ def configcommands(message):
                     key = word.split('=')[0]
                     value = word.split('=')[1]
                     setconfig(key=key, value=value)
-                    text = "Setting config for `%s` to `%s`" % (key, value)
+                    text = _("Setting config for `%s` to `%s`") % (key, value)
                     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                               reply_to_message_id=message_id,
                                               disable_web_page_preview=True,
@@ -133,15 +132,15 @@ def showconfig(key=False):
         except:
             # Value didn't exist before, return 0 value
             value = 0
-        text = "%s has a value of %s" % (key, value)
+        text = _("%s has a value of %s") % (key, value)
 
     else:
         sql = "select * from config ORDER BY key ASC;"
         cur = stampy.stampy.dbsql(sql)
-        text = "Defined configurations:\n"
+        text = _("Defined configurations:\n")
         table = from_db_cursor(cur)
         text = "%s\n```%s```" % (text, table.get_string())
-    logger.debug(msg="Returning config %s for key %s" % (text, key))
+    logger.debug(msg=_("Returning config %s for key %s") % (text, key))
     return text
 
 
@@ -182,7 +181,7 @@ def saveconfig(key, value):
     if value:
         sql = "UPDATE config SET value = '%s' WHERE key = '%s';" % (value, key)
         stampy.stampy.dbsql(sql)
-        logger.debug(msg="Updating config for %s with %s" % (key, value))
+        logger.debug(msg=_("Updating config for %s with %s") % (key, value))
     return value
 
 

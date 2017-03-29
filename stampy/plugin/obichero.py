@@ -14,6 +14,7 @@ from lxml import html
 import stampy.stampy
 import stampy.plugin.stats
 import stampy.plugin.config
+from stampy.i18n import _
 
 sched = BackgroundScheduler()
 sched.start()
@@ -50,11 +51,9 @@ def help(message):  # do not edit this line
     :param message: message to process
     :return: help text
     """
-    commandtext = "Use `/obichero <date>` to get O bichero's comic "
-    commandtext += "strip for date or today (must be on RSS feed)\n\n"
+    commandtext = _("Use `/obichero <date>` to get O bichero's comic strip for date or today (must be on RSS feed)\n\n")
     if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
-        commandtext = "Use `/obichero trigger` to force sending actual " \
-                      "strip to channel\n\n"
+        commandtext = _("Use `/obichero trigger` to force sending actual strip to channel\n\n")
     return commandtext
 
 
@@ -74,7 +73,7 @@ def obicherocommands(message):
     message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    logger.debug(msg="Command: %s by %s" % (texto, who_un))
+    logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
 
     # We might be have been given no command, just /dilbert
     try:
@@ -129,7 +128,7 @@ def obichero(chat_id=-1001069507044, date=None, reply_to_message_id=""):
         if date.year == dateitem.year and date.month == dateitem.month and date.day == dateitem.day:
             tira.append(item)
 
-    logger.debug(msg="# of Comics for today: %s" % len(tira))
+    logger.debug(msg=_("# of Comics for today: %s") % len(tira))
 
     if tira:
         item = tira[-1]

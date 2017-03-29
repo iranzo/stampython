@@ -13,6 +13,7 @@ from prettytable import from_db_cursor
 
 import stampy.plugin.config
 import stampy.stampy
+from stampy.i18n import _
 
 
 def init():
@@ -37,7 +38,7 @@ def run(message):  # do not edit this line
 
     if text:
         if text.split()[0].lower() == "/forward":
-            logger.debug(msg="Processing forward commands")
+            logger.debug(msg=_("Processing forward commands"))
             forwardcommands(message)
     return
 
@@ -51,11 +52,9 @@ def help(message):  # do not edit this line
 
     commandtext = ""
     if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
-        commandtext = "Use `/forward <source>=<target>`" \
-                      " to assign a forwarder\n"
-        commandtext += "Use `/forward list` to list forwards defined\n"
-        commandtext += "Use `/forward delete <source>=<target>` " \
-                       "to remove a forwarding\n\n"
+        commandtext = _("Use `/forward <source>=<target>` to assign a forwarder\n")
+        commandtext += _("Use `/forward list` to list forwards defined\n")
+        commandtext += _("Use `/forward delete <source>=<target>` to remove a forwarding\n\n")
     return commandtext
 
 
@@ -93,18 +92,16 @@ def forwardmessage(message):
             while not code:
                 result = json.load(urllib.urlopen(message))
                 code = result['ok']
-                logger.error(msg="ERROR (%s) forwarding message: Code: %s : Text: %s" % (
-                    attempt, code, result))
+                logger.error(msg=_("ERROR (%s) forwarding message: Code: %s : Text: %s") % (attempt, code, result))
                 attempt += 1
                 sleep(1)
                 # exit after 60 retries with 1 second delay each
                 if attempt > 60:
-                    logger.error(msg="PERM ERROR forwarding message: Code: %s : Text: "
-                                     "%s" % (code, result))
+                    logger.error(msg=_("PERM ERROR forwarding message: Code: %s : Text: %s") % (code, result))
                     code = True
-            logger.debug(msg="forwarding message: Code: %s : Text: %s" % (code, message))
+            logger.debug(msg=_("forwarding message: Code: %s : Text: %s") % (code, message))
     else:
-        logger.debug(msg="Forward plugin not enabled, skipping")
+        logger.debug(msg=_("Forward plugin not enabled, skipping"))
     return
 
 
@@ -123,9 +120,9 @@ def forwardcommands(message):
     who_un = msgdetail["who_un"]
 
     logger = logging.getLogger(__name__)
-    logger.debug(msg="Command: %s by %s" % (texto, who_un))
+    logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
     if who_un == stampy.plugin.config.config('owner'):
-        logger.debug(msg="Command: %s by Owner: %s" % (texto, who_un))
+        logger.debug(msg=_("Command: %s by Owner: %s") % (texto, who_un))
         try:
             command = texto.split(' ')[1]
         except:
@@ -148,7 +145,7 @@ def forwardcommands(message):
                 if "=" in word:
                     source = word.split('=')[0]
                     target = texto.split('=')[1:][0]
-                    text = "Deleting forward for `%s -> %s`" % (source, target)
+                    text = _("Deleting forward for `%s -> %s`") % (source, target)
                     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                               reply_to_message_id=message_id,
                                               disable_web_page_preview=True,
@@ -160,7 +157,7 @@ def forwardcommands(message):
                 if "=" in word:
                     source = word.split('=')[0]
                     target = texto.split('=')[1:][0]
-                    text = "Setting forward for `%s` to `%s`" % (source, target)
+                    text = _("Setting forward for `%s` to `%s`") % (source, target)
                     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                               reply_to_message_id=message_id,
                                               disable_web_page_preview=True,
@@ -206,12 +203,12 @@ def listforward(source=False):
         except:
             # Value didn't exist before, return 0 value
             target = ""
-        text = "%s has a forward %s" % (source, target)
+        text = _("%s has a forward %s") % (source, target)
 
     else:
         sql = "select * from forward ORDER BY source ASC;"
         cur = stampy.stampy.dbsql(sql)
-        text = "Defined forwards:\n"
+        text = _("Defined forwards:\n")
         table = from_db_cursor(cur)
         text = "%s\n```%s```" % (text, table.get_string())
     logger.debug(msg=text)
@@ -228,8 +225,7 @@ def createforward(source, target):
 
     logger = logging.getLogger(__name__)
     if getforward(source) == target:
-        logger.error(msg="createforward: circular reference %s=%s" % (
-                         source, target))
+        logger.error(msg=_("createforward: circular reference %s=%s") % (source, target))
     else:
         sql = "INSERT INTO forward VALUES('%s','%s');" % (source, target)
         logger.debug(msg="createforward: %s=%s" % (source, target))

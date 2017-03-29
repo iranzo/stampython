@@ -11,6 +11,7 @@ from prettytable import from_db_cursor
 import stampy.stampy
 import stampy.plugin.karma
 import stampy.plugin.config
+from stampy.i18n import _
 
 
 def init():
@@ -28,7 +29,7 @@ def run(message):  # do not edit this line
     :return:
     """
     logger = logging.getLogger(__name__)
-    logger.debug(msg="Processing plugin: Code: %s" % __file__)
+    logger.debug(msg=_("Processing plugin: Code: %s") % __file__)
     text = stampy.stampy.getmsgdetail(message)["text"]
     if text:
         if text.split()[0].lower() == "/alias":
@@ -45,11 +46,9 @@ def help(message):  # do not edit this line
     commandtext = ""
 
     if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
-        commandtext = "Use `/alias <key>=<value>`" \
-                      " to assign an alias for karma\n"
-        commandtext += "Use `/alias list` to list aliases\n"
-        commandtext += "Use `/alias delete <key>` " \
-                       "to remove an alias\n\n"
+        commandtext = _("Use `/alias <key>=<value>` to assign an alias for karma\n")
+        commandtext += _("Use `/alias list` to list aliases\n")
+        commandtext += _("Use `/alias delete <key>` to remove an alias\n\n")
     return commandtext
 
 
@@ -68,9 +67,9 @@ def aliascommands(message):
     who_un = msgdetail["who_un"]
 
     logger = logging.getLogger(__name__)
-    logger.debug(msg="Command: %s by %s" % (texto, who_un))
+    logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
     if who_un == stampy.plugin.config.config('owner'):
-        logger.debug(msg="Command: %s by Owner: %s" % (texto, who_un))
+        logger.debug(msg=_("Command: %s by Owner: %s") % (texto, who_un))
         try:
             command = texto.split(' ')[1]
         except:
@@ -90,7 +89,7 @@ def aliascommands(message):
                 break
             if case('delete'):
                 key = word
-                text = "Deleting alias for `%s`" % key
+                text = _("Deleting alias for `%s`") % key
                 stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                           reply_to_message_id=message_id,
                                           disable_web_page_preview=True,
@@ -102,7 +101,7 @@ def aliascommands(message):
                 if "=" in word:
                     key = word.split('=')[0]
                     value = texto.split('=')[1:][0]
-                    text = "Setting alias for `%s` to `%s`" % (key, value)
+                    text = _("Setting alias for `%s` to `%s`") % (key, value)
                     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                               reply_to_message_id=message_id,
                                               disable_web_page_preview=True,
@@ -147,15 +146,15 @@ def listalias(word=False):
         except:
             # Value didn't exist before, return 0 value
             value = 0
-        text = "%s has an alias %s" % (word, value)
+        text = _("%s has an alias %s") % (word, value)
 
     else:
         sql = "select * from alias ORDER BY key ASC;"
         cur = stampy.stampy.dbsql(sql)
-        text = "Defined aliases:\n"
+        text = _("Defined aliases:\n")
         table = from_db_cursor(cur)
         text = "%s\n```%s```" % (text, table.get_string())
-    logger.debug(msg="Returning aliases %s for word %s" % (text, word))
+    logger.debug(msg=_("Returning aliases %s for word %s") % (text, word))
     return text
 
 
@@ -169,8 +168,7 @@ def createalias(word, value):
 
     logger = logging.getLogger(__name__)
     if getalias(value) == word:
-        logger.error(msg="createalias: circular reference %s=%s" % (
-                         word, value))
+        logger.error(msg=_("createalias: circular reference %s=%s") % (word, value))
     else:
         if not getalias(word) or getalias(word) == word:
             # Removing duplicates on karma DB and add

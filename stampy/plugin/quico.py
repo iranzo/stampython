@@ -15,6 +15,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import stampy.stampy
 import stampy.plugin.stats
 import stampy.plugin.config
+from stampy.i18n import _
 
 sched = BackgroundScheduler()
 sched.start()
@@ -51,11 +52,9 @@ def help(message):  # do not edit this line
     :param message: message to process
     :return: help text
     """
-    commandtext = "Use `/quico <date>` to get Quico Jubilata's comic "
-    commandtext += "strip for date or today\n\n"
+    commandtext = _("Use `/quico <date>` to get Quico Jubilata's comic strip for date or today\n\n")
     if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
-        commandtext = "Use `/quico trigger` to force sending actual " \
-                      "strip to channel\n\n"
+        commandtext = _("Use `/quico trigger` to force sending actual strip to channel\n\n")
     return commandtext
 
 
@@ -75,7 +74,7 @@ def quicocommands(message):
     message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    logger.debug(msg="Command: %s by %s" % (texto, who_un))
+    logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
 
     # We might be have been given no command, just /quico
     try:
@@ -122,7 +121,7 @@ def quico(chat_id=-1001105187138, date=None, reply_to_message_id=""):
     # Ping chat ID to not have chat removed
     stampy.plugin.stats.pingchat(chat_id)
 
-    logger.debug(msg="quico comic found")
+    logger.debug(msg=_("quico comic found"))
 
     page = requests.get(url)
     tree = html.fromstring(page.content)
@@ -132,5 +131,5 @@ def quico(chat_id=-1001105187138, date=None, reply_to_message_id=""):
         imgtxt = tree.xpath('//h1[@class="js-quickedit-page-title page-header"]/span')[0].text + "\n" + url + " - @redken_strips"
         return stampy.stampy.sendimage(chat_id=chat_id, image=imgsrc, text=imgtxt, reply_to_message_id=reply_to_message_id)
     except:
-        logger.debug(msg="No comic found yet")
+        logger.debug(msg=_("No comic found yet"))
         return

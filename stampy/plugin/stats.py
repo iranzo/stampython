@@ -16,6 +16,7 @@ import stampy.plugin.config
 import stampy.plugin.karma
 
 from apscheduler.schedulers.background import BackgroundScheduler
+from stampy.i18n import _
 
 sched = BackgroundScheduler()
 sched.start()
@@ -69,11 +70,9 @@ def help(message):  # do not edit this line
     :return: help text
     """
 
-    commandtext = "Use `@all` to ping all users in a channel as long as " \
-                  "they have username defined in Telegram\n\n"
+    commandtext = _("Use `@all` to ping all users in a channel as long as they have username defined in Telegram\n\n")
     if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
-        commandtext += "Use `/stats show <user|chat>` " \
-                       "to get stats on last usage\n\n"
+        commandtext += _("Use `/stats show <user|chat>` to get stats on last usage\n\n")
     return commandtext
 
 
@@ -94,7 +93,7 @@ def statscommands(message):
     who_un = msgdetail["who_un"]
 
     if who_un == stampy.plugin.config.config('owner'):
-        logger.debug(msg="Owner Stat: %s by %s" % (texto, who_un))
+        logger.debug(msg=_("Owner Stat: %s by %s") % (texto, who_un))
         try:
             command = texto.split(' ')[1]
         except:
@@ -131,15 +130,14 @@ def showstats(type=False):
     """
     logger = logging.getLogger(__name__)
     if type:
-        sql = "select * from stats WHERE type='%s' ORDER BY count DESC LIMIT " \
-              "10" % type
+        sql = "select * from stats WHERE type='%s' ORDER BY count DESC LIMIT 10" % type
     else:
         sql = "select * from stats ORDER BY count DESC LIMIT 10"
     cur = stampy.stampy.dbsql(sql)
     table = from_db_cursor(cur)
-    text = "Defined stats:\n"
+    text = _("Defined stats:\n")
     text = "%s\n```%s```" % (text, table.get_string())
-    logger.debug(msg="Returning stats %s" % text)
+    logger.debug(msg=_("Returning stats %s") % text)
     return text
 
 
@@ -193,18 +191,15 @@ def updatestats(type=False, id=0, name=False, date=False, memberid=None):
     sql = "DELETE from stats where id='%s'" % id
     stampy.stampy.dbsql(sql)
 
-    sql = "INSERT INTO stats VALUES('%s', '%s', '%s', '%s', '%s', '%s');" % (
-        type, id, name, date, count, json.dumps(newmemberid))
+    sql = "INSERT INTO stats VALUES('%s', '%s', '%s', '%s', '%s', '%s');" % (type, id, name, date, count, json.dumps(newmemberid))
 
-    logger.debug(msg="values: type:%s, id:%s, name:%s, date:%s, count:%s, "
-                     "memberid: %s" % (type, id, name, date, count,
-                                       newmemberid))
+    logger.debug(msg=_("values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid: %s") % (type, id, name, date, count, newmemberid))
 
     if id:
         try:
             stampy.stampy.dbsql(sql)
         except:
-            logger.debug(msg="ERROR on updatestats")
+            logger.debug(msg=_("ERROR on updatestats"))
     return
 
 
@@ -224,7 +219,7 @@ def getchatmemberscount(chat_id=False):
     except:
         result = 0
 
-    logger.info(msg="Chat id %s users %s" % (chat_id, result))
+    logger.info(msg=_("Chat id %s users %s") % (chat_id, result))
     return result
 
 
@@ -243,13 +238,11 @@ def getoutofchat(chat_id=False):
     except:
         result = 0
 
-    logger.info(msg="Chat id %s left" % chat_id)
+    logger.info(msg=_("Chat id %s left") % chat_id)
     return result
 
 
-def dochatcleanup(chat_id=False,
-                  maxage=int(stampy.plugin.config.config("maxage",
-                                                         default=180))):
+def dochatcleanup(chat_id=False, maxage=int(stampy.plugin.config.config("maxage", default=180))):
     """
     Checks on the stats database the date of the last update in the chat
     :param chat_id: Channel ID to query in database
@@ -270,11 +263,10 @@ def dochatcleanup(chat_id=False,
         chatid = row[1]
         chatids.append(chatid)
 
-    logger.debug(msg="Processing chat_ids for cleanup: %s" % chatids)
+    logger.debug(msg=_("Processing chat_ids for cleanup: %s") % chatids)
 
     for chatid in chatids:
-        (type, id, name, date, count, memberid) = getstats(type='chat',
-                                                           id=chatid)
+        (type, id, name, date, count, memberid) = getstats(type='chat', id=chatid)
         if date and (date != "False"):
             chatdate = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
         else:
@@ -283,12 +275,11 @@ def dochatcleanup(chat_id=False,
         now = datetime.datetime.now()
 
         if (now - chatdate).days > maxage:
-            logger.debug(msg="CHAT ID %s with name %s and %s inactivity days is going to be purged" % (
+            logger.debug(msg=_("CHAT ID %s with name %s and %s inactivity days is going to be purged") % (
                 chatid, name, (now - chatdate).days))
             # The last update was older than maxage days ago, get out of chat and
             #  remove karma
-            texto = "Due to inactivity of more than %s days, this bot will " \
-                    "exit the channel, please re-add in the future if needed" % maxage
+            texto = _("Due to inactivity of more than %s days, this bot will exit the channel, please re-add in the future if needed") % maxage
             stampy.stampy.sendmessage(chatid, text=texto)
 
             getoutofchat(chatid)
@@ -303,7 +294,7 @@ def dochatcleanup(chat_id=False,
 
             for line in cur:
                 (type, id, name, date, count, memberid) = line
-                logger.debug(msg="LINE for user %s and memberid: %s will be deleted" % (name, memberid))
+                logger.debug(msg=_("LINE for user %s and memberid: %s will be deleted") % (name, memberid))
                 memberid.remove(chatid)
                 # Update stats entry in database without the removed chat
                 updatestats(type=type, id=id, name=name, date=date, memberid=memberid)
@@ -333,7 +324,7 @@ def dousercleanup(user_id=False,
         userid = row[1]
         userids.append(userid)
 
-    logger.debug(msg="Processing userids for cleanup: %s" % userids)
+    logger.debug(msg=_("Processing userids for cleanup: %s") % userids)
 
     for userid in userids:
         (type, id, name, date, count, memberid) = getstats(type='user',
@@ -346,7 +337,7 @@ def dousercleanup(user_id=False,
         now = datetime.datetime.now()
 
         if (now - chatdate).days > maxage:
-            logger.debug(msg="USER ID %s with name %s and %s inactivity days is going to be purged" % (
+            logger.debug(msg=_("USER ID %s with name %s and %s inactivity days is going to be purged") % (
                 userid, name, (now - chatdate).days))
 
             # Remove channel stats
@@ -359,7 +350,7 @@ def dousercleanup(user_id=False,
 
             for line in cur:
                 (type, id, name, date, count, memberid) = line
-                logger.debug(msg="LINE for user %s and memberid: %s will be deleted" % (name, memberid))
+                logger.debug(msg=_("LINE for user %s and memberid: %s will be deleted") % (name, memberid))
                 memberid.remove(userid)
                 # Update stats entry in database without the removed chat
                 updatestats(type=type, id=id, name=name, date=date, memberid=memberid)
@@ -396,8 +387,7 @@ def getstats(type=False, id=0, name=False, date=False, count=0):
     if not count:
         count = 0
 
-    logger.debug(msg="values: type:%s, id:%s, name:%s, date:%s, count:%s, "
-                     "memberid:%s" % (type, id, name, date, count, memberid))
+    logger.debug(msg=_("values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid:%s") % (type, id, name, date, count, memberid))
 
     # Ensure we return the modified values
     return type, id, name, date, count, memberid
@@ -414,7 +404,7 @@ def getall(message):
     who_un = msgdetail["who_un"]
 
     if "@all" in texto:
-        logger.debug(msg="@All invoked")
+        logger.debug(msg=_("@All invoked"))
         (type, id, name, date, count, members) = getstats(type='chat', id=chat_id)
 
         all = []
@@ -438,7 +428,7 @@ def getall(message):
             if newall and text:
                 stampy.plugin.karma.karmaprocess(msgdetail)
         else:
-            text = "%s wanted to ping you: " % who_un
+            text = _("%s wanted to ping you: ") % who_un
             if text and all:
                 text += " ".join(all)
                 stampy.stampy.sendmessage(chat_id=chat_id, text=text,
@@ -458,7 +448,7 @@ def pingchat(chatid):
     (type, id, name, date, count, memberid) = getstats(type='chat', id=chatid)
     date = datetime.datetime.now()
     datefor = date.strftime('%Y-%m-%d %H:%M:%S')
-    logger.debug(msg="Pinging chat %s: %s on %s" % (chatid, name, datefor))
+    logger.debug(msg=_("Pinging chat %s: %s on %s") % (chatid, name, datefor))
     updatestats(type="chat", id=chatid, name=name,
                 date=datefor, memberid=memberid)
     return

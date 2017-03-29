@@ -9,6 +9,7 @@ import imp
 import os
 import logging
 import plugin.config
+from i18n import _
 
 PluginFolder = "./stampy/plugin"
 MainModule = "__init__"
@@ -35,10 +36,10 @@ def getPlugins():
         if i and info:
             if i not in plugin.config.config(key='disabled_plugins',
                                              default=''):
-                logger.debug(msg="Plugging added: %s" % i)
+                logger.debug(msg=_("Plugging added: %s") % i)
                 plugins.append({"name": i, "info": info})
             else:
-                logger.debug(msg="Plugging disabled: %s" % i)
+                logger.debug(msg=_("Plugging disabled: %s") % i)
 
     return plugins
 
@@ -64,7 +65,7 @@ def initplugins():
     plugs = []
     plugtriggers = {}
     for i in getPlugins():
-        logger.debug(msg="Processing plugin initialization: %s" % i["name"])
+        logger.debug(msg=_("Processing plugin initialization: %s") % i["name"])
         newplug = loadPlugin(i)
         plugs.append(newplug)
         plugtriggers[i["name"]] = newplug.init()

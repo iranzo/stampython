@@ -61,13 +61,10 @@
       to start a new round
     - Implement forward conditions so just some messages based on sender, or
       text are sent
-    - Implement version stored in database and migration scripts so
-      databases with old format can be automatically migrated to new
-      format by running those functions automatically
-        - Integrate python alembic for this
     - Implement function to get bot out of one chat_id
       - Function is there, we need to trigger from telegram commands 
       (getoutofchat() )
     - Implement i18n to the project to allow users to write strings for the 
       bot and use the channel-configured language (or default to en) for 
       messages.
+    - Fix espp so it works with whatever number of stocks defined
