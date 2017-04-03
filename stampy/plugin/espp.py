@@ -3,6 +3,7 @@
 #
 # Description: Plugin for processing essp gain
 # Author: Pablo Iranzo Gomez (Pablo.Iranzo@gmail.com)
+# Modified by: Javier Ramirez Molina (javilinux@gmail.com)
 
 import logging
 
