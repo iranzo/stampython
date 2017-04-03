@@ -10,6 +10,7 @@ import json
 import logging
 import urllib2
 import requests
+import sys
 
 import stampy.stampy
 import stampy.plugin.config
@@ -47,21 +48,6 @@ def help(message):  # do not edit this line
     return commandtext
 
 
-class CurrencyConverter:
-    def __init__(self):
-        self.prefix = "http://themoneyconverter.com/"
-
-    def convert(self, currencyf, currencyt):
-        url = self.prefix + currencyf + "/" + currencyt + ".aspx"
-        # split and strip
-        split1 = ': 1 %s = ' % 'United States Dollar'
-        strip1 = ' %s</h3>' % 'Euro'
-
-        rate = requests.get(url)
-        a = float(rate.text.split(split1)[1].split(strip1)[0].strip())
-        return a
-
-
 class GoogleFinanceAPI:
     def __init__(self):
         self.prefix = "http://finance.google.com/finance/info?client=ig&q="
@@ -80,6 +66,23 @@ class GoogleFinanceAPI:
         return obj[0]
 
 
+def get_currency_rate(currency, rate_in):
+    base_url = 'http://api.fixer.io/latest'
+    query = base_url + '?base=%s&symbols=%s' % (currency, rate_in)
+    try:
+        response = requests.get(query)
+        if response.status_code != 200:
+            response = 'N/A'
+            return response
+        else:
+            rates = response.json()
+            rate_in_currency = rates["rates"][rate_in]
+            return rate_in_currency
+    except requests.ConnectionError as error:
+        print error
+        sys.exit(1)
+
+
 def stock(message):
     """
     Processes stock commands
@@ -89,7 +92,6 @@ def stock(message):
 
     logger = logging.getLogger(__name__)
     c = GoogleFinanceAPI()
-    d = CurrencyConverter()
 
     msgdetail = stampy.stampy.getmsgdetail(message)
 
@@ -112,7 +114,7 @@ def stock(message):
         stock = texto.split(" ")[1::]
 
     text = "```\n"
-    rate = d.convert("USD", "EUR")
+    rate = get_currency_rate('USD', 'EUR')
     text += _("USD/EUR rate " + str(rate) + "\n")
     for ticker in stock:
         try:
