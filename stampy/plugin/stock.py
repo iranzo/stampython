@@ -67,6 +67,12 @@ class GoogleFinanceAPI:
 
 
 def get_currency_rate(currency, rate_in):
+    """
+    Get currency rate
+    :param currency: Original Currency
+    :param rate_in: Destination Currency
+    :return: rate
+    """
     base_url = 'http://api.fixer.io/latest'
     query = base_url + '?base=%s&symbols=%s' % (currency, rate_in)
     try:

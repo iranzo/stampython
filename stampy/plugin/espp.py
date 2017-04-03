@@ -52,8 +52,6 @@ def espp(message):
 
     logger = logging.getLogger(__name__)
     c = stampy.plugin.stock.GoogleFinanceAPI()
-    d = stampy.plugin.stock.CurrencyConverter()
-
     msgdetail = stampy.stampy.getmsgdetail(message)
 
     texto = msgdetail["text"]
@@ -72,7 +70,7 @@ def espp(message):
     ticker = stampy.plugin.config.config("stock")
 
     text = "```\n"
-    rate = d.convert("USD", "EUR")
+    rate = stampy.plugin.stock.get_currency_rate('USD', 'EUR')
     text += _("USD/EUR rate ") + str(rate) + "\n"
     initial = float(stampy.plugin.config.config("espp", 0))
     text += _("Initial quote: %s USD\n") % initial
