@@ -41,7 +41,7 @@ p = optparse.OptionParser("stampy.py [arguments]", description=description)
 p.add_option("-t", "--token", dest="token",
              help=_("API token for bot access to messages"), default=False)
 p.add_option("-b", "--database", dest="database",
-             help=_("database file for storing karma and last processed message"),
+             help=_("database file for storing karma"),
              default="stampy.db")
 p.add_option('-v', "--verbosity", dest="verbosity",
              help=_("Set verbosity level for messages while running/logging"),
@@ -51,7 +51,7 @@ p.add_option('-u', "--url", dest="url",
              help=_("Define URL for accessing bot API"),
              default="https://api.telegram.org/bot")
 p.add_option('-o', '--owner', dest='owner',
-             help=_("Define owner username for monitoring service"),
+             help=_("Define owner username"),
              default="iranzo")
 p.add_option('-d', '--daemon', dest='daemon', help=_("Run as daemon"),
              default=False, action="store_true")
@@ -309,7 +309,7 @@ def telegramcommands(texto, chat_id, message_id, who_un):
                 commandtext += _("Learn more about this bot in [https://github.com/iranzo/stampython] (https://github.com/iranzo/stampython)")
             break
         if case('/start'):
-            commandtext = _("This bot does not use start or stop commands it automatically checks for karma operands")
+            commandtext = _("This bot does not use start or stop commands, it automatically checks for karma operands")
             retv = True
             break
         if case('/stop'):
