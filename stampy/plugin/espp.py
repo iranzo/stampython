@@ -40,7 +40,7 @@ def help(message):  # do not edit this line
     :param message: message to process
     :return: help text
     """
-    commandtext = _("Use `/espp <amount>` to get estimated espp earnings\n\n")
+    commandtext = _("Use `/espp <amount>` to get estimated ESPP earnings\n\n")
     return commandtext
 
 

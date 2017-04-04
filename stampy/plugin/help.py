@@ -65,7 +65,12 @@ def helpcommands(message):
     commandtext = ""
 
     for i in stampy.stampy.plugs:
-        commandtext += i.help(message=message)
+        if i.__name__.split(".")[-1] != "help":
+            commandtext += i.help(message=message)
+
+    for i in stampy.stampy.plugs:
+        if i.__name__.split(".")[-1] == "help":
+            commandtext += i.help(message=message)
 
     logger.debug(msg=_("Command: %s") % texto)
 

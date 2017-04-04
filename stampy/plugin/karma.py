@@ -50,10 +50,10 @@ def help(message):  # do not edit this line
     :return: help text
     """
     commandtext = _("Use `word++` or `word--` to increment or decrement karma, a new message will be sent providing the new total\n\n")
-    commandtext += _("Use `rank word` or `rank` to get value for actual word or top 10 rankings\n")
-    commandtext += _("Use `srank word` to search for similar words already ranked\n\n")
+    commandtext += _("Use `rank <word>` or `rank` to get value for actual word or top 10 rankings\n")
+    commandtext += _("Use `srank <word>` to search for similar words already ranked\n\n")
     if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
-        commandtext += _("Use `skarma word=value` to establish karma of a word\n\n")
+        commandtext += _("Use `skarma <word>=<value>` to establish karma of a word\n\n")
 
     return commandtext
 
@@ -407,7 +407,7 @@ def dokarmacleanup(word=False,
         now = datetime.datetime.now()
 
         if (now - worddate).days > maxage:
-            logger.debug(msg=_("Word %s and %s inactivity days is going to be purged") % (word, (now - worddate).days))
+            logger.debug(msg=_("Word %s with %s inactivity days is going to be purged") % (word, (now - worddate).days))
 
             # Remove word from database
             updatekarma(word=word, change=-row[1])

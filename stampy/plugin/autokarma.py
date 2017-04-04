@@ -47,7 +47,7 @@ def help(message):  # do not edit this line
 
     commandtext = ""
     if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
-        commandtext = _("Use `/autok <key>=<value>` to autokarma value every time key is in the conversation. Multiple values for same key can be added\n\n")
+        commandtext = _("Use `/autok <key>=<value>` to autokarma <value> every time key is in the conversation. Multiple values for same <key> can be added\n\n")
         commandtext += _("Use `/autok delete <key>=<value>` to delete autokarma <value> for <key>\n\n")
         commandtext += _("Use `/autok list` to list autokarma <key> <value> pairs\n\n")
     return commandtext

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-04-03 14:50+0200\n"
-"PO-Revision-Date: 2017-04-03 15:54+0200\n"
+"POT-Creation-Date: 2017-04-04 14:55+0200\n"
+"PO-Revision-Date: 2017-04-04 14:57+0200\n"
 "Last-Translator: Pablo Iranzo Gómez <Pablo.Iranzo@gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -124,7 +124,7 @@ msgstr ""
 "Este robot no utiliza comandos de arranque/parada, comprueba automáticamente "
 "los mensajes en busca de comandos de karma."
 
-#: stampy/plugin/help.py:70 stampy/stampy.py:332
+#: stampy/plugin/help.py:75 stampy/stampy.py:332
 #, python-format
 msgid "Command: %s"
 msgstr "Comando: %s"
@@ -222,9 +222,10 @@ msgstr ""
 
 #: stampy/plugin/alias.py:70 stampy/plugin/autokarma.py:71
 #: stampy/plugin/config.py:68 stampy/plugin/dilbert.py:77
-#: stampy/plugin/espp.py:64 stampy/plugin/forward.py:123
-#: stampy/plugin/help.py:61 stampy/plugin/jueves.py:74 stampy/plugin/mel.py:75
-#: stampy/plugin/obichero.py:76 stampy/plugin/quico.py:77
+#: stampy/plugin/espp.py:63 stampy/plugin/forward.py:123
+#: stampy/plugin/help.py:61 stampy/plugin/jueves.py:74 stampy/plugin/lang.py:68
+#: stampy/plugin/mel.py:75 stampy/plugin/obichero.py:76
+#: stampy/plugin/quico.py:77
 #, python-format
 msgid "Command: %s by %s"
 msgstr "Comando: %s por %s"
@@ -266,22 +267,31 @@ msgstr "createalias: referencia circular %s=%s"
 
 #: stampy/plugin/autokarma.py:50
 msgid ""
-"Use `/autok <key>=<value>` to autokarma value every time key is in the "
-"conversation. Multiple values for same key can be added\n"
+"Use `/autok <key>=<value>` to autokarma <value> every time key is in the "
+"conversation. Multiple values for same <key> can be added\n"
 "\n"
 msgstr ""
+"Use `/autok <clave>=<valor>` para incrementar el karma de <valor> cada vez "
+"que <key> aparezca en una conversación. Múltiples valores para la misma "
+"<clave> pueden ser definidos\n"
+"\n"
 
 #: stampy/plugin/autokarma.py:51
 msgid ""
 "Use `/autok delete <key>=<value>` to delete autokarma <value> for <key>\n"
 "\n"
 msgstr ""
+"Use `/autok delete <clave>=<valor>` para eliminar el disparador de <valor> "
+"para <clave>\n"
+"\n"
 
 #: stampy/plugin/autokarma.py:52
 msgid ""
 "Use `/autok list` to list autokarma <key> <value> pairs\n"
 "\n"
 msgstr ""
+"Use `/autok list` para mostrar las parejas de claves/valor de autokarma\n"
+"\n"
 
 #: stampy/plugin/autokarma.py:97
 #, python-format
@@ -325,11 +335,12 @@ msgstr "Encontradas palabras autokarma %s para procesado"
 
 #: stampy/plugin/config.py:45
 msgid "Use `/config show` to get a list of defined config settings\n"
-msgstr ""
+msgstr "Use `/config show` para obtener el listado de opciones configuradas\n"
 
 #: stampy/plugin/config.py:46
 msgid "Use `/config set <key>=<value>` to define a value for key\n"
 msgstr ""
+"Use `/config set <clave>=<valor>` para definir un valor para una clave\n"
 
 #: stampy/plugin/config.py:47
 msgid ""
@@ -373,6 +384,9 @@ msgid ""
 "Use `/dilbert <date>` to get Dilbert's comic strip for date or today\n"
 "\n"
 msgstr ""
+"Use `/dilbert <fecha>` para obtener la tira de Dilbert correspondiente para "
+"dicha fecha\n"
+"\n"
 
 #: stampy/plugin/dilbert.py:57
 msgid ""
@@ -386,55 +400,58 @@ msgstr ""
 msgid "Dilbert comic found"
 msgstr "Viñeta de Dilbert encontrada"
 
-#: stampy/plugin/espp.py:42
+#: stampy/plugin/espp.py:43
 msgid ""
-"Use `/espp <amount>` to get estimated espp earnings\n"
+"Use `/espp <amount>` to get estimated ESPP earnings\n"
 "\n"
 msgstr ""
+"Use `/espp <importe>` para obtener una estimación de ganancias de ESPP con "
+"dicha cuota mensual\n"
+"\n"
 
-#: stampy/plugin/espp.py:76
+#: stampy/plugin/espp.py:75
 msgid "USD/EUR rate "
 msgstr "Tasa de cambio USD/EUR"
 
-#: stampy/plugin/espp.py:78
+#: stampy/plugin/espp.py:77
 #, python-format
 msgid "Initial quote: %s USD\n"
 msgstr "Precio inicial: %s USD\n"
 
-#: stampy/plugin/espp.py:82
+#: stampy/plugin/espp.py:81
 #, python-format
 msgid "Actual quote: %s USD\n"
 msgstr "Precio actual: %s USD\n"
 
-#: stampy/plugin/espp.py:94
+#: stampy/plugin/espp.py:93
 #, python-format
 msgid "Buy price: %s USD\n"
 msgstr "Precio de compra: %s USD\n"
 
-#: stampy/plugin/espp.py:95
+#: stampy/plugin/espp.py:94
 #, python-format
 msgid "Earning per unit: %s USD\n"
 msgstr "Ganancia por acción: %s USD\n"
 
-#: stampy/plugin/espp.py:98
+#: stampy/plugin/espp.py:97
 #, python-format
 msgid "Estimated stocks: %s\n"
 msgstr "Acciones estimadas: %s\n"
 
-#: stampy/plugin/espp.py:100
+#: stampy/plugin/espp.py:99
 #, python-format
 msgid "Estimated earning: %s EUR\n"
 msgstr "Ganancais estimadas: %s EUR\n"
 
-#: stampy/plugin/espp.py:102
+#: stampy/plugin/espp.py:101
 #, python-format
 msgid "Total amount deposited on sell: %s EUR\n"
-msgstr ""
+msgstr "Importe total transferido a la venta: %s EUR\n"
 
-#: stampy/plugin/espp.py:103
+#: stampy/plugin/espp.py:102
 #, python-format
 msgid "Estimated A.E.R. vs investment: %s %%"
-msgstr ""
+msgstr "Tasa de interés vs inversión: %s %%"
 
 #: stampy/plugin/forward.py:41
 msgid "Processing forward commands"
@@ -442,17 +459,19 @@ msgstr "Procesando comandos de reenvío"
 
 #: stampy/plugin/forward.py:55
 msgid "Use `/forward <source>=<target>` to assign a forwarder\n"
-msgstr ""
+msgstr "Use `/forward <origen>=<destino>` para establecer un reenvío\n"
 
 #: stampy/plugin/forward.py:56
 msgid "Use `/forward list` to list forwards defined\n"
-msgstr ""
+msgstr "Use `/forward list` para mostrar los reenvíos definidos\n"
 
 #: stampy/plugin/forward.py:57
 msgid ""
 "Use `/forward delete <source>=<target>` to remove a forwarding\n"
 "\n"
 msgstr ""
+"Use `/forward delete <origen>=<destino>` para eliminar un reenvío\n"
+"\n"
 
 #: stampy/plugin/forward.py:95
 #, python-format
@@ -510,12 +529,16 @@ msgid ""
 "Read about announcements at https://telegram.me/stampynews\n"
 "\n"
 msgstr ""
+"Lea más informacion y anuncios en https://telegram.me/stampynews\n"
+"\n"
 
 #: stampy/plugin/info.py:44
 msgid ""
 "Use `/info` to return information about the current message\n"
 "\n"
 msgstr ""
+"Use `/info` para devolver información acerca del mensaje actual\n"
+"\n"
 
 #: stampy/plugin/info.py:62
 #, python-format
@@ -530,7 +553,7 @@ msgstr "con id de mensaje *%s*.\n"
 #: stampy/plugin/info.py:64
 #, python-format
 msgid "This has been sent on chat *%s*, named *%s* on *%s*\n"
-msgstr ""
+msgstr "Este mensaje ha sido enviado en el chat *%s*, llamado *%s* el *%s*\n"
 
 #: stampy/plugin/info.py:65
 #, python-format
@@ -538,6 +561,8 @@ msgid ""
 "This message was sent by user id *%s*, with given name *%s*, long name *%s* "
 "and username *%s*\n"
 msgstr ""
+"Este mensaje fue enviado por el usuario *%s*, con nombre *%s*, nombre largo *"
+"%s* y usuario *%s*\n"
 
 #: stampy/plugin/info.py:67
 #, python-format
@@ -550,6 +575,9 @@ msgid ""
 "on RSS feed)\n"
 "\n"
 msgstr ""
+"Use `/jueves <fecha>` para obtener la tira de El Jueves correspondiente para "
+"dicha fecha u hoy (debe estar en el flujo RSS)\n"
+"\n"
 
 #: stampy/plugin/jueves.py:55
 msgid ""
@@ -571,23 +599,32 @@ msgid ""
 "be sent providing the new total\n"
 "\n"
 msgstr ""
+"Use `palabra++` o `palabra--` para incrementar o reducir el karma, se "
+"enviará un nuevo mensaje informando del nuevo acumulado\n"
+"\n"
 
 #: stampy/plugin/karma.py:53
 msgid ""
-"Use `rank word` or `rank` to get value for actual word or top 10 rankings\n"
+"Use `rank <word>` or `rank` to get value for actual word or top 10 rankings\n"
 msgstr ""
+"Use `rank <palabra>` o `rank` para obtener el karma de la palabra indicada o "
+"las 10 con más puntos\n"
 
 #: stampy/plugin/karma.py:54
 msgid ""
-"Use `srank word` to search for similar words already ranked\n"
+"Use `srank <word>` to search for similar words already ranked\n"
 "\n"
 msgstr ""
+"Use `srank <palabra>` para buscar por palabras similares con karma\n"
+"\n"
 
 #: stampy/plugin/karma.py:56
 msgid ""
-"Use `skarma word=value` to establish karma of a word\n"
+"Use `skarma <word>=<value>` to establish karma of a word\n"
 "\n"
 msgstr ""
+"Use `skarma palabra=valor` para establecer el karma de una palabra\n"
+"\n"
 
 #: stampy/plugin/karma.py:105
 #, python-format
@@ -636,11 +673,14 @@ msgstr "El texto tiene operadores de karma"
 #, python-format
 msgid "Processing word %s sent by id %s with username %s (%s %s)"
 msgstr ""
+"Procesando palabra %s enviada por id %s con nombre de usuario %s (%s %s)"
 
 #: stampy/plugin/karma.py:356
 #, python-format
 msgid "%s Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)"
 msgstr ""
+"%s Encontrado en %s a las %s con id %s (%s), enviada por id %s llamado %s "
+"(%s %s)"
 
 #: stampy/plugin/karma.py:362
 #, python-format
@@ -650,7 +690,7 @@ msgstr "`%s` tiene ahora `%s` puntos de karma."
 #: stampy/plugin/karma.py:365
 #, python-format
 msgid "`%s` now has no Karma and has been garbage collected."
-msgstr ""
+msgstr "`%s` ahora no tiene Karma y ha sido eliminado."
 
 #: stampy/plugin/karma.py:395
 #, python-format
@@ -659,8 +699,27 @@ msgstr "Procesando palabras para limpieza: %s"
 
 #: stampy/plugin/karma.py:410
 #, python-format
-msgid "Word %s and %s inactivity days is going to be purged"
-msgstr ""
+msgid "Word %s with %s inactivity days is going to be purged"
+msgstr "La palabra %s con %s días de inactividad va a ser eliminada"
+
+#: stampy/plugin/lang.py:49
+msgid "Use `/lang <country code>` to change LANG environment variable\n"
+msgstr "Use `/lang <codigo_pais>` para cambiar la variable de entorno LANG\n"
+
+#: stampy/plugin/lang.py:84
+#, python-format
+msgid "Changing to %s"
+msgstr "Cambiando a %s"
+
+#: stampy/plugin/lang.py:87
+#, python-format
+msgid "Failed changing to %s"
+msgstr "Fallo al cambiar a %s"
+
+#: stampy/plugin/lang.py:89
+#, python-format
+msgid "Changing translator to: %s"
+msgstr "Cambiando traductor a: %s"
 
 #: stampy/plugin/mel.py:54
 msgid ""
@@ -668,6 +727,9 @@ msgid ""
 "feed)\n"
 "\n"
 msgstr ""
+"Use `/mel <fecha>`` para obtener la tira para la fecha o para hoy (debe "
+"estar en el flujo RSS)\n"
+"\n"
 
 #: stampy/plugin/mel.py:56
 msgid ""
@@ -683,6 +745,9 @@ msgid ""
 "(must be on RSS feed)\n"
 "\n"
 msgstr ""
+"Use `/obichero <fecha>` para obtener la tira de O bichero correspondiente "
+"para dicha fecha u hoy (debe estar en el flujo RSS)\n"
+"\n"
 
 #: stampy/plugin/obichero.py:56
 msgid ""
@@ -697,6 +762,9 @@ msgid ""
 "Use `/quico <date>` to get Quico Jubilata's comic strip for date or today\n"
 "\n"
 msgstr ""
+"Use `/quico <fecha>` para obtener la tira de Quico Jubilata para dicha "
+"fecha\n"
+"\n"
 
 #: stampy/plugin/quico.py:57
 msgid ""
@@ -724,6 +792,9 @@ msgid ""
 "Use `/quote <id>` to get a random quote from that username\n"
 "\n"
 msgstr ""
+"Use `/quote <id>` para obtener una cita aleatoria de dicho nombre de "
+"usuario\n"
+"\n"
 
 #: stampy/plugin/quote.py:46
 msgid ""
@@ -772,6 +843,8 @@ msgid ""
 "Use `/stats show <user|chat>` to get stats on last usage\n"
 "\n"
 msgstr ""
+"Use `/stats show <usuario|chat>` para obtener estadísticas de uso\n"
+"\n"
 
 #: stampy/plugin/stats.py:96
 #, python-format
@@ -791,6 +864,7 @@ msgstr "Devolviendo estadísticas %s"
 #, python-format
 msgid "values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid: %s"
 msgstr ""
+"valores: tipo: %s, id:%s, nombre:%s,  fecha:%s, numero:%s, memberid: %s"
 
 #: stampy/plugin/stats.py:202
 msgid "ERROR on updatestats"
@@ -813,8 +887,8 @@ msgstr "Procesando chat_ids para limpieza: %s"
 
 #: stampy/plugin/stats.py:278
 #, python-format
-msgid "CHAT ID %s with name %s and %s inactivity days is going to be purged"
-msgstr ""
+msgid "CHAT ID %s with name %s with %s inactivity days is going to be purged"
+msgstr "El chat %s con nombre %s y %s días de inactividad va a ser eliminado"
 
 #: stampy/plugin/stats.py:282
 #, python-format
@@ -828,7 +902,7 @@ msgstr ""
 #: stampy/plugin/stats.py:297 stampy/plugin/stats.py:353
 #, python-format
 msgid "LINE for user %s and memberid: %s will be deleted"
-msgstr ""
+msgstr "LINEA para usuario %s con memberid: %s será eliminada"
 
 #: stampy/plugin/stats.py:327
 #, python-format
@@ -837,13 +911,15 @@ msgstr "Procesando userids para limpieza: %s"
 
 #: stampy/plugin/stats.py:340
 #, python-format
-msgid "USER ID %s with name %s and %s inactivity days is going to be purged"
+msgid "USER ID %s with name %s with %s inactivity days is going to be purged"
 msgstr ""
+"El usuario %s con nombre %s y con %s días de inactividad va a ser eliminado"
 
 #: stampy/plugin/stats.py:390
 #, python-format
 msgid "values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid:%s"
 msgstr ""
+"valores: tipo: %s, id:%s, nombre:%s,  fecha:%s, numero:%s, memberid: %s"
 
 #: stampy/plugin/stats.py:407
 msgid "@All invoked"
@@ -859,7 +935,7 @@ msgstr "%s quiso mencionarle: "
 msgid "Pinging chat %s: %s on %s"
 msgstr "Mencionando chat %s: %s en %s"
 
-#: stampy/plugin/stock.py:46
+#: stampy/plugin/stock.py:47
 msgid ""
 "Use `stock <ticker>` to get stock trading price\n"
 "\n"
@@ -867,6 +943,6 @@ msgstr ""
 "Use `stock <valor>` para obtener la cotización del valor\n"
 "\n"
 
-#: stampy/plugin/stock.py:116
+#: stampy/plugin/stock.py:125
 msgid "USD/EUR rate \n"
 msgstr "Tasa de cambio USD/EUR\n"

@@ -275,7 +275,7 @@ def dochatcleanup(chat_id=False, maxage=int(stampy.plugin.config.config("maxage"
         now = datetime.datetime.now()
 
         if (now - chatdate).days > maxage:
-            logger.debug(msg=_("CHAT ID %s with name %s and %s inactivity days is going to be purged") % (
+            logger.debug(msg=_("CHAT ID %s with name %s with %s inactivity days is going to be purged") % (
                 chatid, name, (now - chatdate).days))
             # The last update was older than maxage days ago, get out of chat and
             #  remove karma
@@ -337,7 +337,7 @@ def dousercleanup(user_id=False,
         now = datetime.datetime.now()
 
         if (now - chatdate).days > maxage:
-            logger.debug(msg=_("USER ID %s with name %s and %s inactivity days is going to be purged") % (
+            logger.debug(msg=_("USER ID %s with name %s with %s inactivity days is going to be purged") % (
                 userid, name, (now - chatdate).days))
 
             # Remove channel stats
