@@ -11,7 +11,8 @@ from prettytable import from_db_cursor
 import stampy.stampy
 import stampy.plugin.karma
 import stampy.plugin.config
-from stampy.i18n import _
+from stampy.i18n import translate
+_ = translate.ugettext
 
 
 def init():

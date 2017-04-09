@@ -14,7 +14,8 @@ import sys
 
 import stampy.stampy
 import stampy.plugin.config
-from stampy.i18n import _
+from stampy.i18n import translate
+_ = translate.ugettext
 
 
 def init():

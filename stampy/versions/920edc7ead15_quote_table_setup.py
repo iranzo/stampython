@@ -1,3 +1,4 @@
+# coding=utf-8
 """quote table setup
 
 Revision ID: 920edc7ead15

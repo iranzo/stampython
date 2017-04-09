@@ -1,3 +1,4 @@
+# coding=utf-8
 """Config table setup
 
 Revision ID: d750f83c294a

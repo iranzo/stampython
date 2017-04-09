@@ -24,8 +24,8 @@ import urllib
 from time import sleep
 
 from apscheduler.schedulers.background import BackgroundScheduler
-
-from i18n import _
+from i18n import translate
+_ = translate.ugettext
 import plugins
 import plugin.config
 import plugin.forward

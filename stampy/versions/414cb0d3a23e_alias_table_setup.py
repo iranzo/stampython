@@ -1,3 +1,4 @@
+# coding=utf-8
 """Alias table setup
 
 Revision ID: 414cb0d3a23e

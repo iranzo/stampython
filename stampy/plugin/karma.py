@@ -13,7 +13,8 @@ import stampy.stampy
 import stampy.plugin.config
 
 from apscheduler.schedulers.background import BackgroundScheduler
-from stampy.i18n import _
+from stampy.i18n import translate
+_ = translate.ugettext
 
 sched = BackgroundScheduler()
 sched.start()

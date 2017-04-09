@@ -1,3 +1,4 @@
+# coding=utf-8
 """Karma table setup
 
 Revision ID: 6970b028313f

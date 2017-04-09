@@ -6,10 +6,13 @@
 # Modifications: Pablo Iranzo Gómez (Pablo.Iranzo@gmail.com
 
 import imp
-import os
 import logging
+import os
+
 import plugin.config
-from i18n import _
+from i18n import translate
+
+_ = translate.ugettext
 
 PluginFolder = "./stampy/plugin"
 MainModule = "__init__"

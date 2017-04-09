@@ -1,3 +1,4 @@
+# coding=utf-8
 """Autokarma table setup
 
 Revision ID: a928300a090d

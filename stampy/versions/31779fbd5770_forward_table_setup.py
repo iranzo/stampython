@@ -1,3 +1,4 @@
+# coding=utf-8
 """Forward table setup
 
 Revision ID: 31779fbd5770

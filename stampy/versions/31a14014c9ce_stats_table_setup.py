@@ -1,3 +1,4 @@
+# coding=utf-8
 """Stats table setup
 
 Revision ID: 31a14014c9ce

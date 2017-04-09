@@ -9,7 +9,8 @@ import logging
 from prettytable import from_db_cursor
 
 import stampy.stampy
-from stampy.i18n import _
+from stampy.i18n import translate
+_ = translate.ugettext
 
 
 def init():

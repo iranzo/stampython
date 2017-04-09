@@ -8,7 +8,8 @@ import logging
 
 import stampy.plugins
 import stampy.stampy
-from stampy.i18n import _
+from stampy.i18n import translate
+_ = translate.ugettext
 
 
 def init():

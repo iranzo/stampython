@@ -1,12 +1,10 @@
 # coding: utf-8
 from sqlalchemy import Column, Integer, Table, Text
-from sqlalchemy.sql.sqltypes import NullType
 from sqlalchemy.ext.declarative import declarative_base
-
+from sqlalchemy.sql.sqltypes import NullType
 
 Base = declarative_base()
 metadata = Base.metadata
-
 
 t_alias = Table(
     'alias', metadata,
@@ -14,13 +12,11 @@ t_alias = Table(
     Column('value', Text)
 )
 
-
 t_autokarma = Table(
     'autokarma', metadata,
     Column('key', Text),
     Column('value', Text)
 )
-
 
 t_config = Table(
     'config', metadata,
@@ -28,13 +24,11 @@ t_config = Table(
     Column('value', Text)
 )
 
-
 t_forward = Table(
     'forward', metadata,
     Column('source', Text),
     Column('target', Text)
 )
-
 
 t_karma = Table(
     'karma', metadata,
@@ -58,7 +52,6 @@ t_sqlite_sequence = Table(
     Column('name', NullType),
     Column('seq', NullType)
 )
-
 
 t_stats = Table(
     'stats', metadata,

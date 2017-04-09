@@ -67,4 +67,9 @@
     - Implement i18n to the project to allow users to write strings for the 
       bot and use the channel-configured language (or default to en) for 
       messages.
-    - Fix espp so it works with whatever number of stocks defined
+    - Fix ESPP so it works with whatever number of stocks defined
+    - Fix ESPP so it might have several periods or stocks
+    - Fix ESPP so it might have several discuonts
+    - Fix owner to have several users
+
+
