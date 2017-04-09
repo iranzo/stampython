@@ -71,5 +71,10 @@
     - Fix ESPP so it might have several periods or stocks
     - Fix ESPP so it might have several discuonts
     - Fix owner to have several users
+    - Fix handlers so each plugin has more than one handler
+        - Implement handlers in karma as ++ or -- in text before handling 
+        info to plugin
+        - Implement autok keys as handlers on start or on modification and 
+        disable on removal
 
 

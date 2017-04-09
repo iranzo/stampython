@@ -378,7 +378,11 @@ def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
     if text:
         message += "&caption=%s" % urllib.quote_plus(text.encode('utf-8'))
     logger.debug(msg=_("Sending image: %s") % text)
-    sent = {"message": json.load(urllib.urlopen(message))['result']}
+
+    try:
+        sent = {"message": json.load(urllib.urlopen(message))['result']}
+    except:
+        sent = False
 
     # Check if there's something to forward and do it
     plugin.forward.forwardmessage(sent)
