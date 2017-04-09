@@ -435,6 +435,11 @@ def getmsgdetail(message):
         text = ""
 
     try:
+        replyto = message[type]['reply_to_message']['from']['username']
+    except:
+        replyto = False
+
+    try:
         message_id = int(message[type]['message_id'])
         date = int(float(message[type]['date']))
         datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
@@ -469,7 +474,7 @@ def getmsgdetail(message):
 
     vals = {"name": name, "chat_id": chat_id, "chat_name": chat_name, "date": date, "datefor": datefor, "error": error,
             "message_id": message_id, "text": text, "update_id": update_id, "who_gn": who_gn, "who_id": who_id,
-            "who_ln": who_ln, "who_un": who_un, "type": type}
+            "who_ln": who_ln, "who_un": who_un, "type": type, "replyto": replyto}
 
     return vals
 

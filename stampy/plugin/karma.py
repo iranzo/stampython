@@ -313,7 +313,7 @@ def karmaprocess(msgdetail):
     else:
         text_to_process = ""
 
-    logger.debug(msg="Text to process: %s" % " ".join(text_to_process))
+    logger.debug(msg=_("Text to process: %s") % " ".join(text_to_process))
 
     wordadd = []
     worddel = []
@@ -333,6 +333,18 @@ def karmaprocess(msgdetail):
                 if len(word) >= 4:
                     oper = word[-2:]
                     word = word[:-2]
+                else:
+                    # In case we've replied ++ or -- to a message,
+                    # find username for it and add karma
+
+                    if len(word) == 2:
+                        oper = word[-2:]
+                        try:
+                            word = msgdetail["replyto"]
+                        except:
+                            word = False
+
+                if word and oper:
                     if stampy.plugin.alias.getalias(word):
                         word = stampy.plugin.alias.getalias(word).split(" ")
                     for item in word:
