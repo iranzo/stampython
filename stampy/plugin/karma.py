@@ -330,6 +330,8 @@ def karmaprocess(msgdetail):
                 # This should help to avoid duplicate karma operations
                 # in the same message
 
+                oper = False
+
                 if len(word) >= 4:
                     oper = word[-2:]
                     word = word[:-2]
