@@ -198,7 +198,7 @@ def setconfig(key, value):
     if config(key=key):
         deleteconfig(key)
     sql = "INSERT INTO config VALUES('%s','%s');" % (key, value)
-    logger.debug(msg="setconfig: %s=%s" % (key, value))
+    logger.debug(msg=_("setconfig: %s=%s") % (key, value))
     stampy.stampy.dbsql(sql)
     return
 
@@ -212,6 +212,6 @@ def deleteconfig(word):
 
     logger = logging.getLogger(__name__)
     sql = "DELETE FROM config WHERE key='%s';" % word
-    logger.debug(msg="rmconfig: %s" % word)
+    logger.debug(msg=_("rmconfig: %s") % word)
     stampy.stampy.dbsql(sql)
     return

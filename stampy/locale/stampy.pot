@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-04-10 12:22+0200\n"
+"POT-Creation-Date: 2017-04-10 15:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -129,63 +129,63 @@ msgstr ""
 msgid "Sending image: %s"
 msgstr ""
 
-#: stampy/stampy.py:520
+#: stampy/stampy.py:524
 #, python-format
 msgid "Processing plugin: %s"
 msgstr ""
 
-#: stampy/stampy.py:528
+#: stampy/stampy.py:532
 #, python-format
 msgid "TEXT: %s : %s : %s"
 msgstr ""
 
-#: stampy/stampy.py:532
+#: stampy/stampy.py:536
 #, python-format
 msgid "Last processed message at: %s"
 msgstr ""
 
-#: stampy/stampy.py:534
+#: stampy/stampy.py:538
 #, python-format
 msgid "Last processed update_id : %s"
 msgstr ""
 
-#: stampy/stampy.py:536
+#: stampy/stampy.py:540
 #, python-format
 msgid "Number of messages in this batch: %s"
 msgstr ""
 
-#: stampy/stampy.py:567
+#: stampy/stampy.py:571
 #, python-format
 msgid "Final deduplicated list: %s"
 msgstr ""
 
-#: stampy/stampy.py:602
+#: stampy/stampy.py:606
 #, python-format
 msgid "Logging level set to %s"
 msgstr ""
 
-#: stampy/stampy.py:670
+#: stampy/stampy.py:674
 msgid "Started execution"
 msgstr ""
 
-#: stampy/stampy.py:681
+#: stampy/stampy.py:685
 msgid "Token required for operation, please check"
 msgstr ""
 
-#: stampy/stampy.py:701
+#: stampy/stampy.py:705
 #, python-format
 msgid "Plug triggers reported: %s"
 msgstr ""
 
-#: stampy/stampy.py:706
+#: stampy/stampy.py:710
 msgid "Running in daemon mode"
 msgstr ""
 
-#: stampy/stampy.py:711
+#: stampy/stampy.py:715
 msgid "Running in one-shoot mode"
 msgstr ""
 
-#: stampy/stampy.py:714
+#: stampy/stampy.py:718
 msgid "Stopped execution"
 msgstr ""
 
@@ -353,6 +353,16 @@ msgstr ""
 #: stampy/plugin/config.py:185
 #, python-format
 msgid "Updating config for %s with %s"
+msgstr ""
+
+#: stampy/plugin/config.py:201
+#, python-format
+msgid "setconfig: %s=%s"
+msgstr ""
+
+#: stampy/plugin/config.py:215
+#, python-format
+msgid "rmconfig: %s"
 msgstr ""
 
 #: stampy/plugin/dilbert.py:56
