@@ -135,7 +135,7 @@ def rank(word=False):
     if word:
         # if word is provided, return the rank value for that word
         string = (word,)
-        sql = "SELECT * FROM karma WHERE word='%s';" % string
+        sql = "SELECT word,value,date FROM karma WHERE word='%s';" % string
         cur = stampy.stampy.dbsql(sql)
         value = cur.fetchone()
 
@@ -150,7 +150,7 @@ def rank(word=False):
 
     else:
         # if word is not provided, return top 10 words with top karma
-        sql = "select * from karma ORDER BY value DESC LIMIT 10;"
+        sql = "select word,value,date from karma ORDER BY value DESC LIMIT 10;"
 
         text = _("Global rankings:\n")
         cur = stampy.stampy.dbsql(sql)
@@ -175,7 +175,7 @@ def srank(word=False):
         text = rank(word)
     else:
         string = "%" + word + "%"
-        sql = "SELECT * FROM karma WHERE word LIKE '%s' LIMIT 10;" % string
+        sql = "SELECT word,value,date FROM karma WHERE word LIKE '%s' LIMIT 10;" % string
         cur = stampy.stampy.dbsql(sql)
         table = from_db_cursor(cur)
         text = "%s\n```%s```" % (text, table.get_string())
@@ -207,7 +207,7 @@ def getkarma(word):
 
     logger = logging.getLogger(__name__)
     string = (word,)
-    sql = "SELECT * FROM karma WHERE word='%s';" % string
+    sql = "SELECT word,value FROM karma WHERE word='%s';" % string
     cur = stampy.stampy.dbsql(sql)
     value = cur.fetchone()
 
@@ -400,9 +400,9 @@ def dokarmacleanup(word=False,
     logger = logging.getLogger(__name__)
 
     if word:
-        sql = "SELECT * FROM karma WHERE word=%s" % word
+        sql = "SELECT word,value,date FROM karma WHERE word=%s" % word
     else:
-        sql = "SELECT * FROM karma"
+        sql = "SELECT word,value,date FROM karma"
 
     words = []
     cur = stampy.stampy.dbsql(sql)

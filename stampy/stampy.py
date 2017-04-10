@@ -126,7 +126,7 @@ def dbsql(sql=False):
     try:
         con = lite.connect(options.database)
         cur = con.cursor()
-        cur.execute("SELECT * FROM config WHERE key='token';")
+        cur.execute("SELECT key,value FROM config WHERE key='token';")
         cur.fetchone()
 
     except lite.Error, e:

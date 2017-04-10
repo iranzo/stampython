@@ -125,7 +125,7 @@ def getautok(key):
     """
 
     logger = logging.getLogger(__name__)
-    sql = "SELECT * FROM autokarma WHERE key='%s';" % key
+    sql = "SELECT key,value FROM autokarma WHERE key='%s';" % key
     cur = stampy.stampy.dbsql(sql)
     data = cur.fetchall()
     value = []
@@ -203,11 +203,10 @@ def listautok(word=False):
     wordtext = ""
 
     if not word:
-        sql = "select * from autokarma ORDER BY key ASC;"
+        sql = "select key,value from autokarma ORDER BY key ASC;"
     else:
         string = (word,)
-        sql = "SELECT * FROM autokarma WHERE key='%s' ORDER by key ASC;" % (
-              string)
+        sql = "SELECT key,value FROM autokarma WHERE key='%s' ORDER by key ASC;" % string
         wordtext = _("for word %s") % word
 
     cur = stampy.stampy.dbsql(sql)

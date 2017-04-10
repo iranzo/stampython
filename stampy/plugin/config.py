@@ -122,7 +122,7 @@ def showconfig(key=False):
     if key:
         # if word is provided, return the config for that key
         string = (key,)
-        sql = "SELECT * FROM config WHERE key='%s';" % string
+        sql = "SELECT key,value FROM config WHERE key='%s';" % string
         cur = stampy.stampy.dbsql(sql)
         value = cur.fetchone()
 
@@ -136,7 +136,7 @@ def showconfig(key=False):
         text = _("%s has a value of %s") % (key, value)
 
     else:
-        sql = "select * from config ORDER BY key ASC;"
+        sql = "select key,value from config ORDER BY key ASC;"
         cur = stampy.stampy.dbsql(sql)
         text = _("Defined configurations:\n")
         table = from_db_cursor(cur)
@@ -155,7 +155,7 @@ def config(key, default=False):
 
     # logger = logging.getLogger(__name__)
     string = (key,)
-    sql = "SELECT * FROM config WHERE key='%s';" % string
+    sql = "SELECT key,value FROM config WHERE key='%s';" % string
     cur = stampy.stampy.dbsql(sql)
     value = cur.fetchone()
 

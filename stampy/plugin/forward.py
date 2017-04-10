@@ -193,7 +193,7 @@ def listforward(source=False):
     if source:
         # if source is provided, return the forwards for that source
         string = (source,)
-        sql = "SELECT * FROM forward WHERE source='%s' ORDER by source ASC;" % string
+        sql = "SELECT source,target FROM forward WHERE source='%s' ORDER by source ASC;" % string
         cur = stampy.stampy.dbsql(sql)
         target = cur.fetchone()
 
@@ -207,7 +207,7 @@ def listforward(source=False):
         text = _("%s has a forward %s") % (source, target)
 
     else:
-        sql = "select * from forward ORDER BY source ASC;"
+        sql = "SELECT source,target from forward ORDER BY source ASC;"
         cur = stampy.stampy.dbsql(sql)
         text = _("Defined forwards:\n")
         table = from_db_cursor(cur)

@@ -131,9 +131,9 @@ def showstats(type=False):
     """
     logger = logging.getLogger(__name__)
     if type:
-        sql = "select * from stats WHERE type='%s' ORDER BY count DESC LIMIT 10" % type
+        sql = "select type,id,name,date,count from stats WHERE type='%s' ORDER BY count DESC LIMIT 10" % type
     else:
-        sql = "select * from stats ORDER BY count DESC LIMIT 10"
+        sql = "select type,id,name,date,count from stats ORDER BY count DESC LIMIT 10"
     cur = stampy.stampy.dbsql(sql)
     table = from_db_cursor(cur)
     text = _("Defined stats:\n")
@@ -253,9 +253,9 @@ def dochatcleanup(chat_id=False, maxage=int(stampy.plugin.config.config("maxage"
     logger = logging.getLogger(__name__)
 
     if chat_id:
-        sql = "SELECT * FROM stats WHERE type='chat' and id=%s" % chat_id
+        sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type='chat' and id=%s" % chat_id
     else:
-        sql = "SELECT * FROM stats WHERE type='chat'"
+        sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type='chat'"
 
     chatids = []
     cur = stampy.stampy.dbsql(sql)
@@ -290,7 +290,7 @@ def dochatcleanup(chat_id=False, maxage=int(stampy.plugin.config.config("maxage"
             cur = stampy.stampy.dbsql(sql)
 
             # Remove users membership that had that channel id
-            sql = "SELECT * FROM stats WHERE type='user' and memberid LIKE '%%%s%%';" % chatid
+            sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type='user' and memberid LIKE '%%%s%%';" % chatid
             cur = stampy.stampy.dbsql(sql)
 
             for line in cur:
@@ -314,9 +314,9 @@ def dousercleanup(user_id=False,
     logger = logging.getLogger(__name__)
 
     if user_id:
-        sql = "SELECT * FROM stats WHERE type='user' and id=%s" % user_id
+        sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type='user' and id=%s" % user_id
     else:
-        sql = "SELECT * FROM stats WHERE type='user'"
+        sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type='user'"
 
     userids = []
     cur = stampy.stampy.dbsql(sql)
@@ -346,7 +346,7 @@ def dousercleanup(user_id=False,
             cur = stampy.stampy.dbsql(sql)
 
             # Remove users membership that had that channel id
-            sql = "SELECT * FROM stats WHERE type='chat' and memberid LIKE '%%%s%%';" % userid
+            sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type='chat' and memberid LIKE '%%%s%%';" % userid
             cur = stampy.stampy.dbsql(sql)
 
             for line in cur:
@@ -370,7 +370,7 @@ def getstats(type=False, id=0, name=False, date=False, count=0):
     """
 
     logger = logging.getLogger(__name__)
-    sql = "SELECT * FROM stats WHERE id='%s' AND type='%s';" % (id, type)
+    sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE id='%s' AND type='%s';" % (id, type)
     cur = stampy.stampy.dbsql(sql)
     try:
         value = cur.fetchone()

@@ -136,7 +136,7 @@ def listalias(word=False):
     if word:
         # if word is provided, return the alias for that word
         string = (word,)
-        sql = "SELECT * FROM alias WHERE key='%s' ORDER by key ASC;" % string
+        sql = "SELECT key,value FROM alias WHERE key='%s' ORDER by key ASC;" % string
         cur = stampy.stampy.dbsql(sql)
         value = cur.fetchone()
 
@@ -150,7 +150,7 @@ def listalias(word=False):
         text = _("%s has an alias %s") % (word, value)
 
     else:
-        sql = "select * from alias ORDER BY key ASC;"
+        sql = "select key,value from alias ORDER BY key ASC;"
         cur = stampy.stampy.dbsql(sql)
         text = _("Defined aliases:\n")
         table = from_db_cursor(cur)
@@ -194,7 +194,7 @@ def getalias(word):
 
     logger = logging.getLogger(__name__)
     string = (word,)
-    sql = "SELECT * FROM alias WHERE key='%s';" % string
+    sql = "SELECT key,value FROM alias WHERE key='%s';" % string
     cur = stampy.stampy.dbsql(sql)
     value = cur.fetchone()
     logger.debug(msg="getalias: %s" % word)

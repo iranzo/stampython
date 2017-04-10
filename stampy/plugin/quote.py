@@ -129,10 +129,9 @@ def getquote(username=False):
     logger = logging.getLogger(__name__)
     if username:
         string = (username,)
-        sql = "SELECT * FROM quote WHERE username='%s' ORDER BY RANDOM() \
-              LIMIT 1;" % string
+        sql = "SELECT id,username,date,text FROM quote WHERE username='%s' ORDER BY RANDOM() LIMIT 1;" % string
     else:
-        sql = "SELECT * FROM quote ORDER BY RANDOM() LIMIT 1;"
+        sql = "SELECT id,username,date,text FROM quote ORDER BY RANDOM() LIMIT 1;"
     cur = stampy.stampy.dbsql(sql)
     value = cur.fetchone()
     logger.debug(msg="getquote: %s" % username)
