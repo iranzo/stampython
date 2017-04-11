@@ -10,6 +10,7 @@ from prettytable import from_db_cursor
 
 import stampy.stampy
 from stampy.i18n import translate
+
 _ = translate.ugettext
 
 
@@ -18,7 +19,7 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    triggers = [ "^/config" ]
+    triggers = ["^/config"]
     return triggers
 
 
