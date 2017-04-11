@@ -19,7 +19,8 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    return "/quote"
+    triggers = ["^/quote"]
+    return triggers
 
 
 def run(message):  # do not edit this line

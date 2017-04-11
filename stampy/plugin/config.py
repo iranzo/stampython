@@ -18,7 +18,8 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    return "/config"
+    triggers = [ "^/config" ]
+    return triggers
 
 
 def run(message):  # do not edit this line

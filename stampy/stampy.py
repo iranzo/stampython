@@ -514,15 +514,41 @@ def process(messages):
         msgdetail = getmsgdetail(message)
         try:
             command = msgdetail["text"].split()[0].lower()
+            texto = msgdetail["text"].lower()
+            date = msgdetail["datefor"]
         except:
-            command = None
+            command = ""
+            texto = ""
+            date = 0
 
         for i in plugs:
             name = i.__name__.split(".")[-1]
 
-            if plugtriggers[name] == "*" or command == plugtriggers[name]:
+            runplugin = False
+            for trigger in plugtriggers[name]:
+                logger.debug(msg=_("Running checks for trigger: %s") % trigger)
+                logger.debug(msg=_("Command %s, texto: %s") % (command, texto))
+                if "*" in trigger:
+                    runplugin = True
+                    break
+                elif trigger[0] == "^":
+                    if command == trigger[1:]:
+                        runplugin = True
+                        break
+                elif trigger in texto:
+                    runplugin = True
+                    break
+
+            code = False
+            if runplugin:
                 logger.debug(msg=_("Processing plugin: %s") % name)
-                i.run(message=message)
+                code = i.run(message=message)
+                logger.debug(msg=_("Plugin return code: %s") % code)
+
+            if code:
+                # Plugin has changed triggers, reload
+                plugtriggers[name] = i.init()
+                logger.debug(msg=_("New triggers for %s: %s") % (name, plugtriggers[name]))
 
         # Update last message id to later clear it from the server
         if msgdetail["update_id"] > lastupdateid:
@@ -652,7 +678,7 @@ def conflogging(target=None):
 def main():
     """
     Main code for the bot
-si      """
+    """
 
     # Main code
     logger = logging.getLogger(__name__)
@@ -662,14 +688,14 @@ si      """
         createorupdatedb()
         plugin.config.setconfig(key='database', value=options.database)
 
-    if not logger.handlers:
-        conflogging()
+    # Configure logging
+    conflogging(target="stampy")
 
     # Configuring apscheduler logger
-    conflogging(target="scheduler")
+    conflogging(target="apscheduler")
 
     # Configuring alembic logger
-    conflogging(target='alembic')
+    conflogging(target="alembic")
 
     logger.info(msg=_("Started execution"))
 
@@ -682,8 +708,7 @@ si      """
             token = options.token
             plugin.config.setconfig(key='token', value=token)
         else:
-            msg = _("Token required for operation, please check")
-            msg += " https://core.telegram.org/bots"
+            msg = _("Token required for operation, please check https://core.telegram.org/bots")
             logger.critical(msg)
             sys.exit(1)
 
@@ -726,5 +751,5 @@ if __name__ == "__main__":
         __name__ = plugin.config.config(key="database").split(".")[0]
     else:
         plugin.config.setconfig(key="database", value='stampy')
-        __name__ = "stampy"
+        __name__ = "stampy.stampy"
     main()

@@ -15,8 +15,6 @@ from i18n import translate
 _ = translate.ugettext
 
 PluginFolder = "./stampy/plugin"
-MainModule = "__init__"
-
 
 def getPlugins():
     """
@@ -71,5 +69,9 @@ def initplugins():
         logger.debug(msg=_("Processing plugin initialization: %s") % i["name"])
         newplug = loadPlugin(i)
         plugs.append(newplug)
-        plugtriggers[i["name"]] = newplug.init()
+        triggers = []
+        for each in newplug.init():
+            triggers.append(each)
+        plugtriggers[i["name"]] = triggers
+        logger.debug(msg=_("Plugin %s is triggered by %s") % (i["name"], triggers))
     return plugs, plugtriggers

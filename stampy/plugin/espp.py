@@ -19,7 +19,9 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    return "/espp"
+
+    triggers = ["^/espp"]
+    return triggers
 
 
 def run(message):  # do not edit this line

@@ -30,8 +30,8 @@ def init():
 
     sched.add_job(quico, 'cron', id='quico', hour='10',
                   replace_existing=True, misfire_grace_time=120)
-
-    return "/quico"
+    triggers = ["^/quico"]
+    return triggers
 
 
 def run(message):  # do not edit this line

@@ -21,7 +21,11 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    return "*"
+
+    triggers = ["^/autok"]
+    triggers.extend(getautokeywords())
+
+    return triggers
 
 
 def run(message):  # do not edit this line
@@ -30,13 +34,15 @@ def run(message):  # do not edit this line
     :param message: message to run against
     :return:
     """
+    code = None
     text = stampy.stampy.getmsgdetail(message)["text"]
     if text:
         if text.split()[0].lower() == "/autok":
+            code = True
             autokcommands(message)
         autokarmawords(message)
 
-    return
+    return code
 
 
 def help(message):  # do not edit this line

@@ -30,7 +30,8 @@ def init():
     sched.add_job(mel, 'cron', id='mel', hour='13', replace_existing=True,
                   misfire_grace_time=120)
 
-    return "/mel"
+    triggers = ["^/mel"]
+    return triggers
 
 
 def run(message):  # do not edit this line

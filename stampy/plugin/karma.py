@@ -27,8 +27,8 @@ def init():
     """
     sched.add_job(dokarmacleanup, 'interval', minutes=int(stampy.plugin.config.config('cleanup', 24 * 60)), id='dokarmacleanup', replace_existing=True,
                   misfire_grace_time=120)
-
-    return "*"
+    triggers = ["++", "--", u"—", "@", "^rank", "^srank", "^skarma"]
+    return triggers
 
 
 def run(message):  # do not edit this line

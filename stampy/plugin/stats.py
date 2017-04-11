@@ -32,8 +32,8 @@ def init():
                   replace_existing=True, misfire_grace_time=120)
     sched.add_job(dousercleanup, 'interval', minutes=int(stampy.plugin.config.config('cleanup', 24 * 60)), id='dousercleanup',
                   replace_existing=True, misfire_grace_time=120)
-
-    return "*"
+    triggers = ["@all", "^/stats", "*"]
+    return triggers
 
 
 def run(message):  # do not edit this line

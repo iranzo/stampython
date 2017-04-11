@@ -22,7 +22,8 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    return "/forward"
+    triggers = ["^/forward"]
+    return triggers
 
 
 def run(message):  # do not edit this line

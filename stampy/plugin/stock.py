@@ -23,7 +23,8 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    return "stock"
+    triggers = ["^stock"]
+    return triggers
 
 
 def run(message):  # do not edit this line

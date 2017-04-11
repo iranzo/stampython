@@ -31,7 +31,8 @@ def init():
     sched.add_job(dilbert, 'cron', id='dilbert', hour='10',
                   replace_existing=True, misfire_grace_time=120)
 
-    return "/dilbert"
+    triggers = ["^/dilbert"]
+    return triggers
 
 
 def run(message):  # do not edit this line
