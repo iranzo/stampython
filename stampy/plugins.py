@@ -16,6 +16,7 @@ _ = translate.ugettext
 
 PluginFolder = "./stampy/plugin"
 
+
 def getPlugins():
     """
     Gets list of plugins in the plugins folder
