@@ -53,7 +53,7 @@ def help(message):  # do not edit this line
     """
 
     commandtext = ""
-    if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
+    if stampy.stampy.is_owner(message):
         commandtext = _("Use `/forward <source>=<target>` to assign a forwarder\n")
         commandtext += _("Use `/forward list` to list forwards defined\n")
         commandtext += _("Use `/forward delete <source>=<target>` to remove a forwarding\n\n")
@@ -123,7 +123,7 @@ def forwardcommands(message):
 
     logger = logging.getLogger(__name__)
     logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
-    if who_un == stampy.plugin.config.config('owner'):
+    if stampy.stampy.is_owner(message):
         logger.debug(msg=_("Command: %s by Owner: %s") % (texto, who_un))
         try:
             command = texto.split(' ')[1]

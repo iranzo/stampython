@@ -53,7 +53,7 @@ def help(message):  # do not edit this line
     """
 
     commandtext = ""
-    if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
+    if stampy.stampy.is_owner(message):
         commandtext = _("Use `/autok <key>=<value>` to autokarma <value> every time key is in the conversation. Multiple values for same <key> can be added\n\n")
         commandtext += _("Use `/autok delete <key>=<value>` to delete autokarma <value> for <key>\n\n")
         commandtext += _("Use `/autok list` to list autokarma <key> <value> pairs\n\n")
@@ -77,7 +77,7 @@ def autokcommands(message):
 
     logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
 
-    if who_un == stampy.plugin.config.config('owner'):
+    if stampy.stampy.is_owner_or_admin(message):
         logger.debug(msg=_("Command: %s by Owner: %s") % (texto, who_un))
         try:
             command = texto.split(' ')[1]

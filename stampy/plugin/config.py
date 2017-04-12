@@ -44,7 +44,7 @@ def help(message):  # do not edit this line
     """
 
     commandtext = ""
-    if config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
+    if stampy.stampy.is_owner(message):
         commandtext = _("Use `/config show` to get a list of defined config settings\n")
         commandtext += _("Use `/config set <key>=<value>` to define a value for key\n")
         commandtext += _("Use `/config delete <key>` to delete key\n\n")
@@ -67,7 +67,7 @@ def configcommands(message):
     logger = logging.getLogger(__name__)
 
     # Only users defined as 'owner' can perform commands
-    if who_un == config('owner'):
+    if stampy.stampy.is_owner(message):
         logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
         try:
             command = texto.split(' ')[1]

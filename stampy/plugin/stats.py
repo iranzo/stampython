@@ -81,9 +81,9 @@ def help(message):  # do not edit this line
     """
 
     commandtext = _("Use `@all` to ping all users in a channel as long as they have username defined in Telegram\n\n")
-    if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
+    if stampy.stampy.is_owner(message):
         commandtext += _("Use `/stats show <user|chat>` to get stats on last usage\n\n")
-        commandtext += _("Use `/getout <chatid>` to have bot leave that chat\n\n")
+        commandtext += _("Use `/getout <chatid|here>` to have bot leave that chat or current one\n\n")
     return commandtext
 
 
@@ -103,7 +103,7 @@ def statscommands(message):
     message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    if who_un == stampy.plugin.config.config('owner'):
+    if stampy.stampy.is_owner(message):
         logger.debug(msg=_("Owner Stat: %s by %s") % (texto, who_un))
         try:
             command = texto.split(' ')[1]
@@ -146,15 +146,17 @@ def getoutcommands(message):
 
     texto = msgdetail["text"]
     chat_id = msgdetail["chat_id"]
-    message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    if who_un == stampy.plugin.config.config('owner'):
+    if stampy.stampy.is_owner(message):
         logger.debug(msg=_("Owner getout: %s by %s") % (texto, who_un))
         try:
             command = texto.split(' ')[1]
         except:
             command = False
+
+        if command == 'here':
+            command = chat_id
 
         if command:
             try:

@@ -47,7 +47,7 @@ def help(message):  # do not edit this line
     """
     commandtext = ""
 
-    if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
+    if stampy.stampy.is_owner_or_admin(message):
         commandtext = _("Use `/alias <key>=<value>` to assign an alias for karma\n")
         commandtext += _("Use `/alias list` to list aliases\n")
         commandtext += _("Use `/alias delete <key>` to remove an alias\n\n")
@@ -70,7 +70,7 @@ def aliascommands(message):
 
     logger = logging.getLogger(__name__)
     logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
-    if who_un == stampy.plugin.config.config('owner'):
+    if stampy.stampy.is_owner_or_admin(message):
         logger.debug(msg=_("Command: %s by Owner: %s") % (texto, who_un))
         try:
             command = texto.split(' ')[1]

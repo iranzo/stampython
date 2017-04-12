@@ -44,7 +44,7 @@ def help(message):  # do not edit this line
     """
     commandtext = _("Use `/quote add <id> <text>` to add a quote for that username\n")
     commandtext += _("Use `/quote <id>` to get a random quote from that username\n\n")
-    if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
+    if stampy.stampy.is_owner_or_admin(message):
         commandtext += _("Use `/quote del <quoteid>` to remove a quote\n\n")
     return commandtext
 
@@ -87,7 +87,7 @@ def quotecommands(message):
                                       parse_mode="Markdown")
             break
         if case('del'):
-            if who_un == stampy.plugin.config.config(key='owner'):
+            if stampy.stampy.is_owner_or_admin(message):
                 id_todel = texto.split(' ')[2]
                 text = _("Deleting quote id `%s`") % id_todel
                 stampy.stampy.sendmessage(chat_id=chat_id, text=text,

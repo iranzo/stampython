@@ -54,7 +54,7 @@ def help(message):  # do not edit this line
     :return: help text
     """
     commandtext = _("Use `/quico <date>` to get Quico Jubilata's comic strip for date or today\n\n")
-    if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
+    if stampy.stampy.is_owner(message):
         commandtext = _("Use `/quico trigger` to force sending actual strip to channel\n\n")
     return commandtext
 
@@ -83,7 +83,7 @@ def quicocommands(message):
     except:
         date = ""
 
-    if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"] and date == "trigger":
+    if stampy.stampy.is_owner(message) and date == "trigger":
         # We've been called to update the strip channel
         return quico()
 

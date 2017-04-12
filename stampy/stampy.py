@@ -277,16 +277,19 @@ def clearupdates(offset):
     return result
 
 
-def telegramcommands(texto, chat_id, message_id, who_un):
+def telegramcommands(message):
     """
     Processes telegram commands in message texts (/help, etc)
-    :param texto: text from the update
-    :param chat_id:  chat to answer to
-    :param message_id: message to reply to
-    :param who_un: username of user providing the command
+    :param message: message received
     :return: True if any telegramcommands where processed,
              False if no telegramcommands were present
     """
+
+    msgdetail = getmsgdetail(message)
+
+    texto = msgdetail["text"]
+    chat_id = msgdetail["chat_id"]
+    message_id = msgdetail["message_id"]
 
     logger = logging.getLogger(__name__)
 
@@ -304,7 +307,7 @@ def telegramcommands(texto, chat_id, message_id, who_un):
     retv = False
     for case in Switch(word):
         if case('/help'):
-            if plugin.config.config(key='owner') == who_un:
+            if is_owner(message):
                 commandtext += _("Use `/quit` to exit daemon mode\n")
                 commandtext += _("Learn more about this bot in [https://github.com/iranzo/stampython] (https://github.com/iranzo/stampython)")
             break
@@ -318,7 +321,7 @@ def telegramcommands(texto, chat_id, message_id, who_un):
             break
         if case('/quit'):
             # Disable running as daemon to ensure we're exiting the loop
-            if plugin.config.config(key='owner') == who_un:
+            if is_owner(message):
                 plugin.config.setconfig('daemon', False)
             retv = True
 
@@ -596,6 +599,21 @@ def getitems(var):
     if len(final) > 1:
         logger.debug(msg=_("Final deduplicated list: %s") % final)
     return final
+
+
+def is_owner(message):
+    if plugin.config.config(key='owner') == getmsgdetail(message)["who_un"]:
+        return True
+    return False
+
+
+def is_owner_or_admin(message):
+    admin = False
+    owner = is_owner(message)
+    if plugin.config.config(key='admin') == getmsgdetail(message)["who_un"]:
+        admin = True
+
+    return owner or admin
 
 
 def loglevel():
