@@ -51,6 +51,7 @@
           started a chat with the bot previously
     - Improve message handling so when a user joins/parts a channel the stats
       table is updated with that event
+      - ¿DONE?
     - Implement something similar to
       <https://supportex.net/blog/2011/09/rrd-python/> for graphing message
       activity
@@ -61,9 +62,6 @@
       to start a new round
     - Implement forward conditions so just some messages based on sender, or
       text are sent
-    - Implement function to get bot out of one chat_id
-      - Function is there, we need to trigger from telegram commands 
-      (getoutofchat() )
     - Implement i18n to the project to allow users to write strings for the 
       bot and use the channel-configured language (or default to en) for 
       messages.
@@ -71,8 +69,3 @@
     - Fix ESPP so it might have several periods or stocks
     - Fix ESPP so it might have several discuonts
     - Fix owner to have several users
-    - Fix handlers so each plugin has more than one handler
-        - Implement handlers in karma as ++ or -- in text before handling 
-        info to plugin
-        - Implement autok keys as handlers on start or on modification and 
-        disable on removal

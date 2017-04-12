@@ -32,7 +32,7 @@ def init():
                   replace_existing=True, misfire_grace_time=120)
     sched.add_job(dousercleanup, 'interval', minutes=int(stampy.plugin.config.config('cleanup', 24 * 60)), id='dousercleanup',
                   replace_existing=True, misfire_grace_time=120)
-    triggers = ["@all", "^/stats", "*"]
+    triggers = ["@all", "^/stats", "*", "^/getout"]
     return triggers
 
 
@@ -58,8 +58,17 @@ def run(message):  # do not edit this line
         if text.split()[0].lower() == "/stats":
             statscommands(message)
 
+        if text.split()[0].lower() == "/getout":
+            getoutcommands(message)
+
     if "@all" in text:
         getall(message)
+
+    if 'left_chat_participant' in message:
+        remove_from_memberid(type='chat', id=msgdetail["chat_id"],
+                             memberid=msgdetail['who_id'])
+        remove_from_memberid(type='user', id=msgdetail["who_id"],
+                             memberid=msgdetail['chat_id'])
 
     return
 
@@ -74,6 +83,7 @@ def help(message):  # do not edit this line
     commandtext = _("Use `@all` to ping all users in a channel as long as they have username defined in Telegram\n\n")
     if stampy.plugin.config.config(key='owner') == stampy.stampy.getmsgdetail(message)["who_un"]:
         commandtext += _("Use `/stats show <user|chat>` to get stats on last usage\n\n")
+        commandtext += _("Use `/getout <chatid>` to have bot leave that chat\n\n")
     return commandtext
 
 
@@ -120,6 +130,37 @@ def statscommands(message):
             if case():
                 break
 
+    return
+
+
+def getoutcommands(message):
+    """
+    Processes getout commands in the messages
+    :param message: message to process
+    :return:
+    """
+
+    logger = logging.getLogger(__name__)
+
+    msgdetail = stampy.stampy.getmsgdetail(message)
+
+    texto = msgdetail["text"]
+    chat_id = msgdetail["chat_id"]
+    message_id = msgdetail["message_id"]
+    who_un = msgdetail["who_un"]
+
+    if who_un == stampy.plugin.config.config('owner'):
+        logger.debug(msg=_("Owner getout: %s by %s") % (texto, who_un))
+        try:
+            command = texto.split(' ')[1]
+        except:
+            command = False
+
+        if command:
+            try:
+                getoutofchat(chat_id=command)
+            except:
+                pass
     return
 
 
@@ -201,6 +242,65 @@ def updatestats(type=False, id=0, name=False, date=False, memberid=None):
             stampy.stampy.dbsql(sql)
         except:
             logger.debug(msg=_("ERROR on updatestats"))
+    return
+
+
+def remove_from_memberid(type=False, id=0, name=False, date=False, memberid=None):
+    """
+    Remove memberID from memberid
+    :param type: user or chat
+    :param id: ID to update
+    :param name: name of the chat of user
+    :param date: date of the update
+    :param memberid: ID of the origin to remove
+        chat_id if type='user'
+        user_id if type='chat'
+    :return:
+    """
+
+    logger = logging.getLogger(__name__)
+
+    try:
+        value = getstats(type=type, id=id)
+        count = value[4] + 1
+    except:
+        value = False
+        count = 0
+
+    if value:
+        newmemberid = value[5]
+    else:
+        newmemberid = []
+
+    # Only add the id if it was not already stored
+    if memberid in newmemberid:
+        newmemberid.remove(memberid)
+
+    newmemberid = stampy.stampy.getitems(newmemberid)
+
+    if 'False' in newmemberid:
+        newmemberid.remove('False')
+    if 'false' in newmemberid:
+        newmemberid.remove('false')
+    if False in newmemberid:
+        newmemberid.remove(False)
+    if "" in newmemberid:
+        newmemberid.remove("")
+    if [] in newmemberid:
+        newmemberid.remove([])
+
+    sql = "DELETE from stats where id='%s'" % id
+    stampy.stampy.dbsql(sql)
+
+    sql = "INSERT INTO stats VALUES('%s', '%s', '%s', '%s', '%s', '%s');" % (type, id, name, date, count, json.dumps(newmemberid))
+
+    logger.debug(msg=_("values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid: %s") % (type, id, name, date, count, newmemberid))
+
+    if id:
+        try:
+            stampy.stampy.dbsql(sql)
+        except:
+            logger.debug(msg=_("ERROR on remove_from_memberid"))
     return
 
 
