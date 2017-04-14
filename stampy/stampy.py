@@ -602,16 +602,35 @@ def getitems(var):
 
 
 def is_owner(message):
-    if plugin.config.config(key='owner') == getmsgdetail(message)["who_un"]:
-        return True
-    return False
+    """
+    Check if user of message is owner
+    :param message: message to check
+    :return:  True on owner
+    """
+
+    logger = logging.getLogger(__name__)
+    code = False
+    msgdetail = getmsgdetail(message)
+    for each in plugin.config.config(key='owner').split():
+        if each == msgdetail["who_un"]:
+            code = True
+    return code
 
 
 def is_owner_or_admin(message):
+    """
+    Check if user is owner or admin for group
+    :param message: message to check
+    :return: True on owner or admin
+    """
+
+    logger = logging.getLogger(__name__)
     admin = False
+    msgdetail = getmsgdetail(message)
     owner = is_owner(message)
-    if plugin.config.config(key='admin') == getmsgdetail(message)["who_un"]:
-        admin = True
+    for each in plugin.config.config(key='admin').split():
+        if each == msgdetail["who_un"]:
+            admin = True
 
     return owner or admin
 
