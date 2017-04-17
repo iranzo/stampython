@@ -49,9 +49,6 @@
       https://core.telegram.org/bots/api#forwardmessage)
         - Doesn't work to send messages directly to users if they haven't 
           started a chat with the bot previously
-    - Improve message handling so when a user joins/parts a channel the stats
-      table is updated with that event
-      - ¿DONE?
     - Implement something similar to
       <https://supportex.net/blog/2011/09/rrd-python/> for graphing message
       activity
@@ -68,4 +65,3 @@
     - Fix ESPP so it works with whatever number of stocks defined
     - Fix ESPP so it might have several periods or stocks
     - Fix ESPP so it might have several discuonts
-    - Fix owner to have several users

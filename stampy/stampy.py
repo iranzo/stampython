@@ -628,7 +628,7 @@ def is_owner_or_admin(message):
     admin = False
     msgdetail = getmsgdetail(message)
     owner = is_owner(message)
-    for each in plugin.config.config(key='admin').split():
+    for each in plugin.config.config(key='admin', default="").split():
         if each == msgdetail["who_un"]:
             admin = True
 
