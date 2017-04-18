@@ -84,4 +84,3 @@ Bot allows to setup alias, so when karma is given to a word, it will instead add
 The bot runs on my hardware which involves (HW, power, internet, etc), if
 you wish to collaborate, please, use <https://www.paypal.me/iranzop> for
 your donation.
-
