@@ -11,6 +11,7 @@ from stampy.i18n import translate
 
 _ = translate.ugettext
 
+
 def init():
     """
     Initializes module
