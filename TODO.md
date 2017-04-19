@@ -8,35 +8,52 @@
              time of the day and rate
 
 ### Private group support
-    - Implement /settings to store settings per chat (be silent, timeout
+  - TODO:
+    - DONE:
+       - Implement /gconfig to store settings per chat (be silent, timeout
       for ban, etc)
-    - Implement having separate karma per group-id to have privacy on the
-      topics discussed on each one (no leaks because of karma)
-          - Implement table for config with chatid and 'group_id' to tie several
-            chats together i.r.t config
-    - Review whole config usage to separate between master admin and channel
-      admin and determine operations valid for one or both
-      - TODO:
-        - Create settings to store chat-specific values
-            - silent
-            - admin
-            - modulo (to just show karma every X points)
-            - link
-              - when two channels are linked, merge their karmas
-              - Set a procedure for ACK'ing the link from both source and
-                target channel unless set by owner or admin of both is the same
-            - isolated
-            - create default settings (isolated, etc) for new channels
-            - language
-            - currency
-        - Create table to store chat-specific-settings
-            - id, key, value
+       - Create table to store chat-specific-settings
+         - id, key, value
+            - Stored in config with id==chat_id, 0 for general settings
+    - TODO:
+        - Define basic/default configuration to be applied to all new channels 
+        and versioning, so once a new default is required, if missing, define
+         it or inherit from global config
+        - Define config preference between user/chat/general
+        - Implement having separate karma per group-id to have privacy on the
+          topics discussed on each one (no leaks because of karma)
+          - Implement table for config with chatid and 'group_id' to tie 
+          several chats together i.r.t config
+        - Review whole config usage to separate between master admin and channel
+          admin and determine operations valid for one or both
+    
+        - Create settings to store chat-specific values in a consistent way
+            - Limit settings that can be defined (keys) for group admins
+                - common
+                    - language: en
+                    - currency: EUR
+                    - modulo (to just show karma every X points)
+                        - Set to '0' to just show stampy
+                    - stock
+                    - espp
+                - chats
+                    - isolated: False, if true, allow link
+                        - link: Empty, if defined, use the target gid for karma, alias, admin, etc
+                    - admin: ''
+                        - Allow group without 'admin' to get owned
+                    - link
+                      - when two channels are linked, merge their karmas
+                      - Set a procedure for ACK'ing the link from both source and
+                        target channel unless set by owner or admin of both is the same
+                - users
+                    - highlight
+
         - Modify karma commands and database
         - Modify quote commands and database
         - Modify alias commands and database
         - Modify autok commands and database
-        - Modify stock commands to get values from settings
-        - Modify espp commands to get values from settings
+        - Modify stock commands to get values from gconfig
+        - Modify espp commands to get values from gconfig
       
 ### Other
     - Initial load of karma points from older bot (possible separate script)

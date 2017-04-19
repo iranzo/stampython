@@ -19,7 +19,7 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    triggers = ["^/config"]
+    triggers = ["^/config", "^/gconfig"]
     return triggers
 
 
@@ -32,6 +32,8 @@ def run(message):  # do not edit this line
     text = stampy.stampy.getmsgdetail(message)["text"]
     if text:
         if text.split()[0].lower() == "/config":
+            configcommands(message)
+        elif text.split()[0].lower() == "/gconfig":
             configcommands(message)
     return
 
@@ -48,6 +50,10 @@ def help(message):  # do not edit this line
         commandtext = _("Use `/config show` to get a list of defined config settings\n")
         commandtext += _("Use `/config set <key>=<value>` to define a value for key\n")
         commandtext += _("Use `/config delete <key>` to delete key\n\n")
+    if stampy.stampy.is_owner_or_admin(message):
+        commandtext = _("Use `/gconfig show` to get a list of defined group config settings\n")
+        commandtext += _("Use `/gconfig set <key>=<value>` to define a value for key\n")
+        commandtext += _("Use `/gconfig delete <key>` to delete key\n\n")
     return commandtext
 
 
@@ -66,8 +72,13 @@ def configcommands(message):
 
     logger = logging.getLogger(__name__)
 
-    # Only users defined as 'owner' can perform commands
-    if stampy.stampy.is_owner(message):
+    if texto.split(' ')[0] == "/config":
+        gid = 0
+    else:
+        gid = chat_id
+
+    # Only users defined as 'owner' or 'admin' can perform commands
+    if stampy.stampy.is_owner_or_admin(message):
         logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
         try:
             command = texto.split(' ')[1]
@@ -81,7 +92,7 @@ def configcommands(message):
 
         for case in stampy.stampy.Switch(command):
             if case('show'):
-                text = showconfig(word)
+                text = showconfig(key=word, gid=gid)
                 stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                           reply_to_message_id=message_id,
                                           disable_web_page_preview=True,
@@ -89,20 +100,41 @@ def configcommands(message):
                 break
             if case('delete'):
                 key = word
-                text = _("Deleting config for `%s`") % key
+                # Define valid keys for each role
+                if gid > 0:  # user private chat
+                    validkeys = ['language', 'currency', 'modulo', 'stock', 'espp', 'highlight']
+                elif gid < 0:  # group chat or channel
+                    validkeys = ['language', 'currency', 'modulo', 'stock', 'espp', 'isolated', 'link', 'admin']
+
+                if key in validkeys or gid == 0:
+                    text = _("Deleting config for `%s`") % key
+                    deleteconfig(key=key, gid=gid)
+                else:
+                    text = _("Key *%s* not allowed to be removed") % key
                 stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                           reply_to_message_id=message_id,
                                           disable_web_page_preview=True,
                                           parse_mode="Markdown")
-                deleteconfig(word=key)
+
                 break
+
             if case('set'):
                 word = " ".join(texto.split(' ')[2:])
                 if "=" in word:
                     key = word.split('=')[0]
-                    value = word.split('=')[1]
-                    setconfig(key=key, value=value)
-                    text = _("Setting config for `%s` to `%s`") % (key, value)
+
+                    # Define valid keys for each role
+                    if gid > 0:  # user private chat
+                        validkeys = ['language', 'currency', 'modulo', 'stock', 'espp', 'highlight']
+                    elif gid < 0:  # group chat or channel
+                        validkeys = ['language', 'currency', 'modulo', 'stock', 'espp', 'isolated', 'link', 'admin']
+
+                    if key in validkeys or gid == 0:
+                        value = word.split('=')[1]
+                        setconfig(key=key, value=value, gid=gid)
+                        text = _("Setting config for `%s` to `%s`") % (key, value)
+                    else:
+                        text = _("Key *%s* not allowed to be set") % key
                     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                               reply_to_message_id=message_id,
                                               disable_web_page_preview=True,
@@ -114,9 +146,10 @@ def configcommands(message):
     return
 
 
-def showconfig(key=False):
+def showconfig(key=False, gid=0):
     """
     Shows configuration in database for a key or all values
+    :param gid: group ID to check
     :param key: key to return value for
     :return: Value stored
     """
@@ -124,7 +157,7 @@ def showconfig(key=False):
     if key:
         # if word is provided, return the config for that key
         string = (key,)
-        sql = "SELECT key,value FROM config WHERE key='%s';" % string
+        sql = "SELECT key,value FROM config WHERE key='%s' AND id='%s';" % (string, gid)
         cur = stampy.stampy.dbsql(sql)
         value = cur.fetchone()
 
@@ -135,29 +168,30 @@ def showconfig(key=False):
         except:
             # Value didn't exist before, return 0 value
             value = 0
-        text = _("%s has a value of %s") % (key, value)
+        text = _("%s has a value of %s for id %s") % (key, value, gid)
 
     else:
-        sql = "select key,value from config ORDER BY key ASC;"
+        sql = "select key,value from config WHERE id='%s' ORDER BY key ASC;" % gid
         cur = stampy.stampy.dbsql(sql)
         text = _("Defined configurations:\n")
         table = from_db_cursor(cur)
         text = "%s\n```%s```" % (text, table.get_string())
-    logger.debug(msg=_("Returning config %s for key %s") % (text, key))
+    logger.debug(msg=_("Returning config %s for key %s for id %s") % (text, key, gid))
     return text
 
 
-def config(key, default=False):
+def config(key, default=False, gid=0):
     """
     Gets configuration from database for a given key
+    :param gid: group ID to check
     :param key: key to get configuration for
     :param default: value to return for key if not define or False
     :return: value in database for that key
     """
 
     # logger = logging.getLogger(__name__)
-    string = (key,)
-    sql = "SELECT key,value FROM config WHERE key='%s';" % string
+    string = (key, gid, )
+    sql = "SELECT key,value FROM config WHERE key='%s' AND id='%s';" % string
     cur = stampy.stampy.dbsql(sql)
     value = cur.fetchone()
 
@@ -172,9 +206,10 @@ def config(key, default=False):
     return value
 
 
-def saveconfig(key, value):
+def saveconfig(key, value, gid=0):
     """
     Saves configuration for a given key to a defined value
+    :param gid: group ID to check
     :param key: key to save
     :param value: value to store
     :return:
@@ -182,38 +217,40 @@ def saveconfig(key, value):
 
     logger = logging.getLogger(__name__)
     if value:
-        sql = "UPDATE config SET value = '%s' WHERE key = '%s';" % (value, key)
+        sql = "UPDATE config SET value='%s' WHERE key='%s' AND id='%s';" % (value, key, gid)
         stampy.stampy.dbsql(sql)
-        logger.debug(msg=_("Updating config for %s with %s") % (key, value))
+        logger.debug(msg=_("Updating config for %s with %s for id %s") % (key, value, gid))
     return value
 
 
-def setconfig(key, value):
+def setconfig(key, value, gid=0):
     """
     Sets a config parameter in database
+    :param gid: group ID to check
     :param key: key to update
     :param value: value to store
     :return:
     """
 
     logger = logging.getLogger(__name__)
-    if config(key=key):
-        deleteconfig(key)
-    sql = "INSERT INTO config VALUES('%s','%s');" % (key, value)
-    logger.debug(msg=_("setconfig: %s=%s") % (key, value))
+    if config(key=key, gid=gid):
+        deleteconfig(key, gid=gid)
+    sql = "INSERT INTO config VALUES('%s','%s', '%s');" % (key, value, gid)
+    logger.debug(msg=_("setconfig: %s=%s for id %s") % (key, value, gid))
     stampy.stampy.dbsql(sql)
     return
 
 
-def deleteconfig(word):
+def deleteconfig(key, gid=0):
     """
     Deletes a config parameter in database
-    :param word: key to remove
+    :param gid: group ID to check
+    :param key: key to remove
     :return:
     """
 
     logger = logging.getLogger(__name__)
-    sql = "DELETE FROM config WHERE key='%s';" % word
-    logger.debug(msg=_("rmconfig: %s") % word)
+    sql = "DELETE FROM config WHERE key='%s' AND id='%s';" % (key, gid)
+    logger.debug(msg=_("rmconfig: %s for id %s") % (key, gid))
     stampy.stampy.dbsql(sql)
     return
