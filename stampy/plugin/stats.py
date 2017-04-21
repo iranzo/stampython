@@ -64,11 +64,14 @@ def run(message):  # do not edit this line
     if "@all" in text:
         getall(message)
 
-    if 'left_chat_participant' in message:
-        remove_from_memberid(type='chat', id=msgdetail["chat_id"],
-                             memberid=msgdetail['who_id'])
-        remove_from_memberid(type='user', id=msgdetail["who_id"],
-                             memberid=msgdetail['chat_id'])
+    try:
+        if 'left_chat_participant' in message['message']:
+            remove_from_memberid(type='chat', id=msgdetail["chat_id"],
+                                 memberid=msgdetail['who_id'])
+            remove_from_memberid(type='user', id=msgdetail["who_id"],
+                                 memberid=msgdetail['chat_id'])
+    except:
+        pass
 
     return
 
