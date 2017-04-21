@@ -86,6 +86,5 @@
       bot and use the channel-configured language (or default to en) for 
       messages.
       - Mostly i18n done, failed to change the language dynamically so far
-    - Fix ESPP so it works with whatever number of stocks defined
     - Fix ESPP so it might have several periods or stocks
-    - Fix ESPP so it might have several discuonts
+    - Fix ESPP so it might have several discounts

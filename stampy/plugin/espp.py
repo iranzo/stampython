@@ -71,7 +71,7 @@ def espp(message):
     except:
         monthly = 0
 
-    ticker = stampy.plugin.config.gconfig(key="stock", gid=chat_id, default='RHT')
+    ticker = stampy.plugin.config.gconfig(key="stock", gid=chat_id, default='RHT').split(" ")[0]
 
     text = "```\n"
     rate = stampy.plugin.stock.get_currency_rate('USD', 'EUR')
