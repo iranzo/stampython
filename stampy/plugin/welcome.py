@@ -29,8 +29,11 @@ def run(message):  # do not edit this line
     """
 
     # Send greetings
-    if 'new_chat_participant' in message:
-        welcomeuser(message=message)
+    try:
+        if 'new_chat_participant' in message['message']:
+            welcomeuser(message=message)
+    except:
+        pass
     return
 
 
@@ -43,7 +46,7 @@ def help(message):  # do not edit this line
 
     commandtext = ""
     if stampy.stampy.is_owner_or_admin(message):
-        commandtext = _("As admin or owner define 'welcome' to the greeting text sent to new chat members\n\n")
+        commandtext = _("As admin or owner define 'welcome' to the greeting text sent to new chat members. You can use $username to put long name in the text\n\n")
     return commandtext
 
 
@@ -57,7 +60,8 @@ def welcomeuser(message):
 
     msgdetail = stampy.stampy.getmsgdetail(message=message)
 
-    greeting = stampy.plugin.config.config(key='message', default=False)
+    welcome = stampy.plugin.config.config(key='welcome', default=False)
+    greeting = welcome.replace("$username", msgdetail['name'])
 
     logger.debug(msg=_('New user in chat, sending greetings: %s') % greeting)
 
