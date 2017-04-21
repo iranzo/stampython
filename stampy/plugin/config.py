@@ -105,6 +105,8 @@ def configcommands(message):
                     validkeys = ['language', 'currency', 'modulo', 'stock', 'espp', 'highlight']
                 elif gid < 0:  # group chat or channel
                     validkeys = ['language', 'currency', 'modulo', 'stock', 'espp', 'isolated', 'link', 'admin']
+                else:
+                    validkeys = []
 
                 if key in validkeys or gid == 0:
                     text = _("Deleting config for `%s`") % key
@@ -128,6 +130,8 @@ def configcommands(message):
                         validkeys = ['language', 'currency', 'modulo', 'stock', 'espp', 'highlight']
                     elif gid < 0:  # group chat or channel
                         validkeys = ['language', 'currency', 'modulo', 'stock', 'espp', 'isolated', 'link', 'admin']
+                    else:
+                        validkeys = []
 
                     if key in validkeys or gid == 0:
                         value = word.split('=')[1]
@@ -178,6 +182,27 @@ def showconfig(key=False, gid=0):
         text = "%s\n```%s```" % (text, table.get_string())
     logger.debug(msg=_("Returning config %s for key %s for id %s") % (text, key, gid))
     return text
+
+
+def gconfig(key, default=False, gid=0):
+    """
+    Wrapper to get configuration given key
+    :param gid: group ID to check
+    :param key: key to get configuration for
+    :param default: value to return for key if not define or False
+    :return: value in database for that key
+    """
+
+    # Try custom group configuration
+    value = config(key=key, default=False, gid=gid)
+    if value:
+        return value
+    else:
+        # Try general group configuration
+        value = config(key=key, default=False, gid=0)
+        if value:
+            return value
+    return default
 
 
 def config(key, default=False, gid=0):

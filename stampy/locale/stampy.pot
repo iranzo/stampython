@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-04-12 12:07+0200\n"
+"POT-Creation-Date: 2017-04-21 21:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,22 +17,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
 
-#: stampy/plugins.py:40
+#: stampy/plugins.py:41
 #, python-format
 msgid "Plugging added: %s"
 msgstr ""
 
-#: stampy/plugins.py:43
+#: stampy/plugins.py:44
 #, python-format
 msgid "Plugging disabled: %s"
 msgstr ""
 
-#: stampy/plugins.py:69
+#: stampy/plugins.py:70
 #, python-format
 msgid "Processing plugin initialization: %s"
 msgstr ""
 
-#: stampy/plugins.py:76
+#: stampy/plugins.py:77
 #, python-format
 msgid "Plugin %s is triggered by %s"
 msgstr ""
@@ -103,114 +103,114 @@ msgstr ""
 msgid "Clearing messages at %s"
 msgstr ""
 
-#: stampy/stampy.py:308
+#: stampy/stampy.py:311
 msgid "Use `/quit` to exit daemon mode\n"
 msgstr ""
 
-#: stampy/stampy.py:309
+#: stampy/stampy.py:312
 msgid ""
 "Learn more about this bot in [https://github.com/iranzo/stampython] "
 "(https://github.com/iranzo/stampython)"
 msgstr ""
 
-#: stampy/stampy.py:312 stampy/stampy.py:316
+#: stampy/stampy.py:315 stampy/stampy.py:319
 msgid ""
 "This bot does not use start or stop commands, it automatically checks for"
 " karma operands"
 msgstr ""
 
-#: stampy/plugin/help.py:78 stampy/stampy.py:332
+#: stampy/plugin/help.py:78 stampy/stampy.py:335
 #, python-format
 msgid "Command: %s"
 msgstr ""
 
-#: stampy/stampy.py:352
+#: stampy/stampy.py:355
 #, python-format
 msgid "Sending sticker: %s"
 msgstr ""
 
-#: stampy/stampy.py:380
+#: stampy/stampy.py:383
 #, python-format
 msgid "Sending image: %s"
 msgstr ""
 
-#: stampy/stampy.py:529
+#: stampy/stampy.py:532
 #, python-format
 msgid "Running checks for trigger: %s"
 msgstr ""
 
-#: stampy/stampy.py:530
+#: stampy/stampy.py:533
 #, python-format
 msgid "Command %s, texto: %s"
 msgstr ""
 
-#: stampy/stampy.py:544
+#: stampy/stampy.py:547
 #, python-format
 msgid "Processing plugin: %s"
 msgstr ""
 
-#: stampy/stampy.py:546
+#: stampy/stampy.py:549
 #, python-format
 msgid "Plugin return code: %s"
 msgstr ""
 
-#: stampy/stampy.py:551
+#: stampy/stampy.py:554
 #, python-format
 msgid "New triggers for %s: %s"
 msgstr ""
 
-#: stampy/stampy.py:558
+#: stampy/stampy.py:561
 #, python-format
 msgid "TEXT: %s : %s : %s"
 msgstr ""
 
-#: stampy/stampy.py:562
+#: stampy/stampy.py:565
 #, python-format
 msgid "Last processed message at: %s"
 msgstr ""
 
-#: stampy/stampy.py:564
+#: stampy/stampy.py:567
 #, python-format
 msgid "Last processed update_id : %s"
 msgstr ""
 
-#: stampy/stampy.py:566
+#: stampy/stampy.py:569
 #, python-format
 msgid "Number of messages in this batch: %s"
 msgstr ""
 
-#: stampy/stampy.py:597
+#: stampy/stampy.py:600
 #, python-format
 msgid "Final deduplicated list: %s"
 msgstr ""
 
-#: stampy/stampy.py:632
+#: stampy/stampy.py:669
 #, python-format
 msgid "Logging level set to %s"
 msgstr ""
 
-#: stampy/stampy.py:700
+#: stampy/stampy.py:737
 msgid "Started execution"
 msgstr ""
 
-#: stampy/stampy.py:711
+#: stampy/stampy.py:748
 msgid "Token required for operation, please check https://core.telegram.org/bots"
 msgstr ""
 
-#: stampy/stampy.py:730
+#: stampy/stampy.py:767
 #, python-format
 msgid "Plug triggers reported: %s"
 msgstr ""
 
-#: stampy/stampy.py:735
+#: stampy/stampy.py:772
 msgid "Running in daemon mode"
 msgstr ""
 
-#: stampy/stampy.py:740
+#: stampy/stampy.py:777
 msgid "Running in one-shoot mode"
 msgstr ""
 
-#: stampy/stampy.py:743
+#: stampy/stampy.py:780
 msgid "Stopped execution"
 msgstr ""
 
@@ -234,7 +234,7 @@ msgid ""
 msgstr ""
 
 #: stampy/plugin/alias.py:72 stampy/plugin/autokarma.py:78
-#: stampy/plugin/config.py:70 stampy/plugin/dilbert.py:79
+#: stampy/plugin/config.py:82 stampy/plugin/dilbert.py:79
 #: stampy/plugin/espp.py:66 stampy/plugin/forward.py:125
 #: stampy/plugin/help.py:64 stampy/plugin/jueves.py:76 stampy/plugin/mel.py:77
 #: stampy/plugin/obichero.py:78 stampy/plugin/quico.py:78
@@ -337,57 +337,81 @@ msgstr ""
 msgid "Autokarma words %s encountered for processing"
 msgstr ""
 
-#: stampy/plugin/config.py:47
+#: stampy/plugin/config.py:50
 msgid "Use `/config show` to get a list of defined config settings\n"
 msgstr ""
 
-#: stampy/plugin/config.py:48
+#: stampy/plugin/config.py:51
 msgid "Use `/config set <key>=<value>` to define a value for key\n"
 msgstr ""
 
-#: stampy/plugin/config.py:49
+#: stampy/plugin/config.py:52
 msgid ""
 "Use `/config delete <key>` to delete key\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/config.py:91
+#: stampy/plugin/config.py:54
+msgid "Use `/gconfig show` to get a list of defined group config settings\n"
+msgstr ""
+
+#: stampy/plugin/config.py:55
+msgid "Use `/gconfig set <key>=<value>` to define a value for key\n"
+msgstr ""
+
+#: stampy/plugin/config.py:56
+msgid ""
+"Use `/gconfig delete <key>` to delete key\n"
+"\n"
+msgstr ""
+
+#: stampy/plugin/config.py:112
 #, python-format
 msgid "Deleting config for `%s`"
 msgstr ""
 
-#: stampy/plugin/config.py:104
+#: stampy/plugin/config.py:115
+#, python-format
+msgid "Key *%s* not allowed to be removed"
+msgstr ""
+
+#: stampy/plugin/config.py:139
 #, python-format
 msgid "Setting config for `%s` to `%s`"
 msgstr ""
 
-#: stampy/plugin/config.py:137
+#: stampy/plugin/config.py:141
 #, python-format
-msgid "%s has a value of %s"
+msgid "Key *%s* not allowed to be set"
 msgstr ""
 
-#: stampy/plugin/config.py:142
+#: stampy/plugin/config.py:175
+#, python-format
+msgid "%s has a value of %s for id %s"
+msgstr ""
+
+#: stampy/plugin/config.py:180
 msgid "Defined configurations:\n"
 msgstr ""
 
-#: stampy/plugin/config.py:145
+#: stampy/plugin/config.py:183
 #, python-format
-msgid "Returning config %s for key %s"
+msgid "Returning config %s for key %s for id %s"
 msgstr ""
 
-#: stampy/plugin/config.py:186
+#: stampy/plugin/config.py:247
 #, python-format
-msgid "Updating config for %s with %s"
+msgid "Updating config for %s with %s for id %s"
 msgstr ""
 
-#: stampy/plugin/config.py:202
+#: stampy/plugin/config.py:264
 #, python-format
-msgid "setconfig: %s=%s"
+msgid "setconfig: %s=%s for id %s"
 msgstr ""
 
-#: stampy/plugin/config.py:216
+#: stampy/plugin/config.py:279
 #, python-format
-msgid "rmconfig: %s"
+msgid "rmconfig: %s for id %s"
 msgstr ""
 
 #: stampy/plugin/dilbert.py:57
@@ -771,99 +795,114 @@ msgstr ""
 msgid "createquote: %s=%s on %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:74
+#: stampy/plugin/stats.py:86
 msgid ""
 "Use `@all` to ping all users in a channel as long as they have username "
 "defined in Telegram\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/stats.py:76
+#: stampy/plugin/stats.py:88
 msgid ""
 "Use `/stats show <user|chat>` to get stats on last usage\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/stats.py:97
+#: stampy/plugin/stats.py:89
+msgid ""
+"Use `/getout <chatid|here>` to have bot leave that chat or current one\n"
+"\n"
+msgstr ""
+
+#: stampy/plugin/stats.py:110
 #, python-format
 msgid "Owner Stat: %s by %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:139
+#: stampy/plugin/stats.py:155
+#, python-format
+msgid "Owner getout: %s by %s"
+msgstr ""
+
+#: stampy/plugin/stats.py:185
 msgid "Defined stats:\n"
 msgstr ""
 
-#: stampy/plugin/stats.py:141
+#: stampy/plugin/stats.py:187
 #, python-format
 msgid "Returning stats %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:197
+#: stampy/plugin/stats.py:243 stampy/plugin/stats.py:302
 #, python-format
 msgid "values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid: %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:203
+#: stampy/plugin/stats.py:249
 msgid "ERROR on updatestats"
 msgstr ""
 
-#: stampy/plugin/stats.py:223
+#: stampy/plugin/stats.py:308
+msgid "ERROR on remove_from_memberid"
+msgstr ""
+
+#: stampy/plugin/stats.py:328
 #, python-format
 msgid "Chat id %s users %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:242
+#: stampy/plugin/stats.py:347
 #, python-format
 msgid "Chat id %s left"
 msgstr ""
 
-#: stampy/plugin/stats.py:267
+#: stampy/plugin/stats.py:372
 #, python-format
 msgid "Processing chat_ids for cleanup: %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:279
+#: stampy/plugin/stats.py:384
 #, python-format
 msgid "CHAT ID %s with name %s with %s inactivity days is going to be purged"
 msgstr ""
 
-#: stampy/plugin/stats.py:283
+#: stampy/plugin/stats.py:388
 #, python-format
 msgid ""
 "Due to inactivity of more than %s days, this bot will exit the channel, "
 "please re-add in the future if needed"
 msgstr ""
 
-#: stampy/plugin/stats.py:298 stampy/plugin/stats.py:354
+#: stampy/plugin/stats.py:403 stampy/plugin/stats.py:459
 #, python-format
 msgid "LINE for user %s and memberid: %s will be deleted"
 msgstr ""
 
-#: stampy/plugin/stats.py:328
+#: stampy/plugin/stats.py:433
 #, python-format
 msgid "Processing userids for cleanup: %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:341
+#: stampy/plugin/stats.py:446
 #, python-format
 msgid "USER ID %s with name %s with %s inactivity days is going to be purged"
 msgstr ""
 
-#: stampy/plugin/stats.py:391
+#: stampy/plugin/stats.py:496
 #, python-format
 msgid "values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid:%s"
 msgstr ""
 
-#: stampy/plugin/stats.py:408
+#: stampy/plugin/stats.py:513
 msgid "@All invoked"
 msgstr ""
 
-#: stampy/plugin/stats.py:432
+#: stampy/plugin/stats.py:537
 #, python-format
 msgid "%s wanted to ping you: "
 msgstr ""
 
-#: stampy/plugin/stats.py:452
+#: stampy/plugin/stats.py:557
 #, python-format
 msgid "Pinging chat %s: %s on %s"
 msgstr ""
@@ -876,6 +915,18 @@ msgstr ""
 
 #: stampy/plugin/stock.py:127
 msgid "USD/EUR rate \n"
+msgstr ""
+
+#: stampy/plugin/welcome.py:49
+msgid ""
+"As admin or owner define 'welcome' to the greeting text sent to new chat "
+"members. You can use $username to put long name in the text\n"
+"\n"
+msgstr ""
+
+#: stampy/plugin/welcome.py:66
+#, python-format
+msgid "New user in chat, sending greetings: %s"
 msgstr ""
 
 #: stampy/plugin/xkcd.py:55

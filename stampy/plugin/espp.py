@@ -71,12 +71,12 @@ def espp(message):
     except:
         monthly = 0
 
-    ticker = stampy.plugin.config.config("stock")
+    ticker = stampy.plugin.config.gconfig(key="stock", gid=chat_id, default='RHT')
 
     text = "```\n"
     rate = stampy.plugin.stock.get_currency_rate('USD', 'EUR')
     text += _("USD/EUR rate ") + str(rate) + "\n"
-    initial = float(stampy.plugin.config.config("espp", 0))
+    initial = float(stampy.plugin.config.gconfig(key="espp", default=0, gid=chat_id))
     text += _("Initial quote: %s USD\n") % initial
     try:
         quote = c.get(ticker)

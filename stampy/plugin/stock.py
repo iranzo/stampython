@@ -118,7 +118,7 @@ def stock(message):
         command = False
 
     if not command:
-        stock = stampy.plugin.config.config("stock", "RHT").split(" ")
+        stock = stampy.plugin.config.gconfig(key="stock", default="RHT", gid=chat_id).split(" ")
     else:
         stock = texto.split(" ")[1::]
 

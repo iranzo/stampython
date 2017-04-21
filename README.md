@@ -30,10 +30,26 @@ News about the program, new features, etc at <https://telegram.me/stampynews>.
   or prior days as data is obtained from RSS feed)
 - `/obichero <date>` to retrieve O bichero's strip for today or supplied date 
   (today or prior days as data is obtained from RSS feed)  
-- `/quico <date>` to retrieve Quico Jubilata's strip for today or suplied
+- `/quico <date>` to retrieve Quico Jubilata's strip for today or supplied
   date
+- `/xkcd <date>` to retrieve XKCD's strip for today or supplied
+  date
+- `/jueves <date>` to retrieve El Jueves strip for today or supplied  date
+  
 - `@all` to ping all usernames for users in a channel
+- `@all++` to give karma to all usernames in a channel
 - `stock <ticker>` to get trading quote for ticker in stock market
+- `/espp <amount>` to get earning calculations based on stock defined and monthly rate (for 6 months)
+
+## Extra commands only for admin user
+### Configuration
+The bot, once token has been used and admin has been set, will store that information in the database, so you can control it from a chat window
+
+- `/gconfig show` will list actual defined settings
+- `/gconfig set var=value` will set one of those settings with a new value
+    - As of this writing (verbosity, url for api, token, sleep timeout, owner, database, run in daemon mode)
+- `/gconfig delete var` will delete that variable from configuration.
+
 
 ## Extra commands only for owner user
 ### Configuration

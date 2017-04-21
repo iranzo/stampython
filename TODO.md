@@ -10,8 +10,7 @@
 ### Private group support
   - TODO:
     - DONE:
-       - Implement /gconfig to store settings per chat (be silent, timeout
-      for ban, etc)
+       - Implement /gconfig to store settings per chat
        - Create table to store chat-specific-settings
          - id, key, value
             - Stored in config with id==chat_id, 0 for general settings
@@ -41,10 +40,17 @@
                         - link: Empty, if defined, use the target gid for karma, alias, admin, etc
                     - admin: ''
                         - Allow group without 'admin' to get owned
+                        - If user with 'alias' no longer in group, moved to 
+                        unadmin
                     - link
-                      - when two channels are linked, merge their karmas
+                      - when two channels are linked, delete prior karma for 
+                      slave channel and use the one from master
                       - Set a procedure for ACK'ing the link from both source and
                         target channel unless set by owner or admin of both is the same
+                      - When 'master' channel is removed, unlink slaves but 
+                      keep karma/alias, etc
+                      - Allow prior admin of channel to 'unlink' while  
+                      duplicating karma/alias, etc
                 - users
                     - highlight
 
@@ -79,6 +85,7 @@
     - Implement i18n to the project to allow users to write strings for the 
       bot and use the channel-configured language (or default to en) for 
       messages.
+      - Mostly i18n done, failed to change the language dynamically so far
     - Fix ESPP so it works with whatever number of stocks defined
     - Fix ESPP so it might have several periods or stocks
     - Fix ESPP so it might have several discuonts
