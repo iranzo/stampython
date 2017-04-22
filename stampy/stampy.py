@@ -611,7 +611,7 @@ def is_owner(message):
     logger = logging.getLogger(__name__)
     code = False
     msgdetail = getmsgdetail(message)
-    for each in plugin.config.config(key='owner').split():
+    for each in plugin.config.config(key='owner').split(" "):
         if each == msgdetail["who_un"]:
             code = True
     return code
@@ -628,7 +628,7 @@ def is_owner_or_admin(message):
     admin = False
     msgdetail = getmsgdetail(message)
     owner = is_owner(message)
-    for each in plugin.config.config(key='admin', default="").split():
+    for each in plugin.config.config(key='admin', default="").split(" "):
         if each == msgdetail["who_un"]:
             admin = True
 
