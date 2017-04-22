@@ -9,12 +9,6 @@
 
 ### Private group support
   - TODO:
-    - DONE:
-       - Implement /gconfig to store settings per chat
-       - Create table to store chat-specific-settings
-         - id, key, value
-            - Stored in config with id==chat_id, 0 for general settings
-    - TODO:
         - Define basic/default configuration to be applied to all new channels 
         and versioning, so once a new default is required, if missing, define
          it or inherit from global config
@@ -58,8 +52,6 @@
         - Modify quote commands and database
         - Modify alias commands and database
         - Modify autok commands and database
-        - Modify stock commands to get values from gconfig
-        - Modify espp commands to get values from gconfig
       
 ### Other
     - Initial load of karma points from older bot (possible separate script)
