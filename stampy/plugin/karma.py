@@ -381,9 +381,14 @@ def karmaprocess(msgdetail):
 
             # Send originating user for karma change a reply with
             # the new value
-            stampy.stampy.sendmessage(chat_id=msgdetail["chat_id"], text=text,
-                                      reply_to_message_id=msgdetail["message_id"],
-                                      parse_mode="Markdown")
+
+            modulo = int(stampy.plugin.config.gconfig(key="modulo", default="1", gid=msgdetail["chat_id"]))
+
+            if modulo != 0:
+                if karma % modulo == 0:
+                    stampy.stampy.sendmessage(chat_id=msgdetail["chat_id"], text=text,
+                                              reply_to_message_id=msgdetail["message_id"],
+                                              parse_mode="Markdown")
             stampyphant(chat_id=msgdetail["chat_id"], karma=karma)
     return
 

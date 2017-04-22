@@ -26,7 +26,7 @@
                     - language: en (TODO)
                     - currency: EUR (DONE)
                     - modulo (to just show karma every X points)
-                        - Set to '0' to just show stampy  (TODO)
+                        - Set to '0' to just show stampy  (DONE)
                     - stock (DONE)
                     - espp (DONE
                 - chats
