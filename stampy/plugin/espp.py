@@ -74,8 +74,9 @@ def espp(message):
     ticker = stampy.plugin.config.gconfig(key="stock", gid=chat_id, default='RHT').split(" ")[0]
 
     text = "```\n"
-    rate = stampy.plugin.stock.get_currency_rate('USD', 'EUR')
-    text += _("USD/EUR rate ") + str(rate) + "\n"
+    currency = stampy.plugin.config.gconfig(key="currency", default="EUR", gid=chat_id)
+    rate = stampy.plugin.stock.get_currency_rate('USD', currency)
+    text += _("USD/%s rate ") % currency + str(rate) + "\n"
     initial = float(stampy.plugin.config.gconfig(key="espp", default=0, gid=chat_id))
     text += _("Initial quote: %s USD\n") % initial
     try:
@@ -99,9 +100,9 @@ def espp(message):
         stocks = float(int((monthly / rate) * 6 / reduced))
         text += _("Estimated stocks: %s\n") % stocks
         earning = (final - reduced) * stocks * rate
-        text += _("Estimated earning: %s EUR\n") % "{0:.2f}".format(earning)
+        text += _("Estimated earning: %s %s\n") % ("{0:.2f}".format(earning), currency)
         total = monthly * 6 + earning
-        text += _("Total amount deposited on sell: %s EUR\n") % "{0:.2f}".format(total)
+        text += _("Total amount deposited on sell: %s %s\n") % ("{0:.2f}".format(total), currency)
         text += _("Estimated A.E.R. vs investment: %s %%") % "{0:.2f}".format(earning / (total - earning) * 100)
 
     text += "```"

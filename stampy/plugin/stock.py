@@ -123,15 +123,16 @@ def stock(message):
         stock = texto.split(" ")[1::]
 
     text = "```\n"
-    rate = get_currency_rate('USD', 'EUR')
-    text += _("USD/EUR rate " + str(rate) + "\n")
+    currency = stampy.plugin.config.gconfig(key="currency", default="EUR", gid=chat_id)
+    rate = get_currency_rate('USD', currency)
+    text += _("USD/%s rate " % currency + str(rate) + "\n")
     for ticker in stock:
         try:
             quote = c.get(ticker)
             text += "%s Quote " % quote["t"] + " " + quote["l_cur"] + " " + quote["c"] + " (%s%%)" % quote["cp"]
             quoteUSD = float(quote["l_cur"])
             quoteEur = float(quoteUSD * rate)
-            text += " (%s EUR)\n" % "{0:.2f}".format(quoteEur)
+            text += " (%s %s)\n" % ("{0:.2f}".format(quoteEur), currency)
         except:
             text += ""
 

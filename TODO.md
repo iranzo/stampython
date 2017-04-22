@@ -23,8 +23,8 @@
         - Create settings to store chat-specific values in a consistent way
             - Limit settings that can be defined (keys) for group admins
                 - common
-                    - language: en
-                    - currency: EUR
+                    - language: en (TODO)
+                    - currency: EUR (TODO)
                     - modulo (to just show karma every X points)
                         - Set to '0' to just show stampy
                     - stock
