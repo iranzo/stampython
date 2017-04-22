@@ -24,11 +24,11 @@
             - Limit settings that can be defined (keys) for group admins
                 - common
                     - language: en (TODO)
-                    - currency: EUR (TODO)
+                    - currency: EUR (DONE)
                     - modulo (to just show karma every X points)
-                        - Set to '0' to just show stampy
-                    - stock
-                    - espp
+                        - Set to '0' to just show stampy  (TODO)
+                    - stock (DONE)
+                    - espp (DONE
                 - chats
                     - isolated: False, if true, allow link
                         - link: Empty, if defined, use the target gid for karma, alias, admin, etc
