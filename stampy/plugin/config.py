@@ -51,7 +51,7 @@ def help(message):  # do not edit this line
         commandtext += _("Use `/config set <key>=<value>` to define a value for key\n")
         commandtext += _("Use `/config delete <key>` to delete key\n\n")
     if stampy.stampy.is_owner_or_admin(message):
-        commandtext = _("Use `/gconfig show` to get a list of defined group config settings\n")
+        commandtext += _("Use `/gconfig show` to get a list of defined group config settings\n")
         commandtext += _("Use `/gconfig set <key>=<value>` to define a value for key\n")
         commandtext += _("Use `/gconfig delete <key>` to delete key\n\n")
     return commandtext
