@@ -37,11 +37,10 @@
                         - If user with 'alias' no longer in group, moved to 
                         unadmin
                     - link
+                        - create commands for link, ack link, unlink, show links (DONE)
                       - when two channels are linked, delete prior karma for 
                       slave channel and use the one from master
-                      - Set a procedure for ACK'ing the link from both source and
-                        target channel unless set by owner or admin of both is the same
-                      - When 'master' channel is removed, unlink slaves but 
+                      - When 'master' channel is removed, unlink slaves but
                       keep karma/alias, etc
                       - Allow prior admin of channel to 'unlink' while  
                       duplicating karma/alias, etc
