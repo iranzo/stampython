@@ -104,7 +104,7 @@ def configcommands(message):
                 if gid > 0:  # user private chat
                     validkeys = ['language', 'currency', 'modulo', 'stock', 'espp', 'highlight']
                 elif gid < 0:  # group chat or channel
-                    validkeys = ['language', 'currency', 'modulo', 'stock', 'espp', 'isolated', 'link', 'admin']
+                    validkeys = ['language', 'currency', 'modulo', 'stock', 'espp', 'isolated', 'admin']
                 else:
                     validkeys = []
 
@@ -129,7 +129,7 @@ def configcommands(message):
                     if gid > 0:  # user private chat
                         validkeys = ['language', 'currency', 'modulo', 'stock', 'espp', 'highlight']
                     elif gid < 0:  # group chat or channel
-                        validkeys = ['language', 'currency', 'modulo', 'stock', 'espp', 'isolated', 'link', 'admin']
+                        validkeys = ['language', 'currency', 'modulo', 'stock', 'espp', 'isolated', 'admin']
                     else:
                         validkeys = []
 
