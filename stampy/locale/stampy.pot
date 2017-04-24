@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-04-24 23:39+0200\n"
+"POT-Creation-Date: 2017-04-25 00:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -345,12 +345,12 @@ msgstr ""
 
 #: stampy/plugin/alias.py:159
 #, python-format
-msgid "Returning aliases %s for word %s"
+msgid "Returning aliases %s for word %s for gid %s"
 msgstr ""
 
 #: stampy/plugin/alias.py:173
 #, python-format
-msgid "createalias: circular reference %s=%s"
+msgid "createalias: circular reference %s=%s for gid %s"
 msgstr ""
 
 #: stampy/plugin/autokarma.py:57

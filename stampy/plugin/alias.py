@@ -83,7 +83,7 @@ def aliascommands(message):
 
         for case in stampy.stampy.Switch(command):
             if case('list'):
-                text = listalias(word)
+                text = listalias(word, gid=0)
                 stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                           reply_to_message_id=message_id,
                                           disable_web_page_preview=True,
@@ -96,7 +96,7 @@ def aliascommands(message):
                                           reply_to_message_id=message_id,
                                           disable_web_page_preview=True,
                                           parse_mode="Markdown")
-                deletealias(word=key)
+                deletealias(word=key, gid=0)
                 break
             if case():
                 word = texto.split(' ')[1]
@@ -108,11 +108,11 @@ def aliascommands(message):
                                               reply_to_message_id=message_id,
                                               disable_web_page_preview=True,
                                               parse_mode="Markdown")
-                    createalias(word=key, value=value)
+                    createalias(word=key, value=value, gid=0)
     return
 
 
-def deletealias(word):
+def deletealias(word, gid=0):
     """
     Deletes a word from the alias database
     :param word:  word to delete
@@ -120,13 +120,13 @@ def deletealias(word):
     """
 
     logger = logging.getLogger(__name__)
-    sql = "DELETE FROM alias WHERE key='%s';" % word
-    logger.debug(msg="rmalias: %s" % word)
+    sql = "DELETE FROM alias WHERE key='%s' AND gid='%s';" % (word, gid)
+    logger.debug(msg="rmalias: %s for group %s" % (word, gid))
     stampy.stampy.dbsql(sql)
     return
 
 
-def listalias(word=False):
+def listalias(word=False, gid=0):
     """
     Lists the alias defined for a word, or all the aliases
     :param word: word to return value for or everything
@@ -136,8 +136,8 @@ def listalias(word=False):
     logger = logging.getLogger(__name__)
     if word:
         # if word is provided, return the alias for that word
-        string = (word,)
-        sql = "SELECT key,value FROM alias WHERE key='%s' ORDER by key ASC;" % string
+        string = (word, gid)
+        sql = "SELECT key,value FROM alias WHERE key='%s' AND gid='%s' ORDER by key ASC;" % string
         cur = stampy.stampy.dbsql(sql)
         value = cur.fetchone()
 
@@ -151,16 +151,16 @@ def listalias(word=False):
         text = _("%s has an alias %s") % (word, value)
 
     else:
-        sql = "select key,value from alias ORDER BY key ASC;"
+        sql = "select key,value from alias WHERE gid='%s' ORDER BY key ASC;" % gid
         cur = stampy.stampy.dbsql(sql)
         text = _("Defined aliases:\n")
         table = from_db_cursor(cur)
         text = "%s\n```%s```" % (text, table.get_string())
-    logger.debug(msg=_("Returning aliases %s for word %s") % (text, word))
+    logger.debug(msg=_("Returning aliases %s for word %s for gid %s") % (text, word, gid))
     return text
 
 
-def createalias(word, value):
+def createalias(word, value, gid=0):
     """
     Creates an alias for a word
     :param word: word to use as base for the alias
@@ -169,24 +169,24 @@ def createalias(word, value):
     """
 
     logger = logging.getLogger(__name__)
-    if getalias(value) == word:
-        logger.error(msg=_("createalias: circular reference %s=%s") % (word, value))
+    if getalias(value, gid=gid) == word:
+        logger.error(msg=_("createalias: circular reference %s=%s for gid %s") % (word, value, gid))
     else:
-        if not getalias(word) or getalias(word) == word:
+        if not getalias(word, gid) or getalias(word, gid) == word:
             # Removing duplicates on karma DB and add
             # the previous values
             old = stampy.plugin.karma.getkarma(word)
             stampy.plugin.karma.updatekarma(word=word, change=-old)
             stampy.plugin.karma.updatekarma(word=value, change=old)
 
-            sql = "INSERT INTO alias VALUES('%s','%s');" % (word, value)
-            logger.debug(msg="createalias: %s=%s" % (word, value))
+            sql = "INSERT INTO alias(word, value, gid) VALUES('%s','%s', '%s');" % (word, value, gid)
+            logger.debug(msg="createalias: %s=%s for gid %s" % (word, value, gid))
             stampy.stampy.dbsql(sql)
             return
     return False
 
 
-def getalias(word):
+def getalias(word, gid=0):
     """
     Get alias for a word in case it's defined
     :param word: word to search alias
@@ -194,11 +194,11 @@ def getalias(word):
     """
 
     logger = logging.getLogger(__name__)
-    string = (word,)
-    sql = "SELECT key,value FROM alias WHERE key='%s';" % string
+    string = (word, gid)
+    sql = "SELECT key,value FROM alias WHERE key='%s' AND gid='%s';" % string
     cur = stampy.stampy.dbsql(sql)
     value = cur.fetchone()
-    logger.debug(msg="getalias: %s" % word)
+    logger.debug(msg="getalias: %s for gid %s" % (word, gid))
 
     try:
         # Get value from SQL query
@@ -210,5 +210,5 @@ def getalias(word):
 
     # We can define recursive aliases, so this will return the ultimate one
     if value:
-        return getalias(word=value)
+        return getalias(word=value, gid=gid)
     return word

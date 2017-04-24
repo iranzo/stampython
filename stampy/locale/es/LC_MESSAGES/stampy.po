@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-04-24 23:40+0200\n"
-"PO-Revision-Date: 2017-04-24 23:42+0200\n"
+"POT-Creation-Date: 2017-04-25 00:22+0200\n"
+"PO-Revision-Date: 2017-04-25 00:22+0200\n"
 "Last-Translator: Pablo Iranzo Gómez <Pablo.Iranzo@gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -365,13 +365,13 @@ msgstr "Alias definidos:\n"
 
 #: stampy/plugin/alias.py:159
 #, python-format
-msgid "Returning aliases %s for word %s"
-msgstr "Devolviendo alias %s para la palabra %s"
+msgid "Returning aliases %s for word %s for gid %s"
+msgstr "Devolviendo alias %s para la palabra %s para gid %s"
 
 #: stampy/plugin/alias.py:173
 #, python-format
-msgid "createalias: circular reference %s=%s"
-msgstr "createalias: referencia circular %s=%s"
+msgid "createalias: circular reference %s=%s for gid %s"
+msgstr "createalias: referencia circular %s=%s para gid %s"
 
 #: stampy/plugin/autokarma.py:57
 msgid ""
