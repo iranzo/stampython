@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-04-24 23:13+0200\n"
-"PO-Revision-Date: 2017-04-24 23:16+0200\n"
+"POT-Creation-Date: 2017-04-24 23:40+0200\n"
+"PO-Revision-Date: 2017-04-24 23:42+0200\n"
 "Last-Translator: Pablo Iranzo Gómez <Pablo.Iranzo@gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -236,12 +236,17 @@ msgid ""
 "Use `/admin link master` to generate and store linking token to be used on "
 "slaves\n"
 msgstr ""
+"Use `/admin link master <token> para generar y almacenar un token de "
+"enlazado para usarse en esclavos\n"
 
 #: stampy/plugin/admin.py:53
 msgid ""
 "Use `/admin link slave <token> to use provided token to link against master "
 "channel\n"
 msgstr ""
+"Use `/admin link slave <token> para usar el token proporcionado al enlazar "
+"contra el canal maestro\n"
+" master channel\n"
 
 #: stampy/plugin/admin.py:54
 msgid "Use `/admin link show to list linked channel\n"
@@ -261,17 +266,17 @@ msgstr "Comando: %s por %s"
 #: stampy/plugin/admin.py:129
 #, python-format
 msgid "Generated token %s for channel %s"
-msgstr ""
+msgstr "Generado el token %s para el canal %s"
 
 #: stampy/plugin/admin.py:130
 #, python-format
 msgid "Token for linking against this channel has been generated as %s"
-msgstr ""
+msgstr "Token para enlazar a este canal generado como %s"
 
 #: stampy/plugin/admin.py:134
 #, python-format
 msgid "Already generated token %s for channel %s"
-msgstr ""
+msgstr "Token ya generado %s para el canal %s"
 
 #: stampy/plugin/admin.py:135
 #, python-format
@@ -406,32 +411,33 @@ msgstr "Borrando pareja de auto karma para `%s - %s`"
 msgid "Setting autokarma for `%s` triggers `%s++`"
 msgstr "Estableciendo autokarma para `%s` que desencadena `%s++`"
 
-#: stampy/plugin/autokarma.py:177
+#: stampy/plugin/autokarma.py:179
 #, python-format
-msgid "createautok: autok pair %s - %s already exists"
-msgstr "createautok: la pareja de autokarma %s - %s ya existe"
+msgid "createautok: autok pair %s - %s for gid %s already exists"
+msgstr ""
+"createautok: la pareja de autokarma %s - %s para el groupo %s ya existe"
 
-#: stampy/plugin/autokarma.py:216
+#: stampy/plugin/autokarma.py:220
 #, python-format
-msgid "for word %s"
-msgstr "para la palabra %s"
+msgid "for word %s for gid %s"
+msgstr "para la palabra %s para id %s"
 
-#: stampy/plugin/autokarma.py:222
+#: stampy/plugin/autokarma.py:226
 #, python-format
 msgid "Defined autokarma triggers %s:\n"
 msgstr "Disparadores de autokarma %s:\n"
 
-#: stampy/plugin/autokarma.py:228
+#: stampy/plugin/autokarma.py:232
 #, python-format
 msgid "%s has no trigger autokarma"
 msgstr "%s no tiene un disparador de autokarma"
 
-#: stampy/plugin/autokarma.py:230
+#: stampy/plugin/autokarma.py:234
 #, python-format
 msgid "Returning autokarma %s for word %s"
 msgstr "Devolviendo autokarma %s para la palabra %s"
 
-#: stampy/plugin/autokarma.py:258
+#: stampy/plugin/autokarma.py:262
 #, python-format
 msgid "Autokarma words %s encountered for processing"
 msgstr "Encontradas palabras autokarma %s para procesado"
@@ -1130,6 +1136,9 @@ msgid ""
 msgstr ""
 "Use `/xkcd trigger` para forzar el envío de la viñeta actual al canal\n"
 "\n"
+
+#~ msgid "for word %s"
+#~ msgstr "para la palabra %s"
 
 #~ msgid "Use `/lang <country code>` to change LANG environment variable\n"
 #~ msgstr ""

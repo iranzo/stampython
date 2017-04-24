@@ -90,7 +90,7 @@ def autokcommands(message):
 
         for case in stampy.stampy.Switch(command):
             if case('list'):
-                text = listautok(word)
+                text = listautok(word, gid=0)
                 stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                           reply_to_message_id=message_id,
                                           disable_web_page_preview=True,
@@ -106,7 +106,7 @@ def autokcommands(message):
                                               reply_to_message_id=message_id,
                                               disable_web_page_preview=True,
                                               parse_mode="Markdown")
-                    deleteautok(key=key, value=value)
+                    deleteautok(key=key, value=value, gid=0)
 
             if case():
                 word = texto.split(' ')[1]
@@ -118,20 +118,21 @@ def autokcommands(message):
                                               reply_to_message_id=message_id,
                                               disable_web_page_preview=True,
                                               parse_mode="Markdown")
-                    createautok(word=key, value=value)
+                    createautok(word=key, value=value, gid=0)
 
     return
 
 
-def getautok(key):
+def getautok(key, gid=0):
     """
     Get autok for a key value pair in case it's defined
+    :param gid: filter to group id
     :param key: key to search autok
     :return: list of values
     """
 
     logger = logging.getLogger(__name__)
-    sql = "SELECT key,value FROM autokarma WHERE key='%s';" % key
+    sql = "SELECT key,value FROM autokarma WHERE key='%s' AND gid='%s';" % (key, gid)
     cur = stampy.stampy.dbsql(sql)
     data = cur.fetchall()
     value = []
@@ -139,19 +140,19 @@ def getautok(key):
         # Fill valid values
         value.append(row[1])
 
-    logger.debug(msg="getautok: %s - %s" % (key, value))
+    logger.debug(msg="getautok: %s - %s for gid %s" % (key, value, gid))
 
     return value
 
 
-def getautokeywords():
+def getautokeywords(gid=0):
     """
     Get autokeywords
     :return: List of autokeywords
     """
 
     logger = logging.getLogger(__name__)
-    sql = "SELECT distinct key FROM autokarma;"
+    sql = "SELECT distinct key FROM autokarma WHERE gid='%s';" % gid
     cur = stampy.stampy.dbsql(sql)
     data = cur.fetchall()
     value = []
@@ -159,14 +160,15 @@ def getautokeywords():
         # Fill valid values
         value.append(row[0])
 
-    logger.debug(msg="getautokeywords: %s" % value)
+    logger.debug(msg="getautokeywords: %s for gid %s" % (value, gid))
 
     return value
 
 
-def createautok(word, value):
+def createautok(word, value, gid=0):
     """
     Creates an autokarma trigger for a word
+    :param gid: filter to group id
     :param word: word to use as base for the autokarma
     :param value: values to set as autokarma
     :return:
@@ -174,33 +176,35 @@ def createautok(word, value):
 
     logger = logging.getLogger(__name__)
     if value in getautok(word):
-        logger.error(msg=_("createautok: autok pair %s - %s already exists") % (word, value))
+        logger.error(msg=_("createautok: autok pair %s - %s for gid %s already exists") % (word, value, gid))
     else:
-        sql = "INSERT INTO autokarma VALUES('%s','%s');" % (word, value)
-        logger.debug(msg="createautok: %s=%s" % (word, value))
+        sql = "INSERT INTO autokarma(word, value, gid) VALUES('%s','%s', '%s');" % (word, value, gid)
+        logger.debug(msg="createautok: %s=%s for gid %s" % (word, value, gid))
         stampy.stampy.dbsql(sql)
         return True
     return False
 
 
-def deleteautok(key, value):
+def deleteautok(key, value, gid=0):
     """
     Deletes a key - value pair from autokarma TABLE
+    :param gid: filter to group id
     :param key:  key to delete
     :param value: value to delete
     :return:
     """
 
     logger = logging.getLogger(__name__)
-    sql = "DELETE FROM autokarma WHERE key='%s' and value='%s';" % (key, value)
-    logger.debug(msg="rmautok: %s=%s" % (key, value))
+    sql = "DELETE FROM autokarma WHERE key='%s' and value='%s' and gid='%s';" % (key, value, gid)
+    logger.debug(msg="rmautok: %s=%s for gid %s" % (key, value, gid))
     stampy.stampy.dbsql(sql)
     return True
 
 
-def listautok(word=False):
+def listautok(word=False, gid=0):
     """
     Lists the autok pairs defined for a word, or all the autok
+    :param gid: filter to group id
     :param word: word to return value for or everything
     :return: table with autok stored
     """
@@ -211,9 +215,9 @@ def listautok(word=False):
     if not word:
         sql = "select key,value from autokarma ORDER BY key ASC;"
     else:
-        string = (word,)
-        sql = "SELECT key,value FROM autokarma WHERE key='%s' ORDER by key ASC;" % string
-        wordtext = _("for word %s") % word
+        string = (word, gid)
+        sql = "SELECT key,value FROM autokarma WHERE key='%s' AND gid='%s' ORDER by key ASC;" % string
+        wordtext = _("for word %s for gid %s") % (word, gid)
 
     cur = stampy.stampy.dbsql(sql)
 
@@ -245,7 +249,7 @@ def autokarmawords(message):
 
     wordadd = []
 
-    keywords = getautokeywords()
+    keywords = getautokeywords(gid=0)
     for autok in keywords:
         if autok in text_to_process:
             # If trigger word is there, add the triggered action

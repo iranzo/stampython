@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-04-24 23:10+0200\n"
+"POT-Creation-Date: 2017-04-24 23:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -382,32 +382,32 @@ msgstr ""
 msgid "Setting autokarma for `%s` triggers `%s++`"
 msgstr ""
 
-#: stampy/plugin/autokarma.py:177
+#: stampy/plugin/autokarma.py:179
 #, python-format
-msgid "createautok: autok pair %s - %s already exists"
+msgid "createautok: autok pair %s - %s for gid %s already exists"
 msgstr ""
 
-#: stampy/plugin/autokarma.py:216
+#: stampy/plugin/autokarma.py:220
 #, python-format
-msgid "for word %s"
+msgid "for word %s for gid %s"
 msgstr ""
 
-#: stampy/plugin/autokarma.py:222
+#: stampy/plugin/autokarma.py:226
 #, python-format
 msgid "Defined autokarma triggers %s:\n"
 msgstr ""
 
-#: stampy/plugin/autokarma.py:228
+#: stampy/plugin/autokarma.py:232
 #, python-format
 msgid "%s has no trigger autokarma"
 msgstr ""
 
-#: stampy/plugin/autokarma.py:230
+#: stampy/plugin/autokarma.py:234
 #, python-format
 msgid "Returning autokarma %s for word %s"
 msgstr ""
 
-#: stampy/plugin/autokarma.py:258
+#: stampy/plugin/autokarma.py:262
 #, python-format
 msgid "Autokarma words %s encountered for processing"
 msgstr ""

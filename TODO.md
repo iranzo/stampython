@@ -48,9 +48,9 @@
             - unlink: prior admin or admin from group
             - if admin is no longer listed, autoremove
     - Modify karma commands and database for group operation
-    - Modify quote commands and database for group operation
+    - Modify quote commands and database for group operation (DONE)
     - Modify alias commands and database for group operation
-    - Modify autok commands and database for group operation
+    - Modify autok commands and database for group operation (DONE)
       
 ### Other
     - Initial load of karma points from older bot (possible separate script)
