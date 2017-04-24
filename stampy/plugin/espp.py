@@ -77,35 +77,38 @@ def espp(message):
     currency = stampy.plugin.config.gconfig(key="currency", default="EUR", gid=chat_id)
     rate = stampy.plugin.stock.get_currency_rate('USD', currency)
     text += _("USD/%s rate ") % currency + str(rate) + "\n"
-    initial = float(stampy.plugin.config.gconfig(key="espp", default=0, gid=chat_id))
-    text += _("Initial quote: %s USD\n") % initial
-    try:
-        quote = c.get(ticker)
-        final = float(quote["l_cur"])
-        text += _("Actual quote: %s USD\n") % final
-    except:
-        final = initial
-        text += ""
+    initial = float(stampy.plugin.config.gconfig(key="espp", default=False, gid=chat_id))
+    if initial:
+        text += _("Initial quote: %s USD\n") % initial
+        try:
+            quote = c.get(ticker)
+            final = float(quote["l_cur"])
+            text += _("Actual quote: %s USD\n") % final
+        except:
+            final = initial
+            text += ""
 
-    if initial > final:
-        pricebuy = final
+        if initial > final:
+            pricebuy = final
+        else:
+            pricebuy = initial
+
+        reduced = 0.85 * pricebuy
+
+        text += _("Buy price: %s USD\n") % reduced
+        text += _("Earning per unit: %s USD\n") % (final - reduced)
+        if monthly:
+            stocks = float(int((monthly / rate) * 6 / reduced))
+            text += _("Estimated stocks: %s\n") % stocks
+            earning = (final - reduced) * stocks * rate
+            text += _("Estimated earning: %s %s\n") % ("{0:.2f}".format(earning), currency)
+            total = monthly * 6 + earning
+            text += _("Total amount deposited on sell: %s %s\n") % ("{0:.2f}".format(total), currency)
+            text += _("Estimated A.E.R. vs investment: %s %%") % "{0:.2f}".format(earning / (total - earning) * 100)
+
+        text += "```"
     else:
-        pricebuy = initial
-
-    reduced = 0.85 * pricebuy
-
-    text += _("Buy price: %s USD\n") % reduced
-    text += _("Earning per unit: %s USD\n") % (final - reduced)
-    if monthly:
-        stocks = float(int((monthly / rate) * 6 / reduced))
-        text += _("Estimated stocks: %s\n") % stocks
-        earning = (final - reduced) * stocks * rate
-        text += _("Estimated earning: %s %s\n") % ("{0:.2f}".format(earning), currency)
-        total = monthly * 6 + earning
-        text += _("Total amount deposited on sell: %s %s\n") % ("{0:.2f}".format(total), currency)
-        text += _("Estimated A.E.R. vs investment: %s %%") % "{0:.2f}".format(earning / (total - earning) * 100)
-
-    text += "```"
+        text = _("espp setting not defined, please use /gconfig set espp=<value>")
     logger.debug(msg=text)
     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                               reply_to_message_id=message_id,
