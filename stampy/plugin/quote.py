@@ -79,7 +79,7 @@ def quotecommands(message):
             who_quote = texto.split(' ')[2]
             date = time.time()
             quote = str.join(" ", texto.split(' ')[3:])
-            result = addquote(username=who_quote, date=date, text=quote)
+            result = addquote(username=who_quote, date=date, text=quote, gid=0)
             text = _("Quote `%s` added") % result
             stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                       reply_to_message_id=message_id,
@@ -94,7 +94,7 @@ def quotecommands(message):
                                           reply_to_message_id=message_id,
                                           disable_web_page_preview=True,
                                           parse_mode="Markdown")
-                deletequote(id=id_todel)
+                deletequote(id=id_todel, gid=0)
             break
         if case():
             # We're just given the nick (or not), so find quote for it
@@ -103,7 +103,7 @@ def quotecommands(message):
             except:
                 nick = False
             try:
-                (quoteid, username, date, quote) = getquote(username=nick)
+                (quoteid, username, date, quote) = getquote(username=nick, gid=0)
                 datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
                 text = '`%s` -- `@%s`, %s (id %s)' % (
                        quote, username, datefor, quoteid)
@@ -120,22 +120,23 @@ def quotecommands(message):
     return
 
 
-def getquote(username=False):
+def getquote(username=False, gid=0):
     """
     Gets quote for a specified username or a random one
+    :param gid: group id to filter
     :param username: username to get quote for
     :return: text for the quote or empty
     """
 
     logger = logging.getLogger(__name__)
     if username:
-        string = (username,)
-        sql = "SELECT id,username,date,text FROM quote WHERE username='%s' ORDER BY RANDOM() LIMIT 1;" % string
+        string = (username, gid)
+        sql = "SELECT id,username,date,text FROM quote WHERE username='%s' and gid='%s' ORDER BY RANDOM() LIMIT 1;" % string
     else:
-        sql = "SELECT id,username,date,text FROM quote ORDER BY RANDOM() LIMIT 1;"
+        sql = "SELECT id,username,date,text FROM quote WHERE gid='%s' ORDER BY RANDOM() LIMIT 1;" % gid
     cur = stampy.stampy.dbsql(sql)
     value = cur.fetchone()
-    logger.debug(msg="getquote: %s" % username)
+    logger.debug(msg="getquote: %s for gid: %s" % (username, gid))
     try:
         # Get value from SQL query
         (quoteid, username, date, quote) = value
@@ -153,9 +154,10 @@ def getquote(username=False):
     return False
 
 
-def addquote(username=False, date=False, text=False):
+def addquote(username=False, date=False, text=False, gid=0):
     """
     Adds a quote for a specified username
+    :param gid: group id to filter
     :param username: username to store quote for
     :param date: date when quote was added
     :param text: text of the quote
@@ -163,10 +165,10 @@ def addquote(username=False, date=False, text=False):
     """
 
     logger = logging.getLogger(__name__)
-    sql = "INSERT INTO quote(username, date, text) VALUES('%s','%s', '%s');" % (
-          username, date, text)
+    sql = "INSERT INTO quote(username, date, text, gid) VALUES('%s','%s', '%s', '%s');" % (
+          username, date, text, gid)
     cur = stampy.stampy.dbsql(sql)
-    logger.debug(msg=_("createquote: %s=%s on %s") % (username, text, date))
+    logger.debug(msg=_("createquote: %s=%s on %s for group %s") % (username, text, date, gid))
     # Retrieve last id
     sql = "select last_insert_rowid();"
     cur = stampy.stampy.dbsql(sql)
@@ -174,14 +176,15 @@ def addquote(username=False, date=False, text=False):
     return lastrowid
 
 
-def deletequote(id=False):
+def deletequote(id=False, gid=0):
     """
     Deletes quote from the database
+    :param gid: group id to filter
     :param id: ID of the quote to remove
     :return:
     """
 
     logger = logging.getLogger(__name__)
-    sql = "DELETE FROM quote WHERE id='%s';" % id
-    logger.debug(msg="deletequote: %s" % id)
+    sql = "DELETE FROM quote WHERE id='%s' AND gid='%s';" % (id, gid)
+    logger.debug(msg="deletequote: %s, group: %s" % (id, gid))
     return stampy.stampy.dbsql(sql)

@@ -9,48 +9,48 @@
 
 ### Private group support
   - TODO:
-        - Define basic/default configuration to be applied to all new channels 
-        and versioning, so once a new default is required, if missing, define
-         it or inherit from global config
-        - Define config preference between user/chat/general
-        - Implement having separate karma per group-id to have privacy on the
-          topics discussed on each one (no leaks because of karma)
-          - Implement table for config with chatid and 'group_id' to tie 
-          several chats together i.r.t config
-        - Review whole config usage to separate between master admin and channel
-          admin and determine operations valid for one or both
-    
-        - Create settings to store chat-specific values in a consistent way
-            - Limit settings that can be defined (keys) for group admins
-                - common
-                    - language: en (TODO)
-                    - currency: EUR (DONE)
-                    - modulo (to just show karma every X points)
-                        - Set to '0' to just show stampy  (DONE)
-                    - stock (DONE)
-                    - espp (DONE
-                - chats
-                    - isolated: False, if true, allow link
-                        - link: Empty, if defined, use the target gid for karma, alias, admin, etc
-                    - admin: ''
-                        - Allow group without 'admin' to get owned
-                        - If user with 'alias' no longer in group, moved to 
-                        unadmin
-                    - link
-                        - create commands for link, ack link, unlink, show links (DONE)
-                      - when two channels are linked, delete prior karma for 
-                      slave channel and use the one from master
-                      - When 'master' channel is removed, unlink slaves but
-                      keep karma/alias, etc
-                      - Allow prior admin of channel to 'unlink' while  
-                      duplicating karma/alias, etc
-                - users
-                    - highlight
+    - Define basic/default configuration to be applied to all new channels 
+    and versioning, so once a new default is required, if missing, define
+     it or inherit from global config
+    - Define config preference between user/chat/general
+    - Review whole config usage to separate between master admin and channel
+      admin and determine operations valid for one or both
 
-        - Modify karma commands and database
-        - Modify quote commands and database
-        - Modify alias commands and database
-        - Modify autok commands and database
+    - Create settings to store chat-specific values in a consistent way
+        - Limit settings that can be defined (keys) for group admins
+            - common
+                - language: en (TODO)
+                - currency: EUR (DONE)
+                - modulo (to just show karma every X points)
+                    - Set to '0' to just show stampy  (DONE)
+                - stock (DONE)
+                - espp (DONE
+            - chats
+                - isolated: False, if true, allow link
+                    - link: Empty, if defined, use the target gid for karma, alias, admin, etc
+                - admin: ''
+                    - Allow group without 'admin' to get owned
+                    - If user with 'alias' no longer in group, moved to 
+                    unadmin
+                - link
+                    - create commands for link, ack link, unlink, show links (DONE)
+                  - Allow prior admin of channel to 'unlink' while  
+                  duplicating karma/alias, etc
+            - users
+                - highlight
+    
+    - Define behavior when two channels are
+        - linked
+            - Merge karma, quote, alias, autok or ignore from slave?
+        - unlinked
+            - Copy karma, quote, alias, autok from master or start clean
+        - operations
+            - unlink: prior admin or admin from group
+            - if admin is no longer listed, autoremove
+    - Modify karma commands and database for group operation
+    - Modify quote commands and database for group operation
+    - Modify alias commands and database for group operation
+    - Modify autok commands and database for group operation
       
 ### Other
     - Initial load of karma points from older bot (possible separate script)

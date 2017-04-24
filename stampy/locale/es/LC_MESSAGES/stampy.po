@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-04-21 21:11+0200\n"
-"PO-Revision-Date: 2017-04-21 21:12+0200\n"
+"POT-Creation-Date: 2017-04-24 23:13+0200\n"
+"PO-Revision-Date: 2017-04-24 23:16+0200\n"
 "Last-Translator: Pablo Iranzo Gómez <Pablo.Iranzo@gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -194,38 +194,123 @@ msgstr "Número de mensajes en este lote: %s"
 msgid "Final deduplicated list: %s"
 msgstr "Lista final deduplicada: %s"
 
-#: stampy/stampy.py:669
+#: stampy/stampy.py:683
 #, python-format
 msgid "Logging level set to %s"
 msgstr "Nivel de registro establecido a %s"
 
-#: stampy/stampy.py:737
+#: stampy/stampy.py:751
 msgid "Started execution"
 msgstr "Ejecución iniciada"
 
-#: stampy/stampy.py:748
+#: stampy/stampy.py:762
 msgid ""
 "Token required for operation, please check https://core.telegram.org/bots"
 msgstr ""
 "Es necesaria una clave/token para operar, por favor, revise https://core."
 "telegram.org/bots"
 
-#: stampy/stampy.py:767
+#: stampy/stampy.py:781
 #, python-format
 msgid "Plug triggers reported: %s"
 msgstr "Complementos devueltos: %s"
 
-#: stampy/stampy.py:772
+#: stampy/stampy.py:786
 msgid "Running in daemon mode"
 msgstr "Ejecutando en modo demonio"
 
-#: stampy/stampy.py:777
+#: stampy/stampy.py:791
 msgid "Running in one-shoot mode"
 msgstr "Ejecución única"
 
-#: stampy/stampy.py:780
+#: stampy/stampy.py:794
 msgid "Stopped execution"
 msgstr "Ejecución detenida"
+
+#: stampy/plugin/admin.py:51
+msgid "Use `/admin unlink` to remove channel linking\n"
+msgstr "Use `/admin unlink` para eliminar un enlace de canal\n"
+
+#: stampy/plugin/admin.py:52
+msgid ""
+"Use `/admin link master` to generate and store linking token to be used on "
+"slaves\n"
+msgstr ""
+
+#: stampy/plugin/admin.py:53
+msgid ""
+"Use `/admin link slave <token> to use provided token to link against master "
+"channel\n"
+msgstr ""
+
+#: stampy/plugin/admin.py:54
+msgid "Use `/admin link show to list linked channel\n"
+msgstr "Use `/admin linik show` para listar los canales enlazados\n"
+
+#: stampy/plugin/admin.py:73 stampy/plugin/alias.py:72
+#: stampy/plugin/autokarma.py:78 stampy/plugin/config.py:82
+#: stampy/plugin/dilbert.py:79 stampy/plugin/espp.py:66
+#: stampy/plugin/forward.py:125 stampy/plugin/help.py:64
+#: stampy/plugin/jueves.py:76 stampy/plugin/mel.py:77
+#: stampy/plugin/obichero.py:78 stampy/plugin/quico.py:78
+#: stampy/plugin/xkcd.py:76
+#, python-format
+msgid "Command: %s by %s"
+msgstr "Comando: %s por %s"
+
+#: stampy/plugin/admin.py:129
+#, python-format
+msgid "Generated token %s for channel %s"
+msgstr ""
+
+#: stampy/plugin/admin.py:130
+#, python-format
+msgid "Token for linking against this channel has been generated as %s"
+msgstr ""
+
+#: stampy/plugin/admin.py:134
+#, python-format
+msgid "Already generated token %s for channel %s"
+msgstr ""
+
+#: stampy/plugin/admin.py:135
+#, python-format
+msgid "A token for linking against this channel already existed as %s"
+msgstr "Un token para enlazar contra este canal ya existe como %s"
+
+#: stampy/plugin/admin.py:159
+#, python-format
+msgid "chanenslave: %s, master-id: %s, master-token:%s"
+msgstr "chanenslave: %s, id maestro: %s, clave: %s"
+
+#: stampy/plugin/admin.py:172
+#, python-format
+msgid "Channel %s with name %s has been linked as *SLAVE* to this one"
+msgstr "Canal %s con nombre %s ha sido enlazado como *ESCLAVO*"
+
+#: stampy/plugin/admin.py:181
+#, python-format
+msgid "This channel has been set as *SLAVE* from *MASTER* channel %s"
+msgstr "Este canal ha sido establecido como *ESCLAVO* del canal *MAESTRO* %s"
+
+#: stampy/plugin/admin.py:204
+#, python-format
+msgid "Channel %s with name %s has been unlinked as *SLAVE* to this one"
+msgstr "El canal %s con nombre %s ha sido desenlazado como *ESCLAVO*"
+
+#: stampy/plugin/admin.py:212
+#, python-format
+msgid "This channel has been unliked as *SLAVE* from *MASTER* channel %s"
+msgstr "Este canal ha sido desenlazado como *ESCLAVO* del canal *MAESTRO*  %s"
+
+#: stampy/plugin/admin.py:231
+#, python-format
+msgid "This channel %s is slave of channel %s"
+msgstr "Este canal %s es esclavo del canal %s"
+
+#: stampy/plugin/admin.py:237
+msgid "Defined slaves:\n"
+msgstr "Esclavos definidos:\n"
 
 #: stampy/plugin/alias.py:34
 #, python-format
@@ -247,16 +332,6 @@ msgid ""
 msgstr ""
 "Use `/alias delete <clave>` para eliminar un alias\n"
 "\n"
-
-#: stampy/plugin/alias.py:72 stampy/plugin/autokarma.py:78
-#: stampy/plugin/config.py:82 stampy/plugin/dilbert.py:79
-#: stampy/plugin/espp.py:66 stampy/plugin/forward.py:125
-#: stampy/plugin/help.py:64 stampy/plugin/jueves.py:76 stampy/plugin/mel.py:77
-#: stampy/plugin/obichero.py:78 stampy/plugin/quico.py:78
-#: stampy/plugin/xkcd.py:76
-#, python-format
-msgid "Command: %s by %s"
-msgstr "Comando: %s por %s"
 
 #: stampy/plugin/alias.py:74 stampy/plugin/autokarma.py:81
 #: stampy/plugin/forward.py:127
@@ -474,49 +549,54 @@ msgstr ""
 "dicha cuota mensual\n"
 "\n"
 
-#: stampy/plugin/espp.py:78
-msgid "USD/EUR rate "
-msgstr "Tasa de cambio USD/EUR"
+#: stampy/plugin/espp.py:79
+#, python-format
+msgid "USD/%s rate "
+msgstr "Tasa de cambio USD/%s"
 
-#: stampy/plugin/espp.py:80
+#: stampy/plugin/espp.py:82
 #, python-format
 msgid "Initial quote: %s USD\n"
 msgstr "Precio inicial: %s USD\n"
 
-#: stampy/plugin/espp.py:84
+#: stampy/plugin/espp.py:86
 #, python-format
 msgid "Actual quote: %s USD\n"
 msgstr "Precio actual: %s USD\n"
 
-#: stampy/plugin/espp.py:96
+#: stampy/plugin/espp.py:98
 #, python-format
 msgid "Buy price: %s USD\n"
 msgstr "Precio de compra: %s USD\n"
 
-#: stampy/plugin/espp.py:97
+#: stampy/plugin/espp.py:99
 #, python-format
 msgid "Earning per unit: %s USD\n"
 msgstr "Ganancia por acción: %s USD\n"
 
-#: stampy/plugin/espp.py:100
+#: stampy/plugin/espp.py:102
 #, python-format
 msgid "Estimated stocks: %s\n"
 msgstr "Acciones estimadas: %s\n"
 
-#: stampy/plugin/espp.py:102
-#, python-format
-msgid "Estimated earning: %s EUR\n"
-msgstr "Ganancais estimadas: %s EUR\n"
-
 #: stampy/plugin/espp.py:104
 #, python-format
-msgid "Total amount deposited on sell: %s EUR\n"
-msgstr "Importe total transferido a la venta: %s EUR\n"
+msgid "Estimated earning: %s %s\n"
+msgstr "Ganancais estimadas: %s %s\n"
 
-#: stampy/plugin/espp.py:105
+#: stampy/plugin/espp.py:106
+#, python-format
+msgid "Total amount deposited on sell: %s %s\n"
+msgstr "Importe total transferido a la venta: %s %s\n"
+
+#: stampy/plugin/espp.py:107
 #, python-format
 msgid "Estimated A.E.R. vs investment: %s %%"
 msgstr "Tasa de interés vs inversión: %s %%"
+
+#: stampy/plugin/espp.py:111
+msgid "espp setting not defined, please use /gconfig set espp=<value>"
+msgstr "La variable espp no está definida, utilice /gconfig set espp=<valor>"
 
 #: stampy/plugin/forward.py:43
 msgid "Processing forward commands"
@@ -762,12 +842,12 @@ msgstr "`%s` tiene ahora `%s` puntos de karma."
 msgid "`%s` now has no Karma and has been garbage collected."
 msgstr "`%s` ahora no tiene Karma y ha sido eliminado."
 
-#: stampy/plugin/karma.py:410
+#: stampy/plugin/karma.py:415
 #, python-format
 msgid "Processing words for cleanup: %s"
 msgstr "Procesando palabras para limpieza: %s"
 
-#: stampy/plugin/karma.py:425
+#: stampy/plugin/karma.py:430
 #, python-format
 msgid "Word %s with %s inactivity days is going to be purged"
 msgstr "La palabra %s con %s días de inactividad va a ser eliminada"
@@ -874,10 +954,10 @@ msgstr "No hay cita almacenada para `%s`"
 msgid "No quote found"
 msgstr "No se encontraron citas"
 
-#: stampy/plugin/quote.py:169
+#: stampy/plugin/quote.py:171
 #, python-format
-msgid "createquote: %s=%s on %s"
-msgstr "createquote: %s=%s en %s"
+msgid "createquote: %s=%s on %s for group %s"
+msgstr "createquote: %s=%s en %s para el grupo %s"
 
 #: stampy/plugin/stats.py:86
 msgid ""
@@ -1012,9 +1092,10 @@ msgstr ""
 "Use `stock <valor>` para obtener la cotización del valor\n"
 "\n"
 
-#: stampy/plugin/stock.py:127
-msgid "USD/EUR rate \n"
-msgstr "Tasa de cambio USD/EUR\n"
+#: stampy/plugin/stock.py:128
+#, python-format
+msgid "USD/%s rate \n"
+msgstr "Tasa de cambio USD/%s\n"
 
 #: stampy/plugin/welcome.py:49
 msgid ""
