@@ -643,7 +643,7 @@ def is_owner_or_admin(message):
 
             # If we're not admin and admin is empty, consider ourselves admin
             if not admin:
-                if plugin.config.config(key='admin', gid=chat_id, default=True):
+                if plugin.config.config(key='admin', gid=chat_id, default="") == "":
                     admin = True
 
     return owner or admin
