@@ -627,9 +627,10 @@ def is_owner_or_admin(message):
     logger = logging.getLogger(__name__)
     admin = False
     msgdetail = getmsgdetail(message)
+    chat_id = msgdetail["chat_id"]
 
     # if we're on a user private chat, return admin true
-    if msgdetail["chat_id"] > 0:
+    if chat_id > 0:
         admin = True
     else:
         # Check if we're owner
@@ -638,6 +639,11 @@ def is_owner_or_admin(message):
             # Check if we are admin of chat
             for each in plugin.config.config(key='admin', default="").split(" "):
                 if each == msgdetail["who_un"]:
+                    admin = True
+
+            # If we're not admin and admin is empty, consider ourselves admin
+            if not admin:
+                if plugin.config.config(key='admin', gid=chat_id, default=True)
                     admin = True
 
     return owner or admin
