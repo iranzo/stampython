@@ -124,7 +124,10 @@ def stock(message):
 
     text = "```\n"
     currency = stampy.plugin.config.gconfig(key="currency", default="EUR", gid=chat_id)
-    rate = get_currency_rate('USD', currency)
+    if currency != 'USD':
+        rate = get_currency_rate('USD', currency)
+    else:
+        rate = 1
     text += _("USD/%s rate " % currency + str(rate) + "\n")
     for ticker in stock:
         try:

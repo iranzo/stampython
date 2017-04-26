@@ -86,14 +86,14 @@ def karmacommands(message):
                 word = texto.split()[1]
             except:
                 word = False
-            commandtext = rank(word)
+            commandtext = rank(word, gid=stampy.stampy.geteffectivegid(gid=chat_id))
             break
         if case('srank'):
             try:
                 word = texto.split()[1]
             except:
                 word = False
-            commandtext = srank(word)
+            commandtext = srank(word, gid=stampy.stampy.geteffectivegid(gid=chat_id))
             break
         if case('skarma'):
             try:
@@ -108,7 +108,7 @@ def karmacommands(message):
                                           reply_to_message_id=message_id,
                                           disable_web_page_preview=True,
                                           parse_mode="Markdown")
-                putkarma(word=key, value=value)
+                putkarma(word=key, value=value, gid=stampy.stampy.geteffectivegid(gid=chat_id))
             break
         if case():
             commandtext = False
@@ -122,9 +122,10 @@ def karmacommands(message):
     return
 
 
-def rank(word=False):
+def rank(word=False, gid=0):
     """
     Outputs rank for word or top 10
+    :param gid: Group ID to filter
     :param word: word to return rank for
     :return:
     """
@@ -134,8 +135,8 @@ def rank(word=False):
         word = stampy.plugin.alias.getalias(word)
     if word:
         # if word is provided, return the rank value for that word
-        string = (word,)
-        sql = "SELECT word,value,date FROM karma WHERE word='%s';" % string
+        string = (word, gid)
+        sql = "SELECT word,value,date FROM karma WHERE word='%s' and gid='%s';" % string
         cur = stampy.stampy.dbsql(sql)
         value = cur.fetchone()
 
@@ -150,7 +151,7 @@ def rank(word=False):
 
     else:
         # if word is not provided, return top 10 words with top karma
-        sql = "select word,value,date from karma ORDER BY value DESC LIMIT 10;"
+        sql = "select word,value,date from karma where gid='%s' ORDER BY value DESC LIMIT 10;" % gid
 
         text = _("Global rankings:\n")
         cur = stampy.stampy.dbsql(sql)
@@ -160,9 +161,10 @@ def rank(word=False):
     return text
 
 
-def srank(word=False):
+def srank(word=False, gid=0):
     """
     Search for rank for word
+    :param gid: Group ID to filter
     :param word: word to search in database
     :return: table with the values for srank
     """
@@ -175,7 +177,7 @@ def srank(word=False):
         text = rank(word)
     else:
         string = "%" + word + "%"
-        sql = "SELECT word,value,date FROM karma WHERE word LIKE '%s' LIMIT 10;" % string
+        sql = "SELECT word,value,date FROM karma WHERE word LIKE '%s' AND gid='%s' LIMIT 10;" % (string, gid)
         cur = stampy.stampy.dbsql(sql)
         table = from_db_cursor(cur)
         text = "%s\n```%s```" % (text, table.get_string())
@@ -183,31 +185,33 @@ def srank(word=False):
     return text
 
 
-def updatekarma(word=False, change=0):
+def updatekarma(word=False, change=0, gid=0):
     """
     Updates karma for a word
+    :param gid: Group ID to filter
     :param word:  Word to update
     :param change:  Change in karma
     :return:
     """
 
     logger = logging.getLogger(__name__)
-    value = getkarma(word=word) + change
-    putkarma(word, value)
+    value = getkarma(word=word, gid=gid) + change
+    putkarma(word, value, gid=gid)
     logger.debug(msg=_("Putting karma of %s to %s") % (value, word))
     return value
 
 
-def getkarma(word):
+def getkarma(word, gid=0):
     """
     Gets karma for a word
+    :param gid: Group ID to filter
     :param word: word to get karma for
     :return: karma of given word
     """
 
     logger = logging.getLogger(__name__)
-    string = (word,)
-    sql = "SELECT word,value FROM karma WHERE word='%s';" % string
+    string = (word, gid)
+    sql = "SELECT word,value FROM karma WHERE word='%s' AND gid='%s';" % string
     cur = stampy.stampy.dbsql(sql)
     value = cur.fetchone()
 
@@ -222,9 +226,10 @@ def getkarma(word):
     return value
 
 
-def putkarma(word, value):
+def putkarma(word, value, gid=0):
     """
     Updates value of karma for a word
+    :param gid: Group ID to filter
     :param word: Word to update
     :param value: Value of karma to set
     :return: sql execution
@@ -234,10 +239,10 @@ def putkarma(word, value):
     date = datetime.datetime.now()
     datefor = date.strftime('%Y-%m-%d %H:%M:%S')
 
-    sql = "DELETE FROM karma WHERE word = '%s';" % word
+    sql = "DELETE FROM karma WHERE word = '%s' AND gid='%s';" % (word, gid)
     stampy.stampy.dbsql(sql)
     if value != 0:
-        sql = "INSERT INTO karma VALUES('%s','%s', '%s');" % (word, value, datefor)
+        sql = "INSERT INTO karma(word,value,date,gid) VALUES('%s','%s', '%s', '%s');" % (word, value, datefor, gid)
         stampy.stampy.dbsql(sql)
 
     logger.debug(msg=_("Putting karma of %s to %s") % (value, word))
@@ -297,6 +302,14 @@ def karmaprocess(msgdetail):
 
     logger = logging.getLogger(__name__)
 
+    texto = msgdetail["text"]
+    chat_id = msgdetail["chat_id"]
+    message_id = msgdetail["message_id"]
+    who_un = msgdetail["who_un"]
+    who_gn = msgdetail["who_gn"]
+    who_id = msgdetail["who_id"]
+    who_ln = msgdetail["who_ln"]
+
     # Define dictionary for text replacements
     dictionary = {
         "'": "",
@@ -305,9 +318,9 @@ def karmaprocess(msgdetail):
         u"—": "--"
     }
 
-    if not msgdetail["error"] and msgdetail["text"]:
+    if not msgdetail["error"] and texto:
         # Search for telegram commands and if any disable text processing
-        text_to_process = stampy.stampy.replace_all(msgdetail["text"],
+        text_to_process = stampy.stampy.replace_all(texto,
                                                     dictionary).lower().split(
             " ")
     else:
@@ -324,7 +337,7 @@ def karmaprocess(msgdetail):
         for word in text_to_process:
             if "++" in word or "--" in word:
                 msg = _("Processing word %s sent by id %s with username %s (%s %s)") % (
-                    word, msgdetail["who_id"], msgdetail["who_un"], msgdetail["who_gn"], msgdetail["who_ln"])
+                    word, who_id, who_un, who_gn, who_ln)
                 logger.debug(msg)
 
                 # This should help to avoid duplicate karma operations
@@ -368,10 +381,10 @@ def karmaprocess(msgdetail):
             oper = "--"
 
         if change != 0:
-            msg = _("%s Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)") % (oper, word, msgdetail["chat_id"], msgdetail["message_id"], msgdetail["chat_name"], msgdetail["who_id"], msgdetail["who_un"], msgdetail["who_gn"], msgdetail["who_ln"])
+            msg = _("%s Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)") % (oper, word, chat_id, message_id, msgdetail["chat_name"], who_id, who_un, who_gn, who_ln)
             logger.debug(msg)
 
-            karma = updatekarma(word=word, change=change)
+            karma = updatekarma(word=word, change=change, gid=stampy.stampy.geteffectivegid(gid=chat_id))
             if karma != 0:
                 # Karma has changed, report back
                 text = _("`%s` now has `%s` karma points.") % (word, karma)
@@ -382,20 +395,18 @@ def karmaprocess(msgdetail):
             # Send originating user for karma change a reply with
             # the new value
 
-            modulo = int(stampy.plugin.config.gconfig(key="modulo", default="1", gid=msgdetail["chat_id"]))
+            modulo = int(stampy.plugin.config.gconfig(key="modulo", default="1", gid=chat_id))
 
             if modulo != 0:
                 if karma % modulo == 0:
-                    stampy.stampy.sendmessage(chat_id=msgdetail["chat_id"], text=text,
-                                              reply_to_message_id=msgdetail["message_id"],
+                    stampy.stampy.sendmessage(chat_id=chat_id, text=text,
+                                              reply_to_message_id=message_id,
                                               parse_mode="Markdown")
-            stampyphant(chat_id=msgdetail["chat_id"], karma=karma)
+            stampyphant(chat_id=chat_id, karma=karma)
     return
 
 
-def dokarmacleanup(word=False,
-                   maxage=int(stampy.plugin.config.config("maxage",
-                                                          default=180))):
+def dokarmacleanup(word=False, maxage=int(stampy.plugin.config.config("maxage", default=180))):
     """
     Checks on the karma database the date of the last update in the word
     :param word: word to query in database
@@ -407,7 +418,7 @@ def dokarmacleanup(word=False,
     if word:
         sql = "SELECT word,value,date FROM karma WHERE word=%s" % word
     else:
-        sql = "SELECT word,value,date FROM karma"
+        sql = "SELECT word,value,date,gid FROM karma"
 
     words = []
     cur = stampy.stampy.dbsql(sql)
@@ -418,6 +429,7 @@ def dokarmacleanup(word=False,
         # Process each word returned
         word = row[0]
         date = row[2]
+        gid = row[3]
 
         if date and (date != "False"):
             worddate = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
@@ -430,6 +442,5 @@ def dokarmacleanup(word=False,
             logger.debug(msg=_("Word %s with %s inactivity days is going to be purged") % (word, (now - worddate).days))
 
             # Remove word from database
-            updatekarma(word=word, change=-row[1])
-
+            updatekarma(word=word, change=-row[1], gid=gid)
     return

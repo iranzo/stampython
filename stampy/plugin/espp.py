@@ -75,7 +75,12 @@ def espp(message):
 
     text = "```\n"
     currency = stampy.plugin.config.gconfig(key="currency", default="EUR", gid=chat_id)
-    rate = stampy.plugin.stock.get_currency_rate('USD', currency)
+
+    if currency != 'USD':
+        rate = stampy.plugin.stock.get_currency_rate('USD', currency)
+    else:
+        rate = 1
+
     text += _("USD/%s rate ") % currency + str(rate) + "\n"
     initial = float(stampy.plugin.config.gconfig(key="espp", default=False, gid=chat_id))
     if initial:

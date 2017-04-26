@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-04-25 00:21+0200\n"
+"POT-Creation-Date: 2017-04-26 15:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,7 +119,7 @@ msgid ""
 " karma operands"
 msgstr ""
 
-#: stampy/plugin/help.py:78 stampy/stampy.py:335
+#: stampy/plugin/help.py:77 stampy/stampy.py:335
 #, python-format
 msgid "Command: %s"
 msgstr ""
@@ -184,33 +184,33 @@ msgstr ""
 msgid "Final deduplicated list: %s"
 msgstr ""
 
-#: stampy/stampy.py:683
+#: stampy/stampy.py:708
 #, python-format
 msgid "Logging level set to %s"
 msgstr ""
 
-#: stampy/stampy.py:751
+#: stampy/stampy.py:776
 msgid "Started execution"
 msgstr ""
 
-#: stampy/stampy.py:762
+#: stampy/stampy.py:787
 msgid "Token required for operation, please check https://core.telegram.org/bots"
 msgstr ""
 
-#: stampy/stampy.py:781
+#: stampy/stampy.py:806
 #, python-format
 msgid "Plug triggers reported: %s"
 msgstr ""
 
-#: stampy/stampy.py:786
+#: stampy/stampy.py:811
 msgid "Running in daemon mode"
 msgstr ""
 
-#: stampy/stampy.py:791
+#: stampy/stampy.py:816
 msgid "Running in one-shoot mode"
 msgstr ""
 
-#: stampy/stampy.py:794
+#: stampy/stampy.py:819
 msgid "Stopped execution"
 msgstr ""
 
@@ -265,37 +265,49 @@ msgstr ""
 msgid "A token for linking against this channel already existed as %s"
 msgstr ""
 
-#: stampy/plugin/admin.py:159
+#: stampy/plugin/admin.py:137 stampy/plugin/admin.py:220
+msgid ""
+"\n"
+"\n"
+"Channel has also been enabled as running in isolated mode, use "
+"```/gconfig delete isolated``` to revert back to global karma"
+msgstr ""
+
+#: stampy/plugin/admin.py:143
+msgid "This channel is a slave for another one, cannot generate token"
+msgstr ""
+
+#: stampy/plugin/admin.py:167
 #, python-format
 msgid "chanenslave: %s, master-id: %s, master-token:%s"
 msgstr ""
 
-#: stampy/plugin/admin.py:172
-#, python-format
-msgid "Channel %s with name %s has been linked as *SLAVE* to this one"
-msgstr ""
-
 #: stampy/plugin/admin.py:181
 #, python-format
-msgid "This channel has been set as *SLAVE* from *MASTER* channel %s"
+msgid "Channel *%s* with name *%s* has been linked as *SLAVE*"
 msgstr ""
 
-#: stampy/plugin/admin.py:204
+#: stampy/plugin/admin.py:189
 #, python-format
-msgid "Channel %s with name %s has been unlinked as *SLAVE* to this one"
+msgid "This channel has been set as *SLAVE* from *MASTER* channel *%s*"
 msgstr ""
 
 #: stampy/plugin/admin.py:212
 #, python-format
-msgid "This channel has been unliked as *SLAVE* from *MASTER* channel %s"
+msgid "Channel *%s* with name *%s* has been unlinked as *SLAVE*"
 msgstr ""
 
-#: stampy/plugin/admin.py:231
+#: stampy/plugin/admin.py:219
+#, python-format
+msgid "This channel has been unliked as *SLAVE* from *MASTER* channel *%s*"
+msgstr ""
+
+#: stampy/plugin/admin.py:241
 #, python-format
 msgid "This channel %s is slave of channel %s"
 msgstr ""
 
-#: stampy/plugin/admin.py:237
+#: stampy/plugin/admin.py:247
 msgid "Defined slaves:\n"
 msgstr ""
 
@@ -382,32 +394,32 @@ msgstr ""
 msgid "Setting autokarma for `%s` triggers `%s++`"
 msgstr ""
 
-#: stampy/plugin/autokarma.py:179
+#: stampy/plugin/autokarma.py:182
 #, python-format
 msgid "createautok: autok pair %s - %s for gid %s already exists"
 msgstr ""
 
-#: stampy/plugin/autokarma.py:220
+#: stampy/plugin/autokarma.py:223
 #, python-format
 msgid "for word %s for gid %s"
 msgstr ""
 
-#: stampy/plugin/autokarma.py:226
+#: stampy/plugin/autokarma.py:229
 #, python-format
 msgid "Defined autokarma triggers %s:\n"
 msgstr ""
 
-#: stampy/plugin/autokarma.py:232
+#: stampy/plugin/autokarma.py:235
 #, python-format
 msgid "%s has no trigger autokarma"
 msgstr ""
 
-#: stampy/plugin/autokarma.py:234
+#: stampy/plugin/autokarma.py:237
 #, python-format
 msgid "Returning autokarma %s for word %s"
 msgstr ""
 
-#: stampy/plugin/autokarma.py:262
+#: stampy/plugin/autokarma.py:266
 #, python-format
 msgid "Autokarma words %s encountered for processing"
 msgstr ""
@@ -715,75 +727,75 @@ msgstr ""
 msgid "Setting karma for `%s` to `%s`"
 msgstr ""
 
-#: stampy/plugin/karma.py:149
+#: stampy/plugin/karma.py:150
 #, python-format
 msgid "`%s` has `%s` karma points."
 msgstr ""
 
-#: stampy/plugin/karma.py:155
+#: stampy/plugin/karma.py:156
 msgid "Global rankings:\n"
 msgstr ""
 
-#: stampy/plugin/karma.py:159
+#: stampy/plugin/karma.py:160
 #, python-format
 msgid "Returning karma %s for word %s"
 msgstr ""
 
-#: stampy/plugin/karma.py:182
+#: stampy/plugin/karma.py:184
 #, python-format
 msgid "Returning srank for word: %s"
 msgstr ""
 
-#: stampy/plugin/karma.py:197 stampy/plugin/karma.py:243
+#: stampy/plugin/karma.py:200 stampy/plugin/karma.py:248
 #, python-format
 msgid "Putting karma of %s to %s"
 msgstr ""
 
-#: stampy/plugin/karma.py:221
+#: stampy/plugin/karma.py:225
 #, python-format
 msgid "Getting karma for %s: %s"
 msgstr ""
 
-#: stampy/plugin/karma.py:273
+#: stampy/plugin/karma.py:278
 #, python-format
 msgid "Sticker for %s karma points"
 msgstr ""
 
-#: stampy/plugin/karma.py:316
+#: stampy/plugin/karma.py:329
 #, python-format
 msgid "Text to process: %s"
 msgstr ""
 
-#: stampy/plugin/karma.py:323
+#: stampy/plugin/karma.py:336
 msgid "Text has karma operators"
 msgstr ""
 
-#: stampy/plugin/karma.py:326
+#: stampy/plugin/karma.py:339
 #, python-format
 msgid "Processing word %s sent by id %s with username %s (%s %s)"
 msgstr ""
 
-#: stampy/plugin/karma.py:371
+#: stampy/plugin/karma.py:384
 #, python-format
 msgid "%s Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)"
 msgstr ""
 
-#: stampy/plugin/karma.py:377
+#: stampy/plugin/karma.py:390
 #, python-format
 msgid "`%s` now has `%s` karma points."
 msgstr ""
 
-#: stampy/plugin/karma.py:380
+#: stampy/plugin/karma.py:393
 #, python-format
 msgid "`%s` now has no Karma and has been garbage collected."
 msgstr ""
 
-#: stampy/plugin/karma.py:415
+#: stampy/plugin/karma.py:426
 #, python-format
 msgid "Processing words for cleanup: %s"
 msgstr ""
 
-#: stampy/plugin/karma.py:430
+#: stampy/plugin/karma.py:442
 #, python-format
 msgid "Word %s with %s inactivity days is going to be purged"
 msgstr ""
@@ -953,36 +965,41 @@ msgid ""
 "please re-add in the future if needed"
 msgstr ""
 
-#: stampy/plugin/stats.py:403 stampy/plugin/stats.py:459
+#: stampy/plugin/stats.py:416
+#, python-format
+msgid "The removed channel (%s) was master for others, electing new master: %s"
+msgstr ""
+
+#: stampy/plugin/stats.py:446 stampy/plugin/stats.py:502
 #, python-format
 msgid "LINE for user %s and memberid: %s will be deleted"
 msgstr ""
 
-#: stampy/plugin/stats.py:433
+#: stampy/plugin/stats.py:476
 #, python-format
 msgid "Processing userids for cleanup: %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:446
+#: stampy/plugin/stats.py:489
 #, python-format
 msgid "USER ID %s with name %s with %s inactivity days is going to be purged"
 msgstr ""
 
-#: stampy/plugin/stats.py:496
+#: stampy/plugin/stats.py:568
 #, python-format
 msgid "values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid:%s"
 msgstr ""
 
-#: stampy/plugin/stats.py:513
+#: stampy/plugin/stats.py:585
 msgid "@All invoked"
 msgstr ""
 
-#: stampy/plugin/stats.py:537
+#: stampy/plugin/stats.py:609
 #, python-format
 msgid "%s wanted to ping you: "
 msgstr ""
 
-#: stampy/plugin/stats.py:557
+#: stampy/plugin/stats.py:629
 #, python-format
 msgid "Pinging chat %s: %s on %s"
 msgstr ""

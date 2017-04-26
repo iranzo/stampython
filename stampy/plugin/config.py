@@ -72,7 +72,7 @@ def configcommands(message):
 
     logger = logging.getLogger(__name__)
 
-    if texto.split(' ')[0] == "/config":
+    if texto.split(' ')[0] == "/config" and stampy.stampy.is_owner(message):
         gid = 0
     else:
         gid = chat_id

@@ -63,7 +63,6 @@ def helpcommands(message):
     logger = logging.getLogger(__name__)
     logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
 
-    # TODO(iranzo) process code
     # Call plugins to process help messages
     commandtext = ""
 

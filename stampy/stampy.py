@@ -626,6 +626,7 @@ def is_owner_or_admin(message):
 
     logger = logging.getLogger(__name__)
     admin = False
+    owner = False
     msgdetail = getmsgdetail(message)
     chat_id = msgdetail["chat_id"]
 
@@ -647,6 +648,30 @@ def is_owner_or_admin(message):
                     admin = True
 
     return owner or admin
+
+
+def geteffectivegid(gid):
+    """
+    Gets effective gid based on settings
+    :param gid: gid of group
+    :return: gid to use
+    """
+
+    if plugin.config.gconfig(key='isolated', default=False, gid=gid):
+        # Isolated is defined for either channel or general bot config.
+        # need to check now if group is linked and if so, return that gid,
+        # and if not, return groupid
+
+        link = plugin.config.gconfig(key='link', default=False, gid=gid)
+        if link:
+            # This chat_id has 'link' defined against master, effective gid
+            # should be that one
+            return link
+        else:
+            return gid
+    else:
+        # Non insolation configured, returning '0' as gid to use
+        return 0
 
 
 def loglevel():

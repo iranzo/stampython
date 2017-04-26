@@ -23,7 +23,7 @@ def init():
     """
 
     triggers = ["^/autok"]
-    triggers.extend(getautokeywords())
+    triggers.extend(getautokeywords(gid=False))
 
     return triggers
 
@@ -90,7 +90,7 @@ def autokcommands(message):
 
         for case in stampy.stampy.Switch(command):
             if case('list'):
-                text = listautok(word, gid=0)
+                text = listautok(word, gid=stampy.stampy.geteffectivegid(gid=chat_id))
                 stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                           reply_to_message_id=message_id,
                                           disable_web_page_preview=True,
@@ -106,7 +106,7 @@ def autokcommands(message):
                                               reply_to_message_id=message_id,
                                               disable_web_page_preview=True,
                                               parse_mode="Markdown")
-                    deleteautok(key=key, value=value, gid=0)
+                    deleteautok(key=key, value=value, gid=stampy.stampy.geteffectivegid(gid=chat_id))
 
             if case():
                 word = texto.split(' ')[1]
@@ -118,7 +118,7 @@ def autokcommands(message):
                                               reply_to_message_id=message_id,
                                               disable_web_page_preview=True,
                                               parse_mode="Markdown")
-                    createautok(word=key, value=value, gid=0)
+                    createautok(word=key, value=value, gid=stampy.stampy.geteffectivegid(gid=chat_id))
 
     return
 
@@ -152,7 +152,10 @@ def getautokeywords(gid=0):
     """
 
     logger = logging.getLogger(__name__)
-    sql = "SELECT distinct key FROM autokarma WHERE gid='%s';" % gid
+    if gid is False:
+        sql = "SELECT distinct key FROM autokarma;"
+    else:
+        sql = "SELECT distinct key FROM autokarma WHERE gid='%s';" % gid
     cur = stampy.stampy.dbsql(sql)
     data = cur.fetchall()
     value = []
@@ -178,7 +181,7 @@ def createautok(word, value, gid=0):
     if value in getautok(word):
         logger.error(msg=_("createautok: autok pair %s - %s for gid %s already exists") % (word, value, gid))
     else:
-        sql = "INSERT INTO autokarma(word, value, gid) VALUES('%s','%s', '%s');" % (word, value, gid)
+        sql = "INSERT INTO autokarma(key, value, gid) VALUES('%s','%s', '%s');" % (word, value, gid)
         logger.debug(msg="createautok: %s=%s for gid %s" % (word, value, gid))
         stampy.stampy.dbsql(sql)
         return True
@@ -246,10 +249,11 @@ def autokarmawords(message):
 
     msgdetail = stampy.stampy.getmsgdetail(message)
     text_to_process = msgdetail["text"].lower()
+    chat_id = msgdetail['chat_id']
 
     wordadd = []
 
-    keywords = getautokeywords(gid=0)
+    keywords = getautokeywords(gid=stampy.stampy.geteffectivegid(gid=chat_id))
     for autok in keywords:
         if autok in text_to_process:
             # If trigger word is there, add the triggered action

@@ -96,8 +96,7 @@ def admincommands(message):
                     except:
                         pass
                 elif word == "show":
-                    chanshowslave(message=message
-                                  )
+                    chanshowslave(message=message)
                 break
             if case():
                 break
@@ -119,20 +118,29 @@ def changenmastertoken(message):
 
     logger = logging.getLogger(__name__)
 
-    if not stampy.plugin.config.config(key='link-master', default=False, gid=chat_id):
-        charset = string.letters + string.digits
-        size = 20
-        token = ''.join((random.choice(charset)) for x in range(size))
-        generatedtoken = "%s:%s" % (chat_id, token)
-        stampy.plugin.config.setconfig(key='link-master', gid=chat_id,
-                                       value=generatedtoken)
-        logger.debug(msg=_("Generated token %s for channel %s") % (token, chat_id))
-        text = _("Token for linking against this channel has been generated "
-                 "as %s") % generatedtoken
+    if not stampy.plugin.config.config(key='link', default=False, gid=chat_id):
+        if not stampy.plugin.config.config(key='link-master', default=False, gid=chat_id):
+            charset = string.letters + string.digits
+            size = 20
+            token = ''.join((random.choice(charset)) for x in range(size))
+            generatedtoken = "%s:%s" % (chat_id, token)
+            stampy.plugin.config.setconfig(key='link-master', gid=chat_id,
+                                           value=generatedtoken)
+            logger.debug(msg=_("Generated token %s for channel %s") % (token, chat_id))
+            text = _("Token for linking against this channel has been generated "
+                     "as %s") % generatedtoken
+        else:
+            generatedtoken = stampy.plugin.config.config(key='link-master', default=False, gid=chat_id)
+            logger.debug(msg=_("Already generated token %s for channel %s") % (token, chat_id))
+            text = _("A token for linking against this channel already existed as %s") % generatedtoken
+
+        text = text + _("\n\nChannel has also been enabled as running in isolated "
+                        "mode, use ```/gconfig delete isolated``` to revert back to "
+                        "global karma")
+        stampy.plugin.config.setconfig(key='isolated', gid=chat_id, value=True)
+
     else:
-        generatedtoken = stampy.plugin.config.config(key='link-master', default=False, gid=chat_id)
-        logger.debug(msg=_("Already generated token %s for channel %s") % (token, chat_id))
-        text = _("A token for linking against this channel already existed as %s") % generatedtoken
+        text = _("This channel is a slave for another one, cannot generate token")
 
     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                               reply_to_message_id=message_id,
@@ -165,12 +173,12 @@ def chanlinkslave(message, token=""):
         # Delete link-master from master
         stampy.plugin.config.deleteconfig(key='link-master', gid=masterid)
 
-        # Define 'link' on slave
+        # Define 'link' and 'isolated' on slave
         stampy.plugin.config.setconfig(key='link', gid=chat_id, value=masterid)
+        stampy.plugin.config.setconfig(key='isolated', gid=chat_id, value=True)
 
         # Notify master channel of slave linked
-        text = _("Channel %s with name %s has been linked as *SLAVE* to this "
-                 "one") % (chat_id, msgdetail['chat_name'])
+        text = _("Channel *%s* with name *%s* has been linked as *SLAVE*") % (chat_id, msgdetail['chat_name'])
 
         stampy.stampy.sendmessage(chat_id=masterid, text=text,
                                   disable_web_page_preview=True,
@@ -178,7 +186,7 @@ def chanlinkslave(message, token=""):
 
         # Notify slave of master linked
 
-        text = _("This channel has been set as *SLAVE* from *MASTER* channel %s") % masterid
+        text = _("This channel has been set as *SLAVE* from *MASTER* channel *%s*") % masterid
 
         stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                   reply_to_message_id=message_id,
@@ -201,15 +209,17 @@ def chanunlink(message):
         stampy.plugin.config.deleteconfig(key='link', gid=chat_id)
 
         # Notify master channel of slave linked
-        text = _("Channel %s with name %s has been unlinked as *SLAVE* to this "
-                 "one") % (chat_id, msgdetail['chat_name'])
+        text = _("Channel *%s* with name *%s* has been unlinked as *SLAVE*") % (chat_id, msgdetail['chat_name'])
 
         stampy.stampy.sendmessage(chat_id=masterid, text=text,
                                   disable_web_page_preview=True,
                                   parse_mode="Markdown")
 
         # Notify slave of master linked
-        text = _("This channel has been unliked as *SLAVE* from *MASTER* channel %s") % masterid
+        text = _("This channel has been unliked as *SLAVE* from *MASTER* channel *%s*") % masterid
+        text = text + _("\n\nChannel has also been enabled as running in "
+                        "isolated mode, use ```/gconfig delete isolated``` to "
+                        "revert back to global karma")
 
         stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                   reply_to_message_id=message_id,

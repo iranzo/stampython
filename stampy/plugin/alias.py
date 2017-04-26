@@ -83,7 +83,7 @@ def aliascommands(message):
 
         for case in stampy.stampy.Switch(command):
             if case('list'):
-                text = listalias(word, gid=0)
+                text = listalias(word, gid=stampy.stampy.geteffectivegid(gid=chat_id))
                 stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                           reply_to_message_id=message_id,
                                           disable_web_page_preview=True,
@@ -96,7 +96,7 @@ def aliascommands(message):
                                           reply_to_message_id=message_id,
                                           disable_web_page_preview=True,
                                           parse_mode="Markdown")
-                deletealias(word=key, gid=0)
+                deletealias(word=key, gid=stampy.stampy.geteffectivegid(gid=chat_id))
                 break
             if case():
                 word = texto.split(' ')[1]
@@ -108,7 +108,7 @@ def aliascommands(message):
                                               reply_to_message_id=message_id,
                                               disable_web_page_preview=True,
                                               parse_mode="Markdown")
-                    createalias(word=key, value=value, gid=0)
+                    createalias(word=key, value=value, gid=stampy.stampy.geteffectivegid(gid=chat_id))
     return
 
 
@@ -179,7 +179,7 @@ def createalias(word, value, gid=0):
             stampy.plugin.karma.updatekarma(word=word, change=-old)
             stampy.plugin.karma.updatekarma(word=value, change=old)
 
-            sql = "INSERT INTO alias(word, value, gid) VALUES('%s','%s', '%s');" % (word, value, gid)
+            sql = "INSERT INTO alias(key, value, gid) VALUES('%s','%s', '%s');" % (word, value, gid)
             logger.debug(msg="createalias: %s=%s for gid %s" % (word, value, gid))
             stampy.stampy.dbsql(sql)
             return

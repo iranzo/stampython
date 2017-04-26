@@ -79,7 +79,7 @@ def quotecommands(message):
             who_quote = texto.split(' ')[2]
             date = time.time()
             quote = str.join(" ", texto.split(' ')[3:])
-            result = addquote(username=who_quote, date=date, text=quote, gid=0)
+            result = addquote(username=who_quote, date=date, text=quote, gid=stampy.stampy.geteffectivegid(gid=chat_id))
             text = _("Quote `%s` added") % result
             stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                       reply_to_message_id=message_id,
@@ -94,7 +94,7 @@ def quotecommands(message):
                                           reply_to_message_id=message_id,
                                           disable_web_page_preview=True,
                                           parse_mode="Markdown")
-                deletequote(id=id_todel, gid=0)
+                deletequote(id=id_todel, gid=stampy.stampy.geteffectivegid(gid=chat_id))
             break
         if case():
             # We're just given the nick (or not), so find quote for it
@@ -103,7 +103,7 @@ def quotecommands(message):
             except:
                 nick = False
             try:
-                (quoteid, username, date, quote) = getquote(username=nick, gid=0)
+                (quoteid, username, date, quote) = getquote(username=nick, gid=stampy.stampy.geteffectivegid(gid=chat_id))
                 datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
                 text = '`%s` -- `@%s`, %s (id %s)' % (
                        quote, username, datefor, quoteid)

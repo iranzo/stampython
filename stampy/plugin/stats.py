@@ -390,12 +390,56 @@ def dochatcleanup(chat_id=False, maxage=int(stampy.plugin.config.config("maxage"
 
             getoutofchat(chatid)
 
-            # Remove channel stats
-            sql = "DELETE from stats where id='%s';" % chatid
+            # Check if this channel was master to another, if so, elect new
+            # master, and update karma, autokarma, alias, quote to the new
+            # master
+
+            newmaster = 0
+            maxmembers = 0
+
+            sql = "SELECT id from config WHERE key='link' and value='%s'" % chatid
             cur = stampy.stampy.dbsql(sql)
 
+            for row in cur.fetchall():
+                id = row[0]
+                value = getstats(type='chat', id=id)
+                if value:
+                    newmemberid = value[5]
+                else:
+                    newmemberid = []
+
+                if len(newmemberid) > maxmembers:
+                    maxmembers = len(newmemberid)
+                    newmaster = id
+
+            if newmaster != 0:
+                logger.debug(msg=_("The removed channel (%s) was master for others, electing new master: %s") % (chatid, newmaster))
+                # Update slaves to new master
+                sql = "UPDATE config SET value='%s' WHERE key='link' and value='%s'" % (newmaster, chatid)
+                cur = stampy.stampy.dbsql(sql)
+
+                # move data from old master to new one (except stats and config)
+                for table in ['karma', 'quote', 'autokarma', 'alias']:
+                    sql = "UPDATE %s SET gid='%s' where gid='%s';" % (table, newmaster, chatid)
+                    cur = stampy.stampy.dbsql(sql)
+
+                # Remove 'link' from the new master so it becomes a master
+                stampy.plugin.config.deleteconfig(key='link', gid=newmaster)
+
+            # Two different names because of historical reasons
+            for table in ['config', 'stats']:
+                # Remove channel stats
+                sql = "DELETE from %s where id='%s';" % (table, chatid)
+                cur = stampy.stampy.dbsql(sql)
+
+            for table in ['karma', 'quote', 'autokarma', 'alias']:
+                # Remove channel stats
+                sql = "DELETE from %s where gid='%s';" % (table, chatid)
+                cur = stampy.stampy.dbsql(sql)
+
             # Remove users membership that had that channel id
-            sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type='user' and memberid LIKE '%%%s%%';" % chatid
+            string = "%" + chatid + "%"
+            sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type='user' and memberid LIKE '%s';" % string
             cur = stampy.stampy.dbsql(sql)
 
             for line in cur:
@@ -460,6 +504,35 @@ def dousercleanup(user_id=False,
                 memberid.remove(userid)
                 # Update stats entry in database without the removed chat
                 updatestats(type=type, id=id, name=name, date=date, memberid=memberid)
+
+            # Check if user was admin for any channel, and remove
+            username = None
+            if name:
+                for each in name.split():
+                    if "@" in each:
+                        username = each[1:-1]
+            if username and username != "@":
+                # userid to remove has username, check admins on config and remove
+                string = "%" + username + "%"
+                sql = "SELECT id, value FROM config WHERE value like %s" % string
+
+                cur = stampy.stampy.dbsql(sql)
+
+                for row in cur:
+                    id = row[0]
+                    admins = row[1].split(" ")
+                    try:
+                        admins.remove(username)
+                    except:
+                        pass
+                    newadmin = " ".join(admins)
+
+                    if len(newadmin) != 0:
+                        stampy.plugin.config.setconfig(key='admin',
+                                                       value=newadmin, gid=id)
+                    else:
+                        stampy.plugin.config.deleteconfig(key='admin', gid=id)
+
     return
 
 
