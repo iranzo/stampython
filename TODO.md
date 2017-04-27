@@ -11,13 +11,6 @@
     - Initial load of karma points from older bot (possible separate script)
     - Implement banning of consecutive karma changes from same user for a
       period of time
-    - Implement 'highlight', so when a bot is in a channel the user is,
-      allow that user to get a private notification from bot highlighting
-      that word to him. (This should require per-user settings and be
-      limited to group chats were user is in (getChatMember and
-      https://core.telegram.org/bots/api#forwardmessage)
-        - Doesn't work to send messages directly to users if they haven't 
-          started a chat with the bot previously
     - Implement something similar to
       <https://supportex.net/blog/2011/09/rrd-python/> for graphing message
       activity
@@ -26,9 +19,7 @@
       participate into the Bingo, keep track of the ones mentioned already
       and announce bingo Winner (last word completed) and clear the status
       to start a new round
-    - Implement forward conditions so just some messages based on sender, or
-      text are sent
-    - Implement i18n to the project to allow users to write strings for the 
+    - Implement i18n to the project to allow users to write strings for the
       bot and use the channel-configured language (or default to en) for 
       messages.
       - Mostly i18n done, failed to change the language dynamically so far

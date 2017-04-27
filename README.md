@@ -40,6 +40,7 @@ News about the program, new features, etc at <https://telegram.me/stampynews>.
 - `@all++` to give karma to all usernames in a channel
 - `stock <ticker>` to get trading quote for ticker in stock market
 - `/espp <amount>` to get earning calculations based on stock defined and monthly rate (for 6 months)
+- `/hilight <add|delete|list> <word>` Adds/deletes word or lists words that will cause a forward to notify you
 
 ## Extra commands only for admin user
 ### Configuration
@@ -72,6 +73,12 @@ Bot allows to trigger auto-karma events, so when keyword is given, it will trigg
 - `/autok key=value` Will create a new auto-karma trigger, so each time `key` is used, it will trigger value++ event
 - `/alias list [word]` Will show current defined autokarma triggers and in case a word is provided will search based on that word
 - `/alias delete key=value` will delete a previously defined auto-karma so no more auto-karma events will be triggered for that pair
+
+
+### Forward
+- `/forward source_id=target_id` Forwards messages from source to target
+- `/forward delete source_id=target_id` Stops forwarding messages from source to target
+- `/forward list` To get list of defined forwards
 
 ### Alias
 Bot allows to setup alias, so when karma is given to a word, it will instead add it to a different one (and report that one)
