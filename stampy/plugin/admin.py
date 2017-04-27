@@ -100,7 +100,6 @@ def admincommands(message):
                 break
             if case():
                 break
-
     return
 
 

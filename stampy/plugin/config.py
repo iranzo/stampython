@@ -75,7 +75,7 @@ def configcommands(message):
     if texto.split(' ')[0] == "/config" and stampy.stampy.is_owner(message):
         gid = 0
     else:
-        gid = chat_id
+        gid = stampy.stampy.geteffectivegid(chat_id)
 
     # Only users defined as 'owner' or 'admin' can perform commands
     if stampy.stampy.is_owner_or_admin(message):

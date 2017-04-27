@@ -617,9 +617,10 @@ def is_owner(message):
     return code
 
 
-def is_owner_or_admin(message):
+def is_owner_or_admin(message, strict=False):
     """
     Check if user is owner or admin for group
+    :param strict: Defines if we target the actual gid, not effective
     :param message: message to check
     :return: True on owner or admin
     """
@@ -628,23 +629,30 @@ def is_owner_or_admin(message):
     admin = False
     owner = False
     msgdetail = getmsgdetail(message)
-    chat_id = msgdetail["chat_id"]
+    if strict:
+        chat_id = msgdetail["chat_id"]
+    else:
+        chat_id = geteffectivegid(msgdetail["chat_id"])
 
     # if we're on a user private chat, return admin true
     if chat_id > 0:
         admin = True
+        logger.debug(msg=_("We're admin of private chats"))
     else:
         # Check if we're owner
         owner = is_owner(message)
         if not owner:
+            logger.debug(msg=_("We're not owner of public chats"))
             # Check if we are admin of chat
-            for each in plugin.config.config(key='admin', default="").split(" "):
+            for each in plugin.config.config(key='admin', default="", gid=chat_id).split(" "):
                 if each == msgdetail["who_un"]:
                     admin = True
+                    logger.debug(msg=_("We're admin of public chat"))
 
             # If we're not admin and admin is empty, consider ourselves admin
             if not admin:
                 if plugin.config.config(key='admin', gid=chat_id, default="") == "":
+                    logger.debug(msg=_("We're admin because no admin listed on public chat"))
                     admin = True
 
     return owner or admin
@@ -666,7 +674,7 @@ def geteffectivegid(gid):
         if link:
             # This chat_id has 'link' defined against master, effective gid
             # should be that one
-            return link
+            return int(link)
         else:
             return gid
     else:

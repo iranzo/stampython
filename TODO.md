@@ -7,14 +7,6 @@
              store/retrieve the number of messages in average and adapt to
              time of the day and rate
 
-### Private group support
-  - TODO:
-    - Review whole config usage to separate between master admin and channel
-      admin and determine operations valid for one or both
-  - Implement language change
-  - Ensure admin takeover operations
-  - Avoid to operate on gid=0 (/aliases, etc)
-      
 ### Other
     - Initial load of karma points from older bot (possible separate script)
     - Implement banning of consecutive karma changes from same user for a
@@ -40,5 +32,3 @@
       bot and use the channel-configured language (or default to en) for 
       messages.
       - Mostly i18n done, failed to change the language dynamically so far
-    - Fix ESPP so it might have several periods or stocks
-    - Fix ESPP so it might have several discounts
