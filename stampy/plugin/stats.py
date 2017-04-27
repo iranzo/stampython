@@ -494,6 +494,10 @@ def dousercleanup(user_id=False,
             sql = "DELETE from stats where id='%s';" % userid
             cur = stampy.stampy.dbsql(sql)
 
+            # Remove hilights
+            sql = "DELETE from hilight where gid='%s';" % userid
+            cur = stampy.stampy.dbsql(sql)
+
             # Remove users membership that had that channel id
             sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type='chat' and memberid LIKE '%%%s%%';" % userid
             cur = stampy.stampy.dbsql(sql)

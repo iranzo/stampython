@@ -60,6 +60,40 @@ def help(message):  # do not edit this line
     return commandtext
 
 
+def doforward(message, target):
+    """
+    Forwards a message target chatid
+    :param message: Message to process (contaning all details)
+    :param target: Target chat_id
+    :return:
+    """
+
+    logger = logging.getLogger(__name__)
+
+    msgdetail = stampy.stampy.getmsgdetail(message)
+    chat_id = msgdetail["chat_id"]
+    message_id = msgdetail["message_id"]
+
+    url = "%s%s/forwardMessage" % (stampy.plugin.config.config(key="url"),
+                                   stampy.plugin.config.config(key='token'))
+
+    message = "%s?chat_id=%s&from_chat_id=%s&message_id=%s" % (url, target, chat_id, message_id)
+
+    code = False
+    attempt = 0
+    while not code:
+        result = json.load(urllib.urlopen(message))
+        code = result['ok']
+        logger.error(msg=_("ERROR (%s) forwarding message: Code: %s : Text: %s") % (attempt, code, result))
+        attempt += 1
+        sleep(1)
+        # exit after 60 retries with 1 second delay each
+        if attempt > 60:
+            logger.error(msg=_("PERM ERROR forwarding message: Code: %s : Text: %s") % (code, result))
+            code = True
+    logger.debug(msg=_("forwarding message: Code: %s : Text: %s") % (code, message))
+
+
 def forwardmessage(message):
     """
     Forwards a message based on id/chatid to target chatid
@@ -80,28 +114,9 @@ def forwardmessage(message):
     if forward:
         msgdetail = stampy.stampy.getmsgdetail(message)
         chat_id = msgdetail["chat_id"]
-        message_id = msgdetail["message_id"]
-
-        url = "%s%s/forwardMessage" % (stampy.plugin.config.config(key="url"),
-                                       stampy.plugin.config.config(key='token'))
 
         for target in getforward(source=chat_id):
-            message = "%s?chat_id=%s&from_chat_id=%s&message_id=%s" % (
-                url, target, chat_id, message_id)
-
-            code = False
-            attempt = 0
-            while not code:
-                result = json.load(urllib.urlopen(message))
-                code = result['ok']
-                logger.error(msg=_("ERROR (%s) forwarding message: Code: %s : Text: %s") % (attempt, code, result))
-                attempt += 1
-                sleep(1)
-                # exit after 60 retries with 1 second delay each
-                if attempt > 60:
-                    logger.error(msg=_("PERM ERROR forwarding message: Code: %s : Text: %s") % (code, result))
-                    code = True
-            logger.debug(msg=_("forwarding message: Code: %s : Text: %s") % (code, message))
+            doforward(message=message, target=target)
     else:
         logger.debug(msg=_("Forward plugin not enabled, skipping"))
     return
