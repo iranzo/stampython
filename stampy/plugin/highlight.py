@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 #
-# Description: Plugin for processing highlight commands
+# Description: Plugin for processing hilight commands
 # Author: Pablo Iranzo Gomez (Pablo.Iranzo@gmail.com)
 
 import logging
@@ -55,11 +55,11 @@ def help(message):  # do not edit this line
     """
 
     commandtext = _("Use `/hilight add <word>` to add word to your "
-                    "highlight list so messages in channels you're member "
+                    "hilight list so messages in channels you're member "
                     "will be forwarded privately to you (need to start "
                     "prior conversation with bot)\n\n")
     commandtext += _("Use `/hilight delete <word>` to delete word "
-                     "from your highlight list\n\n")
+                     "from your hilight list\n\n")
     commandtext += _("Use `/hilight list` to list hilights enabled "
                      "for your user\n\n")
     return commandtext
@@ -181,7 +181,7 @@ def createhilight(word, uid):
         logger.error(msg=_("createhilight: word %s for uid %s already exists") % (word, uid))
     else:
         sql = "INSERT INTO hilight(word, gid) VALUES('%s', '%s');" % (word, uid)
-        logger.debug(msg="createhighlight: %s for gid %s" % (word, uid))
+        logger.debug(msg="createhilight: %s for gid %s" % (word, uid))
         stampy.stampy.dbsql(sql)
         return True
     return False
@@ -225,15 +225,15 @@ def listhilight(uid, word=False):
 
     try:
         # Get value from SQL query
-        text = _("Defined highlight triggers %s:\n") % wordtext
+        text = _("Defined hilight triggers %s:\n") % wordtext
         table = from_db_cursor(cur)
         text = "%s\n```%s```" % (text, table.get_string())
 
     except:
         # Value didn't exist before
-        text = _("%s has no trigger highlight") % word
+        text = _("%s has no trigger hilight") % word
 
-    logger.debug(msg=_("Returning highlight %s for word %s") % (text, word))
+    logger.debug(msg=_("Returning hilight %s for word %s") % (text, word))
     return text
 
 
@@ -274,8 +274,6 @@ def hilightwords(message):
                 forward = True
     else:
         logger.debug(msg=_('User %s NOT member of group %s') % (who_id, chat_id))
-        print who_id
-        print memberid
 
     if forward:
         text = _("Message sent to chat: %s") % chat_name

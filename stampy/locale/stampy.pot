@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-04-26 15:48+0200\n"
+"POT-Creation-Date: 2017-04-28 00:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -184,33 +184,49 @@ msgstr ""
 msgid "Final deduplicated list: %s"
 msgstr ""
 
-#: stampy/stampy.py:708
+#: stampy/stampy.py:640
+msgid "We're admin of private chats"
+msgstr ""
+
+#: stampy/stampy.py:645
+msgid "We're not owner of public chats"
+msgstr ""
+
+#: stampy/stampy.py:650
+msgid "We're admin of public chat"
+msgstr ""
+
+#: stampy/stampy.py:655
+msgid "We're admin because no admin listed on public chat"
+msgstr ""
+
+#: stampy/stampy.py:716
 #, python-format
 msgid "Logging level set to %s"
 msgstr ""
 
-#: stampy/stampy.py:776
+#: stampy/stampy.py:784
 msgid "Started execution"
 msgstr ""
 
-#: stampy/stampy.py:787
+#: stampy/stampy.py:795
 msgid "Token required for operation, please check https://core.telegram.org/bots"
 msgstr ""
 
-#: stampy/stampy.py:806
+#: stampy/stampy.py:814
 #, python-format
 msgid "Plug triggers reported: %s"
 msgstr ""
 
-#: stampy/stampy.py:811
+#: stampy/stampy.py:819
 msgid "Running in daemon mode"
 msgstr ""
 
-#: stampy/stampy.py:816
+#: stampy/stampy.py:824
 msgid "Running in one-shoot mode"
 msgstr ""
 
-#: stampy/stampy.py:819
+#: stampy/stampy.py:827
 msgid "Stopped execution"
 msgstr ""
 
@@ -237,7 +253,7 @@ msgstr ""
 #: stampy/plugin/admin.py:73 stampy/plugin/alias.py:72
 #: stampy/plugin/autokarma.py:78 stampy/plugin/config.py:82
 #: stampy/plugin/dilbert.py:79 stampy/plugin/espp.py:66
-#: stampy/plugin/forward.py:125 stampy/plugin/help.py:64
+#: stampy/plugin/forward.py:140 stampy/plugin/help.py:64
 #: stampy/plugin/jueves.py:76 stampy/plugin/mel.py:77
 #: stampy/plugin/obichero.py:78 stampy/plugin/quico.py:78
 #: stampy/plugin/xkcd.py:76
@@ -245,27 +261,27 @@ msgstr ""
 msgid "Command: %s by %s"
 msgstr ""
 
-#: stampy/plugin/admin.py:129
+#: stampy/plugin/admin.py:128
 #, python-format
 msgid "Generated token %s for channel %s"
 msgstr ""
 
-#: stampy/plugin/admin.py:130
+#: stampy/plugin/admin.py:129
 #, python-format
 msgid "Token for linking against this channel has been generated as %s"
 msgstr ""
 
-#: stampy/plugin/admin.py:134
+#: stampy/plugin/admin.py:133
 #, python-format
 msgid "Already generated token %s for channel %s"
 msgstr ""
 
-#: stampy/plugin/admin.py:135
+#: stampy/plugin/admin.py:134
 #, python-format
 msgid "A token for linking against this channel already existed as %s"
 msgstr ""
 
-#: stampy/plugin/admin.py:137 stampy/plugin/admin.py:220
+#: stampy/plugin/admin.py:136 stampy/plugin/admin.py:219
 msgid ""
 "\n"
 "\n"
@@ -273,41 +289,41 @@ msgid ""
 "```/gconfig delete isolated``` to revert back to global karma"
 msgstr ""
 
-#: stampy/plugin/admin.py:143
+#: stampy/plugin/admin.py:142
 msgid "This channel is a slave for another one, cannot generate token"
 msgstr ""
 
-#: stampy/plugin/admin.py:167
+#: stampy/plugin/admin.py:166
 #, python-format
 msgid "chanenslave: %s, master-id: %s, master-token:%s"
 msgstr ""
 
-#: stampy/plugin/admin.py:181
+#: stampy/plugin/admin.py:180
 #, python-format
 msgid "Channel *%s* with name *%s* has been linked as *SLAVE*"
 msgstr ""
 
-#: stampy/plugin/admin.py:189
+#: stampy/plugin/admin.py:188
 #, python-format
 msgid "This channel has been set as *SLAVE* from *MASTER* channel *%s*"
 msgstr ""
 
-#: stampy/plugin/admin.py:212
+#: stampy/plugin/admin.py:211
 #, python-format
 msgid "Channel *%s* with name *%s* has been unlinked as *SLAVE*"
 msgstr ""
 
-#: stampy/plugin/admin.py:219
+#: stampy/plugin/admin.py:218
 #, python-format
 msgid "This channel has been unliked as *SLAVE* from *MASTER* channel *%s*"
 msgstr ""
 
-#: stampy/plugin/admin.py:241
+#: stampy/plugin/admin.py:240
 #, python-format
 msgid "This channel %s is slave of channel %s"
 msgstr ""
 
-#: stampy/plugin/admin.py:247
+#: stampy/plugin/admin.py:246
 msgid "Defined slaves:\n"
 msgstr ""
 
@@ -331,7 +347,7 @@ msgid ""
 msgstr ""
 
 #: stampy/plugin/alias.py:74 stampy/plugin/autokarma.py:81
-#: stampy/plugin/forward.py:127
+#: stampy/plugin/forward.py:142
 #, python-format
 msgid "Command: %s by Owner: %s"
 msgstr ""
@@ -523,52 +539,52 @@ msgid ""
 "\n"
 msgstr ""
 
-#: stampy/plugin/espp.py:79
+#: stampy/plugin/espp.py:84
 #, python-format
 msgid "USD/%s rate "
 msgstr ""
 
-#: stampy/plugin/espp.py:82
+#: stampy/plugin/espp.py:87
 #, python-format
 msgid "Initial quote: %s USD\n"
 msgstr ""
 
-#: stampy/plugin/espp.py:86
+#: stampy/plugin/espp.py:91
 #, python-format
 msgid "Actual quote: %s USD\n"
 msgstr ""
 
-#: stampy/plugin/espp.py:98
+#: stampy/plugin/espp.py:103
 #, python-format
 msgid "Buy price: %s USD\n"
 msgstr ""
 
-#: stampy/plugin/espp.py:99
+#: stampy/plugin/espp.py:104
 #, python-format
 msgid "Earning per unit: %s USD\n"
 msgstr ""
 
-#: stampy/plugin/espp.py:102
+#: stampy/plugin/espp.py:107
 #, python-format
 msgid "Estimated stocks: %s\n"
 msgstr ""
 
-#: stampy/plugin/espp.py:104
+#: stampy/plugin/espp.py:109
 #, python-format
 msgid "Estimated earning: %s %s\n"
 msgstr ""
 
-#: stampy/plugin/espp.py:106
+#: stampy/plugin/espp.py:111
 #, python-format
 msgid "Total amount deposited on sell: %s %s\n"
 msgstr ""
 
-#: stampy/plugin/espp.py:107
+#: stampy/plugin/espp.py:112
 #, python-format
 msgid "Estimated A.E.R. vs investment: %s %%"
 msgstr ""
 
-#: stampy/plugin/espp.py:111
+#: stampy/plugin/espp.py:116
 msgid "espp setting not defined, please use /gconfig set espp=<value>"
 msgstr ""
 
@@ -590,45 +606,45 @@ msgid ""
 "\n"
 msgstr ""
 
-#: stampy/plugin/forward.py:97
+#: stampy/plugin/forward.py:87
 #, python-format
 msgid "ERROR (%s) forwarding message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/plugin/forward.py:102
+#: stampy/plugin/forward.py:92
 #, python-format
 msgid "PERM ERROR forwarding message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/plugin/forward.py:104
+#: stampy/plugin/forward.py:94
 #, python-format
 msgid "forwarding message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/plugin/forward.py:106
+#: stampy/plugin/forward.py:121
 msgid "Forward plugin not enabled, skipping"
 msgstr ""
 
-#: stampy/plugin/forward.py:150
+#: stampy/plugin/forward.py:165
 #, python-format
 msgid "Deleting forward for `%s -> %s`"
 msgstr ""
 
-#: stampy/plugin/forward.py:162
+#: stampy/plugin/forward.py:177
 #, python-format
 msgid "Setting forward for `%s` to `%s`"
 msgstr ""
 
-#: stampy/plugin/forward.py:208
+#: stampy/plugin/forward.py:223
 #, python-format
 msgid "%s has a forward %s"
 msgstr ""
 
-#: stampy/plugin/forward.py:213
+#: stampy/plugin/forward.py:228
 msgid "Defined forwards:\n"
 msgstr ""
 
-#: stampy/plugin/forward.py:230
+#: stampy/plugin/forward.py:245
 #, python-format
 msgid "createforward: circular reference %s=%s"
 msgstr ""
@@ -643,6 +659,86 @@ msgstr ""
 msgid ""
 "Read about announcements at https://telegram.me/stampynews\n"
 "\n"
+msgstr ""
+
+#: stampy/plugin/highlight.py:57
+msgid ""
+"Use `/hilight add <word>` to add word to your hilight list so messages in"
+" channels you're member will be forwarded privately to you (need to start"
+" prior conversation with bot)\n"
+"\n"
+msgstr ""
+
+#: stampy/plugin/highlight.py:61
+msgid ""
+"Use `/hilight delete <word>` to delete word from your hilight list\n"
+"\n"
+msgstr ""
+
+#: stampy/plugin/highlight.py:63
+msgid ""
+"Use `/hilight list` to list hilights enabled for your user\n"
+"\n"
+msgstr ""
+
+#: stampy/plugin/highlight.py:84
+#, python-format
+msgid "Command: %s by user: %s"
+msgstr ""
+
+#: stampy/plugin/highlight.py:103
+#, python-format
+msgid "Deleting hilight for `%s`"
+msgstr ""
+
+#: stampy/plugin/highlight.py:112
+#, python-format
+msgid "Adding hilight for `%s`"
+msgstr ""
+
+#: stampy/plugin/highlight.py:181
+#, python-format
+msgid "createhilight: word %s for uid %s already exists"
+msgstr ""
+
+#: stampy/plugin/highlight.py:222
+#, python-format
+msgid "for word %s for uid %s"
+msgstr ""
+
+#: stampy/plugin/highlight.py:228
+#, python-format
+msgid "Defined hilight triggers %s:\n"
+msgstr ""
+
+#: stampy/plugin/highlight.py:234
+#, python-format
+msgid "%s has no trigger hilight"
+msgstr ""
+
+#: stampy/plugin/highlight.py:236
+#, python-format
+msgid "Returning hilight %s for word %s"
+msgstr ""
+
+#: stampy/plugin/highlight.py:270
+#, python-format
+msgid "User %s is member of group %s"
+msgstr ""
+
+#: stampy/plugin/highlight.py:273
+#, python-format
+msgid "Word %s is in text, forwarding"
+msgstr ""
+
+#: stampy/plugin/highlight.py:276
+#, python-format
+msgid "User %s NOT member of group %s"
+msgstr ""
+
+#: stampy/plugin/highlight.py:279
+#, python-format
+msgid "Message sent to chat: %s"
 msgstr ""
 
 #: stampy/plugin/info.py:47
@@ -970,36 +1066,36 @@ msgstr ""
 msgid "The removed channel (%s) was master for others, electing new master: %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:446 stampy/plugin/stats.py:502
+#: stampy/plugin/stats.py:447 stampy/plugin/stats.py:507
 #, python-format
 msgid "LINE for user %s and memberid: %s will be deleted"
 msgstr ""
 
-#: stampy/plugin/stats.py:476
+#: stampy/plugin/stats.py:477
 #, python-format
 msgid "Processing userids for cleanup: %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:489
+#: stampy/plugin/stats.py:490
 #, python-format
 msgid "USER ID %s with name %s with %s inactivity days is going to be purged"
 msgstr ""
 
-#: stampy/plugin/stats.py:568
+#: stampy/plugin/stats.py:573
 #, python-format
 msgid "values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid:%s"
 msgstr ""
 
-#: stampy/plugin/stats.py:585
+#: stampy/plugin/stats.py:590
 msgid "@All invoked"
 msgstr ""
 
-#: stampy/plugin/stats.py:609
+#: stampy/plugin/stats.py:614
 #, python-format
 msgid "%s wanted to ping you: "
 msgstr ""
 
-#: stampy/plugin/stats.py:629
+#: stampy/plugin/stats.py:634
 #, python-format
 msgid "Pinging chat %s: %s on %s"
 msgstr ""
@@ -1010,7 +1106,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: stampy/plugin/stock.py:128
+#: stampy/plugin/stock.py:131
 #, python-format
 msgid "USD/%s rate \n"
 msgstr ""
