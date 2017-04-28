@@ -131,8 +131,8 @@ def rank(word=False, gid=0):
     """
 
     logger = logging.getLogger(__name__)
-    if stampy.plugin.alias.getalias(word):
-        word = stampy.plugin.alias.getalias(word)
+    if stampy.plugin.alias.getalias(word, gid=gid):
+        word = stampy.plugin.alias.getalias(word, gid=gid)
     if word:
         # if word is provided, return the rank value for that word
         string = (word, gid)
@@ -169,8 +169,8 @@ def srank(word=False, gid=0):
     :return: table with the values for srank
     """
     logger = logging.getLogger(__name__)
-    if stampy.plugin.alias.getalias(word):
-        word = stampy.plugin.alias.getalias(word)
+    if stampy.plugin.alias.getalias(word, gid=gid):
+        word = stampy.plugin.alias.getalias(word, gid=gid)
     text = ""
     if word is False:
         # If no word is provided to srank, call rank instead
@@ -309,6 +309,7 @@ def karmaprocess(msgdetail):
     who_gn = msgdetail["who_gn"]
     who_id = msgdetail["who_id"]
     who_ln = msgdetail["who_ln"]
+    gid = stampy.stampy.geteffectivegid(gid=chat_id)
 
     # Define dictionary for text replacements
     dictionary = {
@@ -360,11 +361,11 @@ def karmaprocess(msgdetail):
                             word = False
 
                 if word and oper:
-                    if stampy.plugin.alias.getalias(word):
-                        word = stampy.plugin.alias.getalias(word).split(" ")
+                    if stampy.plugin.alias.getalias(word, gid=gid):
+                        word = stampy.plugin.alias.getalias(word, gid=gid).split(" ")
                     for item in word:
-                        if stampy.plugin.alias.getalias(item):
-                            item = stampy.plugin.alias.getalias(item)
+                        if stampy.plugin.alias.getalias(item, gid=gid):
+                            item = stampy.plugin.alias.getalias(item, gid=gid)
                         if oper == "++" and item not in wordadd:
                             wordadd.append(item)
                         if oper == "--" and item not in worddel:

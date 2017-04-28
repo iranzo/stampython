@@ -168,6 +168,31 @@ def gethilightwords(uid=False):
     return value
 
 
+def gethilightuids(word=False):
+    """
+    Get autokeywords
+    :return: List of autokeywords
+    """
+
+    logger = logging.getLogger(__name__)
+    if word is False:
+        sql = "SELECT distinct gid FROM hilight;"
+    else:
+        sql = "SELECT distinct gid FROM hilight WHERE word='%s';" % word
+    cur = stampy.stampy.dbsql(sql)
+    data = cur.fetchall()
+    value = []
+    for row in data:
+        # Fill valid values
+        value.append(row[0])
+
+    logger.debug(msg="gethilightuids: %s for word %s" % (value, word))
+
+    return value
+
+
+
+
 def createhilight(word, uid):
     """
     Creates an hilight trigger for a word
@@ -215,7 +240,7 @@ def listhilight(uid, word=False):
     wordtext = ""
 
     if not word:
-        sql = "select word from hilight ORDER BY word ASC;"
+        sql = "select word from hilight WHERE gid='%s' ORDER BY word ASC;" % uid
     else:
         string = (word, uid)
         sql = "SELECT word FROM hilight WHERE word='%s' AND gid='%s' ORDER by word ASC;" % string
@@ -248,12 +273,11 @@ def hilightwords(message):
 
     msgdetail = stampy.stampy.getmsgdetail(message)
     text_to_process = msgdetail["text"].lower()
-    who_id = msgdetail["who_id"]
     chat_name = msgdetail["chat_name"]
     chat_id = msgdetail["chat_id"]
 
-    forward = False
-    keywords = gethilightwords(uid=who_id)
+    keywords = gethilightwords(uid=False)
+    uids = gethilightuids(word=False)
 
     try:
         value = stampy.plugin.stats.getstats(type='chat', id=chat_id)
@@ -261,23 +285,26 @@ def hilightwords(message):
         value = False
 
     if value:
-        memberid = value[5]
+        memberid = stampy.stampy.getitems(value[5])
     else:
         memberid = []
 
-    # Only forward if user is member of group
-    if who_id in memberid:
-        logger.debug(msg=_('User %s is member of group %s') % (who_id, chat_id))
-        for hilight in keywords:
-            if hilight in text_to_process:
-                logger.debug(msg=_('Word %s is in text, forwarding') % hilight)
-                forward = True
-    else:
-        logger.debug(msg=_('User %s NOT member of group %s') % (who_id, chat_id))
+    for uid in uids:
+        forward = False
+        # Only forward if user is member of group
+        if int(uid) in memberid:
+            logger.debug(msg=_('User %s is member of group %s') % (uid, chat_id))
+            for hilight in keywords:
+                if hilight in text_to_process:
+                    if hilight in gethilightwords(uid=uid):
+                        logger.debug(msg=_('Word %s is in text and forwarding for user') % hilight)
+                        forward = True
+        else:
+            logger.debug(msg=_('User %s NOT member of group %s (%s)') % (uid, chat_id, memberid))
 
-    if forward:
-        text = _("Message sent to chat: %s") % chat_name
-        stampy.stampy.sendmessage(chat_id=who_id, text=text)
-        stampy.plugin.forward.doforward(message=message, target=who_id)
+        if forward:
+            text = _("Message sent to chat: %s") % chat_name
+            stampy.stampy.sendmessage(chat_id=uid, text=text)
+            stampy.plugin.forward.doforward(message=message, target=uid)
 
     return

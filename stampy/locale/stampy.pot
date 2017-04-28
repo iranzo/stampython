@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-04-28 00:00+0200\n"
+"POT-Creation-Date: 2017-04-28 16:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -696,47 +696,47 @@ msgstr ""
 msgid "Adding hilight for `%s`"
 msgstr ""
 
-#: stampy/plugin/highlight.py:181
+#: stampy/plugin/highlight.py:206
 #, python-format
 msgid "createhilight: word %s for uid %s already exists"
 msgstr ""
 
-#: stampy/plugin/highlight.py:222
+#: stampy/plugin/highlight.py:247
 #, python-format
 msgid "for word %s for uid %s"
 msgstr ""
 
-#: stampy/plugin/highlight.py:228
+#: stampy/plugin/highlight.py:253
 #, python-format
 msgid "Defined hilight triggers %s:\n"
 msgstr ""
 
-#: stampy/plugin/highlight.py:234
+#: stampy/plugin/highlight.py:259
 #, python-format
 msgid "%s has no trigger hilight"
 msgstr ""
 
-#: stampy/plugin/highlight.py:236
+#: stampy/plugin/highlight.py:261
 #, python-format
 msgid "Returning hilight %s for word %s"
 msgstr ""
 
-#: stampy/plugin/highlight.py:270
+#: stampy/plugin/highlight.py:296
 #, python-format
 msgid "User %s is member of group %s"
 msgstr ""
 
-#: stampy/plugin/highlight.py:273
+#: stampy/plugin/highlight.py:300
 #, python-format
-msgid "Word %s is in text, forwarding"
+msgid "Word %s is in text and forwarding for user"
 msgstr ""
 
-#: stampy/plugin/highlight.py:276
+#: stampy/plugin/highlight.py:303
 #, python-format
-msgid "User %s NOT member of group %s"
+msgid "User %s NOT member of group %s (%s)"
 msgstr ""
 
-#: stampy/plugin/highlight.py:279
+#: stampy/plugin/highlight.py:306
 #, python-format
 msgid "Message sent to chat: %s"
 msgstr ""
@@ -857,41 +857,41 @@ msgstr ""
 msgid "Sticker for %s karma points"
 msgstr ""
 
-#: stampy/plugin/karma.py:329
+#: stampy/plugin/karma.py:330
 #, python-format
 msgid "Text to process: %s"
 msgstr ""
 
-#: stampy/plugin/karma.py:336
+#: stampy/plugin/karma.py:337
 msgid "Text has karma operators"
 msgstr ""
 
-#: stampy/plugin/karma.py:339
+#: stampy/plugin/karma.py:340
 #, python-format
 msgid "Processing word %s sent by id %s with username %s (%s %s)"
 msgstr ""
 
-#: stampy/plugin/karma.py:384
+#: stampy/plugin/karma.py:385
 #, python-format
 msgid "%s Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)"
 msgstr ""
 
-#: stampy/plugin/karma.py:390
+#: stampy/plugin/karma.py:391
 #, python-format
 msgid "`%s` now has `%s` karma points."
 msgstr ""
 
-#: stampy/plugin/karma.py:393
+#: stampy/plugin/karma.py:394
 #, python-format
 msgid "`%s` now has no Karma and has been garbage collected."
 msgstr ""
 
-#: stampy/plugin/karma.py:426
+#: stampy/plugin/karma.py:427
 #, python-format
 msgid "Processing words for cleanup: %s"
 msgstr ""
 
-#: stampy/plugin/karma.py:442
+#: stampy/plugin/karma.py:443
 #, python-format
 msgid "Word %s with %s inactivity days is going to be purged"
 msgstr ""
@@ -1118,7 +1118,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: stampy/plugin/welcome.py:66
+#: stampy/plugin/welcome.py:67
 #, python-format
 msgid "New user in chat, sending greetings: %s"
 msgstr ""

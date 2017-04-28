@@ -59,8 +59,9 @@ def welcomeuser(message):
     logger = logging.getLogger(__name__)
 
     msgdetail = stampy.stampy.getmsgdetail(message=message)
+    chat_id = msgdetail['chat_id']
 
-    welcome = stampy.plugin.config.config(key='welcome', default=False)
+    welcome = stampy.plugin.config.gconfig(key='welcome', default=False, gid=chat_id)
     greeting = welcome.replace("$username", msgdetail['name'])
 
     logger.debug(msg=_('New user in chat, sending greetings: %s') % greeting)
