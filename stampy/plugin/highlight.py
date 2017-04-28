@@ -191,8 +191,6 @@ def gethilightuids(word=False):
     return value
 
 
-
-
 def createhilight(word, uid):
     """
     Creates an hilight trigger for a word
