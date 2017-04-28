@@ -438,7 +438,7 @@ def dochatcleanup(chat_id=False, maxage=int(stampy.plugin.config.config("maxage"
                 cur = stampy.stampy.dbsql(sql)
 
             # Remove users membership that had that channel id
-            string = "%" + chatid + "%"
+            string = "%" + "%s" % chatid + "%"
             sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type='user' and memberid LIKE '%s';" % string
             cur = stampy.stampy.dbsql(sql)
 

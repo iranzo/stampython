@@ -176,7 +176,7 @@ def srank(word=False, gid=0):
         # If no word is provided to srank, call rank instead
         text = rank(word)
     else:
-        string = "%" + word + "%"
+        string = "%" + "%s" % word + "%"
         sql = "SELECT word,value,date FROM karma WHERE word LIKE '%s' AND gid='%s' LIMIT 10;" % (string, gid)
         cur = stampy.stampy.dbsql(sql)
         table = from_db_cursor(cur)
