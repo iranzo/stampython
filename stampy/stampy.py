@@ -24,12 +24,16 @@ import urllib
 from time import sleep
 
 from apscheduler.schedulers.background import BackgroundScheduler
+
 from i18n import translate
+
 _ = translate.ugettext
 import plugins
 import plugin.config
 import plugin.forward
 
+logger = logging.getLogger("stampy")
+logger.setLevel(logging.DEBUG)
 
 plugs = []
 plugtriggers = {}
@@ -474,6 +478,8 @@ def getmsgdetail(message):
         who_un = ""
 
     name = "%s %s (@%s)" % (who_gn, who_ln, who_un)
+    while "  " in name:
+        name = name.replace("  ", " ")
 
     # args = ('name', 'chat_id', 'chat_name', 'date', 'datefor', 'error', 'message_id',
     #         'text', 'update_id', 'who_gn', 'who_id', 'who_ln', 'who_un')

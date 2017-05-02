@@ -1,3 +1,4 @@
+# coding=utf-8
 """Use gid in quotes
 
 Revision ID: 7f6c3fd04ee8

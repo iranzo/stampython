@@ -577,7 +577,11 @@ def getstats(type=False, id=0, name=False, date=False, count=0):
 
 
 def getall(message):
-
+    """
+    Processes 'all' in messages
+    :param message:  message to analyze
+    :return:
+    """
     logger = logging.getLogger(__name__)
     msgdetail = stampy.stampy.getmsgdetail(message)
 

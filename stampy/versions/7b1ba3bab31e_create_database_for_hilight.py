@@ -1,3 +1,4 @@
+# coding=utf-8
 """Create database for hilight
 
 Revision ID: 7b1ba3bab31e

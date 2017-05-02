@@ -1,3 +1,4 @@
+# coding=utf-8
 """Use gid in alias
 
 Revision ID: 50aa2dc987c4

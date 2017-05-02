@@ -1,3 +1,4 @@
+# coding=utf-8
 """Use gid in autok
 
 Revision ID: 81a858b4f7f4

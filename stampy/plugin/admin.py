@@ -130,7 +130,7 @@ def changenmastertoken(message):
                      "as %s") % generatedtoken
         else:
             generatedtoken = stampy.plugin.config.config(key='link-master', default=False, gid=chat_id)
-            logger.debug(msg=_("Already generated token %s for channel %s") % (token, chat_id))
+            logger.debug(msg=_("Already generated token %s for channel %s") % (generatedtoken, chat_id))
             text = _("A token for linking against this channel already existed as %s") % generatedtoken
 
         text = text + _("\n\nChannel has also been enabled as running in isolated "
@@ -196,6 +196,11 @@ def chanlinkslave(message, token=""):
 
 
 def chanunlink(message):
+    """
+    Unlinks channel
+    :param message: Message to process
+    :return:
+    """
     logger = logging.getLogger(__name__)
     msgdetail = stampy.stampy.getmsgdetail(message)
 
@@ -228,6 +233,11 @@ def chanunlink(message):
 
 
 def chanshowslave(message):
+    """
+    Shows slaves associated to current channel
+    :param message: Message to process
+    :return:
+    """
     logger = logging.getLogger(__name__)
     msgdetail = stampy.stampy.getmsgdetail(message)
 

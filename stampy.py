@@ -8,6 +8,7 @@ import logging
 import stampy.stampy as stampy
 
 if __name__ == "__main__":
-    __name__ = "stampy"
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger("stampy")
+    logger.setLevel(logging.DEBUG)
+    logger.debug(msg="Starting stampy wrapper")
     stampy.main()

@@ -1,3 +1,4 @@
+# coding=utf-8
 """Add gid to karma
 
 Revision ID: 355236948ec7

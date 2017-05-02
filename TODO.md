@@ -23,3 +23,4 @@
       bot and use the channel-configured language (or default to en) for 
       messages.
       - Mostly i18n done, failed to change the language dynamically so far
+    - Fix logging not working for main code loop

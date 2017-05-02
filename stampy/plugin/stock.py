@@ -55,6 +55,12 @@ class GoogleFinanceAPI:
         self.prefix = "http://finance.google.com/finance/info?client=ig&q="
 
     def get(self, symbol, exchange=False):
+        """
+        Gets data from symbol
+        :param symbol: stock ticker to check
+        :param exchange: Exchange provided
+        :return:
+        """
         string = ""
         if symbol and exchange:
             string = "%s:%s" % (exchange, symbol)

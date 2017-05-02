@@ -27,7 +27,7 @@ def init():
     :return: List of triggers for plugin
     """
 
-    sched.add_job(xkcd, 'cron', id='xkcd', hour='9', replace_existing=True,
+    sched.add_job(xkcd, 'cron', id='xkcd', hour='23', replace_existing=True,
                   misfire_grace_time=120)
     triggers = ["^/xkcd"]
     return triggers
