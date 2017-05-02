@@ -250,14 +250,15 @@ def autokarmawords(message):
     msgdetail = stampy.stampy.getmsgdetail(message)
     text_to_process = msgdetail["text"].lower()
     chat_id = msgdetail['chat_id']
+    gid = stampy.stampy.geteffectivegid(gid=chat_id)
 
     wordadd = []
 
-    keywords = getautokeywords(gid=stampy.stampy.geteffectivegid(gid=chat_id))
+    keywords = getautokeywords(gid=gid)
     for autok in keywords:
         if autok in text_to_process:
             # If trigger word is there, add the triggered action
-            for word in getautok(autok):
+            for word in getautok(key=autok, gid=gid):
                 wordadd.append(word + "++")
 
     if wordadd:
