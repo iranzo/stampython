@@ -73,6 +73,15 @@ def run(message):  # do not edit this line
     except:
         pass
 
+    try:
+        if 'migrate_to_chat_id' in message['message']:
+            # Chat has been migrated to superchat, so we can migrate all configuration
+            chat_id = msgdetail['chat_id']
+            new_id = message['message']['migrate_to_chat_id']
+            migratechats(oldchat=chat_id, newchat=new_id)
+    except:
+        pass
+
     return
 
 
@@ -418,10 +427,7 @@ def dochatcleanup(chat_id=False, maxage=int(stampy.plugin.config.config("maxage"
                 sql = "UPDATE config SET value='%s' WHERE key='link' and value='%s'" % (newmaster, chatid)
                 cur = stampy.stampy.dbsql(sql)
 
-                # move data from old master to new one (except stats and config)
-                for table in ['karma', 'quote', 'autokarma', 'alias']:
-                    sql = "UPDATE %s SET gid='%s' where gid='%s';" % (table, newmaster, chatid)
-                    cur = stampy.stampy.dbsql(sql)
+                migratechats(oldchat=chat_id, newchat=newmaster, includeall=False)
 
                 # Remove 'link' from the new master so it becomes a master
                 stampy.plugin.config.deleteconfig(key='link', gid=newmaster)
@@ -451,9 +457,42 @@ def dochatcleanup(chat_id=False, maxage=int(stampy.plugin.config.config("maxage"
     return
 
 
-def dousercleanup(user_id=False,
-                  maxage=int(stampy.plugin.config.config("maxage",
-                                                         default=180))):
+def migratechats(oldchat, newchat, includeall=True):
+    """
+    Updates chat references
+    :param includeall: defines if stats and config should we moved (chat->supergroup)
+    :param oldchat: Old chat id
+    :param newchat: Newer chat id
+    :return:
+    """
+    logger = logging.getLogger(__name__)
+
+    # move data from old master to new one (except stats and config)
+    logger.debug(msg=_("Migrating chat id: %s to %s") % (oldchat, newchat))
+    for table in ['karma', 'quote', 'autokarma', 'alias']:
+        sql = "UPDATE %s SET gid='%s' where gid='%s';" % (table, newchat, oldchat)
+        cur = stampy.stampy.dbsql(sql)
+
+    if includeall:
+        for table in ['config', 'stats']:
+            sql = "UPDATE %s SET id='%s' where id='%s';" % (table, newchat, oldchat)
+            cur = stampy.stampy.dbsql(sql)
+
+        # Migrate forward data
+        sql = "UPDATE forward SET source='%s' where source='%s;" % (newchat, oldchat)
+        cur = stampy.stampy.dbsql(sql)
+        sql = "UPDATE forward SET target='%s' where target='%s;" % (newchat, oldchat)
+        cur = stampy.stampy.dbsql(sql)
+    else:
+        # Delete forwards not migrated
+        sql = "DELETE FROM forward WHERE source='%s';" % oldchat
+        cur = stampy.stampy.dbsql(sql)
+        sql = "DELETE FROM forward WHERE target='%s';" % oldchat
+        cur = stampy.stampy.dbsql(sql)
+    return
+
+
+def dousercleanup(user_id=False, maxage=int(stampy.plugin.config.config("maxage", default=180))):
     """
     Checks on the stats database the date of the last update from the user
     :param user_id: Channel ID to query in database
