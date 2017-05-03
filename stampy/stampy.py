@@ -535,8 +535,6 @@ def process(messages):
 
             runplugin = False
             for trigger in plugtriggers[name]:
-                logger.debug(msg=_("Running checks for trigger: %s") % trigger)
-                logger.debug(msg=_("Command %s, texto: %s") % (command, texto))
                 if "*" in trigger:
                     runplugin = True
                     break
