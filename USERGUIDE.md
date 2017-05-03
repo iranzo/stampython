@@ -5,24 +5,36 @@
 [![Pypi](http://img.shields.io/pypi/v/stampython.svg)](https://pypi.python.org/pypi/stampython/)
 
 ## Introduction
-Attempt to create a python script that monitors a telegram bot URL and replies to commands for adding/removing karma.
+After reading [Readme.md](Readme.md) that contains more 'how-to-run' 
+information, it might be interesting for you to learn about how to use it.
 
-Check more information about [Telegram Bots](https://core.telegram.org/bots/).
+In short, many options are documented by sending "/help" on a channel where 
+<https://t.me/redken_bot> is.
 
-News about the program, new features, etc at <https://t.me/redkennews>.
+By default, new groups where the bot is added are just ready to start being 
+used.
 
-Quick User guide at [USERGUIDE.md](USERGUIDE.md)
+Also, while nothing is set against, you could use `/gconfig` to configure
+ several aspects of it like:
+  - `modulo` (to just report karma every <modulo> points)
+  - `stock` (to define the stock tickers to query when invoking `stock`)
 
-## Important
-- The bot will need to have access to all of your messages in order to find the words with "++" or "--"
+Once you started chatting with the bot, you can also use /hilight <word> so 
+messages containing that word will be forwarded to you as a private message.
 
-## Notes
-- On first execution it will create database and start filling values
 
-## Test
-- I've a copy running the name `@redken_bot`. Invite it to your channels if you want to give it a try or click <https://telegram.me/redken_bot>.
+By default karma in channels is private to that group, but also, groups can 
+be linked.
 
-## Usage
+On the channel to become `master` execute: `/admin link master` and it will 
+generate a code (token) to link against just once.
+
+On the channel to be linked against `master`, a.k.a. `slave`, execute: 
+`/admin link slave <token>` where `token` is the code received as reply to 
+the command in master channel.
+
+Also, as per general usage (copied from [Readme.md](README.md) ):
+
 - `word++` to add karma
 - `word--` to remove karma
 - `/quote add username text` to add a quote for given username with the following text as message
@@ -53,20 +65,6 @@ The bot, once token has been used and admin has been set, will store that inform
     - As of this writing (verbosity, url for api, token, sleep timeout, owner, database, run in daemon mode)
 - `/gconfig delete var` will delete that variable from configuration.
 
-
-## Extra commands only for owner user
-### Configuration
-The bot, once token has been used and owner set via commandline, will store that information in the database, so you can control it from a chat window
-
-- `/config show` will list actual defined settings
-- `/config set var=value` will set one of those settings with a new value
-    - As of this writing (verbosity, url for api, token, sleep timeout, owner, database, run in daemon mode)
-- `/config delete var` will delete that variable from configuration.
-
-### Stats
-The bot stores stats on users/chats, remembering the chat/user name and last time seen so it can be later used for purging data not being accessed in a while
-- `/stats show (user|chat)` will list the list of users/chats and time of last update
-
 ### Karma
 - `/skarma word=value` will set specified word to the karma value provided.
 
@@ -75,12 +73,6 @@ Bot allows to trigger auto-karma events, so when keyword is given, it will trigg
 - `/autok key=value` Will create a new auto-karma trigger, so each time `key` is used, it will trigger value++ event
 - `/alias list [word]` Will show current defined autokarma triggers and in case a word is provided will search based on that word
 - `/alias delete key=value` will delete a previously defined auto-karma so no more auto-karma events will be triggered for that pair
-
-
-### Forward
-- `/forward source_id=target_id` Forwards messages from source to target
-- `/forward delete source_id=target_id` Stops forwarding messages from source to target
-- `/forward list` To get list of defined forwards
 
 ### Alias
 Bot allows to setup alias, so when karma is given to a word, it will instead add it to a different one (and report that one)
@@ -98,10 +90,6 @@ Bot allows to setup alias, so when karma is given to a word, it will instead add
 
 ### quote
 - `/quote del id` to remove a specific quote id from database
-
-
-### quit
-- `/quit` will exit daemon mode
 
 
 ## Donations
