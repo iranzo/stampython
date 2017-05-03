@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-04-28 16:56+0200\n"
-"PO-Revision-Date: 2017-04-28 16:56+0200\n"
+"POT-Creation-Date: 2017-05-03 23:39+0200\n"
+"PO-Revision-Date: 2017-05-03 23:40+0200\n"
 "Last-Translator: Pablo Iranzo Gómez <Pablo.Iranzo@gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -39,81 +39,81 @@ msgstr "Procesando inicialización del complemento: %s"
 msgid "Plugin %s is triggered by %s"
 msgstr "Plugin %s se activa mediante %s"
 
-#: stampy/stampy.py:37
+#: stampy/stampy.py:41
 msgid "Stampy is a script for controlling Karma via Telegram.org bot api"
 msgstr ""
 "Stampy es un programa para control de karma mediante el api de robots de "
 "Telegram.org"
 
-#: stampy/stampy.py:42
+#: stampy/stampy.py:46
 msgid "API token for bot access to messages"
 msgstr "Clave para el API de telegram para acceder a los mensajes"
 
-#: stampy/stampy.py:44
+#: stampy/stampy.py:48
 msgid "database file for storing karma"
 msgstr "fichero de base de datos para almacenar el karma"
 
-#: stampy/stampy.py:47
+#: stampy/stampy.py:51
 msgid "Set verbosity level for messages while running/logging"
 msgstr "Establecer nivel de detalle de los mensajes durante la ejecución"
 
-#: stampy/stampy.py:51
+#: stampy/stampy.py:55
 msgid "Define URL for accessing bot API"
 msgstr "Definir la URL para acceder al API de robots"
 
-#: stampy/stampy.py:54
+#: stampy/stampy.py:58
 msgid "Define owner username"
 msgstr "Definir nombre de usuario para propietario"
 
-#: stampy/stampy.py:56
+#: stampy/stampy.py:60
 msgid "Run as daemon"
 msgstr "Ejecutar como demonio"
 
-#: stampy/stampy.py:107
+#: stampy/stampy.py:111
 msgid "Using alembic to upgrade/create database to expected revision"
 msgstr ""
 "Utilizando alembic para actualizar/crear la base de datos con la revisión "
 "esperada"
 
-#: stampy/stampy.py:134
+#: stampy/stampy.py:138
 msgid "Error accessing database, creating..."
 msgstr "Error accediendo a la base de datos, creándola..."
 
-#: stampy/stampy.py:150
+#: stampy/stampy.py:154
 #, python-format
 msgid "Error on SQL execution: %s"
 msgstr "Error en la ejecución SQL: %s"
 
-#: stampy/stampy.py:216
+#: stampy/stampy.py:220
 #, python-format
 msgid "ERROR (%s) sending message: Code: %s : Text: %s"
 msgstr "ERROR (%s) enviando el mensaje: Código: %s : Texto: %s"
 
-#: stampy/stampy.py:221
+#: stampy/stampy.py:225
 #, python-format
 msgid "PERM ERROR sending message: Code: %s : Text: %s"
 msgstr "ERROR PERMANENTE al enviar el mensaje: Código: %s : Texto: %s"
 
-#: stampy/stampy.py:233
+#: stampy/stampy.py:237
 #, python-format
 msgid "Sending message: Code: %s : Text: %s"
 msgstr "Enviando mensaje: Código: %s : Texto: %s"
 
-#: stampy/stampy.py:257
+#: stampy/stampy.py:261
 #, python-format
 msgid "Getting updates and returning: %s"
 msgstr "Obteniendo actualizaciones y devolviendo: %s"
 
-#: stampy/stampy.py:276
+#: stampy/stampy.py:280
 #, python-format
 msgid "Clearing messages at %s"
 msgstr "Borrando mensajes en %s"
 
-#: stampy/stampy.py:311
+#: stampy/stampy.py:315
 msgid "Use `/quit` to exit daemon mode\n"
 msgstr "Utilice `/quit´ para salir del modo demonio\n"
 
-#: stampy/stampy.py:312
+#: stampy/stampy.py:316
 msgid ""
 "Learn more about this bot in [https://github.com/iranzo/stampython] (https://"
 "github.com/iranzo/stampython)"
@@ -121,7 +121,7 @@ msgstr ""
 "Aprenda más acerca de este robot in [https://github.com/iranzo/stampython] "
 "(https://github.com/iranzo/stampython)"
 
-#: stampy/stampy.py:315 stampy/stampy.py:319
+#: stampy/stampy.py:319 stampy/stampy.py:323
 msgid ""
 "This bot does not use start or stop commands, it automatically checks for "
 "karma operands"
@@ -129,118 +129,108 @@ msgstr ""
 "Este robot no utiliza comandos de arranque/parada, comprueba automáticamente "
 "los mensajes en busca de comandos de karma."
 
-#: stampy/plugin/help.py:77 stampy/stampy.py:335
+#: stampy/plugin/help.py:77 stampy/stampy.py:339
 #, python-format
 msgid "Command: %s"
 msgstr "Comando: %s"
 
-#: stampy/stampy.py:355
+#: stampy/stampy.py:359
 #, python-format
 msgid "Sending sticker: %s"
 msgstr "Enviando pegatina: %s"
 
-#: stampy/stampy.py:383
+#: stampy/stampy.py:387
 #, python-format
 msgid "Sending image: %s"
 msgstr "Enviando imagen: %s"
 
-#: stampy/stampy.py:532
-#, python-format
-msgid "Running checks for trigger: %s"
-msgstr "Ejecutando comprobaciones para el disparador: %s"
-
-#: stampy/stampy.py:533
-#, python-format
-msgid "Command %s, texto: %s"
-msgstr "Comando: %s, texto %s"
-
-#: stampy/stampy.py:547
+#: stampy/stampy.py:551
 #, python-format
 msgid "Processing plugin: %s"
 msgstr "Procesando complemento: %s"
 
-#: stampy/stampy.py:549
+#: stampy/stampy.py:553
 #, python-format
 msgid "Plugin return code: %s"
 msgstr "Código de retorno del complemento: %s"
 
-#: stampy/stampy.py:554
+#: stampy/stampy.py:558
 #, python-format
 msgid "New triggers for %s: %s"
 msgstr "Nuevos disparadores para %s: %s"
 
-#: stampy/stampy.py:561
+#: stampy/stampy.py:565
 #, python-format
 msgid "TEXT: %s : %s : %s"
 msgstr "TEXTO: %s : %s : %s"
 
-#: stampy/stampy.py:565
+#: stampy/stampy.py:569
 #, python-format
 msgid "Last processed message at: %s"
 msgstr "Último mensaje procesado en: %s"
 
-#: stampy/stampy.py:567
+#: stampy/stampy.py:571
 #, python-format
 msgid "Last processed update_id : %s"
 msgstr "Última actualización procesada: %s"
 
-#: stampy/stampy.py:569
+#: stampy/stampy.py:573
 #, python-format
 msgid "Number of messages in this batch: %s"
 msgstr "Número de mensajes en este lote: %s"
 
-#: stampy/stampy.py:600
+#: stampy/stampy.py:604
 #, python-format
 msgid "Final deduplicated list: %s"
 msgstr "Lista final deduplicada: %s"
 
-#: stampy/stampy.py:640
+#: stampy/stampy.py:644
 msgid "We're admin of private chats"
 msgstr "Somos admin de chats privados"
 
-#: stampy/stampy.py:645
+#: stampy/stampy.py:649
 msgid "We're not owner of public chats"
 msgstr "No somos propietarios de chats publicos"
 
-#: stampy/stampy.py:650
+#: stampy/stampy.py:654
 msgid "We're admin of public chat"
 msgstr "Somos administrador de chat público"
 
-#: stampy/stampy.py:655
+#: stampy/stampy.py:659
 msgid "We're admin because no admin listed on public chat"
 msgstr ""
 "Somos administradores porque no hay administrador definido en el chat público"
 
-#: stampy/stampy.py:716
+#: stampy/stampy.py:720
 #, python-format
 msgid "Logging level set to %s"
 msgstr "Nivel de registro establecido a %s"
 
-#: stampy/stampy.py:784
+#: stampy/stampy.py:788
 msgid "Started execution"
 msgstr "Ejecución iniciada"
 
-#: stampy/stampy.py:795
+#: stampy/stampy.py:799
 msgid ""
 "Token required for operation, please check https://core.telegram.org/bots"
 msgstr ""
 "Es necesaria una clave/token para operar, por favor, revise https://core."
 "telegram.org/bots"
 
-#: stampy/stampy.py:814
+#: stampy/stampy.py:818
 #, python-format
 msgid "Plug triggers reported: %s"
 msgstr "Complementos devueltos: %s"
 
-#: stampy/stampy.py:819
+#: stampy/stampy.py:823
 msgid "Running in daemon mode"
 msgstr "Ejecutando en modo demonio"
 
-#: stampy/stampy.py:824
+#: stampy/stampy.py:828
 msgid "Running in one-shoot mode"
 msgstr "Ejecución única"
 
-#: stampy/stampy.py:827
+#: stampy/stampy.py:831
 msgid "Stopped execution"
 msgstr "Ejecución detenida"
 
@@ -300,7 +290,7 @@ msgstr "Token ya generado %s para el canal %s"
 msgid "A token for linking against this channel already existed as %s"
 msgstr "Un token para enlazar contra este canal ya existe como %s"
 
-#: stampy/plugin/admin.py:136 stampy/plugin/admin.py:219
+#: stampy/plugin/admin.py:136 stampy/plugin/admin.py:224
 msgid ""
 "\n"
 "\n"
@@ -331,23 +321,23 @@ msgstr "Canal *%s* con nombre *%s* ha sido enlazado como *ESCLAVO*"
 msgid "This channel has been set as *SLAVE* from *MASTER* channel *%s*"
 msgstr "Este canal ha sido establecido como *ESCLAVO* del canal *MAESTRO* *%s*"
 
-#: stampy/plugin/admin.py:211
+#: stampy/plugin/admin.py:216
 #, python-format
 msgid "Channel *%s* with name *%s* has been unlinked as *SLAVE*"
 msgstr "El canal *%s* con nombre *%s* ha sido desenlazado como *ESCLAVO*"
 
-#: stampy/plugin/admin.py:218
+#: stampy/plugin/admin.py:223
 #, python-format
 msgid "This channel has been unliked as *SLAVE* from *MASTER* channel *%s*"
 msgstr ""
 "Este canal ha sido desenlazado como *ESCLAVO* del canal *MAESTRO*  *%s*"
 
-#: stampy/plugin/admin.py:240
+#: stampy/plugin/admin.py:250
 #, python-format
 msgid "This channel %s is slave of channel %s"
 msgstr "Este canal %s es esclavo del canal %s"
 
-#: stampy/plugin/admin.py:246
+#: stampy/plugin/admin.py:256
 msgid "Defined slaves:\n"
 msgstr "Esclavos definidos:\n"
 
@@ -471,7 +461,7 @@ msgstr "%s no tiene un disparador de autokarma"
 msgid "Returning autokarma %s for word %s"
 msgstr "Devolviendo autokarma %s para la palabra %s"
 
-#: stampy/plugin/autokarma.py:266
+#: stampy/plugin/autokarma.py:267
 #, python-format
 msgid "Autokarma words %s encountered for processing"
 msgstr "Encontradas palabras autokarma %s para procesado"
@@ -711,10 +701,10 @@ msgstr ""
 
 #: stampy/plugin/help.py:45
 msgid ""
-"Read about announcements at https://telegram.me/stampynews\n"
+"Read about announcements at https://t.me/redkennews\n"
 "\n"
 msgstr ""
-"Lea más informacion y anuncios en https://telegram.me/stampynews\n"
+"Lea más información y anuncios en https://t.me/redkennews\n"
 "\n"
 
 #: stampy/plugin/highlight.py:57
@@ -761,47 +751,47 @@ msgstr "Borrando hilight para `%s`"
 msgid "Adding hilight for `%s`"
 msgstr "Borrando hilight para `%s`"
 
-#: stampy/plugin/highlight.py:206
+#: stampy/plugin/highlight.py:204
 #, python-format
 msgid "createhilight: word %s for uid %s already exists"
 msgstr "createhilight: palabra %s para el usuario %s ya existe."
 
-#: stampy/plugin/highlight.py:247
+#: stampy/plugin/highlight.py:245
 #, python-format
 msgid "for word %s for uid %s"
 msgstr "para la palabra %s para uid %s"
 
-#: stampy/plugin/highlight.py:253
+#: stampy/plugin/highlight.py:251
 #, python-format
 msgid "Defined hilight triggers %s:\n"
 msgstr "Disparadores de hilight %s:\n"
 
-#: stampy/plugin/highlight.py:259
+#: stampy/plugin/highlight.py:257
 #, python-format
 msgid "%s has no trigger hilight"
 msgstr "%s no tiene un disparador de hilight"
 
-#: stampy/plugin/highlight.py:261
+#: stampy/plugin/highlight.py:259
 #, python-format
 msgid "Returning hilight %s for word %s"
 msgstr "Devolviendo hilight %s para la palabra %s"
 
-#: stampy/plugin/highlight.py:296
+#: stampy/plugin/highlight.py:294
 #, python-format
 msgid "User %s is member of group %s"
 msgstr "Usuario %s es miembro del grupo %s"
 
-#: stampy/plugin/highlight.py:300
+#: stampy/plugin/highlight.py:298
 #, python-format
 msgid "Word %s is in text and forwarding for user"
 msgstr "Palabra %s en el texto, y en reenvio para el usuario"
 
-#: stampy/plugin/highlight.py:303
+#: stampy/plugin/highlight.py:301
 #, python-format
 msgid "User %s NOT member of group %s (%s)"
 msgstr "El usuario %s no es miembro del grupo %s (%s)"
 
-#: stampy/plugin/highlight.py:306
+#: stampy/plugin/highlight.py:304
 #, python-format
 msgid "Message sent to chat: %s"
 msgstr "Mensaje enviado al chat: %s"
@@ -1088,7 +1078,7 @@ msgstr "No se encontraron citas"
 msgid "createquote: %s=%s on %s for group %s"
 msgstr "createquote: %s=%s en %s para el grupo %s"
 
-#: stampy/plugin/stats.py:86
+#: stampy/plugin/stats.py:95
 msgid ""
 "Use `@all` to ping all users in a channel as long as they have username "
 "defined in Telegram\n"
@@ -1098,7 +1088,7 @@ msgstr ""
 "nombre de usuario definido en Telegram\n"
 "\n"
 
-#: stampy/plugin/stats.py:88
+#: stampy/plugin/stats.py:97
 msgid ""
 "Use `/stats show <user|chat>` to get stats on last usage\n"
 "\n"
@@ -1106,7 +1096,7 @@ msgstr ""
 "Use `/stats show <usuario|chat>` para obtener estadísticas de uso\n"
 "\n"
 
-#: stampy/plugin/stats.py:89
+#: stampy/plugin/stats.py:98
 msgid ""
 "Use `/getout <chatid|here>` to have bot leave that chat or current one\n"
 "\n"
@@ -1115,60 +1105,60 @@ msgstr ""
 "especificado o el actual\n"
 "\n"
 
-#: stampy/plugin/stats.py:110
+#: stampy/plugin/stats.py:119
 #, python-format
 msgid "Owner Stat: %s by %s"
 msgstr "Estadísticas de propietario: %s por %s"
 
-#: stampy/plugin/stats.py:155
+#: stampy/plugin/stats.py:164
 #, python-format
 msgid "Owner getout: %s by %s"
 msgstr "Expulsión del propietario: %s por %s"
 
-#: stampy/plugin/stats.py:185
+#: stampy/plugin/stats.py:194
 msgid "Defined stats:\n"
 msgstr "Estadísticas definidas:\n"
 
-#: stampy/plugin/stats.py:187
+#: stampy/plugin/stats.py:196
 #, python-format
 msgid "Returning stats %s"
 msgstr "Devolviendo estadísticas %s"
 
-#: stampy/plugin/stats.py:243 stampy/plugin/stats.py:302
+#: stampy/plugin/stats.py:252 stampy/plugin/stats.py:311
 #, python-format
 msgid "values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid: %s"
 msgstr ""
 "valores: tipo: %s, id:%s, nombre:%s,  fecha:%s, numero:%s, memberid: %s"
 
-#: stampy/plugin/stats.py:249
+#: stampy/plugin/stats.py:258
 msgid "ERROR on updatestats"
 msgstr "ERROR al ejecutar updatestats"
 
-#: stampy/plugin/stats.py:308
+#: stampy/plugin/stats.py:317
 msgid "ERROR on remove_from_memberid"
 msgstr "ERROR en remove_from_memberid"
 
-#: stampy/plugin/stats.py:328
+#: stampy/plugin/stats.py:337
 #, python-format
 msgid "Chat id %s users %s"
 msgstr "Chat id %s usuarios %s"
 
-#: stampy/plugin/stats.py:347
+#: stampy/plugin/stats.py:356
 #, python-format
 msgid "Chat id %s left"
 msgstr "Chat id %s abandonado"
 
-#: stampy/plugin/stats.py:372
+#: stampy/plugin/stats.py:381
 #, python-format
 msgid "Processing chat_ids for cleanup: %s"
 msgstr "Procesando chat_ids para limpieza: %s"
 
-#: stampy/plugin/stats.py:384
+#: stampy/plugin/stats.py:393
 #, python-format
 msgid "CHAT ID %s with name %s with %s inactivity days is going to be purged"
 msgstr "El chat %s con nombre %s y %s días de inactividad va a ser eliminado"
 
-#: stampy/plugin/stats.py:388
+#: stampy/plugin/stats.py:397
 #, python-format
 msgid ""
 "Due to inactivity of more than %s days, this bot will exit the channel, "
@@ -1177,45 +1167,50 @@ msgstr ""
 "Debido a inactividad de más de %s días, este bot saldrá del canal, por "
 "favor, reañádalo en el futuro si es necesario"
 
-#: stampy/plugin/stats.py:416
+#: stampy/plugin/stats.py:425
 #, python-format
 msgid "The removed channel (%s) was master for others, electing new master: %s"
 msgstr ""
 "El canal eliminado (%s) era MAESTRO para otros, escogiendo a nuevo maestro: "
 "%s"
 
-#: stampy/plugin/stats.py:447 stampy/plugin/stats.py:507
+#: stampy/plugin/stats.py:453 stampy/plugin/stats.py:546
 #, python-format
 msgid "LINE for user %s and memberid: %s will be deleted"
 msgstr "LINEA para usuario %s con memberid: %s será eliminada"
 
-#: stampy/plugin/stats.py:477
+#: stampy/plugin/stats.py:471
+#, python-format
+msgid "Migrating chat id: %s to %s"
+msgstr "Migrando chat id %s a %s"
+
+#: stampy/plugin/stats.py:516
 #, python-format
 msgid "Processing userids for cleanup: %s"
 msgstr "Procesando userids para limpieza: %s"
 
-#: stampy/plugin/stats.py:490
+#: stampy/plugin/stats.py:529
 #, python-format
 msgid "USER ID %s with name %s with %s inactivity days is going to be purged"
 msgstr ""
 "El usuario %s con nombre %s y con %s días de inactividad va a ser eliminado"
 
-#: stampy/plugin/stats.py:573
+#: stampy/plugin/stats.py:612
 #, python-format
 msgid "values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid:%s"
 msgstr ""
 "valores: tipo: %s, id:%s, nombre:%s,  fecha:%s, numero:%s, memberid: %s"
 
-#: stampy/plugin/stats.py:590
+#: stampy/plugin/stats.py:633
 msgid "@All invoked"
 msgstr "@All invocado"
 
-#: stampy/plugin/stats.py:614
+#: stampy/plugin/stats.py:657
 #, python-format
 msgid "%s wanted to ping you: "
 msgstr "%s quiso mencionarle: "
 
-#: stampy/plugin/stats.py:634
+#: stampy/plugin/stats.py:677
 #, python-format
 msgid "Pinging chat %s: %s on %s"
 msgstr "Mencionando chat %s: %s en %s"
@@ -1228,7 +1223,7 @@ msgstr ""
 "Use `stock <valor>` para obtener la cotización del valor\n"
 "\n"
 
-#: stampy/plugin/stock.py:131
+#: stampy/plugin/stock.py:137
 #, python-format
 msgid "USD/%s rate \n"
 msgstr "Tasa de cambio USD/%s\n"
@@ -1266,6 +1261,12 @@ msgid ""
 msgstr ""
 "Use `/xkcd trigger` para forzar el envío de la viñeta actual al canal\n"
 "\n"
+
+#~ msgid "Running checks for trigger: %s"
+#~ msgstr "Ejecutando comprobaciones para el disparador: %s"
+
+#~ msgid "Command %s, texto: %s"
+#~ msgstr "Comando: %s, texto %s"
 
 #~ msgid ""
 #~ "\n"
