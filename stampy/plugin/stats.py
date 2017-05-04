@@ -42,6 +42,9 @@ def run(message):  # do not edit this line
     :param message: message to run against
     :return:
     """
+
+    logger = logging.getLogger(__name__)
+
     msgdetail = stampy.stampy.getmsgdetail(message)
     text = msgdetail["text"]
 
@@ -64,23 +67,54 @@ def run(message):  # do not edit this line
     if "@all" in text:
         getall(message)
 
+    leftchat = False
     try:
         if 'left_chat_participant' in message['message']:
-            remove_from_memberid(type='chat', id=msgdetail["chat_id"],
-                                 memberid=msgdetail['who_id'])
-            remove_from_memberid(type='user', id=msgdetail["who_id"],
-                                 memberid=msgdetail['chat_id'])
+            leftchat = True
     except:
-        pass
+        leftchat = False
 
+    if leftchat:
+        chat_id = msgdetail["chat_id"]
+        try:
+            wholeft = message['message']['left_chat_participant']['id']
+        except:
+            wholeft = False
+
+        if wholeft:
+            logger.debug(msg=_('Someone with id %s left chat %s, cleaning up') % (wholeft, msgdetail["chat_name"]))
+
+            remove_from_memberid(type='chat', id=chat_id, memberid=wholeft)
+            remove_from_memberid(type='user', id=wholeft, memberid=chat_id)
+
+        # Check if it was the bot leaving the channel and cleanup
+        try:
+            leftusername = message['message']['left_chat_participant']['username']
+        except:
+            leftusername = False
+
+        if leftusername:
+            try:
+                botname = stampy.stampy.getme()['username']
+            except:
+                botname = False
+
+            if leftusername == botname:
+                # Bot has been removed from chat, full cleanup of chat data
+                logger.debug(msg=_('Bot has left chat %s, cleaning up') % msgdetail["chat_name"])
+                dochatcleanup(chat_id=chat_id, maxage=0)
+    migrate = False
     try:
         if 'migrate_to_chat_id' in message['message']:
-            # Chat has been migrated to superchat, so we can migrate all configuration
-            chat_id = msgdetail['chat_id']
-            new_id = message['message']['migrate_to_chat_id']
-            migratechats(oldchat=chat_id, newchat=new_id)
+            migrate = True
     except:
-        pass
+        migrate = False
+
+    if migrate:
+        # Chat has been migrated to superchat, so we can migrate all configuration
+        chat_id = msgdetail['chat_id']
+        new_id = message['message']['migrate_to_chat_id']
+        migratechats(oldchat=chat_id, newchat=new_id)
 
     return
 

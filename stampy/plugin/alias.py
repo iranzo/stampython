@@ -115,6 +115,7 @@ def aliascommands(message):
 def deletealias(word, gid=0):
     """
     Deletes a word from the alias database
+    :param gid: group id to work on
     :param word:  word to delete
     :return:
     """
@@ -129,6 +130,7 @@ def deletealias(word, gid=0):
 def listalias(word=False, gid=0):
     """
     Lists the alias defined for a word, or all the aliases
+    :param gid: Group ID to work on
     :param word: word to return value for or everything
     :return: table with alias stored
     """
@@ -163,6 +165,7 @@ def listalias(word=False, gid=0):
 def createalias(word, value, gid=0):
     """
     Creates an alias for a word
+    :param gid: Group ID to create alias on
     :param word: word to use as base for the alias
     :param value: values to set as alias
     :return:
@@ -189,6 +192,7 @@ def createalias(word, value, gid=0):
 def getalias(word, gid=0):
     """
     Get alias for a word in case it's defined
+    :param gid: Group ID to get alias from
     :param word: word to search alias
     :return: alias if existing or word if not
     """

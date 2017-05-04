@@ -303,6 +303,11 @@ def hilightwords(message):
         if forward:
             text = _("Message sent to chat: %s") % chat_name
             stampy.stampy.sendmessage(chat_id=uid, text=text)
-            stampy.plugin.forward.doforward(message=message, target=uid)
+            result = stampy.plugin.forward.doforward(message=message, target=uid)
+            if result == 'blocked':
+                # User has blocked bot, remove forwards
+                logger.debug(msg=_('User %s has blocked bot direct communication, deleting hilights') % uid)
+                for hilight in gethilightwords(uid=uid):
+                    deletehilight(word=hilight, uid=uid)
 
     return

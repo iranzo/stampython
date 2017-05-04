@@ -81,10 +81,18 @@ def doforward(message, target):
 
     code = False
     attempt = 0
+    exitcode = 0
     while not code:
         result = json.load(urllib.urlopen(message))
         code = result['ok']
         logger.error(msg=_("ERROR (%s) forwarding message: Code: %s : Text: %s") % (attempt, code, result))
+        try:
+            if result['error_code'] == 403 and result['description'] == u'Forbidden: bot was blocked by the user':
+                # User hasn't initiated or has blocked direct messages from bot
+                attempt = 60
+                exitcode = 'blocked'
+        except:
+            pass
         attempt += 1
         sleep(1)
         # exit after 60 retries with 1 second delay each
@@ -92,6 +100,7 @@ def doforward(message, target):
             logger.error(msg=_("PERM ERROR forwarding message: Code: %s : Text: %s") % (code, result))
             code = True
     logger.debug(msg=_("forwarding message: Code: %s : Text: %s") % (code, message))
+    return exitcode
 
 
 def forwardmessage(message):

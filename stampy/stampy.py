@@ -262,6 +262,25 @@ def getupdates(offset=0, limit=100):
         yield item
 
 
+def getme():
+    """
+    Gets bot user
+    :return: returns the items obtained
+    """
+
+    logger = logging.getLogger(__name__)
+    url = "%s%s/getMe" % (plugin.config.config(key='url'),
+                          plugin.config.config(key='token'))
+    message = "%s" % url
+    try:
+        result = json.load(urllib.urlopen(message))['result']
+    except:
+        result = []
+
+    logger.info(msg=_("Getting bot details and returning: %s") % result)
+    return result
+
+
 def clearupdates(offset):
     """
     Marks updates as already processed so they are removed by API
