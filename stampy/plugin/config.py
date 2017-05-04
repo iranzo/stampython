@@ -19,7 +19,7 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    triggers = ["^/config", "^/gconfig"]
+    triggers = ["^/config", "^/gconfig", "^/lconfig"]
     return triggers
 
 
@@ -34,6 +34,8 @@ def run(message):  # do not edit this line
         if text.split()[0].lower() == "/config":
             configcommands(message)
         elif text.split()[0].lower() == "/gconfig":
+            configcommands(message)
+        elif text.split()[0].lower() == "/lconfig":
             configcommands(message)
     return
 
@@ -51,9 +53,10 @@ def help(message):  # do not edit this line
         commandtext += _("Use `/config set <key>=<value>` to define a value for key\n")
         commandtext += _("Use `/config delete <key>` to delete key\n\n")
     if stampy.stampy.is_owner_or_admin(message):
-        commandtext += _("Use `/gconfig show` to get a list of defined group config settings\n")
-        commandtext += _("Use `/gconfig set <key>=<value>` to define a value for key\n")
-        commandtext += _("Use `/gconfig delete <key>` to delete key\n\n")
+        commandtext += _("/gconfig acts on 'effective chat' while /lconfig on 'local chat' (for linked))\n")
+        commandtext += _("Use `/[g|l]config show` to get a list of defined group config settings\n")
+        commandtext += _("Use `/[g|l]gconfig set <key>=<value>` to define a value for key\n")
+        commandtext += _("Use `/[g|l]gconfig delete <key>` to delete key\n\n")
     return commandtext
 
 
@@ -74,6 +77,8 @@ def configcommands(message):
 
     if texto.split(' ')[0] == "/config" and stampy.stampy.is_owner(message):
         gid = 0
+    elif texto.split(' ')[0] == "/lconfig":
+        gid = chat_id
     else:
         gid = stampy.stampy.geteffectivegid(chat_id)
 
@@ -178,7 +183,7 @@ def showconfig(key=False, gid=0):
     else:
         sql = "select key,value from config WHERE id='%s' ORDER BY key ASC;" % gid
         cur = stampy.stampy.dbsql(sql)
-        text = _("Defined configurations:\n")
+        text = _("Defined configurations for gid %s:\n") % gid
         table = from_db_cursor(cur)
         text = "%s\n```%s```" % (text, table.get_string())
     logger.debug(msg=_("Returning config %s for key %s for id %s") % (text, key, gid))

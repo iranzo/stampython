@@ -60,10 +60,10 @@ Also, as per general usage (copied from [Readme.md](README.md) ):
 ### Configuration
 The bot, once token has been used and admin has been set, will store that information in the database, so you can control it from a chat window
 
-- `/gconfig show` will list actual defined settings
-- `/gconfig set var=value` will set one of those settings with a new value
+- `/[g|l]config show` will list actual defined settings
+- `/[g|l]config set var=value` will set one of those settings with a new value
     - As of this writing (verbosity, url for api, token, sleep timeout, owner, database, run in daemon mode)
-- `/gconfig delete var` will delete that variable from configuration.
+- `/[g|l]config delete var` will delete that variable from configuration.
 
 ### Karma
 - `/skarma word=value` will set specified word to the karma value provided.
