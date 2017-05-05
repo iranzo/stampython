@@ -5,6 +5,7 @@
 [![Pypi](http://img.shields.io/pypi/v/stampython.svg)](https://pypi.python.org/pypi/stampython/)
 
 ## Introduction
+
 After reading [Readme.md](Readme.md) that contains more 'how-to-run' 
 information, it might be interesting for you to learn about how to use it.
 
@@ -16,6 +17,7 @@ used.
 
 Also, while nothing is set against, you could use `/gconfig` to configure
  several aspects of it like:
+
   - `modulo` (to just report karma every <modulo> points)
   - `stock` (to define the stock tickers to query when invoking `stock`)
 
@@ -57,7 +59,9 @@ Also, as per general usage (copied from [Readme.md](README.md) ):
 - `/hilight <add|delete|list> <word>` Adds/deletes word or lists words that will cause a forward to notify you
 
 ## Extra commands only for admin user
+
 ### Configuration
+
 The bot, once token has been used and admin has been set, will store that information in the database, so you can control it from a chat window
 
 - `/[g|l]config show` will list actual defined settings
@@ -66,16 +70,21 @@ The bot, once token has been used and admin has been set, will store that inform
 - `/[g|l]config delete var` will delete that variable from configuration.
 
 ### Karma
+
 - `/skarma word=value` will set specified word to the karma value provided.
 
 ### Auto-karma triggers
+
 Bot allows to trigger auto-karma events, so when keyword is given, it will trigger an event to increase karma value for other words
+
 - `/autok key=value` Will create a new auto-karma trigger, so each time `key` is used, it will trigger value++ event
 - `/alias list [word]` Will show current defined autokarma triggers and in case a word is provided will search based on that word
 - `/alias delete key=value` will delete a previously defined auto-karma so no more auto-karma events will be triggered for that pair
 
 ### Alias
+
 Bot allows to setup alias, so when karma is given to a word, it will instead add it to a different one (and report that one)
+
 - `/alias key=value` Will create a new alias, so each time `key++` is used, it will instead do value++
     - This operation, sums the previous karma of `key` and `value` and stores it in value so no karma is lost
     - Recursive aliases can be defined, so doing:
@@ -89,6 +98,7 @@ Bot allows to setup alias, so when karma is given to a word, it will instead add
 - `/alias delete key` will delete a previously defined alias so each word gets karma on its own
 
 ### quote
+
 - `/quote del id` to remove a specific quote id from database
 
 

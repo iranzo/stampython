@@ -1,4 +1,5 @@
 ### Administrator configuration
+
 - owner: owner of bot
 - daemon: Run as daemon or one shoot
 - maxage: chats older than this will be removed
@@ -10,6 +11,7 @@
 - url: URL for telegram server bot api entry point
 
 ### User/chat  configuration
+
 - common
     - language: en (TODO)
     - currency: EUR

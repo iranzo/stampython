@@ -1,13 +1,5 @@
-### web hook
-    - Mostly everything :), initial steps are there for accessing URL:
-    - Consider moving to web-hook for async operation
-        - Now it runs in daemon mode, polling every 10 seconds (can be
-          changed)
-            - Move the 10 seconds to be a maximum, allowing to
-             store/retrieve the number of messages in average and adapt to
-             time of the day and rate
+# TODO
 
-### Other
     - Initial load of karma points from older bot (possible separate script)
     - Implement banning of consecutive karma changes from same user for a
       period of time

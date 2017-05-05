@@ -1,3 +1,5 @@
+# Contribute
+
 All contributions are welcome.
 
 If you're looking around to see what to contribute, please check 'TODO.md' as it contains information on the already identified missing features.

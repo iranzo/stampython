@@ -10,3 +10,4 @@ redken.db
 push-to-test.sh
 .vscode
 .history
+.markdownlint.json
