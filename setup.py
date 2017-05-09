@@ -6,7 +6,7 @@ from babel.messages import frontend as babel
 
 setup(
     name='stampython',
-    version='0.70',
+    version='0.71',
     packages=['stampy'],
     url='https://github.com/iranzo/stampython',
     license='GPL',

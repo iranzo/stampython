@@ -275,7 +275,8 @@ def getme():
     try:
         result = json.load(urllib.urlopen(message))['result']
     except:
-        result = []
+        result = {}
+        result['username'] = 'stampy'
 
     logger.info(msg=_("Getting bot details and returning: %s") % result)
     return result

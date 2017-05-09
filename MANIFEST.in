@@ -1,2 +1,2 @@
-include *.txt *.py
-recursive-include plugin  *.txt *.py
+include *.txt *.py *.md
+recursive-include stampy *.txt *.py
