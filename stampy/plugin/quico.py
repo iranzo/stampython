@@ -27,9 +27,10 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
+    botname = stampy.stampy.getme()['username']
+    if botname == 'redken_bot':
+        sched.add_job(quico, 'cron', id='quico', hour='10', replace_existing=True, misfire_grace_time=120)
 
-    sched.add_job(quico, 'cron', id='quico', hour='10',
-                  replace_existing=True, misfire_grace_time=120)
     triggers = ["^/quico"]
     return triggers
 

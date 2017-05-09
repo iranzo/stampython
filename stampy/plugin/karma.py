@@ -371,6 +371,7 @@ def karmaprocess(msgdetail):
                         if oper == "--" and item not in worddel:
                             worddel.append(item)
 
+    messagetext = ""
     for word in wordadd + worddel:
         change = 0
         oper = False
@@ -400,10 +401,12 @@ def karmaprocess(msgdetail):
 
             if modulo != 0:
                 if karma % modulo == 0:
-                    stampy.stampy.sendmessage(chat_id=chat_id, text=text,
-                                              reply_to_message_id=message_id,
-                                              parse_mode="Markdown")
+                    messagetext = messagetext + "\n" + text
             stampyphant(chat_id=chat_id, karma=karma)
+
+    if messagetext != "":
+        stampy.stampy.sendmessage(chat_id=chat_id, text=messagetext, reply_to_message_id=message_id, parse_mode="Markdown")
+
     return
 
 

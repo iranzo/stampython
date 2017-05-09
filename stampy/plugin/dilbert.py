@@ -28,8 +28,9 @@ def init():
     :return: List of triggers for plugin
     """
 
-    sched.add_job(dilbert, 'cron', id='dilbert', hour='10',
-                  replace_existing=True, misfire_grace_time=120)
+    botname = stampy.stampy.getme()['username']
+    if botname == 'redken_bot':
+        sched.add_job(dilbert, 'cron', id='dilbert', hour='10', replace_existing=True, misfire_grace_time=120)
 
     triggers = ["^/dilbert"]
     return triggers
