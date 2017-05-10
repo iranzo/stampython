@@ -281,7 +281,7 @@ def updatestats(type=False, id=0, name=False, date=False, memberid=None):
     sql = "DELETE from stats where id='%s'" % id
     stampy.stampy.dbsql(sql)
 
-    sql = "INSERT INTO stats VALUES('%s', '%s', '%s', '%s', '%s', '%s');" % (type, id, name, date, count, json.dumps(newmemberid))
+    sql = "INSERT INTO stats(type, id, name, date, count, memberid) VALUES('%s', '%s', '%s', '%s', '%s', '%s');" % (type, id, name, date, count, json.dumps(newmemberid))
 
     logger.debug(msg=_("values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid: %s") % (type, id, name, date, count, newmemberid))
 
@@ -340,7 +340,7 @@ def remove_from_memberid(type=False, id=0, name=False, date=False, memberid=None
     sql = "DELETE from stats where id='%s'" % id
     stampy.stampy.dbsql(sql)
 
-    sql = "INSERT INTO stats VALUES('%s', '%s', '%s', '%s', '%s', '%s');" % (type, id, name, date, count, json.dumps(newmemberid))
+    sql = "INSERT INTO stats(type, id, name, date, count, memberid) VALUES('%s', '%s', '%s', '%s', '%s', '%s');" % (type, id, name, date, count, json.dumps(newmemberid))
 
     logger.debug(msg=_("values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid: %s") % (type, id, name, date, count, newmemberid))
 
