@@ -4,3 +4,4 @@ nose
 python-dateutil
 requests
 lxml
+pymarkdownlint
