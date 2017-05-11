@@ -101,8 +101,8 @@ def aliascommands(message):
             if case():
                 word = texto.split(' ')[1]
                 if "=" in word:
-                    key = word.split('=')[0]
-                    value = texto.split('=')[1:][0]
+                    key = word.split('=')[0].lower()
+                    value = texto.split('=')[1:][0].lower()
                     text = _("Setting alias for `%s` to `%s`") % (key, value)
                     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                               reply_to_message_id=message_id,
