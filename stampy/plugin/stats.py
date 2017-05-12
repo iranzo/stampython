@@ -505,24 +505,24 @@ def migratechats(oldchat, newchat, includeall=True):
     logger.debug(msg=_("Migrating chat id: %s to %s") % (oldchat, newchat))
     for table in ['karma', 'quote', 'autokarma', 'alias']:
         sql = "UPDATE %s SET gid='%s' where gid='%s';" % (table, newchat, oldchat)
-        cur = stampy.stampy.dbsql(sql)
+        stampy.stampy.dbsql(sql)
 
     if includeall:
         for table in ['config', 'stats']:
             sql = "UPDATE %s SET id='%s' where id='%s';" % (table, newchat, oldchat)
-            cur = stampy.stampy.dbsql(sql)
+            stampy.stampy.dbsql(sql)
 
         # Migrate forward data
         sql = "UPDATE forward SET source='%s' where source='%s;" % (newchat, oldchat)
-        cur = stampy.stampy.dbsql(sql)
+        stampy.stampy.dbsql(sql)
         sql = "UPDATE forward SET target='%s' where target='%s;" % (newchat, oldchat)
-        cur = stampy.stampy.dbsql(sql)
+        stampy.stampy.dbsql(sql)
     else:
         # Delete forwards not migrated
         sql = "DELETE FROM forward WHERE source='%s';" % oldchat
-        cur = stampy.stampy.dbsql(sql)
+        stampy.stampy.dbsql(sql)
         sql = "DELETE FROM forward WHERE target='%s';" % oldchat
-        cur = stampy.stampy.dbsql(sql)
+        stampy.stampy.dbsql(sql)
     return
 
 

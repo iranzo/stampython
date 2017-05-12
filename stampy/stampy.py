@@ -21,6 +21,7 @@ import sqlite3 as lite
 import string
 import sys
 import urllib
+import traceback
 from time import sleep
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -128,7 +129,7 @@ def dbsql(sql=False):
     # Initialize database access
     con = False
     try:
-        con = lite.connect(options.database)
+        con = lite.connect(options.database, timeout=1)
         cur = con.cursor()
         cur.execute("SELECT key,value FROM config WHERE key='token';")
         cur.fetchone()
@@ -137,7 +138,7 @@ def dbsql(sql=False):
         logger.debug(msg="Error %s:" % e.args[0])
         print _("Error accessing database, creating...")
         createorupdatedb()
-        con = lite.connect(options.database)
+        con = lite.connect(options.database, timeout=1)
         cur = con.cursor()
 
     # Database initialized
@@ -149,7 +150,10 @@ def dbsql(sql=False):
             con.commit()
             worked = True
         except:
+            exc_info = sys.exc_info()
+            traceback.print_exception(*exc_info)
             worked = False
+
     if not worked:
         logger.critical(msg=_("Error on SQL execution: %s") % sql)
 
