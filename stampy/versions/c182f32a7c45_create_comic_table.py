@@ -26,13 +26,6 @@ def upgrade():
             sa.Column('url', sa.Text)
         )
 
-"""
-INSERT INTO table VALUES('jueves','rss','-1001105187138','','http://www.eljueves.es/feeds/vineta-del-dia.html');
-INSERT INTO table VALUES('mel','rss','-1001105187138','','http://elchistedemel.blogspot.com/feeds/posts/default');
-INSERT INTO table VALUES('obichero','rss','-1001069507044','','http://obichero.blogspot.com/feeds/posts/default');
-INSERT INTO table VALUES('xkcd','rss','-1001105187138','','https://xkcd.com/atom.xml');
-"""
-
 
 def downgrade():
     op.drop_table('comic')

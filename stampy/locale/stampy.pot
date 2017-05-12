@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: stampython 0.70\n"
+"Project-Id-Version: stampython 0.71\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-05-04 22:16+0200\n"
+"POT-Creation-Date: 2017-05-12 16:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,191 +37,191 @@ msgstr ""
 msgid "Plugin %s is triggered by %s"
 msgstr ""
 
-#: stampy/stampy.py:41
+#: stampy/stampy.py:42
 msgid "Stampy is a script for controlling Karma via Telegram.org bot api"
 msgstr ""
 
-#: stampy/stampy.py:46
+#: stampy/stampy.py:47
 msgid "API token for bot access to messages"
 msgstr ""
 
-#: stampy/stampy.py:48
+#: stampy/stampy.py:49
 msgid "database file for storing karma"
 msgstr ""
 
-#: stampy/stampy.py:51
+#: stampy/stampy.py:52
 msgid "Set verbosity level for messages while running/logging"
 msgstr ""
 
-#: stampy/stampy.py:55
+#: stampy/stampy.py:56
 msgid "Define URL for accessing bot API"
 msgstr ""
 
-#: stampy/stampy.py:58
+#: stampy/stampy.py:59
 msgid "Define owner username"
 msgstr ""
 
-#: stampy/stampy.py:60
+#: stampy/stampy.py:61
 msgid "Run as daemon"
 msgstr ""
 
-#: stampy/stampy.py:111
+#: stampy/stampy.py:112
 msgid "Using alembic to upgrade/create database to expected revision"
 msgstr ""
 
-#: stampy/stampy.py:138
+#: stampy/stampy.py:139
 msgid "Error accessing database, creating..."
 msgstr ""
 
-#: stampy/stampy.py:154
+#: stampy/stampy.py:158
 #, python-format
 msgid "Error on SQL execution: %s"
 msgstr ""
 
-#: stampy/stampy.py:220
+#: stampy/stampy.py:224
 #, python-format
 msgid "ERROR (%s) sending message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/stampy.py:225
+#: stampy/stampy.py:229
 #, python-format
 msgid "PERM ERROR sending message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/stampy.py:237
+#: stampy/stampy.py:241
 #, python-format
 msgid "Sending message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/stampy.py:261
+#: stampy/stampy.py:265
 #, python-format
 msgid "Getting updates and returning: %s"
 msgstr ""
 
-#: stampy/stampy.py:280
+#: stampy/stampy.py:285
 #, python-format
 msgid "Getting bot details and returning: %s"
 msgstr ""
 
-#: stampy/stampy.py:299
+#: stampy/stampy.py:304
 #, python-format
 msgid "Clearing messages at %s"
 msgstr ""
 
-#: stampy/stampy.py:334
+#: stampy/stampy.py:339
 msgid "Use `/quit` to exit daemon mode\n"
 msgstr ""
 
-#: stampy/stampy.py:335
+#: stampy/stampy.py:340
 msgid ""
 "Learn more about this bot in [https://github.com/iranzo/stampython] "
 "(https://github.com/iranzo/stampython)"
 msgstr ""
 
-#: stampy/stampy.py:338 stampy/stampy.py:342
+#: stampy/stampy.py:343 stampy/stampy.py:347
 msgid ""
 "This bot does not use start or stop commands, it automatically checks for"
 " karma operands"
 msgstr ""
 
-#: stampy/plugin/help.py:77 stampy/stampy.py:358
+#: stampy/plugin/help.py:77 stampy/stampy.py:363
 #, python-format
 msgid "Command: %s"
 msgstr ""
 
-#: stampy/stampy.py:378
+#: stampy/stampy.py:383
 #, python-format
 msgid "Sending sticker: %s"
 msgstr ""
 
-#: stampy/stampy.py:406
+#: stampy/stampy.py:411
 #, python-format
 msgid "Sending image: %s"
 msgstr ""
 
-#: stampy/stampy.py:570
+#: stampy/stampy.py:575
 #, python-format
 msgid "Processing plugin: %s"
 msgstr ""
 
-#: stampy/stampy.py:572
+#: stampy/stampy.py:577
 #, python-format
 msgid "Plugin return code: %s"
 msgstr ""
 
-#: stampy/stampy.py:577
+#: stampy/stampy.py:582
 #, python-format
 msgid "New triggers for %s: %s"
 msgstr ""
 
-#: stampy/stampy.py:584
+#: stampy/stampy.py:589
 #, python-format
 msgid "TEXT: %s : %s : %s"
 msgstr ""
 
-#: stampy/stampy.py:588
+#: stampy/stampy.py:593
 #, python-format
 msgid "Last processed message at: %s"
 msgstr ""
 
-#: stampy/stampy.py:590
+#: stampy/stampy.py:595
 #, python-format
 msgid "Last processed update_id : %s"
 msgstr ""
 
-#: stampy/stampy.py:592
+#: stampy/stampy.py:597
 #, python-format
 msgid "Number of messages in this batch: %s"
 msgstr ""
 
-#: stampy/stampy.py:623
+#: stampy/stampy.py:628
 #, python-format
 msgid "Final deduplicated list: %s"
 msgstr ""
 
-#: stampy/stampy.py:663
+#: stampy/stampy.py:668
 msgid "We're admin of private chats"
 msgstr ""
 
-#: stampy/stampy.py:668
+#: stampy/stampy.py:673
 msgid "We're not owner of public chats"
 msgstr ""
 
-#: stampy/stampy.py:673
+#: stampy/stampy.py:678
 msgid "We're admin of public chat"
 msgstr ""
 
-#: stampy/stampy.py:678
+#: stampy/stampy.py:683
 msgid "We're admin because no admin listed on public chat"
 msgstr ""
 
-#: stampy/stampy.py:739
+#: stampy/stampy.py:744
 #, python-format
 msgid "Logging level set to %s"
 msgstr ""
 
-#: stampy/stampy.py:807
+#: stampy/stampy.py:812
 msgid "Started execution"
 msgstr ""
 
-#: stampy/stampy.py:818
+#: stampy/stampy.py:823
 msgid "Token required for operation, please check https://core.telegram.org/bots"
 msgstr ""
 
-#: stampy/stampy.py:837
+#: stampy/stampy.py:842
 #, python-format
 msgid "Plug triggers reported: %s"
 msgstr ""
 
-#: stampy/stampy.py:842
+#: stampy/stampy.py:847
 msgid "Running in daemon mode"
 msgstr ""
 
-#: stampy/stampy.py:847
+#: stampy/stampy.py:852
 msgid "Running in one-shoot mode"
 msgstr ""
 
-#: stampy/stampy.py:850
+#: stampy/stampy.py:855
 msgid "Stopped execution"
 msgstr ""
 
@@ -246,12 +246,10 @@ msgid "Use `/admin link show to list linked channel\n"
 msgstr ""
 
 #: stampy/plugin/admin.py:73 stampy/plugin/alias.py:72
-#: stampy/plugin/autokarma.py:78 stampy/plugin/config.py:87
-#: stampy/plugin/dilbert.py:79 stampy/plugin/espp.py:66
-#: stampy/plugin/forward.py:149 stampy/plugin/help.py:64
-#: stampy/plugin/jueves.py:76 stampy/plugin/mel.py:77
-#: stampy/plugin/obichero.py:78 stampy/plugin/quico.py:78
-#: stampy/plugin/xkcd.py:76
+#: stampy/plugin/autokarma.py:78 stampy/plugin/comic.py:92
+#: stampy/plugin/config.py:87 stampy/plugin/dilbert.py:80
+#: stampy/plugin/espp.py:66 stampy/plugin/forward.py:149
+#: stampy/plugin/help.py:64 stampy/plugin/quico.py:79
 #, python-format
 msgid "Command: %s by %s"
 msgstr ""
@@ -342,7 +340,7 @@ msgid ""
 msgstr ""
 
 #: stampy/plugin/alias.py:74 stampy/plugin/autokarma.py:81
-#: stampy/plugin/forward.py:151
+#: stampy/plugin/comic.py:95 stampy/plugin/forward.py:151
 #, python-format
 msgid "Command: %s by Owner: %s"
 msgstr ""
@@ -435,6 +433,33 @@ msgstr ""
 msgid "Autokarma words %s encountered for processing"
 msgstr ""
 
+#: stampy/plugin/comic.py:68
+msgid "Use `/comic list` to list comics defined\n"
+msgstr ""
+
+#: stampy/plugin/comic.py:69
+msgid "Use `/comic all` to show all actual comics\n"
+msgstr ""
+
+#: stampy/plugin/comic.py:71
+msgid ""
+"Use `/comic trigger` to send comics to chats defined\n"
+"\n"
+msgstr ""
+
+#: stampy/plugin/comic.py:163
+msgid "Defined comic strips:\n"
+msgstr ""
+
+#: stampy/plugin/comic.py:169
+msgid "Returning comics"
+msgstr ""
+
+#: stampy/plugin/comic.py:272
+#, python-format
+msgid "# of Comics for today: %s"
+msgstr ""
+
 #: stampy/plugin/config.py:52
 msgid "Use `/config show` to get a list of defined config settings\n"
 msgstr ""
@@ -519,19 +544,19 @@ msgstr ""
 msgid "rmconfig: %s for id %s"
 msgstr ""
 
-#: stampy/plugin/dilbert.py:57
+#: stampy/plugin/dilbert.py:58
 msgid ""
 "Use `/dilbert <date>` to get Dilbert's comic strip for date or today\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/dilbert.py:59
+#: stampy/plugin/dilbert.py:60
 msgid ""
 "Use `/dilbert trigger` to force sending actual strip to channel\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/dilbert.py:127
+#: stampy/plugin/dilbert.py:128
 msgid "Dilbert comic found"
 msgstr ""
 
@@ -781,25 +806,6 @@ msgstr ""
 msgid "Returning %s"
 msgstr ""
 
-#: stampy/plugin/jueves.py:55
-msgid ""
-"Use `/jueves <date>` to get El Jueves comic strip for date or today (must"
-" be on RSS feed)\n"
-"\n"
-msgstr ""
-
-#: stampy/plugin/jueves.py:57
-msgid ""
-"Use `/jueves trigger` to force sending actual strip to channel\n"
-"\n"
-msgstr ""
-
-#: stampy/plugin/jueves.py:130 stampy/plugin/mel.py:131
-#: stampy/plugin/obichero.py:133 stampy/plugin/xkcd.py:130
-#, python-format
-msgid "# of Comics for today: %s"
-msgstr ""
-
 #: stampy/plugin/karma.py:53
 msgid ""
 "Use `word++` or `word--` to increment or decrement karma, a new message "
@@ -878,75 +884,49 @@ msgstr ""
 msgid "Processing word %s sent by id %s with username %s (%s %s)"
 msgstr ""
 
-#: stampy/plugin/karma.py:385
+#: stampy/plugin/karma.py:386
 #, python-format
 msgid "%s Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)"
 msgstr ""
 
-#: stampy/plugin/karma.py:391
+#: stampy/plugin/karma.py:392
 #, python-format
 msgid "`%s` now has `%s` karma points."
 msgstr ""
 
-#: stampy/plugin/karma.py:394
+#: stampy/plugin/karma.py:395
 #, python-format
 msgid "`%s` now has no Karma and has been garbage collected."
 msgstr ""
 
-#: stampy/plugin/karma.py:427
+#: stampy/plugin/karma.py:430
 #, python-format
 msgid "Processing words for cleanup: %s"
 msgstr ""
 
-#: stampy/plugin/karma.py:443
+#: stampy/plugin/karma.py:446
 #, python-format
 msgid "Word %s with %s inactivity days is going to be purged"
 msgstr ""
 
-#: stampy/plugin/mel.py:56
-msgid ""
-"Use `/mel <date>` to get Mel's comic strip for date or today (must be on "
-"RSS feed)\n"
-"\n"
-msgstr ""
-
-#: stampy/plugin/mel.py:58
-msgid ""
-"Use `/mel trigger` to force sending actual strip to channel\n"
-"\n"
-msgstr ""
-
-#: stampy/plugin/obichero.py:56
-msgid ""
-"Use `/obichero <date>` to get O bichero's comic strip for date or today "
-"(must be on RSS feed)\n"
-"\n"
-msgstr ""
-
-#: stampy/plugin/obichero.py:58
-msgid ""
-"Use `/obichero trigger` to force sending actual strip to channel\n"
-"\n"
-msgstr ""
-
-#: stampy/plugin/quico.py:56
+#: stampy/plugin/quico.py:57
 msgid ""
 "Use `/quico <date>` to get Quico Jubilata's comic strip for date or today"
 "\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/quico.py:58
+#: stampy/plugin/quico.py:59
 msgid ""
 "Use `/quico trigger` to force sending actual strip to channel\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/quico.py:125
+#: stampy/plugin/quico.py:126
 msgid "quico comic found"
 msgstr ""
 
-#: stampy/plugin/quico.py:135
+#: stampy/plugin/quico.py:136
 msgid "No comic found yet"
 msgstr ""
 
@@ -1143,18 +1123,5 @@ msgstr ""
 #: stampy/plugin/welcome.py:67
 #, python-format
 msgid "New user in chat, sending greetings: %s"
-msgstr ""
-
-#: stampy/plugin/xkcd.py:55
-msgid ""
-"Use `/xkcd <date>` to get xkcd's comic strip for date or today (must be "
-"on RSS feed)\n"
-"\n"
-msgstr ""
-
-#: stampy/plugin/xkcd.py:57
-msgid ""
-"Use `/xkcd trigger` to force sending actual strip to channel\n"
-"\n"
 msgstr ""
 
