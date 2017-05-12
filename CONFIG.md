@@ -19,7 +19,7 @@
     - stock: stock tickers to check
     - espp: offering price at start of period for ESPP
 - user
-    - highlight: (TODO)
+    - highlight: set the words in messages that causes the message to be forwarded to you
 - chat
     - isolated: False, if true, allow link, all karma, etc is tied to GID
     - link: empty, if defined, channel is slave to a mater
