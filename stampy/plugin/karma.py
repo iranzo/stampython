@@ -356,7 +356,7 @@ def karmaprocess(msgdetail):
                     if len(word) == 2:
                         oper = word[-2:]
                         try:
-                            word = msgdetail["replyto"]
+                            word = msgdetail["replyto"].lower()
                         except:
                             word = False
 
