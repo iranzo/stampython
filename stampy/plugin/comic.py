@@ -205,9 +205,8 @@ def comics(message=False, name=False, all=False):
             chat_id = channelgid
         logger.debug(msg="Processing row in comics: %s:%s:%s:%s:%s" % (name, tipo, channelgid, lastchecked, url))
         try:
-            lastcheck = dateutil.parser.parse(lastchecked)
             # Parse date or if in error, use today
-            datelast = dateutil.parser.parse(lastcheck)
+            datelast = dateutil.parser.parse(lastchecked)
 
             # Force checking if valid date
             day = datelast.day

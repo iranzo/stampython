@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.71\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-05-12 16:42+0200\n"
+"POT-Creation-Date: 2017-05-12 22:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -73,155 +73,155 @@ msgstr ""
 msgid "Error accessing database, creating..."
 msgstr ""
 
-#: stampy/stampy.py:158
+#: stampy/stampy.py:165
 #, python-format
-msgid "Error on SQL execution: %s"
+msgid "Error # %s on SQL execution: %s"
 msgstr ""
 
-#: stampy/stampy.py:224
+#: stampy/stampy.py:231
 #, python-format
 msgid "ERROR (%s) sending message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/stampy.py:229
+#: stampy/stampy.py:236
 #, python-format
 msgid "PERM ERROR sending message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/stampy.py:241
+#: stampy/stampy.py:248
 #, python-format
 msgid "Sending message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/stampy.py:265
+#: stampy/stampy.py:272
 #, python-format
 msgid "Getting updates and returning: %s"
 msgstr ""
 
-#: stampy/stampy.py:285
+#: stampy/stampy.py:292
 #, python-format
 msgid "Getting bot details and returning: %s"
 msgstr ""
 
-#: stampy/stampy.py:304
+#: stampy/stampy.py:311
 #, python-format
 msgid "Clearing messages at %s"
 msgstr ""
 
-#: stampy/stampy.py:339
+#: stampy/stampy.py:346
 msgid "Use `/quit` to exit daemon mode\n"
 msgstr ""
 
-#: stampy/stampy.py:340
+#: stampy/stampy.py:347
 msgid ""
 "Learn more about this bot in [https://github.com/iranzo/stampython] "
 "(https://github.com/iranzo/stampython)"
 msgstr ""
 
-#: stampy/stampy.py:343 stampy/stampy.py:347
+#: stampy/stampy.py:350 stampy/stampy.py:354
 msgid ""
 "This bot does not use start or stop commands, it automatically checks for"
 " karma operands"
 msgstr ""
 
-#: stampy/plugin/help.py:77 stampy/stampy.py:363
+#: stampy/plugin/help.py:77 stampy/stampy.py:370
 #, python-format
 msgid "Command: %s"
 msgstr ""
 
-#: stampy/stampy.py:383
+#: stampy/stampy.py:390
 #, python-format
 msgid "Sending sticker: %s"
 msgstr ""
 
-#: stampy/stampy.py:411
+#: stampy/stampy.py:418
 #, python-format
 msgid "Sending image: %s"
 msgstr ""
 
-#: stampy/stampy.py:575
+#: stampy/stampy.py:582
 #, python-format
 msgid "Processing plugin: %s"
 msgstr ""
 
-#: stampy/stampy.py:577
+#: stampy/stampy.py:584
 #, python-format
 msgid "Plugin return code: %s"
 msgstr ""
 
-#: stampy/stampy.py:582
+#: stampy/stampy.py:589
 #, python-format
 msgid "New triggers for %s: %s"
 msgstr ""
 
-#: stampy/stampy.py:589
+#: stampy/stampy.py:596
 #, python-format
 msgid "TEXT: %s : %s : %s"
 msgstr ""
 
-#: stampy/stampy.py:593
+#: stampy/stampy.py:600
 #, python-format
 msgid "Last processed message at: %s"
 msgstr ""
 
-#: stampy/stampy.py:595
+#: stampy/stampy.py:602
 #, python-format
 msgid "Last processed update_id : %s"
 msgstr ""
 
-#: stampy/stampy.py:597
+#: stampy/stampy.py:604
 #, python-format
 msgid "Number of messages in this batch: %s"
 msgstr ""
 
-#: stampy/stampy.py:628
+#: stampy/stampy.py:635
 #, python-format
 msgid "Final deduplicated list: %s"
 msgstr ""
 
-#: stampy/stampy.py:668
+#: stampy/stampy.py:675
 msgid "We're admin of private chats"
 msgstr ""
 
-#: stampy/stampy.py:673
+#: stampy/stampy.py:680
 msgid "We're not owner of public chats"
 msgstr ""
 
-#: stampy/stampy.py:678
+#: stampy/stampy.py:685
 msgid "We're admin of public chat"
 msgstr ""
 
-#: stampy/stampy.py:683
+#: stampy/stampy.py:690
 msgid "We're admin because no admin listed on public chat"
 msgstr ""
 
-#: stampy/stampy.py:744
+#: stampy/stampy.py:751
 #, python-format
 msgid "Logging level set to %s"
 msgstr ""
 
-#: stampy/stampy.py:812
+#: stampy/stampy.py:819
 msgid "Started execution"
 msgstr ""
 
-#: stampy/stampy.py:823
+#: stampy/stampy.py:830
 msgid "Token required for operation, please check https://core.telegram.org/bots"
 msgstr ""
 
-#: stampy/stampy.py:842
+#: stampy/stampy.py:849
 #, python-format
 msgid "Plug triggers reported: %s"
 msgstr ""
 
-#: stampy/stampy.py:847
+#: stampy/stampy.py:854
 msgid "Running in daemon mode"
 msgstr ""
 
-#: stampy/stampy.py:852
+#: stampy/stampy.py:859
 msgid "Running in one-shoot mode"
 msgstr ""
 
-#: stampy/stampy.py:855
+#: stampy/stampy.py:862
 msgid "Stopped execution"
 msgstr ""
 
@@ -455,7 +455,7 @@ msgstr ""
 msgid "Returning comics"
 msgstr ""
 
-#: stampy/plugin/comic.py:272
+#: stampy/plugin/comic.py:271
 #, python-format
 msgid "# of Comics for today: %s"
 msgstr ""

@@ -144,18 +144,25 @@ def dbsql(sql=False):
     # Database initialized
 
     worked = False
-    if sql:
-        try:
-            cur.execute(sql)
-            con.commit()
-            worked = True
-        except:
-            exc_info = sys.exc_info()
-            traceback.print_exception(*exc_info)
-            worked = False
+    attempt = 0
+    while attempt < 10:
+        if sql:
+            attempt = attempt + 1
+            try:
+                cur.execute(sql)
+                con.commit()
+                worked = True
+                attempt = 10
+            except:
+                exc_info = sys.exc_info()
+                traceback.print_exception(*exc_info)
+                worked = False
+                sleep(2)
+        else:
+            attempt = 10
 
-    if not worked:
-        logger.critical(msg=_("Error on SQL execution: %s") % sql)
+        if not worked:
+            logger.critical(msg=_("Error # %s on SQL execution: %s") % (attempt, sql))
 
     return cur
 
