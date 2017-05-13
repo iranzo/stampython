@@ -330,9 +330,13 @@ def comicfromurl(name):
 
     try:
         page = requests.get(url)
-        tree = html.fromstring(page.content)
-        imgsrc = tree.xpath('%s' % imgxpath)[0]
-        imgtxt = tree.xpath('%s' % txtxpath)[0]
+        if url == page.url:
+            tree = html.fromstring(page.content)
+            imgsrc = tree.xpath('%s' % imgxpath)[0]
+            imgtxt = tree.xpath('%s' % txtxpath)[0]
+        else:
+            imgtxt = False
+            imgsrc = False
 
     except:
         imgtxt = False
