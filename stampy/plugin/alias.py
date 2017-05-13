@@ -172,7 +172,7 @@ def createalias(word, value, gid=0):
     """
 
     logger = logging.getLogger(__name__)
-    if getalias(value, gid=gid) == word:
+    if getalias(value, gid=gid) == word or word.lower() == value.lower():
         logger.error(msg=_("createalias: circular reference %s=%s for gid %s") % (word, value, gid))
     else:
         if not getalias(word, gid) or getalias(word, gid) == word:
