@@ -12,6 +12,7 @@ import feedparser
 from apscheduler.schedulers.background import BackgroundScheduler
 from lxml import html
 from prettytable import from_db_cursor
+import requests
 
 import stampy.plugin.alias
 import stampy.plugin.config
@@ -155,7 +156,7 @@ def listcomics():
 
     logger = logging.getLogger(__name__)
 
-    sql = "select name,type,channelgid,lastchecked,url  from comic ORDER BY name ASC;"
+    sql = "select name,lastchecked, type,url  from comic ORDER BY name ASC;"
     cur = stampy.stampy.dbsql(sql)
 
     try:
@@ -233,6 +234,23 @@ def comics(message=False, name=False, all=False):
                                             reply_to_message_id=message_id)
                     gidstoping.append(chat_id)
                     comicsupdated.append(name)
+        elif tipo == 'url':
+            # Comic is rss feed, process
+            if all:
+                datelast = datetime.datetime(year=1981, month=1, day=24)
+            if (date - datelast).days > 1:
+                # Last checked comic was more than 1 day ago
+                for comic in comicfromurl(name=name):
+                    title = comic[0]
+                    img = comic[1]
+                    url = comic[2]
+                    if title and img:
+                        imgtxt = title + "\n" + url + " - @redken_strips"
+                        stampy.stampy.sendimage(chat_id=chat_id, image=img,
+                                                text=imgtxt,
+                                                reply_to_message_id=message_id)
+                        gidstoping.append(chat_id)
+                        comicsupdated.append(name)
 
     # We were invoked in cron job, not updating database of last pushed comic
     #  strips
@@ -277,3 +295,47 @@ def comicfromrss(url):
         imgtxt = item['title_detail']['value']
         yield imgtxt, imgsrc, url
     return
+
+
+def comicfromurl(name):
+    """
+    Returns title, img and post url
+    :param name: name of comic to process
+    :return:
+    """
+
+    logger = logging.getLogger(__name__)
+
+    sql = "SELECT url, imgxpath, txtxpath from comic WHERE name='%s';" % name
+    cur = stampy.stampy.dbsql(sql)
+
+    date = datetime.datetime.now()
+
+    day = date.day
+    month = date.month
+    year = date.year
+
+    for row in cur:
+        (url, imgxpath, txtxpath) = row
+
+    items = ['year', 'month', 'day']
+    for item in items:
+        url = url.replace('#%s#' % item, '%02d')
+        if item == 'year':
+            url = url % year
+        elif item == 'month':
+            url = url % month
+        elif item == 'day':
+            url = url % day
+
+    try:
+        page = requests.get(url)
+        tree = html.fromstring(page.content)
+        imgsrc = tree.xpath('%s' % imgxpath)[0]
+        imgtxt = tree.xpath('%s' % txtxpath)[0]
+
+    except:
+        imgtxt = False
+        imgsrc = False
+
+    yield imgtxt, imgsrc, url

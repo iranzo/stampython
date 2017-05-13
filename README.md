@@ -32,13 +32,8 @@ Quick User guide at [USERGUIDE.md](USERGUIDE.md)
 - `word--` to remove karma
 - `/quote add username text` to add a quote for given username with the following text as message
 - `/quote username` to retrieve a random quote for that username.
-- `/dilbert <date>` to retrieve Dilbert's strip for today or supplied date (today if error parsing)
-- `/comic mel` to retrieve Mel's strip for today
-- `/comic obichero` to retrieve O bichero's strip for today
-- `/quico <date>` to retrieve Quico Jubilata's strip for today or supplied
-  date
-- `/comic xkcd` to retrieve XKCD's strip for today
-- `/comic jueves` to retrieve El Jueves strip for today
+- `/comic list` to list all knwon comic strips
+- `/comic <comic>` to retrieve <comic> strip for today
 - `/comic all` to retrieve all of today's comic strips
 - `@all` to ping all usernames for users in a channel
 - `@all++` to give karma to all usernames in a channel
