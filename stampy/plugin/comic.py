@@ -9,10 +9,10 @@ import logging
 
 import dateutil.parser
 import feedparser
+import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 from lxml import html
 from prettytable import from_db_cursor
-import requests
 
 import stampy.plugin.alias
 import stampy.plugin.config
