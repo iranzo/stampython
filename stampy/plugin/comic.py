@@ -8,6 +8,7 @@ import datetime
 import logging
 
 import dateutil.parser
+from urlparse import urlparse
 import feedparser
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -53,7 +54,6 @@ def run(message):  # do not edit this line
     code = None
     text = stampy.stampy.getmsgdetail(message)["text"]
     if text:
-        code = True
         comiccommands(message)
     return code
 
@@ -334,6 +334,11 @@ def comicfromurl(name):
             tree = html.fromstring(page.content)
             imgsrc = tree.xpath('%s' % imgxpath)[0]
             imgtxt = tree.xpath('%s' % txtxpath)[0]
+            if imgsrc[0] == "/":
+                # imgsrc is relative, prepend url
+                parsed_uri = urlparse(url)
+                domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
+                imgsrc = domain + imgsrc
         else:
             imgtxt = False
             imgsrc = False

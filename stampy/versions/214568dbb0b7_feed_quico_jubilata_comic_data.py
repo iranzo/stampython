@@ -34,7 +34,8 @@ def upgrade():
              'lastchecked': '1981/01/24',
              'url': 'http://www.quicojubilata.com/quico-jubilata/#year#-#month#-#day#',
              'imgxpath': '//img[@class="img-responsive"]/@src',
-             'txtxpath': '//h1[@class="js-quickedit-page-title page-header"]/span'}
+             'txtxpath': '//h1[@class="js-quickedit-page-title page-header"]/span/text()'
+             }
         ]
     )
 
