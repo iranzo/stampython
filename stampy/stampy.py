@@ -231,6 +231,12 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
         logger.error(msg=_("ERROR (%s) sending message: Code: %s : Text: %s") % (attempt, code, result))
         attempt += 1
         sleep(1)
+        if not code:
+            for case in Switch(result['description']):
+                if case('Bad Request: message text is empty'):
+                    # Message is empty, no need to resend
+                    attempt = 60
+                break
         # exit after 60 retries with 1 second delay each
         if attempt > 60:
             logger.error(msg=_("PERM ERROR sending message: Code: %s : Text: %s") % (code, result))

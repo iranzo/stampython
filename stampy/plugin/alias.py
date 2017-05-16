@@ -103,7 +103,7 @@ def aliascommands(message):
                     word = texto.split(' ')[1]
                 except:
                     word = ""
-                    
+
                 if "=" in word:
                     key = word.split('=')[0].lower()
                     value = texto.split('=')[1:][0].lower()

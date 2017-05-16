@@ -131,10 +131,13 @@ def rank(word=False, gid=0):
     """
 
     logger = logging.getLogger(__name__)
-    if stampy.plugin.alias.getalias(word, gid=gid):
-        word = stampy.plugin.alias.getalias(word, gid=gid)
     if word:
+
         # if word is provided, return the rank value for that word
+
+        if stampy.plugin.alias.getalias(word, gid=gid):
+            word = stampy.plugin.alias.getalias(word, gid=gid)
+
         string = (word, gid)
         sql = "SELECT word,value,date FROM karma WHERE word='%s' and gid='%s';" % string
         cur = stampy.stampy.dbsql(sql)
