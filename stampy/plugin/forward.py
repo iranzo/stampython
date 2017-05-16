@@ -73,6 +73,7 @@ def doforward(message, target):
     msgdetail = stampy.stampy.getmsgdetail(message)
     chat_id = msgdetail["chat_id"]
     message_id = msgdetail["message_id"]
+    text = msgdetail['text']
 
     url = "%s%s/forwardMessage" % (stampy.plugin.config.config(key="url"),
                                    stampy.plugin.config.config(key='token'))
@@ -99,7 +100,7 @@ def doforward(message, target):
         if attempt > 60:
             logger.error(msg=_("PERM ERROR forwarding message: Code: %s : Text: %s") % (code, result))
             code = True
-    logger.debug(msg=_("forwarding message: Code: %s : Text: %s") % (code, message))
+    logger.debug(msg=_("forwarding message: Code: %s : Text: %s") % (code, text))
     return exitcode
 
 
