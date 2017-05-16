@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.71\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-05-12 22:15+0200\n"
+"POT-Creation-Date: 2017-05-16 12:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -246,10 +246,9 @@ msgid "Use `/admin link show to list linked channel\n"
 msgstr ""
 
 #: stampy/plugin/admin.py:73 stampy/plugin/alias.py:72
-#: stampy/plugin/autokarma.py:78 stampy/plugin/comic.py:92
-#: stampy/plugin/config.py:87 stampy/plugin/dilbert.py:80
-#: stampy/plugin/espp.py:66 stampy/plugin/forward.py:149
-#: stampy/plugin/help.py:64 stampy/plugin/quico.py:79
+#: stampy/plugin/autokarma.py:78 stampy/plugin/comic.py:93
+#: stampy/plugin/config.py:87 stampy/plugin/espp.py:66
+#: stampy/plugin/forward.py:149 stampy/plugin/help.py:64
 #, python-format
 msgid "Command: %s by %s"
 msgstr ""
@@ -340,7 +339,7 @@ msgid ""
 msgstr ""
 
 #: stampy/plugin/alias.py:74 stampy/plugin/autokarma.py:81
-#: stampy/plugin/comic.py:95 stampy/plugin/forward.py:151
+#: stampy/plugin/comic.py:96 stampy/plugin/forward.py:151
 #, python-format
 msgid "Command: %s by Owner: %s"
 msgstr ""
@@ -350,26 +349,26 @@ msgstr ""
 msgid "Deleting alias for `%s`"
 msgstr ""
 
-#: stampy/plugin/alias.py:106
+#: stampy/plugin/alias.py:110
 #, python-format
 msgid "Setting alias for `%s` to `%s`"
 msgstr ""
 
-#: stampy/plugin/alias.py:153
+#: stampy/plugin/alias.py:157
 #, python-format
 msgid "%s has an alias %s"
 msgstr ""
 
-#: stampy/plugin/alias.py:158
+#: stampy/plugin/alias.py:162
 msgid "Defined aliases:\n"
 msgstr ""
 
-#: stampy/plugin/alias.py:161
+#: stampy/plugin/alias.py:165
 #, python-format
 msgid "Returning aliases %s for word %s for gid %s"
 msgstr ""
 
-#: stampy/plugin/alias.py:176
+#: stampy/plugin/alias.py:180
 #, python-format
 msgid "createalias: circular reference %s=%s for gid %s"
 msgstr ""
@@ -433,29 +432,49 @@ msgstr ""
 msgid "Autokarma words %s encountered for processing"
 msgstr ""
 
-#: stampy/plugin/comic.py:68
+#: stampy/plugin/comic.py:69
 msgid "Use `/comic list` to list comics defined\n"
 msgstr ""
 
-#: stampy/plugin/comic.py:69
+#: stampy/plugin/comic.py:70
 msgid "Use `/comic all` to show all actual comics\n"
 msgstr ""
 
-#: stampy/plugin/comic.py:71
+#: stampy/plugin/comic.py:72
 msgid ""
 "Use `/comic trigger` to send comics to chats defined\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/comic.py:163
+#: stampy/plugin/comic.py:146
+#, python-format
+msgid "getcomics: %s"
+msgstr ""
+
+#: stampy/plugin/comic.py:164
 msgid "Defined comic strips:\n"
 msgstr ""
 
-#: stampy/plugin/comic.py:169
+#: stampy/plugin/comic.py:170
 msgid "Returning comics"
 msgstr ""
 
-#: stampy/plugin/comic.py:271
+#: stampy/plugin/comic.py:207
+#, python-format
+msgid "Processing row in comics: %s:%s:%s:%s:%s"
+msgstr ""
+
+#: stampy/plugin/comic.py:220
+#, python-format
+msgid "Comic: %s, last: %s, now: %s"
+msgstr ""
+
+#: stampy/plugin/comic.py:263
+#, python-format
+msgid "Updating last checked as per %s"
+msgstr ""
+
+#: stampy/plugin/comic.py:289
 #, python-format
 msgid "# of Comics for today: %s"
 msgstr ""
@@ -542,22 +561,6 @@ msgstr ""
 #: stampy/plugin/config.py:285
 #, python-format
 msgid "rmconfig: %s for id %s"
-msgstr ""
-
-#: stampy/plugin/dilbert.py:58
-msgid ""
-"Use `/dilbert <date>` to get Dilbert's comic strip for date or today\n"
-"\n"
-msgstr ""
-
-#: stampy/plugin/dilbert.py:60
-msgid ""
-"Use `/dilbert trigger` to force sending actual strip to channel\n"
-"\n"
-msgstr ""
-
-#: stampy/plugin/dilbert.py:128
-msgid "Dilbert comic found"
 msgstr ""
 
 #: stampy/plugin/espp.py:46
@@ -907,27 +910,6 @@ msgstr ""
 #: stampy/plugin/karma.py:446
 #, python-format
 msgid "Word %s with %s inactivity days is going to be purged"
-msgstr ""
-
-#: stampy/plugin/quico.py:57
-msgid ""
-"Use `/quico <date>` to get Quico Jubilata's comic strip for date or today"
-"\n"
-"\n"
-msgstr ""
-
-#: stampy/plugin/quico.py:59
-msgid ""
-"Use `/quico trigger` to force sending actual strip to channel\n"
-"\n"
-msgstr ""
-
-#: stampy/plugin/quico.py:126
-msgid "quico comic found"
-msgstr ""
-
-#: stampy/plugin/quico.py:136
-msgid "No comic found yet"
 msgstr ""
 
 #: stampy/plugin/quote.py:45

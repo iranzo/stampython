@@ -143,7 +143,7 @@ def getcomics():
         # Fill valid values
         value.append(row[0])
 
-    logger.debug(msg="getcomics: %s" % value)
+    logger.debug(msg=_("getcomics: %s") % value)
 
     return value
 
@@ -204,7 +204,7 @@ def comics(message=False, name=False, all=False):
             chat_id = msgdetail["chat_id"]
         else:
             chat_id = channelgid
-        logger.debug(msg="Processing row in comics: %s:%s:%s:%s:%s" % (name, tipo, channelgid, lastchecked, url))
+        logger.debug(msg=_("Processing row in comics: %s:%s:%s:%s:%s") % (name, tipo, channelgid, lastchecked, url))
         try:
             # Parse date or if in error, use today
             datelast = dateutil.parser.parse(lastchecked)
@@ -217,12 +217,12 @@ def comics(message=False, name=False, all=False):
         except:
             datelast = datetime.datetime(year=1981, month=1, day=24)
 
-        logger.debug(msg="DATE LAST: %s, NOW: %s" % (datelast, date))
+        logger.debug(msg=_("Comic: %s, last: %s, now: %s") % (name, datelast, date))
         if tipo == "rss":
             # Comic is rss feed, process
             if all:
                 datelast = datetime.datetime(year=1981, month=1, day=24)
-            if (date - datelast).days > 1:
+            if (date - datelast).days >= 1:
                 # Last checked comic was more than 1 day ago
                 for comic in comicfromrss(url=url):
                     title = comic[0]
@@ -238,7 +238,7 @@ def comics(message=False, name=False, all=False):
             # Comic is rss feed, process
             if all:
                 datelast = datetime.datetime(year=1981, month=1, day=24)
-            if (date - datelast).days > 1:
+            if (date - datelast).days >= 1:
                 # Last checked comic was more than 1 day ago
                 for comic in comicfromurl(name=name):
                     title = comic[0]
@@ -260,7 +260,7 @@ def comics(message=False, name=False, all=False):
         for comic in stampy.stampy.getitems(comicsupdated):
             # Update date in SQL so it's not invoked again
             sql = "UPDATE comic SET lastchecked='%s' where name='%s'" % (datefor, comic)
-            logger.debug(msg="Updating last checked as per %s" % sql)
+            logger.debug(msg=_("Updating last checked as per %s") % sql)
             stampy.stampy.dbsql(sql=sql)
 
         # Update stats for chats where sent comic

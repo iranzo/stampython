@@ -99,7 +99,11 @@ def aliascommands(message):
                 deletealias(word=key, gid=stampy.stampy.geteffectivegid(gid=chat_id))
                 break
             if case():
-                word = texto.split(' ')[1]
+                try:
+                    word = texto.split(' ')[1]
+                except:
+                    word = ""
+                    
                 if "=" in word:
                     key = word.split('=')[0].lower()
                     value = texto.split('=')[1:][0].lower()
