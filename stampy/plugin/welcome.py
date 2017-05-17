@@ -5,6 +5,7 @@
 # Author: Pablo Iranzo Gomez (Pablo.Iranzo@gmail.com)
 
 import logging
+
 import stampy.plugin.config
 import stampy.stampy
 from stampy.i18n import translate
@@ -62,7 +63,30 @@ def welcomeuser(message):
     chat_id = msgdetail['chat_id']
 
     welcome = stampy.plugin.config.gconfig(key='welcome', default=False, gid=chat_id)
-    greeting = welcome.replace("$username", msgdetail['name'])
+
+    try:
+        newparticipant = message['message']['new_chat_participant']
+    except:
+        newparticipant = False
+
+    try:
+        newusername = newparticipant['username']
+    except:
+        newusername = ""
+
+    try:
+        newfirstname = newparticipant['first_name']
+    except:
+        newfirstname = ""
+
+    try:
+        newlastname = newparticipant['last_name']
+    except:
+        newlastname = ""
+
+    name = "%s %s (@%s)" % (newfirstname, newlastname, newusername)
+
+    greeting = welcome.replace("$username", name)
 
     logger.debug(msg=_('New user in chat, sending greetings: %s') % greeting)
 
