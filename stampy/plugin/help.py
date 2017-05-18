@@ -53,6 +53,8 @@ def helpcommands(message):
     :return:
     """
 
+    logger = logging.getLogger(__name__)
+
     msgdetail = stampy.stampy.getmsgdetail(message)
 
     texto = msgdetail["text"]
@@ -60,8 +62,17 @@ def helpcommands(message):
     message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    logger = logging.getLogger(__name__)
     logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
+
+    if chat_id != msgdetail['who_id']:
+        # Provide text on public channel
+        text = _("Message sent privately, open a chat with @%s and say hi to receive private messages or read https://github.com/iranzo/stampython/blob/master/README.md\n") % stampy.stampy.getme()['username']
+        stampy.stampy.sendmessage(chat_id=chat_id, text=text,
+                                  reply_to_message_id=message_id)
+
+        # We asked for help on public channel, answer privately
+        chat_id = msgdetail['who_id']
+        message_id = False
 
     # Call plugins to process help messages
     commandtext = ""
