@@ -235,8 +235,9 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
             for case in Switch(result['description']):
                 if case('Bad Request: message text is empty'):
                     # Message is empty, no need to resend
-                    attempt = 60
-                break
+                    attempt = 61
+                    break
+
         # exit after 60 retries with 1 second delay each
         if attempt > 60:
             logger.error(msg=_("PERM ERROR sending message: Code: %s : Text: %s") % (code, result))
@@ -453,6 +454,10 @@ def getmsgdetail(message):
     :return: message details as dict
     """
 
+    dictionary = {
+        "'": ""
+    }
+
     try:
         update_id = message['update_id']
     except:
@@ -471,9 +476,10 @@ def getmsgdetail(message):
             type = "channel_post"
         except:
             chat_id = ""
+            # Define dictionary for text replacements
 
     try:
-        chat_name = message[type]['chat']['title']
+        chat_name = replace_all(message[type]['chat']['title'], dictionary)
     except:
         chat_name = ""
 
@@ -491,7 +497,7 @@ def getmsgdetail(message):
         message_id = int(message[type]['message_id'])
         date = int(float(message[type]['date']))
         datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
-        who_gn = message[type]['from']['first_name']
+        who_gn = replace_all(message[type]['from']['first_name'], dictionary)
         who_id = message[type]['from']['id']
         error = False
     except:
@@ -503,7 +509,7 @@ def getmsgdetail(message):
         message_id = ""
 
     try:
-        who_ln = message[type]['from']['last_name']
+        who_ln = replace_all(message[type]['from']['last_name'], dictionary)
     except:
         who_ln = ""
 
