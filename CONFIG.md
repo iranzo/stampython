@@ -10,7 +10,7 @@
 - verbosity: log level verbosity
 - url: URL for telegram server bot api entry point
 
-### User/chat  configuration
+### User/chat configuration
 
 - common
     - language: en (TODO)
@@ -24,3 +24,9 @@
     - isolated: False, if true, allow link, all karma, etc is tied to GID
     - link: empty, if defined, channel is slave to a mater
     - admin: List of admins of channels, default empty: everyone
+
+## Donations
+
+The bot runs on my hardware which involves (HW, power, internet, etc), if
+you wish to collaborate, please, use <https://www.paypal.me/iranzop> for
+your donation.

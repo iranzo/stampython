@@ -8,6 +8,13 @@ Whenever possible, also contribute UT to tests/ so the new functions can be vali
 
 - flake8 will test PEP8 validation
 - nosetests will check UT's in tests/ against the code
+- markdown-lint will validate *.MD files
 - `tox` can be used to validate both set of tests on your code before Pull Request
 
 Thanks!
+
+## Donations
+
+The bot runs on my hardware which involves (HW, power, internet, etc), if
+you wish to collaborate, please, use <https://www.paypal.me/iranzop> for
+your donation.

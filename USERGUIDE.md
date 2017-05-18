@@ -1,39 +1,25 @@
-# Stampython: A Telegram bot for karma accounting
-
-[![Build Status](https://travis-ci.org/iranzo/stampython.svg?branch=master)](https://travis-ci.org/iranzo/stampython)
-[![Code Climate](https://codeclimate.com/github/iranzo/stampython/badges/gpa.svg)](https://codeclimate.com/github/iranzo/stampython)
-[![Pypi](http://img.shields.io/pypi/v/stampython.svg)](https://pypi.python.org/pypi/stampython/)
+# User guide
 
 ## Introduction
 
-After reading [Readme.md](Readme.md) that contains more 'how-to-run' 
-information, it might be interesting for you to learn about how to use it.
+After reading [Readme.md](Readme.md) that contains more 'how-to-run' information, it might be interesting for you to learn about how to use it.
 
-In short, many options are documented by sending "/help" on a channel where 
-<https://t.me/redken_bot> is.
+In short, many options are documented by sending "/help" on a channel where <https://t.me/redken_bot> is.
 
-By default, new groups where the bot is added are just ready to start being 
-used.
+By default, new groups where the bot is added are just ready to start being used.
 
-Also, while nothing is set against, you could use `/gconfig` to configure
- several aspects of it like:
+Also, while nothing is set against, you could use `/gconfig` to configure  several aspects of it like:
 
-  - `modulo` (to just report karma every <modulo> points)
-  - `stock` (to define the stock tickers to query when invoking `stock`)
+- `modulo` (to just report karma every `modulo` points)
+- `stock` (to define the stock tickers to query when invoking `stock`)
 
-Once you started chatting with the bot, you can also use /hilight <word> so 
-messages containing that word will be forwarded to you as a private message.
+Once you started chatting with the bot, you can also use /hilight `word` so messages containing that word will be forwarded to you as a private message.
 
+By default karma in channels is private to that group, but also, groups can be linked.
 
-By default karma in channels is private to that group, but also, groups can 
-be linked.
+On the channel to become `master` execute: `/admin link master` and it will generate a code (token) to link against just once.
 
-On the channel to become `master` execute: `/admin link master` and it will 
-generate a code (token) to link against just once.
-
-On the channel to be linked against `master`, a.k.a. `slave`, execute: 
-`/admin link slave <token>` where `token` is the code received as reply to 
-the command in master channel.
+On the channel to be linked against `master`, a.k.a. `slave`, execute: `/admin link slave <token>` where `token` is the code received as reply to the command in master channel.
 
 Also, as per general usage (copied from [Readme.md](README.md) ):
 
@@ -42,7 +28,7 @@ Also, as per general usage (copied from [Readme.md](README.md) ):
 - `/quote add username text` to add a quote for given username with the following text as message
 - `/quote username` to retrieve a random quote for that username.
 - `/comic list` to list all knwon comic strips
-- `/comic <comic>` to retrieve <comic> strip for today
+- `/comic <comic>` to retrieve `comic` strip for today
 - `/comic all` to retrieve all of today's comic strips
 - `@all` to ping all usernames for users in a channel
 - `@all++` to give karma to all usernames in a channel
@@ -93,9 +79,6 @@ Bot allows to setup alias, so when karma is given to a word, it will instead add
 
 - `/quote del id` to remove a specific quote id from database
 
-
 ## Donations
 
-The bot runs on my hardware which involves (HW, power, internet, etc), if
-you wish to collaborate, please, use <https://www.paypal.me/iranzop> for
-your donation.
+The bot runs on my hardware which involves (HW, power, internet, etc), if you wish to collaborate, please, use <https://www.paypal.me/iranzop> for your donation.
