@@ -318,22 +318,32 @@ def comicfromurl(name):
     for row in cur:
         (url, imgxpath, txtxpath) = row
 
-    items = ['year', 'month', 'day']
-    for item in items:
-        url = url.replace('#%s#' % item, '%02d')
-        if item == 'year':
-            url = url % year
-        elif item == 'month':
-            url = url % month
-        elif item == 'day':
-            url = url % day
+    while '#year#' in url or '#month#' in url or '#day#' in url:
+        items = ['year', 'month', 'day']
+        for item in items:
+            if item in url:
+                url = url.replace('#%s#' % item, '%02d', 1)
+                if item == 'year':
+                    url = url % year
+                elif item == 'month':
+                    url = url % month
+                elif item == 'day':
+                    url = url % day
 
     try:
         page = requests.get(url)
         if url == page.url:
             tree = html.fromstring(page.content)
-            imgsrc = tree.xpath('%s' % imgxpath)[0]
-            imgtxt = tree.xpath('%s' % txtxpath)[0]
+            if imgxpath != 'False':
+                imgsrc = tree.xpath('%s' % imgxpath)[0]
+            else:
+                imgsrc = url
+
+            if txtxpath != 'False':
+                imgtxt = tree.xpath('%s' % txtxpath)[0]
+            else:
+                imgtxt = "%s: %s/%s/%s" % (name, year, month, day)
+
             if imgsrc[0] == "/":
                 # imgsrc is relative, prepend url
                 parsed_uri = urlparse(url)
