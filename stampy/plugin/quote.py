@@ -31,7 +31,7 @@ def run(message):  # do not edit this line
     """
     text = stampy.stampy.getmsgdetail(message)["text"]
     if text:
-        if text.split()[0].lower() == "/quote":
+        if text.split()[0].lower()[0:6] == "/quote":
             quotecommands(message)
     return
 

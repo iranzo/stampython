@@ -31,11 +31,11 @@ def run(message):  # do not edit this line
     """
     text = stampy.stampy.getmsgdetail(message)["text"]
     if text:
-        if text.split()[0].lower() == "/config":
+        if text.split()[0].lower()[0:7] == "/config":
             configcommands(message)
-        elif text.split()[0].lower() == "/gconfig":
+        elif text.split()[0].lower()[0:8] == "/gconfig":
             configcommands(message)
-        elif text.split()[0].lower() == "/lconfig":
+        elif text.split()[0].lower()[0:8] == "/lconfig":
             configcommands(message)
     return
 

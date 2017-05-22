@@ -564,8 +564,9 @@ def process(messages):
         global plugtriggers
 
         msgdetail = getmsgdetail(message)
+        botname = getme()['username']
         try:
-            command = msgdetail["text"].split()[0].lower()
+            command = msgdetail["text"].split()[0].lower().replace('@%s' % botname, '')
             texto = msgdetail["text"].lower()
             date = msgdetail["datefor"]
         except:

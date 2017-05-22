@@ -34,7 +34,7 @@ def run(message):  # do not edit this line
     logger.debug(msg=_("Processing plugin: Code: %s") % __file__)
     text = stampy.stampy.getmsgdetail(message)["text"]
     if text:
-        if text.split()[0].lower() == "/alias":
+        if text.split()[0].lower()[0:6] == "/alias":
             aliascommands(message)
     return
 

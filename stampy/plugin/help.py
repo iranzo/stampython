@@ -30,7 +30,7 @@ def run(message):  # do not edit this line
     """
     text = stampy.stampy.getmsgdetail(message)["text"]
     if text:
-        if text.split()[0].lower() == "/help":
+        if text.split()[0].lower()[0:5] == "/help":
             helpcommands(message=message)
     return
 

@@ -37,7 +37,7 @@ def run(message):  # do not edit this line
     code = None
     text = stampy.stampy.getmsgdetail(message)["text"]
     if text:
-        if text.split()[0].lower() == "/autok":
+        if text.split()[0].lower()[0:6] == "/autok":
             code = True
             autokcommands(message)
         autokarmawords(message)

@@ -58,10 +58,9 @@ def run(message):  # do not edit this line
                     memberid=msgdetail["chat_id"])
 
     if text:
-        if text.split()[0].lower() == "/stats":
+        if text.split()[0].lower()[0:6] == "/stats":
             statscommands(message)
-
-        if text.split()[0].lower() == "/getout":
+        elif text.split()[0].lower()[0:7] == "/getout":
             getoutcommands(message)
 
     if "@all" in text:

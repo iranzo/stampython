@@ -34,7 +34,7 @@ def run(message):  # do not edit this line
     """
     text = stampy.stampy.getmsgdetail(message)["text"]
     if text and stampy.stampy.is_owner_or_admin(message):
-        if text.split()[0].lower() == "/admin":
+        if text.split()[0].lower()[0:6] == "/admin":
             admincommands(message)
     return
 

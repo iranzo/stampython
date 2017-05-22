@@ -32,7 +32,7 @@ def run(message):  # do not edit this line
     """
     text = stampy.stampy.getmsgdetail(message)["text"]
     if text:
-        if text.split()[0].lower() == "/espp":
+        if text.split()[0].lower()[0:5] == "/espp":
             espp(message=message)
     return
 

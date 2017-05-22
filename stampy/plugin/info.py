@@ -32,7 +32,7 @@ def run(message):  # do not edit this line
     text = msgdetail["text"]
 
     if text:
-        if text.split()[0].lower() == "/info":
+        if text.split()[0].lower()[0:5] == "/info":
             info(message)
     return
 
