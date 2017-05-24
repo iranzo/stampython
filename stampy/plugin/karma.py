@@ -101,7 +101,7 @@ def karmacommands(message):
             except:
                 word = False
             if "=" in word:
-                key = word.split('=')[0]
+                key = stampy.plugin.alias.getalias(word=word.split('=')[0], gid=stampy.stampy.geteffectivegid(gid=chat_id))
                 value = texto.split('=')[1:][0]
                 text = _("Setting karma for `%s` to `%s`") % (key, value)
                 stampy.stampy.sendmessage(chat_id=chat_id, text=text,
