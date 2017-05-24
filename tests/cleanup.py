@@ -33,4 +33,3 @@ def clean():
     stampy.stampy.dbsql('DELETE from autokarma')
     stampy.stampy.dbsql('DELETE from stats')
     stampy.stampy.dbsql('DELETE from quote')
-    stampy.stampy.dbsql('UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME="quote"')

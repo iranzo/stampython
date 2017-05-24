@@ -5,5 +5,5 @@ requests
 lxml
 feedparser
 alembic
-sqlalchemy
+SQLAlchemy
 Babel
