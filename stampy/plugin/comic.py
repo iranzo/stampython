@@ -235,7 +235,7 @@ def comics(message=False, name=False, all=False):
                     gidstoping.append(chat_id)
                     comicsupdated.append(name)
         elif tipo == 'url':
-            # Comic is rss feed, process
+            # Comic is url, process
             if all:
                 datelast = datetime.datetime(year=1981, month=1, day=24)
             if (date - datelast).days >= 1:
@@ -332,29 +332,27 @@ def comicfromurl(name):
 
     try:
         page = requests.get(url)
-        if url == page.url:
-            tree = html.fromstring(page.content)
-            if imgxpath != 'False':
-                imgsrc = tree.xpath('%s' % imgxpath)[0]
-            else:
-                imgsrc = url
-
-            if txtxpath != 'False':
-                imgtxt = tree.xpath('%s' % txtxpath)[0]
-            else:
-                imgtxt = "%s: %s/%s/%s" % (name, year, month, day)
-
-            if imgsrc[0] == "/":
-                # imgsrc is relative, prepend url
-                parsed_uri = urlparse(url)
-                domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
-                imgsrc = domain + imgsrc
-        else:
-            imgtxt = False
-            imgsrc = False
 
     except:
         imgtxt = False
         imgsrc = False
+
+    if url == page.url:
+        tree = html.fromstring(page.content)
+        if imgxpath != 'False':
+            imgsrc = tree.xpath('%s' % imgxpath)[0]
+        else:
+            imgsrc = url
+
+        if txtxpath != 'False':
+            imgtxt = tree.xpath('%s' % txtxpath)[0]
+        else:
+            imgtxt = "%s: %s/%s/%s" % (name, year, month, day)
+
+        if imgsrc[0] == "/":
+            # imgsrc is relative, prepend url
+            parsed_uri = urlparse(url)
+            domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
+            imgsrc = domain + imgsrc
 
     yield imgtxt, imgsrc, url
