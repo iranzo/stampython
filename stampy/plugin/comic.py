@@ -35,7 +35,7 @@ def init():
     """
     botname = stampy.stampy.getme()['username']
     if botname == 'redken_bot':
-        sched.add_job(comics, 'interval', id='comic', hours=1,
+        sched.add_job(comics, 'interval', id='comic', minutes=30,
                       replace_existing=True, misfire_grace_time=120)
 
     triggers = ["^/comic"]
