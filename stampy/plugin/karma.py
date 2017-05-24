@@ -220,7 +220,7 @@ def getkarma(word, gid=0):
 
     try:
         # Get value from SQL query
-        value = value[1]
+        value = int(value[1])
 
     except:
         # Value didn't exist before, return 0
