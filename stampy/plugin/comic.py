@@ -290,8 +290,11 @@ def comicfromrss(url):
 
     for item in tira:
         url = item['link']
-        tree = html.fromstring(item['summary'])
-        imgsrc = tree.xpath('//img/@src')[0]
+        try:
+            tree = html.fromstring(item['summary'])
+            imgsrc = tree.xpath('//img/@src')[0]
+        except:
+            imgsrc = item['media_content'][0]['url']
         imgtxt = item['title_detail']['value']
         yield imgtxt, imgsrc, url
     return
