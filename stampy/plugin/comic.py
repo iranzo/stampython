@@ -224,12 +224,21 @@ def comics(message=False, name=False, all=False):
             # Last checked comic was more than 1 day ago
             logger.debug(msg=_("Comic: %s, last: %s, now: %s, url: %s") % (name, datelast, date, url))
 
-            if tipo == "rss":
+            if tipo == 'rss':
                 # Comic is rss feed, process
                 comic = comicfromrss(url=url)
             elif tipo == 'url':
                 # Comic is URL based
                 comic = comicfromurl(name=name)
+            elif tipo == 'rssurl':
+                # Comic uses RSS feed to link to posts containing images
+                # grab URL via RSS
+
+                txt, img, urlpage = comicfromrss(url)
+
+                # Process URL with xpaths
+                comic = comicfromurl(name=name, forceurl=urlpage)
+
             else:
                 comic = (False, False, False)
 
@@ -294,13 +303,16 @@ def comicfromrss(url):
             tree = html.fromstring(item['summary'])
             imgsrc = tree.xpath('//img/@src')[0]
         except:
-            imgsrc = item['media_content'][0]['url']
+            try:
+                imgsrc = item['media_content'][0]['url']
+            except:
+                imgsrc = False
         imgtxt = item['title_detail']['value']
 
     return imgtxt, imgsrc, url
 
 
-def comicfromurl(name):
+def comicfromurl(name, forceurl=False):
     """
     Returns title, img and post url
     :param name: name of comic to process
@@ -320,6 +332,10 @@ def comicfromurl(name):
 
     for row in cur:
         (url, imgxpath, txtxpath) = row
+
+    if forceurl:
+        # If we pass url via parameters, force use that one
+        url = forceurl
 
     while '#year#' in url or '#month#' in url or '#day#' in url:
         items = ['year', 'month', 'day']
@@ -358,10 +374,14 @@ def comicfromurl(name):
         else:
             imgtxt = "%s: %s/%s/%s" % (name, year, month, day)
 
-        if imgsrc and imgsrc[0] == "/":
-            # imgsrc is relative, prepend url
-            parsed_uri = urlparse(url)
-            domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
-            imgsrc = domain + imgsrc
+        if imgsrc:
+            if imgsrc[0:2] == "//":
+                imgsrc = 'http:' + imgsrc
+
+            elif imgsrc[0] == "/":
+                # imgsrc is relative, prepend url
+                parsed_uri = urlparse(url)
+                domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
+                imgsrc = domain + imgsrc
 
     return imgtxt, imgsrc, url
