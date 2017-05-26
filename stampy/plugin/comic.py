@@ -383,5 +383,9 @@ def comicfromurl(name, forceurl=False):
                 parsed_uri = urlparse(url)
                 domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
                 imgsrc = domain + imgsrc
+    else:
+        imgtxt = False
+        imgsrc = False
+        url = False
 
     return imgtxt, imgsrc, url
