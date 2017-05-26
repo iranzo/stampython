@@ -22,6 +22,7 @@ import string
 import sys
 import urllib
 import traceback
+import random
 from time import sleep
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -157,7 +158,7 @@ def dbsql(sql=False):
                 exc_info = sys.exc_info()
                 traceback.print_exception(*exc_info)
                 worked = False
-                sleep(2)
+                sleep(random.randint(0,10))
         else:
             attempt = 10
 
@@ -235,6 +236,14 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
             for case in Switch(result['description']):
                 if case('Bad Request: message text is empty'):
                     # Message is empty, no need to resend
+                    attempt = 61
+                    break
+                if case("Forbidden: bot can't initiate conversation with a user"):
+                    # Bot hasn't been authorized by user, cancelling
+                    attempt = 61
+                    break
+                if case('Bad Request: reply message not found'):
+                    # Original reply has been deleted
                     attempt = 61
                     break
 
