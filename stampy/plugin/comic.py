@@ -343,16 +343,22 @@ def comicfromurl(name):
     if url == page.url:
         tree = html.fromstring(page.content)
         if imgxpath and imgxpath != 'False':
-            imgsrc = tree.xpath('%s' % imgxpath)[0]
+            try:
+                imgsrc = tree.xpath('%s' % imgxpath)[0]
+            except:
+                imgsrc = False
         else:
             imgsrc = url
 
         if txtxpath and txtxpath != 'False':
-            imgtxt = tree.xpath('%s' % txtxpath)[0]
+            try:
+                imgtxt = tree.xpath('%s' % txtxpath)[0]
+            except:
+                imgtxt = False
         else:
             imgtxt = "%s: %s/%s/%s" % (name, year, month, day)
 
-        if imgsrc[0] == "/":
+        if imgsrc and imgsrc[0] == "/":
             # imgsrc is relative, prepend url
             parsed_uri = urlparse(url)
             domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)

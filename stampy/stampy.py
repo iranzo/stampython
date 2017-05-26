@@ -25,6 +25,7 @@ import traceback
 import urllib
 from time import sleep
 
+import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from i18n import translate
@@ -428,23 +429,36 @@ def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
         return False
 
     url = "%s%s/sendPhoto" % (plugin.config.config(key='url'), plugin.config.config(key='token'))
-    message = "%s?chat_id=%s" % (url, chat_id)
-    message = "%s&photo=%s" % (message, image)
-    
+    payload = {'chat_id': chat_id}
+
     if reply_to_message_id:
-        message += "&reply_to_message_id=%s" % reply_to_message_id
+        payload['reply_to_message_id'] = reply_to_message_id
     if text:
-        message += "&caption=%s" % urllib.quote_plus(text.encode('utf-8'))
+        payload['caption'] = text.encode('utf-8')
+
     logger.debug(msg=_("Sending image: %s") % text)
 
-    try:
-        sent = {"message": json.load(urllib.urlopen(message))['result']}
-    except:
-        logger.debug(msg=_("Failure sending image: %s") % image)
-        sent = False
+    # Download image first to later send it
+    rawimage = requests.get(image, stream=True)
+    sent = False
+
+    if rawimage.status_code == 200:
+        rawimage.raw.decode_content = True
+
+        # Send image
+        files = {'photo': rawimage.raw}
+
+        try:
+            sent = requests.post(url, files=files, data=payload)
+        except:
+            logger.debug(msg=_("Failure sending image: %s") % image)
+            sent = False
+    else:
+        logger.debug(msg=_("Failure downloading image: %s") % image)
 
     # Check if there's something to forward and do it
     plugin.forward.forwardmessage(sent)
+
     return sent
 
 
