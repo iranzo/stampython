@@ -17,12 +17,12 @@ import datetime
 import json
 import logging
 import optparse
+import random
 import sqlite3 as lite
 import string
 import sys
-import urllib
 import traceback
-import random
+import urllib
 from time import sleep
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -302,8 +302,7 @@ def getme():
     try:
         result = json.load(urllib.urlopen(message))['result']
     except:
-        result = {}
-        result['username'] = 'stampy'
+        result = {'username': 'stampy'}
 
     logger.info(msg=_("Getting bot details and returning: %s") % result)
     return result
@@ -424,9 +423,14 @@ def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
     """
 
     logger = logging.getLogger(__name__)
+
+    if not image:
+        return False
+
     url = "%s%s/sendPhoto" % (plugin.config.config(key='url'), plugin.config.config(key='token'))
     message = "%s?chat_id=%s" % (url, chat_id)
     message = "%s&photo=%s" % (message, image)
+    
     if reply_to_message_id:
         message += "&reply_to_message_id=%s" % reply_to_message_id
     if text:
@@ -436,11 +440,12 @@ def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
     try:
         sent = {"message": json.load(urllib.urlopen(message))['result']}
     except:
+        logger.debug(msg=_("Failure sending image: %s") % image)
         sent = False
 
     # Check if there's something to forward and do it
     plugin.forward.forwardmessage(sent)
-    return
+    return sent
 
 
 def replace_all(text, dictionary):

@@ -6,9 +6,9 @@
 
 import datetime
 import logging
+from urlparse import urlparse
 
 import dateutil.parser
-from urlparse import urlparse
 import feedparser
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -204,53 +204,49 @@ def comics(message=False, name=False, all=False):
             chat_id = msgdetail["chat_id"]
         else:
             chat_id = channelgid
-        logger.debug(msg=_("Processing row in comics: %s:%s:%s:%s:%s") % (name, tipo, channelgid, lastchecked, url))
-        try:
-            # Parse date or if in error, use today
-            datelast = dateutil.parser.parse(lastchecked)
 
-            # Force checking if valid date
-            day = datelast.day
-            month = datelast.month
-            year = datelast.year
-            datelast = datetime.datetime(year=year, month=month, day=day)
-        except:
+        if all:
             datelast = datetime.datetime(year=1981, month=1, day=24)
+        else:
+            try:
+                # Parse date or if in error, use today
+                datelast = dateutil.parser.parse(lastchecked)
 
-        logger.debug(msg=_("Comic: %s, last: %s, now: %s") % (name, datelast, date))
-        if tipo == "rss":
-            # Comic is rss feed, process
-            if all:
+                # Force checking if valid date
+                day = datelast.day
+                month = datelast.month
+                year = datelast.year
+                datelast = datetime.datetime(year=year, month=month, day=day)
+            except:
                 datelast = datetime.datetime(year=1981, month=1, day=24)
-            if (date - datelast).days >= 1:
-                # Last checked comic was more than 1 day ago
-                for comic in comicfromrss(url=url):
-                    title = comic[0]
-                    img = comic[1]
-                    url = comic[2]
-                    imgtxt = title + "\n" + url + " - @redken_strips"
-                    stampy.stampy.sendimage(chat_id=chat_id, image=img,
-                                            text=imgtxt,
-                                            reply_to_message_id=message_id)
-                    gidstoping.append(chat_id)
-                    comicsupdated.append(name)
-        elif tipo == 'url':
-            # Comic is url, process
-            if all:
-                datelast = datetime.datetime(year=1981, month=1, day=24)
-            if (date - datelast).days >= 1:
-                # Last checked comic was more than 1 day ago
-                for comic in comicfromurl(name=name):
-                    title = comic[0]
-                    img = comic[1]
-                    url = comic[2]
-                    if title and img:
-                        imgtxt = title + "\n" + url + " - @redken_strips"
-                        stampy.stampy.sendimage(chat_id=chat_id, image=img,
-                                                text=imgtxt,
-                                                reply_to_message_id=message_id)
-                        gidstoping.append(chat_id)
-                        comicsupdated.append(name)
+
+        if (date - datelast).days >= 1:
+            # Last checked comic was more than 1 day ago
+            logger.debug(msg=_("Comic: %s, last: %s, now: %s, url: %s") % (name, datelast, date, url))
+
+            if tipo == "rss":
+                # Comic is rss feed, process
+                comic = comicfromrss(url=url)
+            elif tipo == 'url':
+                # Comic is URL based
+                comic = comicfromurl(name=name)
+            else:
+                comic = (False, False, False)
+
+            title = comic[0]
+            img = comic[1]
+            url = comic[2]
+
+            imgtxt = "%s\n%s - @redken_strips" % (title, url)
+
+            try:
+                code = stampy.stampy.sendimage(chat_id=chat_id, image=img, text=imgtxt, reply_to_message_id=message_id)
+            except:
+                code = False
+
+            if code:
+                gidstoping.append(chat_id)
+                comicsupdated.append(name)
 
     # We were invoked in cron job, not updating database of last pushed comic
     #  strips
@@ -288,6 +284,10 @@ def comicfromrss(url):
 
     logger.debug(msg=_("# of Comics for today: %s") % len(tira))
 
+    imgtxt = False
+    imgsrc = False
+    url = False
+
     for item in tira:
         url = item['link']
         try:
@@ -296,8 +296,8 @@ def comicfromrss(url):
         except:
             imgsrc = item['media_content'][0]['url']
         imgtxt = item['title_detail']['value']
-        yield imgtxt, imgsrc, url
-    return
+
+    return imgtxt, imgsrc, url
 
 
 def comicfromurl(name):
@@ -342,12 +342,12 @@ def comicfromurl(name):
 
     if url == page.url:
         tree = html.fromstring(page.content)
-        if imgxpath != 'False':
+        if imgxpath and imgxpath != 'False':
             imgsrc = tree.xpath('%s' % imgxpath)[0]
         else:
             imgsrc = url
 
-        if txtxpath != 'False':
+        if txtxpath and txtxpath != 'False':
             imgtxt = tree.xpath('%s' % txtxpath)[0]
         else:
             imgtxt = "%s: %s/%s/%s" % (name, year, month, day)
@@ -358,4 +358,4 @@ def comicfromurl(name):
             domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
             imgsrc = domain + imgsrc
 
-    yield imgtxt, imgsrc, url
+    return imgtxt, imgsrc, url

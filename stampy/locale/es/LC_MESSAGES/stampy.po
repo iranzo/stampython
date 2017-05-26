@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-05-16 12:52+0200\n"
-"PO-Revision-Date: 2017-05-16 12:53+0200\n"
+"POT-Creation-Date: 2017-05-26 13:00+0200\n"
+"PO-Revision-Date: 2017-05-26 13:00+0200\n"
 "Last-Translator: Pablo Iranzo Gómez <Pablo.Iranzo@gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -21,12 +21,12 @@ msgstr ""
 
 #: stampy/plugins.py:41
 #, python-format
-msgid "Plugging added: %s"
+msgid "Plugin added: %s"
 msgstr "Complemento añadido: %s"
 
 #: stampy/plugins.py:44
 #, python-format
-msgid "Plugging disabled: %s"
+msgid "Plugin disabled: %s"
 msgstr "Complemento deshabilitado: %s"
 
 #: stampy/plugins.py:70
@@ -39,86 +39,86 @@ msgstr "Procesando inicialización del complemento: %s"
 msgid "Plugin %s is triggered by %s"
 msgstr "Plugin %s se activa mediante %s"
 
-#: stampy/stampy.py:42
+#: stampy/stampy.py:43
 msgid "Stampy is a script for controlling Karma via Telegram.org bot api"
 msgstr ""
 "Stampy es un programa para control de karma mediante el api de robots de "
 "Telegram.org"
 
-#: stampy/stampy.py:47
+#: stampy/stampy.py:48
 msgid "API token for bot access to messages"
 msgstr "Clave para el API de telegram para acceder a los mensajes"
 
-#: stampy/stampy.py:49
+#: stampy/stampy.py:50
 msgid "database file for storing karma"
 msgstr "fichero de base de datos para almacenar el karma"
 
-#: stampy/stampy.py:52
+#: stampy/stampy.py:53
 msgid "Set verbosity level for messages while running/logging"
 msgstr "Establecer nivel de detalle de los mensajes durante la ejecución"
 
-#: stampy/stampy.py:56
+#: stampy/stampy.py:57
 msgid "Define URL for accessing bot API"
 msgstr "Definir la URL para acceder al API de robots"
 
-#: stampy/stampy.py:59
+#: stampy/stampy.py:60
 msgid "Define owner username"
 msgstr "Definir nombre de usuario para propietario"
 
-#: stampy/stampy.py:61
+#: stampy/stampy.py:62
 msgid "Run as daemon"
 msgstr "Ejecutar como demonio"
 
-#: stampy/stampy.py:112
+#: stampy/stampy.py:113
 msgid "Using alembic to upgrade/create database to expected revision"
 msgstr ""
 "Utilizando alembic para actualizar/crear la base de datos con la revisión "
 "esperada"
 
-#: stampy/stampy.py:139
+#: stampy/stampy.py:140
 msgid "Error accessing database, creating..."
 msgstr "Error accediendo a la base de datos, creándola..."
 
-#: stampy/stampy.py:165
+#: stampy/stampy.py:166
 #, python-format
 msgid "Error # %s on SQL execution: %s"
 msgstr "Error # %s en la ejecución SQL: %s"
 
-#: stampy/stampy.py:231
+#: stampy/stampy.py:232
 #, python-format
 msgid "ERROR (%s) sending message: Code: %s : Text: %s"
 msgstr "ERROR (%s) enviando el mensaje: Código: %s : Texto: %s"
 
-#: stampy/stampy.py:236
+#: stampy/stampy.py:252
 #, python-format
 msgid "PERM ERROR sending message: Code: %s : Text: %s"
 msgstr "ERROR PERMANENTE al enviar el mensaje: Código: %s : Texto: %s"
 
-#: stampy/stampy.py:248
+#: stampy/stampy.py:264
 #, python-format
 msgid "Sending message: Code: %s : Text: %s"
 msgstr "Enviando mensaje: Código: %s : Texto: %s"
 
-#: stampy/stampy.py:272
+#: stampy/stampy.py:288
 #, python-format
 msgid "Getting updates and returning: %s"
 msgstr "Obteniendo actualizaciones y devolviendo: %s"
 
-#: stampy/stampy.py:292
+#: stampy/stampy.py:308
 #, python-format
 msgid "Getting bot details and returning: %s"
 msgstr "Obteniendo Detalles del bot y devolviendo: %s"
 
-#: stampy/stampy.py:311
+#: stampy/stampy.py:327
 #, python-format
 msgid "Clearing messages at %s"
 msgstr "Borrando mensajes en %s"
 
-#: stampy/stampy.py:346
+#: stampy/stampy.py:362
 msgid "Use `/quit` to exit daemon mode\n"
 msgstr "Utilice `/quit´ para salir del modo demonio\n"
 
-#: stampy/stampy.py:347
+#: stampy/stampy.py:363
 msgid ""
 "Learn more about this bot in [https://github.com/iranzo/stampython] (https://"
 "github.com/iranzo/stampython)"
@@ -126,7 +126,7 @@ msgstr ""
 "Aprenda más acerca de este robot in [https://github.com/iranzo/stampython] "
 "(https://github.com/iranzo/stampython)"
 
-#: stampy/stampy.py:350 stampy/stampy.py:354
+#: stampy/stampy.py:366 stampy/stampy.py:370
 msgid ""
 "This bot does not use start or stop commands, it automatically checks for "
 "karma operands"
@@ -134,108 +134,113 @@ msgstr ""
 "Este robot no utiliza comandos de arranque/parada, comprueba automáticamente "
 "los mensajes en busca de comandos de karma."
 
-#: stampy/plugin/help.py:77 stampy/stampy.py:370
+#: stampy/plugin/help.py:88 stampy/stampy.py:386
 #, python-format
 msgid "Command: %s"
 msgstr "Comando: %s"
 
-#: stampy/stampy.py:390
+#: stampy/stampy.py:406
 #, python-format
 msgid "Sending sticker: %s"
 msgstr "Enviando pegatina: %s"
 
-#: stampy/stampy.py:418
+#: stampy/stampy.py:434
 #, python-format
 msgid "Sending image: %s"
 msgstr "Enviando imagen: %s"
 
-#: stampy/stampy.py:582
+#: stampy/stampy.py:439
+#, python-format
+msgid "Failure sending image: %s"
+msgstr "Fallo enviando imagen: %s"
+
+#: stampy/stampy.py:605
 #, python-format
 msgid "Processing plugin: %s"
 msgstr "Procesando complemento: %s"
 
-#: stampy/stampy.py:584
+#: stampy/stampy.py:607
 #, python-format
 msgid "Plugin return code: %s"
 msgstr "Código de retorno del complemento: %s"
 
-#: stampy/stampy.py:589
+#: stampy/stampy.py:612
 #, python-format
 msgid "New triggers for %s: %s"
 msgstr "Nuevos disparadores para %s: %s"
 
-#: stampy/stampy.py:596
+#: stampy/stampy.py:619
 #, python-format
 msgid "TEXT: %s : %s : %s"
 msgstr "TEXTO: %s : %s : %s"
 
-#: stampy/stampy.py:600
+#: stampy/stampy.py:623
 #, python-format
 msgid "Last processed message at: %s"
 msgstr "Último mensaje procesado en: %s"
 
-#: stampy/stampy.py:602
+#: stampy/stampy.py:625
 #, python-format
 msgid "Last processed update_id : %s"
 msgstr "Última actualización procesada: %s"
 
-#: stampy/stampy.py:604
+#: stampy/stampy.py:627
 #, python-format
 msgid "Number of messages in this batch: %s"
 msgstr "Número de mensajes en este lote: %s"
 
-#: stampy/stampy.py:635
+#: stampy/stampy.py:658
 #, python-format
 msgid "Final deduplicated list: %s"
 msgstr "Lista final deduplicada: %s"
 
-#: stampy/stampy.py:675
+#: stampy/stampy.py:698
 msgid "We're admin of private chats"
 msgstr "Somos admin de chats privados"
 
-#: stampy/stampy.py:680
+#: stampy/stampy.py:703
 msgid "We're not owner of public chats"
 msgstr "No somos propietarios de chats publicos"
 
-#: stampy/stampy.py:685
+#: stampy/stampy.py:708
 msgid "We're admin of public chat"
 msgstr "Somos administrador de chat público"
 
-#: stampy/stampy.py:690
+#: stampy/stampy.py:713
 msgid "We're admin because no admin listed on public chat"
 msgstr ""
 "Somos administradores porque no hay administrador definido en el chat público"
 
-#: stampy/stampy.py:751
+#: stampy/stampy.py:774
 #, python-format
 msgid "Logging level set to %s"
 msgstr "Nivel de registro establecido a %s"
 
-#: stampy/stampy.py:819
+#: stampy/stampy.py:842
 msgid "Started execution"
 msgstr "Ejecución iniciada"
 
-#: stampy/stampy.py:830
+#: stampy/stampy.py:853
 msgid ""
 "Token required for operation, please check https://core.telegram.org/bots"
 msgstr ""
 "Es necesaria una clave/token para operar, por favor, revise https://core."
 "telegram.org/bots"
 
-#: stampy/stampy.py:849
+#: stampy/stampy.py:872
 #, python-format
 msgid "Plug triggers reported: %s"
 msgstr "Complementos devueltos: %s"
 
-#: stampy/stampy.py:854
+#: stampy/stampy.py:877
 msgid "Running in daemon mode"
 msgstr "Ejecutando en modo demonio"
 
-#: stampy/stampy.py:859
+#: stampy/stampy.py:882
 msgid "Running in one-shoot mode"
 msgstr "Ejecución única"
 
-#: stampy/stampy.py:862
+#: stampy/stampy.py:885
 msgid "Stopped execution"
 msgstr "Ejecución detenida"
 
@@ -267,7 +272,7 @@ msgstr "Use `/admin linik show` para listar los canales enlazados\n"
 #: stampy/plugin/admin.py:73 stampy/plugin/alias.py:72
 #: stampy/plugin/autokarma.py:78 stampy/plugin/comic.py:93
 #: stampy/plugin/config.py:87 stampy/plugin/espp.py:66
-#: stampy/plugin/forward.py:149 stampy/plugin/help.py:64
+#: stampy/plugin/forward.py:150 stampy/plugin/help.py:65
 #, python-format
 msgid "Command: %s by %s"
 msgstr "Comando: %s por %s"
@@ -365,7 +370,7 @@ msgstr ""
 "\n"
 
 #: stampy/plugin/alias.py:74 stampy/plugin/autokarma.py:81
-#: stampy/plugin/comic.py:96 stampy/plugin/forward.py:151
+#: stampy/plugin/comic.py:96 stampy/plugin/forward.py:152
 #, python-format
 msgid "Command: %s by Owner: %s"
 msgstr "Comando: %s por propietario: %s"
@@ -497,22 +502,17 @@ msgstr "Comics definidos:\n"
 msgid "Returning comics"
 msgstr "Devolviendo comics"
 
-#: stampy/plugin/comic.py:207
+#: stampy/plugin/comic.py:225
 #, python-format
-msgid "Processing row in comics: %s:%s:%s:%s:%s"
-msgstr "Procesando línea en comics:  %s:%s:%s:%s:%s"
+msgid "Comic: %s, last: %s, now: %s, url: %s"
+msgstr "Comic: %s, último: %s, actual: %s, url: %s"
 
-#: stampy/plugin/comic.py:220
-#, python-format
-msgid "Comic: %s, last: %s, now: %s"
-msgstr "Comic: %s, último: %s, actual: %s"
-
-#: stampy/plugin/comic.py:263
+#: stampy/plugin/comic.py:259
 #, python-format
 msgid "Updating last checked as per %s"
 msgstr "Actualizando última comprobación a %s"
 
-#: stampy/plugin/comic.py:289
+#: stampy/plugin/comic.py:285
 #, python-format
 msgid "# of Comics for today: %s"
 msgstr "Número de viñetas hoy: %s"
@@ -689,45 +689,45 @@ msgstr ""
 "Use `/forward delete <origen>=<destino>` para eliminar un reenvío\n"
 "\n"
 
-#: stampy/plugin/forward.py:88
+#: stampy/plugin/forward.py:89
 #, python-format
 msgid "ERROR (%s) forwarding message: Code: %s : Text: %s"
 msgstr "ERROR (%s) al reenviar el mensaje: Código: %s : Texto: %s"
 
-#: stampy/plugin/forward.py:100
+#: stampy/plugin/forward.py:101
 #, python-format
 msgid "PERM ERROR forwarding message: Code: %s : Text: %s"
 msgstr "ERROR PERMANENTE al reenviar el mensaje: Código: %s : Texto: %s"
 
-#: stampy/plugin/forward.py:102
+#: stampy/plugin/forward.py:103
 #, python-format
 msgid "forwarding message: Code: %s : Text: %s"
 msgstr "Reenviando mensaje: Código: %s : Texto: %s"
 
-#: stampy/plugin/forward.py:130
+#: stampy/plugin/forward.py:131
 msgid "Forward plugin not enabled, skipping"
 msgstr "Complemento de reenvío no habilitado, saltando"
 
-#: stampy/plugin/forward.py:174
+#: stampy/plugin/forward.py:175
 #, python-format
 msgid "Deleting forward for `%s -> %s`"
 msgstr "Borrando reenvio de \"%s -> %s`"
 
-#: stampy/plugin/forward.py:186
+#: stampy/plugin/forward.py:187
 #, python-format
 msgid "Setting forward for `%s` to `%s`"
 msgstr "Estableciendo reenvío de `%s` a `%s`"
 
-#: stampy/plugin/forward.py:232
+#: stampy/plugin/forward.py:233
 #, python-format
 msgid "%s has a forward %s"
 msgstr "%s tiene una redirección %s"
 
-#: stampy/plugin/forward.py:237
+#: stampy/plugin/forward.py:238
 msgid "Defined forwards:\n"
 msgstr "Reenvíos definidos:\n"
 
-#: stampy/plugin/forward.py:254
+#: stampy/plugin/forward.py:255
 #, python-format
 msgid "createforward: circular reference %s=%s"
 msgstr "createforward: referencia circular %s=%s"
@@ -747,6 +747,16 @@ msgid ""
 msgstr ""
 "Lea más información y anuncios en https://t.me/redkennews\n"
 "\n"
+
+#: stampy/plugin/help.py:69
+#, python-format
+msgid ""
+"Message sent privately, open a chat with @%s and say hi to receive private "
+"messages or read https://github.com/iranzo/stampython/blob/master/README.md\n"
+msgstr ""
+"Mensaje enviado de forma privada, abra un chat con @%s y diga hola para "
+"recibir mensajes privados o lea https://github.com/iranzo/stampython/blob/"
+"master/README.md\n"
 
 #: stampy/plugin/highlight.py:57
 msgid ""
@@ -917,78 +927,78 @@ msgstr ""
 msgid "Setting karma for `%s` to `%s`"
 msgstr "Estableciendo karma de `%s` a `%s`"
 
-#: stampy/plugin/karma.py:150
+#: stampy/plugin/karma.py:153
 #, python-format
 msgid "`%s` has `%s` karma points."
 msgstr "`%s` tiene `%s` puntos de karma."
 
-#: stampy/plugin/karma.py:156
+#: stampy/plugin/karma.py:159
 msgid "Global rankings:\n"
 msgstr "Clasificaciones globales:\n"
 
-#: stampy/plugin/karma.py:160
+#: stampy/plugin/karma.py:163
 #, python-format
 msgid "Returning karma %s for word %s"
 msgstr "Devolviendo karma %s para la palabra %s"
 
-#: stampy/plugin/karma.py:184
+#: stampy/plugin/karma.py:187
 #, python-format
 msgid "Returning srank for word: %s"
 msgstr "Devolviendo srank para la palabra: %s"
 
-#: stampy/plugin/karma.py:200 stampy/plugin/karma.py:248
+#: stampy/plugin/karma.py:203 stampy/plugin/karma.py:251
 #, python-format
 msgid "Putting karma of %s to %s"
 msgstr "Poniendo karma de %s a %s"
 
-#: stampy/plugin/karma.py:225
+#: stampy/plugin/karma.py:228
 #, python-format
 msgid "Getting karma for %s: %s"
 msgstr "Obteniendo karma de %s: %s"
 
-#: stampy/plugin/karma.py:278
+#: stampy/plugin/karma.py:281
 #, python-format
 msgid "Sticker for %s karma points"
 msgstr "Pegatina por  %s puntos de karma"
 
-#: stampy/plugin/karma.py:330
+#: stampy/plugin/karma.py:333
 #, python-format
 msgid "Text to process: %s"
 msgstr "Texto a procesar: %s"
 
-#: stampy/plugin/karma.py:337
+#: stampy/plugin/karma.py:340
 msgid "Text has karma operators"
 msgstr "El texto tiene operadores de karma"
 
-#: stampy/plugin/karma.py:340
+#: stampy/plugin/karma.py:343
 #, python-format
 msgid "Processing word %s sent by id %s with username %s (%s %s)"
 msgstr ""
 "Procesando palabra %s enviada por id %s con nombre de usuario %s (%s %s)"
 
-#: stampy/plugin/karma.py:386
+#: stampy/plugin/karma.py:389
 #, python-format
 msgid "%s Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)"
 msgstr ""
 "%s Encontrado en %s a las %s con id %s (%s), enviada por id %s llamado %s "
 "(%s %s)"
 
-#: stampy/plugin/karma.py:392
+#: stampy/plugin/karma.py:395
 #, python-format
 msgid "`%s` now has `%s` karma points."
 msgstr "`%s` tiene ahora `%s` puntos de karma."
 
-#: stampy/plugin/karma.py:395
+#: stampy/plugin/karma.py:398
 #, python-format
 msgid "`%s` now has no Karma and has been garbage collected."
 msgstr "`%s` ahora no tiene Karma y ha sido eliminado."
 
-#: stampy/plugin/karma.py:430
+#: stampy/plugin/karma.py:433
 #, python-format
 msgid "Processing words for cleanup: %s"
 msgstr "Procesando palabras para limpieza: %s"
 
-#: stampy/plugin/karma.py:446
+#: stampy/plugin/karma.py:449
 #, python-format
 msgid "Word %s with %s inactivity days is going to be purged"
 msgstr "La palabra %s con %s días de inactividad va a ser eliminada"
@@ -1039,17 +1049,17 @@ msgstr "No se encontraron citas"
 msgid "createquote: %s=%s on %s for group %s"
 msgstr "createquote: %s=%s en %s para el grupo %s"
 
-#: stampy/plugin/stats.py:85
+#: stampy/plugin/stats.py:84
 #, python-format
 msgid "Someone with id %s left chat %s, cleaning up"
 msgstr "Alguien con el id %s abandonó el chat %s, limpiando"
 
-#: stampy/plugin/stats.py:104
+#: stampy/plugin/stats.py:103
 #, python-format
 msgid "Bot has left chat %s, cleaning up"
 msgstr "El bot ha salido del canal %s, limpiando"
 
-#: stampy/plugin/stats.py:129
+#: stampy/plugin/stats.py:128
 msgid ""
 "Use `@all` to ping all users in a channel as long as they have username "
 "defined in Telegram\n"
@@ -1059,7 +1069,7 @@ msgstr ""
 "nombre de usuario definido en Telegram\n"
 "\n"
 
-#: stampy/plugin/stats.py:131
+#: stampy/plugin/stats.py:130
 msgid ""
 "Use `/stats show <user|chat>` to get stats on last usage\n"
 "\n"
@@ -1067,7 +1077,7 @@ msgstr ""
 "Use `/stats show <usuario|chat>` para obtener estadísticas de uso\n"
 "\n"
 
-#: stampy/plugin/stats.py:132
+#: stampy/plugin/stats.py:131
 msgid ""
 "Use `/getout <chatid|here>` to have bot leave that chat or current one\n"
 "\n"
@@ -1076,60 +1086,60 @@ msgstr ""
 "especificado o el actual\n"
 "\n"
 
-#: stampy/plugin/stats.py:153
+#: stampy/plugin/stats.py:152
 #, python-format
 msgid "Owner Stat: %s by %s"
 msgstr "Estadísticas de propietario: %s por %s"
 
-#: stampy/plugin/stats.py:198
+#: stampy/plugin/stats.py:197
 #, python-format
 msgid "Owner getout: %s by %s"
 msgstr "Expulsión del propietario: %s por %s"
 
-#: stampy/plugin/stats.py:228
+#: stampy/plugin/stats.py:227
 msgid "Defined stats:\n"
 msgstr "Estadísticas definidas:\n"
 
-#: stampy/plugin/stats.py:230
+#: stampy/plugin/stats.py:229
 #, python-format
 msgid "Returning stats %s"
 msgstr "Devolviendo estadísticas %s"
 
-#: stampy/plugin/stats.py:286 stampy/plugin/stats.py:345
+#: stampy/plugin/stats.py:285 stampy/plugin/stats.py:344
 #, python-format
 msgid "values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid: %s"
 msgstr ""
 "valores: tipo: %s, id:%s, nombre:%s,  fecha:%s, numero:%s, memberid: %s"
 
-#: stampy/plugin/stats.py:292
+#: stampy/plugin/stats.py:291
 msgid "ERROR on updatestats"
 msgstr "ERROR al ejecutar updatestats"
 
-#: stampy/plugin/stats.py:351
+#: stampy/plugin/stats.py:350
 msgid "ERROR on remove_from_memberid"
 msgstr "ERROR en remove_from_memberid"
 
-#: stampy/plugin/stats.py:371
+#: stampy/plugin/stats.py:370
 #, python-format
 msgid "Chat id %s users %s"
 msgstr "Chat id %s usuarios %s"
 
-#: stampy/plugin/stats.py:390
+#: stampy/plugin/stats.py:389
 #, python-format
 msgid "Chat id %s left"
 msgstr "Chat id %s abandonado"
 
-#: stampy/plugin/stats.py:415
+#: stampy/plugin/stats.py:414
 #, python-format
 msgid "Processing chat_ids for cleanup: %s"
 msgstr "Procesando chat_ids para limpieza: %s"
 
-#: stampy/plugin/stats.py:427
+#: stampy/plugin/stats.py:426
 #, python-format
 msgid "CHAT ID %s with name %s with %s inactivity days is going to be purged"
 msgstr "El chat %s con nombre %s y %s días de inactividad va a ser eliminado"
 
-#: stampy/plugin/stats.py:431
+#: stampy/plugin/stats.py:430
 #, python-format
 msgid ""
 "Due to inactivity of more than %s days, this bot will exit the channel, "
@@ -1138,50 +1148,50 @@ msgstr ""
 "Debido a inactividad de más de %s días, este bot saldrá del canal, por "
 "favor, reañádalo en el futuro si es necesario"
 
-#: stampy/plugin/stats.py:459
+#: stampy/plugin/stats.py:458
 #, python-format
 msgid "The removed channel (%s) was master for others, electing new master: %s"
 msgstr ""
 "El canal eliminado (%s) era MAESTRO para otros, escogiendo a nuevo maestro: "
 "%s"
 
-#: stampy/plugin/stats.py:487 stampy/plugin/stats.py:580
+#: stampy/plugin/stats.py:486 stampy/plugin/stats.py:579
 #, python-format
 msgid "LINE for user %s and memberid: %s will be deleted"
 msgstr "LINEA para usuario %s con memberid: %s será eliminada"
 
-#: stampy/plugin/stats.py:505
+#: stampy/plugin/stats.py:504
 #, python-format
 msgid "Migrating chat id: %s to %s"
 msgstr "Migrando chat id %s a %s"
 
-#: stampy/plugin/stats.py:550
+#: stampy/plugin/stats.py:549
 #, python-format
 msgid "Processing userids for cleanup: %s"
 msgstr "Procesando userids para limpieza: %s"
 
-#: stampy/plugin/stats.py:563
+#: stampy/plugin/stats.py:562
 #, python-format
 msgid "USER ID %s with name %s with %s inactivity days is going to be purged"
 msgstr ""
 "El usuario %s con nombre %s y con %s días de inactividad va a ser eliminado"
 
-#: stampy/plugin/stats.py:646
+#: stampy/plugin/stats.py:645
 #, python-format
 msgid "values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid:%s"
 msgstr ""
 "valores: tipo: %s, id:%s, nombre:%s,  fecha:%s, numero:%s, memberid: %s"
 
-#: stampy/plugin/stats.py:667
+#: stampy/plugin/stats.py:666
 msgid "@All invoked"
 msgstr "@All invocado"
 
-#: stampy/plugin/stats.py:691
+#: stampy/plugin/stats.py:690
 #, python-format
 msgid "%s wanted to ping you: "
 msgstr "%s quiso mencionarle: "
 
-#: stampy/plugin/stats.py:711
+#: stampy/plugin/stats.py:710
 #, python-format
 msgid "Pinging chat %s: %s on %s"
 msgstr "Mencionando chat %s: %s en %s"
@@ -1199,7 +1209,7 @@ msgstr ""
 msgid "USD/%s rate \n"
 msgstr "Tasa de cambio USD/%s\n"
 
-#: stampy/plugin/welcome.py:49
+#: stampy/plugin/welcome.py:50
 msgid ""
 "As admin or owner define 'welcome' to the greeting text sent to new chat "
 "members. You can use $username to put long name in the text\n"
@@ -1210,10 +1220,16 @@ msgstr ""
 "reemplazarlo por el nombre del usuario en el texto\n"
 "\n"
 
-#: stampy/plugin/welcome.py:67
+#: stampy/plugin/welcome.py:91
 #, python-format
 msgid "New user in chat, sending greetings: %s"
 msgstr "Nuevo usuario en el chat, enviando saludos: %s"
+
+#~ msgid "Comic: %s, last: %s, now: %s"
+#~ msgstr "Comic: %s, último: %s, actual: %s"
+
+#~ msgid "Processing row in comics: %s:%s:%s:%s:%s"
+#~ msgstr "Procesando línea en comics:  %s:%s:%s:%s:%s"
 
 #~ msgid ""
 #~ "Use `/dilbert <date>` to get Dilbert's comic strip for date or today\n"

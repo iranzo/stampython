@@ -38,10 +38,10 @@ def getPlugins():
         if i and info:
             if i not in plugin.config.config(key='disabled_plugins',
                                              default=''):
-                logger.debug(msg=_("Plugging added: %s") % i)
+                logger.debug(msg=_("Plugin added: %s") % i)
                 plugins.append({"name": i, "info": info})
             else:
-                logger.debug(msg=_("Plugging disabled: %s") % i)
+                logger.debug(msg=_("Plugin disabled: %s") % i)
 
     return plugins
 
