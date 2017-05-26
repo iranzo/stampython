@@ -158,7 +158,7 @@ def dbsql(sql=False):
                 exc_info = sys.exc_info()
                 traceback.print_exception(*exc_info)
                 worked = False
-                sleep(random.randint(0,10))
+                sleep(random.randint(0, 10))
         else:
             attempt = 10
 
