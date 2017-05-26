@@ -1,3 +1,4 @@
+# coding=utf-8
 """Create comic entry for Davila in Faro de Vigo
 
 Revision ID: a5ed252d562f
@@ -12,8 +13,8 @@ down_revision = '495fea37afc5'
 branch_labels = None
 depends_on = None
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 from sqlalchemy.sql import table
 
 

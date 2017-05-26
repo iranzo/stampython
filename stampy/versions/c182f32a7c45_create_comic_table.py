@@ -1,3 +1,4 @@
+# coding=utf-8
 """Create comic table
 
 Revision ID: c182f32a7c45
@@ -12,8 +13,8 @@ down_revision = '7b1ba3bab31e'
 branch_labels = None
 depends_on = None
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 
 
 def upgrade():

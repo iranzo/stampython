@@ -8,9 +8,10 @@ import datetime
 import logging
 import time
 
-import stampy.stampy
 import stampy.plugin.config
+import stampy.stampy
 from stampy.i18n import translate
+
 _ = translate.ugettext
 
 

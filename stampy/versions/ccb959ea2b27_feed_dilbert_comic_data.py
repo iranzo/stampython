@@ -1,3 +1,4 @@
+# coding=utf-8
 """Feed Dilbert comic data
 
 Revision ID: ccb959ea2b27
@@ -12,8 +13,8 @@ down_revision = '83655b58898d'
 branch_labels = None
 depends_on = None
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 from sqlalchemy.sql import table
 
 

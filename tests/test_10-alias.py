@@ -9,7 +9,6 @@ import stampy.plugin.alias
 import stampy.plugin.karma
 import stampy.stampy
 
-
 logger = logging.getLogger(__name__)
 
 

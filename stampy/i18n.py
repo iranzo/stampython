@@ -4,8 +4,8 @@
 # Description: Library for i18n translations
 # Author: Pablo Iranzo Gomez (Pablo.Iranzo@gmail.com)
 
-import os
 import gettext
+import os
 
 localedir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'locale')
 translate = gettext.translation('stampy', localedir, fallback=True)

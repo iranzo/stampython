@@ -1,3 +1,4 @@
+# coding=utf-8
 """Feed Quico Jubilata comic data
 
 Revision ID: 214568dbb0b7
@@ -12,8 +13,8 @@ down_revision = 'ccb959ea2b27'
 branch_labels = None
 depends_on = None
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 from sqlalchemy.sql import table
 
 

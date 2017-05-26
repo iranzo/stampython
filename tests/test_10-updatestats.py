@@ -4,8 +4,8 @@
 from unittest import TestCase
 
 import cleanup
-import stampy.stampy
 import stampy.plugin.stats
+import stampy.stampy
 
 
 class TestStampy(TestCase):

@@ -5,6 +5,7 @@
 # Author: Pablo Iranzo Gomez (Pablo.Iranzo@gmail.com)
 
 import logging
+
 import stampy.stampy as stampy
 
 if __name__ == "__main__":

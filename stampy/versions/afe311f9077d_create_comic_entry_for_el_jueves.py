@@ -1,3 +1,4 @@
+# coding=utf-8
 """Create comic entry for El Jueves
 
 Revision ID: afe311f9077d

@@ -9,14 +9,14 @@ import json
 import logging
 import urllib
 
+from apscheduler.schedulers.background import BackgroundScheduler
 from prettytable import from_db_cursor
 
-import stampy.stampy
 import stampy.plugin.config
 import stampy.plugin.karma
-
-from apscheduler.schedulers.background import BackgroundScheduler
+import stampy.stampy
 from stampy.i18n import translate
+
 _ = translate.ugettext
 
 sched = BackgroundScheduler()

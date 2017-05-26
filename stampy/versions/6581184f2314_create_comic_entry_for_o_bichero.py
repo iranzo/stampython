@@ -1,3 +1,4 @@
+# coding=utf-8
 """Create comic entry for O bichero
 
 Revision ID: 6581184f2314

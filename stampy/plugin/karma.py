@@ -4,16 +4,17 @@
 # Description: Plugin for processing karma commands
 # Author: Pablo Iranzo Gomez (Pablo.Iranzo@gmail.com)
 
-import logging
 import datetime
+import logging
+
+from apscheduler.schedulers.background import BackgroundScheduler
 from prettytable import from_db_cursor
 
 import stampy.plugin.alias
-import stampy.stampy
 import stampy.plugin.config
-
-from apscheduler.schedulers.background import BackgroundScheduler
+import stampy.stampy
 from stampy.i18n import translate
+
 _ = translate.ugettext
 
 sched = BackgroundScheduler()

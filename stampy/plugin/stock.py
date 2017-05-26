@@ -8,13 +8,15 @@
 
 import json
 import logging
-import urllib2
-import requests
 import sys
+import urllib2
 
-import stampy.stampy
+import requests
+
 import stampy.plugin.config
+import stampy.stampy
 from stampy.i18n import translate
+
 _ = translate.ugettext
 
 

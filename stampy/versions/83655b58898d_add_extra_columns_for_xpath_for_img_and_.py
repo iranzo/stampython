@@ -1,3 +1,4 @@
+# coding=utf-8
 """Add extra columns for xpath for img and txt
 
 Revision ID: 83655b58898d
@@ -12,8 +13,8 @@ down_revision = '6581184f2314'
 branch_labels = None
 depends_on = None
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 
 
 def upgrade():

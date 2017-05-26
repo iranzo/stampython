@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 from distutils.core import setup
+
 from babel.messages import frontend as babel
 
 setup(

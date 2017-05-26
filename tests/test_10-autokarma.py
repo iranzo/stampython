@@ -3,8 +3,8 @@
 
 from unittest import TestCase
 
-import stampy.plugin.autokarma
 import cleanup
+import stampy.plugin.autokarma
 
 
 class TestStampy(TestCase):

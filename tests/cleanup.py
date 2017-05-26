@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import stampy.stampy
 import stampy.plugin.config
 import stampy.plugins
+import stampy.stampy
 
 # As we're not executing stampy.main, initialize the plugins available to
 # process karma

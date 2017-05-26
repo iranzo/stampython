@@ -8,13 +8,14 @@ import logging
 
 from prettytable import from_db_cursor
 
-import stampy.stampy
-import stampy.plugin.config
-import stampy.plugin.karma
 import stampy.plugin.alias
-import stampy.plugin.stats
+import stampy.plugin.config
 import stampy.plugin.forward
+import stampy.plugin.karma
+import stampy.plugin.stats
+import stampy.stampy
 from stampy.i18n import translate
+
 _ = translate.ugettext
 
 

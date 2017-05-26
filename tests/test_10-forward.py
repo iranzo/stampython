@@ -8,7 +8,6 @@ import cleanup
 import stampy.plugin.forward
 import stampy.stampy
 
-
 logger = logging.getLogger(__name__)
 
 

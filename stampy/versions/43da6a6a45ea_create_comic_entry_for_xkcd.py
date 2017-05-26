@@ -1,3 +1,4 @@
+# coding=utf-8
 """Create comic entry for xkcd
 
 Revision ID: 43da6a6a45ea

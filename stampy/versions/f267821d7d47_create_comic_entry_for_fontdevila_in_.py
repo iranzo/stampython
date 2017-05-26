@@ -1,3 +1,4 @@
+# coding=utf-8
 """Create comic entry for Fontdevila in eldiario.es
 
 Revision ID: f267821d7d47

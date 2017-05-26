@@ -5,10 +5,12 @@
 # Author: Pablo Iranzo Gomez (Pablo.Iranzo@gmail.com)
 
 import logging
-import stampy.stampy
+
 import stampy.plugin.config
 import stampy.plugin.karma
+import stampy.stampy
 from stampy.i18n import translate
+
 _ = translate.ugettext
 
 

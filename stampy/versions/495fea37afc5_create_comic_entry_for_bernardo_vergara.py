@@ -1,3 +1,4 @@
+# coding=utf-8
 """Create comic entry for Bernardo Vergara
 
 Revision ID: 495fea37afc5
@@ -12,8 +13,8 @@ down_revision = 'a224268bda6b'
 branch_labels = None
 depends_on = None
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 from sqlalchemy.sql import table
 
 

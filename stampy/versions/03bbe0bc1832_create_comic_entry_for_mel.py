@@ -1,3 +1,4 @@
+# coding=utf-8
 """Create comic entry for mel
 
 Revision ID: 03bbe0bc1832
@@ -12,8 +13,8 @@ down_revision = 'c182f32a7c45'
 branch_labels = None
 depends_on = None
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 from sqlalchemy.sql import table
 
 
