@@ -18,6 +18,10 @@ depends_on = None
 
 
 def upgrade():
+    """
+    Performs upgrade of database
+    """
+    
     op.create_table(
         'quote',
         sa.Column('id', sa.Integer, primary_key=True, autoincrement=True),
@@ -28,4 +32,7 @@ def upgrade():
 
 
 def downgrade():
+    """
+    Performs database downgrade
+    """
     op.drop_table('quote')

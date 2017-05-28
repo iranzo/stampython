@@ -17,6 +17,10 @@ depends_on = None
 
 
 def upgrade():
+    """
+    Performs upgrade of database
+    """
+    
     op.create_table(
         'autokarma',
         sa.Column('key', sa.Text),
@@ -25,4 +29,7 @@ def upgrade():
 
 
 def downgrade():
+    """
+    Performs database downgrade
+    """
     op.drop_table('autokarma')

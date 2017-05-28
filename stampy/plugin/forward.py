@@ -256,7 +256,7 @@ def createforward(source, target):
         logger.error(msg=_("createforward: circular reference %s=%s") % (source, target))
     else:
         sql = "INSERT INTO forward VALUES('%s','%s');" % (source, target)
-        logger.debug(msg="createforward: %s=%s" % (source, target))
+        logger.debug(msg=_("createforward: %s=%s" % (source, target)))
         stampy.stampy.dbsql(sql)
         return
     return False
@@ -275,5 +275,5 @@ def getforward(source):
     cur = stampy.stampy.dbsql(sql)
     rows = cur.fetchall()
     for target in rows:
-        logger.debug(msg="getforward: %s -> %s" % (source, target))
+        logger.debug(msg=_("getforward: %s -> %s" % (source, target)))
         yield target[0]

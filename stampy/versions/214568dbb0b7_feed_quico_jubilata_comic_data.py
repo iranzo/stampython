@@ -19,6 +19,10 @@ from sqlalchemy.sql import table
 
 
 def upgrade():
+    """
+    Performs upgrade of database
+    """
+    
     comic = table('comic',
                   sa.Column('name', sa.Text),
                   sa.Column('type', sa.Text),
@@ -42,4 +46,7 @@ def upgrade():
 
 
 def downgrade():
+    """
+    Performs database downgrade
+    """
     pass

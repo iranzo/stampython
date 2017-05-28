@@ -18,6 +18,10 @@ from alembic import op
 
 
 def upgrade():
+    """
+    Performs upgrade of database
+    """
+    
     op.add_column(u'quote', sa.Column('gid', sa.Text(), nullable=True))
     op.execute("""
             UPDATE
@@ -28,4 +32,7 @@ def upgrade():
 
 
 def downgrade():
+    """
+    Performs database downgrade
+    """
     op.drop_column(u'quote', 'gid')

@@ -12,14 +12,16 @@ down_revision = 'f267821d7d47'
 branch_labels = None
 depends_on = None
 
-from alembic import op
-import sqlalchemy as sa
 import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.sql import table
 
 
 def upgrade():
+    """
+    Performs upgrade of database
+    """
+    
     comic = table('comic',
                   sa.Column('name', sa.Text),
                   sa.Column('type', sa.Text),
@@ -42,4 +44,7 @@ def upgrade():
 
 
 def downgrade():
+    """
+    Performs database downgrade
+    """
     pass

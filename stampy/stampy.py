@@ -449,7 +449,9 @@ def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
         files = {'photo': rawimage.raw}
 
         try:
-            sent = requests.post(url, files=files, data=payload)
+            output = requests.post(url, files=files, data=payload)
+            sent = {"message": json.loads(output.text)['result']}
+
         except:
             logger.debug(msg=_("Failure sending image: %s") % image)
             sent = False

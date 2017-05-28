@@ -18,15 +18,22 @@ from alembic import op
 
 
 def upgrade():
-        op.create_table(
-            'comic',
-            sa.Column('name', sa.Text),
-            sa.Column('type', sa.Text),
-            sa.Column('channelgid', sa.Text),
-            sa.Column('lastchecked', sa.Text),
-            sa.Column('url', sa.Text)
-        )
+    """
+    Performs upgrade of database
+    """
+
+    op.create_table(
+        'comic',
+        sa.Column('name', sa.Text),
+        sa.Column('type', sa.Text),
+        sa.Column('channelgid', sa.Text),
+        sa.Column('lastchecked', sa.Text),
+        sa.Column('url', sa.Text)
+    )
 
 
 def downgrade():
+    """
+    Performs database downgrade
+    """
     op.drop_table('comic')
