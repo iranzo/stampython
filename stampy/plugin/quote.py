@@ -10,9 +10,9 @@ import time
 
 import stampy.plugin.config
 import stampy.stampy
-from stampy.i18n import translate
+from stampy.i18n import _
 
-_ = translate.ugettext
+from stampy.i18n import _L
 
 
 def init():
@@ -169,7 +169,7 @@ def addquote(username=False, date=False, text=False, gid=0):
     sql = "INSERT INTO quote(username, date, text, gid) VALUES('%s','%s', '%s', '%s');" % (
           username, date, text, gid)
     cur = stampy.stampy.dbsql(sql)
-    logger.debug(msg=_("createquote: %s=%s on %s for group %s") % (username, text, date, gid))
+    logger.debug(msg=_L("createquote: %s=%s on %s for group %s") % (username, text, date, gid))
     # Retrieve last id
     sql = "select last_insert_rowid();"
     cur = stampy.stampy.dbsql(sql)

@@ -10,9 +10,9 @@ import logging
 import stampy.plugin.config
 import stampy.plugin.stock
 import stampy.stampy
-from stampy.i18n import translate
+from stampy.i18n import _
 
-_ = translate.ugettext
+from stampy.i18n import _L
 
 
 def init():
@@ -64,7 +64,7 @@ def espp(message):
     message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
+    logger.debug(msg=_L("Command: %s by %s") % (texto, who_un))
 
     # We might be have been given no command, just stock
     try:

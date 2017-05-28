@@ -12,9 +12,9 @@ import stampy.plugin.alias
 import stampy.plugin.config
 import stampy.plugin.karma
 import stampy.stampy
-from stampy.i18n import translate
+from stampy.i18n import _
 
-_ = translate.ugettext
+from stampy.i18n import _L
 
 
 def init():
@@ -76,10 +76,10 @@ def autokcommands(message):
     message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
+    logger.debug(msg=_L("Command: %s by %s") % (texto, who_un))
 
     if stampy.stampy.is_owner_or_admin(message):
-        logger.debug(msg=_("Command: %s by Owner: %s") % (texto, who_un))
+        logger.debug(msg=_L("Command: %s by Owner: %s") % (texto, who_un))
         try:
             command = texto.split(' ')[1]
         except:
@@ -180,7 +180,7 @@ def createautok(word, value, gid=0):
 
     logger = logging.getLogger(__name__)
     if value in getautok(word):
-        logger.error(msg=_("createautok: autok pair %s - %s for gid %s already exists") % (word, value, gid))
+        logger.error(msg=_L("createautok: autok pair %s - %s for gid %s already exists") % (word, value, gid))
     else:
         sql = "INSERT INTO autokarma(key, value, gid) VALUES('%s','%s', '%s');" % (word, value, gid)
         logger.debug(msg="createautok: %s=%s for gid %s" % (word, value, gid))
@@ -235,7 +235,7 @@ def listautok(word=False, gid=0):
         # Value didn't exist before
         text = _("%s has no trigger autokarma") % word
 
-    logger.debug(msg=_("Returning autokarma %s for word %s") % (text, word))
+    logger.debug(msg=_L("Returning autokarma %s for word %s") % (text, word))
     return text
 
 
@@ -265,7 +265,7 @@ def autokarmawords(message):
     if wordadd:
         # Reduce text in message to just the words we encountered to optimize
         msgdetail["text"] = " ".join(wordadd)
-        logger.debug(msg=_("Autokarma words %s encountered for processing") % msgdetail["text"])
+        logger.debug(msg=_L("Autokarma words %s encountered for processing") % msgdetail["text"])
         stampy.plugin.karma.karmaprocess(msgdetail)
 
     return

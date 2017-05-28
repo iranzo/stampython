@@ -10,9 +10,8 @@ import logging
 import os
 
 import plugin.config
-from i18n import translate
+from i18n import _L
 
-_ = translate.ugettext
 
 PluginFolder = "./stampy/plugin"
 
@@ -38,10 +37,10 @@ def getPlugins():
         if i and info:
             if i not in plugin.config.config(key='disabled_plugins',
                                              default=''):
-                logger.debug(msg=_("Plugin added: %s") % i)
+                logger.debug(msg=_L("Plugin added: %s") % i)
                 plugins.append({"name": i, "info": info})
             else:
-                logger.debug(msg=_("Plugin disabled: %s") % i)
+                logger.debug(msg=_L("Plugin disabled: %s") % i)
 
     return plugins
 
@@ -67,12 +66,12 @@ def initplugins():
     plugs = []
     plugtriggers = {}
     for i in getPlugins():
-        logger.debug(msg=_("Processing plugin initialization: %s") % i["name"])
+        logger.debug(msg=_L("Processing plugin initialization: %s") % i["name"])
         newplug = loadPlugin(i)
         plugs.append(newplug)
         triggers = []
         for each in newplug.init():
             triggers.append(each)
         plugtriggers[i["name"]] = triggers
-        logger.debug(msg=_("Plugin %s is triggered by %s") % (i["name"], triggers))
+        logger.debug(msg=_L("Plugin %s is triggered by %s") % (i["name"], triggers))
     return plugs, plugtriggers

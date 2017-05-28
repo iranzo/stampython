@@ -15,12 +15,12 @@
 
 import datetime
 import json
-import logging
 import optparse
 import random
 import sqlite3 as lite
 import string
 import sys
+import logging
 import traceback
 import urllib
 from time import sleep
@@ -28,18 +28,25 @@ from time import sleep
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from i18n import translate
 
-_ = translate.ugettext
 import plugins
 import plugin.config
 import plugin.forward
+from i18n import _
+from i18n import _L
+from i18n import chlang
 
 logger = logging.getLogger("stampy")
 logger.setLevel(logging.DEBUG)
 
 plugs = []
 plugtriggers = {}
+
+global language
+global loglanguage
+loglanguage = 'en'
+language = 'en'
+
 
 description = _('Stampy is a script for controlling Karma via Telegram.org bot api')
 
@@ -111,8 +118,7 @@ def createorupdatedb():
         'upgrade', 'head',
     ]
 
-    logger.debug(msg=_("Using alembic to upgrade/create database to expected "
-                       "revision"))
+    logger.debug(msg=_L("Using alembic to upgrade/create database to expected revision"))
 
     alembic.config.main(argv=alembicArgs)
 
@@ -164,7 +170,7 @@ def dbsql(sql=False):
             attempt = 10
 
         if not worked:
-            logger.critical(msg=_("Error # %s on SQL execution: %s") % (attempt, sql))
+            logger.critical(msg=_L("Error # %s on SQL execution: %s") % (attempt, sql))
 
     return cur
 
@@ -230,7 +236,7 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
     while not code:
         result = json.load(urllib.urlopen(message))
         code = result['ok']
-        logger.error(msg=_("ERROR (%s) sending message: Code: %s : Text: %s") % (attempt, code, result))
+        logger.error(msg=_L("ERROR (%s) sending message: Code: %s : Text: %s") % (attempt, code, result))
         attempt += 1
         sleep(1)
         if not code:
@@ -250,7 +256,7 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
 
         # exit after 60 retries with 1 second delay each
         if attempt > 60:
-            logger.error(msg=_("PERM ERROR sending message: Code: %s : Text: %s") % (code, result))
+            logger.error(msg=_L("PERM ERROR sending message: Code: %s : Text: %s") % (code, result))
             code = True
 
     try:
@@ -262,7 +268,7 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
         # Check if there's something to forward and do it
         plugin.forward.forwardmessage(sent)
 
-    logger.debug(msg=_("Sending message: Code: %s : Text: %s") % (code, text))
+    logger.debug(msg=_L("Sending message: Code: %s : Text: %s") % (code, text))
     return
 
 
@@ -286,7 +292,7 @@ def getupdates(offset=0, limit=100):
     except:
         result = []
     for item in result:
-        logger.info(msg=_("Getting updates and returning: %s") % item)
+        logger.info(msg=_L("Getting updates and returning: %s") % item)
         yield item
 
 
@@ -305,7 +311,7 @@ def getme():
     except:
         result = {'username': 'stampy'}
 
-    logger.info(msg=_("Getting bot details and returning: %s") % result)
+    logger.info(msg=_L("Getting bot details and returning: %s") % result)
     return result
 
 
@@ -324,7 +330,7 @@ def clearupdates(offset):
         result = json.load(urllib.urlopen(message))
     except:
         result = False
-    logger.info(msg=_("Clearing messages at %s") % offset)
+    logger.info(msg=_L("Clearing messages at %s") % offset)
     return result
 
 
@@ -383,7 +389,7 @@ def telegramcommands(message):
     if commandtext:
         sendmessage(chat_id=chat_id, text=commandtext,
                     reply_to_message_id=message_id, parse_mode="Markdown")
-        logger.debug(msg=_("Command: %s") % word)
+        logger.debug(msg=_L("Command: %s") % word)
     return retv
 
 
@@ -403,7 +409,7 @@ def sendsticker(chat_id=0, sticker="", text="", reply_to_message_id=""):
     message = "%s&sticker=%s" % (message, sticker)
     if reply_to_message_id:
         message += "&reply_to_message_id=%s" % reply_to_message_id
-    logger.debug(msg=_("Sending sticker: %s") % text)
+    logger.debug(msg=_L("Sending sticker: %s") % text)
 
     sent = {"message": json.load(urllib.urlopen(message))['result']}
 
@@ -436,7 +442,7 @@ def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
     if text:
         payload['caption'] = text.encode('utf-8')
 
-    logger.debug(msg=_("Sending image: %s") % text)
+    logger.debug(msg=_L("Sending image: %s") % text)
 
     # Download image first to later send it
     rawimage = requests.get(image, stream=True)
@@ -453,10 +459,10 @@ def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
             sent = {"message": json.loads(output.text)['result']}
 
         except:
-            logger.debug(msg=_("Failure sending image: %s") % image)
+            logger.debug(msg=_L("Failure sending image: %s") % image)
             sent = False
     else:
-        logger.debug(msg=_("Failure downloading image: %s") % image)
+        logger.debug(msg=_L("Failure downloading image: %s") % image)
 
     # Check if there's something to forward and do it
     plugin.forward.forwardmessage(sent)
@@ -595,6 +601,11 @@ def process(messages):
 
         msgdetail = getmsgdetail(message)
         botname = getme()['username']
+
+        # Process group configuration for language
+        chat_id = msgdetail['chat_id']
+        chlang(lang=plugin.config.gconfig(key='language', gid=chat_id))
+
         try:
             command = msgdetail["text"].split()[0].lower().replace('@%s' % botname, '')
             texto = msgdetail["text"].lower()
@@ -622,29 +633,29 @@ def process(messages):
 
             code = False
             if runplugin:
-                logger.debug(msg=_("Processing plugin: %s") % name)
+                logger.debug(msg=_L("Processing plugin: %s") % name)
                 code = i.run(message=message)
-                logger.debug(msg=_("Plugin return code: %s") % code)
+                logger.debug(msg=_L("Plugin return code: %s") % code)
 
             if code:
                 # Plugin has changed triggers, reload
                 plugtriggers[name] = i.init()
-                logger.debug(msg=_("New triggers for %s: %s") % (name, plugtriggers[name]))
+                logger.debug(msg=_L("New triggers for %s: %s") % (name, plugtriggers[name]))
 
         # Update last message id to later clear it from the server
         if msgdetail["update_id"] > lastupdateid:
             lastupdateid = msgdetail["update_id"]
 
         # Write the line for debug
-        messageline = _("TEXT: %s : %s : %s") % (msgdetail["chat_name"], msgdetail["name"], msgdetail["text"])
+        messageline = _L("TEXT: %s : %s : %s") % (msgdetail["chat_name"], msgdetail["name"], msgdetail["text"])
         logger.debug(msg=messageline)
 
     if date != 0:
-        logger.info(msg=_("Last processed message at: %s") % date)
+        logger.info(msg=_L("Last processed message at: %s") % date)
     if lastupdateid != 0:
-        logger.debug(msg=_("Last processed update_id : %s") % lastupdateid)
+        logger.debug(msg=_L("Last processed update_id : %s") % lastupdateid)
     if count != 0:
-        logger.info(msg=_("Number of messages in this batch: %s") % count)
+        logger.info(msg=_L("Number of messages in this batch: %s") % count)
 
     # clear updates (marking messages as read)
     if lastupdateid != 0:
@@ -675,7 +686,7 @@ def getitems(var):
 
     # As we call recursively, don't log calls for just one ID
     if len(final) > 1:
-        logger.debug(msg=_("Final deduplicated list: %s") % final)
+        logger.debug(msg=_L("Final deduplicated list: %s") % final)
     return final
 
 
@@ -715,22 +726,22 @@ def is_owner_or_admin(message, strict=False):
     # if we're on a user private chat, return admin true
     if chat_id > 0:
         admin = True
-        logger.debug(msg=_("We're admin of private chats"))
+        logger.debug(msg=_L("We're admin of private chats"))
     else:
         # Check if we're owner
         owner = is_owner(message)
         if not owner:
-            logger.debug(msg=_("We're not owner of public chats"))
+            logger.debug(msg=_L("We're not owner of public chats"))
             # Check if we are admin of chat
             for each in plugin.config.config(key='admin', default="", gid=chat_id).split(" "):
                 if each == msgdetail["who_un"]:
                     admin = True
-                    logger.debug(msg=_("We're admin of public chat"))
+                    logger.debug(msg=_L("We're admin of public chat"))
 
             # If we're not admin and admin is empty, consider ourselves admin
             if not admin:
                 if plugin.config.config(key='admin', gid=chat_id, default="") == "":
-                    logger.debug(msg=_("We're admin because no admin listed on public chat"))
+                    logger.debug(msg=_L("We're admin because no admin listed on public chat"))
                     admin = True
 
     return owner or admin
@@ -791,7 +802,7 @@ def loglevel():
     # database and send message
     if logging.getLevelName(logger.level).lower() != plugin.config.config(key="verbosity"):
         logger.setLevel(level)
-        logger.info(msg=_("Logging level set to %s") % plugin.config.config(key="verbosity"))
+        logger.info(msg=_L("Logging level set to %s") % plugin.config.config(key="verbosity"))
         plugin.config.setconfig(key="verbosity",
                                 value=logging.getLevelName(logger.level).lower())
 
@@ -859,7 +870,7 @@ def main():
     # Configuring alembic logger
     conflogging(target="alembic")
 
-    logger.info(msg=_("Started execution"))
+    logger.info(msg=_L("Started execution"))
 
     if not plugin.config.config(key='sleep'):
         plugin.config.setconfig(key='sleep', value=10)
@@ -889,20 +900,20 @@ def main():
     global plugtriggers
     plugs, plugtriggers = plugins.initplugins()
 
-    logger.debug(msg=_("Plug triggers reported: %s") % plugtriggers)
+    logger.debug(msg=_L("Plug triggers reported: %s") % plugtriggers)
 
     # Check operation mode and call process as required
     if options.daemon or plugin.config.config(key='daemon'):
         plugin.config.setconfig(key='daemon', value=True)
-        logger.info(msg=_("Running in daemon mode"))
+        logger.info(msg=_L("Running in daemon mode"))
         while plugin.config.config(key='daemon') == 'True':
             process(getupdates())
             sleep(int(plugin.config.config(key='sleep')))
     else:
-        logger.info(msg=_("Running in one-shoot mode"))
+        logger.info(msg=_L("Running in one-shoot mode"))
         process(getupdates())
 
-    logger.info(msg=_("Stopped execution"))
+    logger.info(msg=_L("Stopped execution"))
     logging.shutdown()
     sys.exit(0)
 

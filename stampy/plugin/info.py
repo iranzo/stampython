@@ -9,9 +9,9 @@ import logging
 import stampy.plugin.config
 import stampy.plugin.karma
 import stampy.stampy
-from stampy.i18n import translate
+from stampy.i18n import _
 
-_ = translate.ugettext
+from stampy.i18n import _L
 
 
 def init():
@@ -69,7 +69,7 @@ def info(message):
     text += _("This has been sent on chat *%s*, named *%s* on *%s*\n") % (msgdetail["chat_id"], msgdetail["chat_name"], msgdetail["datefor"])
     text += _("This message was sent by user id *%s*, with given name *%s*, long name *%s* and username *%s*\n") % (msgdetail["who_id"], msgdetail["who_gn"], msgdetail["who_ln"], msgdetail["who_un"])
 
-    logger.debug(msg=_("Returning %s") % text)
+    logger.debug(msg=_L("Returning %s") % text)
 
     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                               reply_to_message_id=message_id,

@@ -8,9 +8,9 @@ import logging
 
 import stampy.plugins
 import stampy.stampy
-from stampy.i18n import translate
+from stampy.i18n import _
 
-_ = translate.ugettext
+from stampy.i18n import _L
 
 
 def init():
@@ -63,7 +63,7 @@ def helpcommands(message):
     message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
+    logger.debug(msg=_L("Command: %s by %s") % (texto, who_un))
 
     if chat_id != msgdetail['who_id']:
         # Provide text on public channel
@@ -86,7 +86,7 @@ def helpcommands(message):
         if i.__name__.split(".")[-1] == "help":
             commandtext += i.help(message=message)
 
-    logger.debug(msg=_("Command: %s") % texto)
+    logger.debug(msg=_L("Command: %s") % texto)
 
     return stampy.stampy.sendmessage(chat_id=chat_id, text=commandtext,
                                      reply_to_message_id=message_id,

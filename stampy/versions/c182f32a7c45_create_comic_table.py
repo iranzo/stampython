@@ -36,4 +36,5 @@ def downgrade():
     """
     Performs database downgrade
     """
+
     op.drop_table('comic')

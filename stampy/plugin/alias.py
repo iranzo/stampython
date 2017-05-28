@@ -11,9 +11,9 @@ from prettytable import from_db_cursor
 import stampy.plugin.config
 import stampy.plugin.karma
 import stampy.stampy
-from stampy.i18n import translate
+from stampy.i18n import _
 
-_ = translate.ugettext
+from stampy.i18n import _L
 
 
 def init():
@@ -32,7 +32,7 @@ def run(message):  # do not edit this line
     :return:
     """
     logger = logging.getLogger(__name__)
-    logger.debug(msg=_("Processing plugin: Code: %s") % __file__)
+    logger.debug(msg=_L("Processing plugin: Code: %s") % __file__)
     text = stampy.stampy.getmsgdetail(message)["text"]
     if text:
         if text.split()[0].lower()[0:6] == "/alias":
@@ -70,9 +70,9 @@ def aliascommands(message):
     who_un = msgdetail["who_un"]
 
     logger = logging.getLogger(__name__)
-    logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
+    logger.debug(msg=_L("Command: %s by %s") % (texto, who_un))
     if stampy.stampy.is_owner_or_admin(message):
-        logger.debug(msg=_("Command: %s by Owner: %s") % (texto, who_un))
+        logger.debug(msg=_L("Command: %s by Owner: %s") % (texto, who_un))
         try:
             command = texto.split(' ')[1]
         except:
@@ -163,7 +163,7 @@ def listalias(word=False, gid=0):
         text = _("Defined aliases:\n")
         table = from_db_cursor(cur)
         text = "%s\n```%s```" % (text, table.get_string())
-    logger.debug(msg=_("Returning aliases %s for word %s for gid %s") % (text, word, gid))
+    logger.debug(msg=_L("Returning aliases %s for word %s for gid %s") % (text, word, gid))
     return text
 
 
@@ -178,7 +178,7 @@ def createalias(word, value, gid=0):
 
     logger = logging.getLogger(__name__)
     if getalias(value, gid=gid) == word or word.lower() == value.lower():
-        logger.error(msg=_("createalias: circular reference %s=%s for gid %s") % (word, value, gid))
+        logger.error(msg=_L("createalias: circular reference %s=%s for gid %s") % (word, value, gid))
     else:
         if not getalias(word, gid) or getalias(word, gid) == word:
             # Removing duplicates on karma DB and add

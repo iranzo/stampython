@@ -9,9 +9,9 @@ import logging
 from prettytable import from_db_cursor
 
 import stampy.stampy
-from stampy.i18n import translate
+from stampy.i18n import _
 
-_ = translate.ugettext
+from stampy.i18n import _L
 
 
 def init():
@@ -84,7 +84,7 @@ def configcommands(message):
 
     # Only users defined as 'owner' or 'admin' can perform commands
     if stampy.stampy.is_owner_or_admin(message):
-        logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
+        logger.debug(msg=_L("Command: %s by %s") % (texto, who_un))
         try:
             command = texto.split(' ')[1]
         except:
@@ -186,7 +186,7 @@ def showconfig(key=False, gid=0):
         text = _("Defined configurations for gid %s:\n") % gid
         table = from_db_cursor(cur)
         text = "%s\n```%s```" % (text, table.get_string())
-    logger.debug(msg=_("Returning config %s for key %s for id %s") % (text, key, gid))
+    logger.debug(msg=_L("Returning config %s for key %s for id %s") % (text, key, gid))
     return text
 
 
@@ -250,7 +250,7 @@ def saveconfig(key, value, gid=0):
     if value:
         sql = "UPDATE config SET value='%s' WHERE key='%s' AND id='%s';" % (value, key, gid)
         stampy.stampy.dbsql(sql)
-        logger.debug(msg=_("Updating config for %s with %s for id %s") % (key, value, gid))
+        logger.debug(msg=_L("Updating config for %s with %s for id %s") % (key, value, gid))
     return value
 
 
@@ -267,7 +267,7 @@ def setconfig(key, value, gid=0):
     if config(key=key, gid=gid):
         deleteconfig(key, gid=gid)
     sql = "INSERT INTO config VALUES('%s','%s', '%s');" % (key, value, gid)
-    logger.debug(msg=_("setconfig: %s=%s for id %s") % (key, value, gid))
+    logger.debug(msg=_L("setconfig: %s=%s for id %s") % (key, value, gid))
     stampy.stampy.dbsql(sql)
     return
 
@@ -282,6 +282,6 @@ def deleteconfig(key, gid=0):
 
     logger = logging.getLogger(__name__)
     sql = "DELETE FROM config WHERE key='%s' AND id='%s';" % (key, gid)
-    logger.debug(msg=_("rmconfig: %s for id %s") % (key, gid))
+    logger.debug(msg=_L("rmconfig: %s for id %s") % (key, gid))
     stampy.stampy.dbsql(sql)
     return

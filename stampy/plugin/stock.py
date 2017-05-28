@@ -15,9 +15,8 @@ import requests
 
 import stampy.plugin.config
 import stampy.stampy
-from stampy.i18n import translate
-
-_ = translate.ugettext
+from stampy.i18n import _
+from stampy.i18n import _L
 
 
 def init():
@@ -117,7 +116,7 @@ def stock(message):
     message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    logger.debug(msg="Command: %s by %s" % (texto, who_un))
+    logger.debug(msg=_L("Command: %s by %s" % (texto, who_un)))
 
     # We might be have been given no command, just stock
     try:

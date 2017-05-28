@@ -21,7 +21,7 @@ def upgrade():
     """
     Performs upgrade of database
     """
-    
+
     op.add_column(u'comic', sa.Column('imgxpath', sa.Text(), nullable=True))
     op.add_column(u'comic', sa.Column('txtxpath', sa.Text(), nullable=True))
 
@@ -30,4 +30,5 @@ def downgrade():
     """
     Performs database downgrade
     """
+
     pass

@@ -13,9 +13,9 @@ from prettytable import from_db_cursor
 import stampy.plugin.alias
 import stampy.plugin.config
 import stampy.stampy
-from stampy.i18n import translate
+from stampy.i18n import _
 
-_ = translate.ugettext
+from stampy.i18n import _L
 
 sched = BackgroundScheduler()
 sched.start()
@@ -161,7 +161,7 @@ def rank(word=False, gid=0):
         cur = stampy.stampy.dbsql(sql)
         table = from_db_cursor(cur)
         text = "%s\n```%s```" % (text, table.get_string())
-    logger.debug(msg=_("Returning karma %s for word %s") % (text, word))
+    logger.debug(msg=_L("Returning karma %s for word %s") % (text, word))
     return text
 
 
@@ -185,7 +185,7 @@ def srank(word=False, gid=0):
         cur = stampy.stampy.dbsql(sql)
         table = from_db_cursor(cur)
         text = "%s\n```%s```" % (text, table.get_string())
-    logger.debug(msg=_("Returning srank for word: %s") % word)
+    logger.debug(msg=_L("Returning srank for word: %s") % word)
     return text
 
 
@@ -201,7 +201,7 @@ def updatekarma(word=False, change=0, gid=0):
     logger = logging.getLogger(__name__)
     value = getkarma(word=word, gid=gid) + change
     putkarma(word, value, gid=gid)
-    logger.debug(msg=_("Putting karma of %s to %s") % (value, word))
+    logger.debug(msg=_L("Putting karma of %s to %s") % (value, word))
     return value
 
 
@@ -226,7 +226,7 @@ def getkarma(word, gid=0):
     except:
         # Value didn't exist before, return 0
         value = 0
-    logger.debug(msg=_("Getting karma for %s: %s") % (word, value))
+    logger.debug(msg=_L("Getting karma for %s: %s") % (word, value))
     return value
 
 
@@ -249,7 +249,7 @@ def putkarma(word, value, gid=0):
         sql = "INSERT INTO karma(word,value,date,gid) VALUES('%s','%s', '%s', '%s');" % (word, value, datefor, gid)
         stampy.stampy.dbsql(sql)
 
-    logger.debug(msg=_("Putting karma of %s to %s") % (value, word))
+    logger.debug(msg=_L("Putting karma of %s to %s") % (value, word))
     return
 
 
@@ -331,14 +331,14 @@ def karmaprocess(msgdetail):
     else:
         text_to_process = ""
 
-    logger.debug(msg=_("Text to process: %s") % " ".join(text_to_process))
+    logger.debug(msg=_L("Text to process: %s") % " ".join(text_to_process))
 
     wordadd = []
     worddel = []
 
     # If operators are not there, exit faster
     if "--" in " ".join(text_to_process) or "++" in " ".join(text_to_process):
-        logger.debug(msg=_("Text has karma operators"))
+        logger.debug(msg=_L("Text has karma operators"))
         for word in text_to_process:
             if "++" in word or "--" in word:
                 msg = _("Processing word %s sent by id %s with username %s (%s %s)") % (
@@ -431,7 +431,7 @@ def dokarmacleanup(word=False, maxage=int(stampy.plugin.config.config("maxage", 
     words = []
     cur = stampy.stampy.dbsql(sql)
 
-    logger.debug(msg=_("Processing words for cleanup: %s") % words)
+    logger.debug(msg=_L("Processing words for cleanup: %s") % words)
 
     for row in cur:
         # Process each word returned
@@ -447,7 +447,7 @@ def dokarmacleanup(word=False, maxage=int(stampy.plugin.config.config("maxage", 
         now = datetime.datetime.now()
 
         if (now - worddate).days > maxage:
-            logger.debug(msg=_("Word %s with %s inactivity days is going to be purged") % (word, (now - worddate).days))
+            logger.debug(msg=_L("Word %s with %s inactivity days is going to be purged") % (word, (now - worddate).days))
 
             # Remove word from database
             updatekarma(word=word, change=-row[1], gid=gid)

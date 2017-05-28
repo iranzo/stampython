@@ -21,7 +21,7 @@ def upgrade():
     """
     Performs upgrade of database
     """
-    
+
     op.create_table(
         'hilight',
         sa.Column('word', sa.Text),
@@ -33,4 +33,5 @@ def downgrade():
     """
     Performs database downgrade
     """
+
     op.drop_table('hilight')

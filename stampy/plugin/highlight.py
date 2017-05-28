@@ -14,9 +14,9 @@ import stampy.plugin.forward
 import stampy.plugin.karma
 import stampy.plugin.stats
 import stampy.stampy
-from stampy.i18n import translate
+from stampy.i18n import _
 
-_ = translate.ugettext
+from stampy.i18n import _L
 
 
 def init():
@@ -82,7 +82,7 @@ def hilightcommands(message):
     who_un = msgdetail["who_un"]
     who_id = msgdetail["who_id"]
 
-    logger.debug(msg=_("Command: %s by user: %s") % (texto, who_un))
+    logger.debug(msg=_L("Command: %s by user: %s") % (texto, who_un))
     try:
         command = texto.split(' ')[1]
     except:
@@ -202,7 +202,7 @@ def createhilight(word, uid):
 
     logger = logging.getLogger(__name__)
     if gethilight(word=word, uid=uid):
-        logger.error(msg=_("createhilight: word %s for uid %s already exists") % (word, uid))
+        logger.error(msg=_L("createhilight: word %s for uid %s already exists") % (word, uid))
     else:
         sql = "INSERT INTO hilight(word, gid) VALUES('%s', '%s');" % (word, uid)
         logger.debug(msg="createhilight: %s for gid %s" % (word, uid))
@@ -257,7 +257,7 @@ def listhilight(uid, word=False):
         # Value didn't exist before
         text = _("%s has no trigger hilight") % word
 
-    logger.debug(msg=_("Returning hilight %s for word %s") % (text, word))
+    logger.debug(msg=_L("Returning hilight %s for word %s") % (text, word))
     return text
 
 
@@ -292,14 +292,14 @@ def hilightwords(message):
         forward = False
         # Only forward if user is member of group
         if int(uid) in memberid:
-            logger.debug(msg=_('User %s is member of group %s') % (uid, chat_id))
+            logger.debug(msg=_L('User %s is member of group %s') % (uid, chat_id))
             for hilight in keywords:
                 if hilight in text_to_process:
                     if hilight in gethilightwords(uid=uid):
-                        logger.debug(msg=_('Word %s is in text and forwarding for user') % hilight)
+                        logger.debug(msg=_L('Word %s is in text and forwarding for user') % hilight)
                         forward = True
         else:
-            logger.debug(msg=_('User %s NOT member of group %s (%s)') % (uid, chat_id, memberid))
+            logger.debug(msg=_L('User %s NOT member of group %s (%s)') % (uid, chat_id, memberid))
 
         if forward:
             text = _("Message sent to chat: %s") % chat_name
@@ -307,7 +307,7 @@ def hilightwords(message):
             result = stampy.plugin.forward.doforward(message=message, target=uid)
             if result == 'blocked':
                 # User has blocked bot, remove forwards
-                logger.debug(msg=_('User %s has blocked bot direct communication, deleting hilights') % uid)
+                logger.debug(msg=_L('User %s has blocked bot direct communication, deleting hilights') % uid)
                 for hilight in gethilightwords(uid=uid):
                     deletehilight(word=hilight, uid=uid)
 

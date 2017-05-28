@@ -21,7 +21,7 @@ def upgrade():
     """
     Performs upgrade of database
     """
-    
+
     comic = table('comic',
                   sa.Column('name', sa.Text),
                   sa.Column('type', sa.Text),
@@ -47,4 +47,5 @@ def downgrade():
     """
     Performs database downgrade
     """
+
     pass

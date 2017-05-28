@@ -43,4 +43,5 @@ def downgrade():
     """
     Performs database downgrade
     """
+
     pass

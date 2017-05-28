@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.71\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-05-27 10:02+0200\n"
+"POT-Creation-Date: 2017-05-28 23:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
+
+#: stampy/i18n.py:47
+#, python-format
+msgid "Language changed to %s"
+msgstr ""
 
 #: stampy/plugins.py:41
 #, python-format
@@ -37,225 +42,225 @@ msgstr ""
 msgid "Plugin %s is triggered by %s"
 msgstr ""
 
-#: stampy/stampy.py:44
+#: stampy/stampy.py:51
 msgid "Stampy is a script for controlling Karma via Telegram.org bot api"
 msgstr ""
 
-#: stampy/stampy.py:49
+#: stampy/stampy.py:56
 msgid "API token for bot access to messages"
 msgstr ""
 
-#: stampy/stampy.py:51
+#: stampy/stampy.py:58
 msgid "database file for storing karma"
 msgstr ""
 
-#: stampy/stampy.py:54
+#: stampy/stampy.py:61
 msgid "Set verbosity level for messages while running/logging"
 msgstr ""
 
-#: stampy/stampy.py:58
+#: stampy/stampy.py:65
 msgid "Define URL for accessing bot API"
 msgstr ""
 
-#: stampy/stampy.py:61
+#: stampy/stampy.py:68
 msgid "Define owner username"
 msgstr ""
 
-#: stampy/stampy.py:63
+#: stampy/stampy.py:70
 msgid "Run as daemon"
 msgstr ""
 
-#: stampy/stampy.py:114
+#: stampy/stampy.py:121
 msgid "Using alembic to upgrade/create database to expected revision"
 msgstr ""
 
-#: stampy/stampy.py:141
+#: stampy/stampy.py:147
 msgid "Error accessing database, creating..."
 msgstr ""
 
-#: stampy/stampy.py:167
+#: stampy/stampy.py:173
 #, python-format
 msgid "Error # %s on SQL execution: %s"
 msgstr ""
 
-#: stampy/stampy.py:233
+#: stampy/stampy.py:239
 #, python-format
 msgid "ERROR (%s) sending message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/stampy.py:253
+#: stampy/stampy.py:259
 #, python-format
 msgid "PERM ERROR sending message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/stampy.py:265
+#: stampy/stampy.py:271
 #, python-format
 msgid "Sending message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/stampy.py:289
+#: stampy/stampy.py:295
 #, python-format
 msgid "Getting updates and returning: %s"
 msgstr ""
 
-#: stampy/stampy.py:308
+#: stampy/stampy.py:314
 #, python-format
 msgid "Getting bot details and returning: %s"
 msgstr ""
 
-#: stampy/stampy.py:327
+#: stampy/stampy.py:333
 #, python-format
 msgid "Clearing messages at %s"
 msgstr ""
 
-#: stampy/stampy.py:362
+#: stampy/stampy.py:368
 msgid "Use `/quit` to exit daemon mode\n"
 msgstr ""
 
-#: stampy/stampy.py:363
+#: stampy/stampy.py:369
 msgid ""
 "Learn more about this bot in [https://github.com/iranzo/stampython] "
 "(https://github.com/iranzo/stampython)"
 msgstr ""
 
-#: stampy/stampy.py:366 stampy/stampy.py:370
+#: stampy/stampy.py:372 stampy/stampy.py:376
 msgid ""
 "This bot does not use start or stop commands, it automatically checks for"
 " karma operands"
 msgstr ""
 
-#: stampy/plugin/help.py:89 stampy/stampy.py:386
+#: stampy/plugin/help.py:89 stampy/stampy.py:392
 #, python-format
 msgid "Command: %s"
 msgstr ""
 
-#: stampy/stampy.py:406
+#: stampy/stampy.py:412
 #, python-format
 msgid "Sending sticker: %s"
 msgstr ""
 
-#: stampy/stampy.py:439
+#: stampy/stampy.py:445
 #, python-format
 msgid "Sending image: %s"
 msgstr ""
 
-#: stampy/stampy.py:454
+#: stampy/stampy.py:462
 #, python-format
 msgid "Failure sending image: %s"
 msgstr ""
 
-#: stampy/stampy.py:457
+#: stampy/stampy.py:465
 #, python-format
 msgid "Failure downloading image: %s"
 msgstr ""
 
-#: stampy/stampy.py:623
+#: stampy/stampy.py:636
 #, python-format
 msgid "Processing plugin: %s"
 msgstr ""
 
-#: stampy/stampy.py:625
+#: stampy/stampy.py:638
 #, python-format
 msgid "Plugin return code: %s"
 msgstr ""
 
-#: stampy/stampy.py:630
+#: stampy/stampy.py:643
 #, python-format
 msgid "New triggers for %s: %s"
 msgstr ""
 
-#: stampy/stampy.py:637
+#: stampy/stampy.py:650
 #, python-format
 msgid "TEXT: %s : %s : %s"
 msgstr ""
 
-#: stampy/stampy.py:641
+#: stampy/stampy.py:654
 #, python-format
 msgid "Last processed message at: %s"
 msgstr ""
 
-#: stampy/stampy.py:643
+#: stampy/stampy.py:656
 #, python-format
 msgid "Last processed update_id : %s"
 msgstr ""
 
-#: stampy/stampy.py:645
+#: stampy/stampy.py:658
 #, python-format
 msgid "Number of messages in this batch: %s"
 msgstr ""
 
-#: stampy/stampy.py:676
+#: stampy/stampy.py:689
 #, python-format
 msgid "Final deduplicated list: %s"
 msgstr ""
 
-#: stampy/stampy.py:716
+#: stampy/stampy.py:729
 msgid "We're admin of private chats"
 msgstr ""
 
-#: stampy/stampy.py:721
+#: stampy/stampy.py:734
 msgid "We're not owner of public chats"
 msgstr ""
 
-#: stampy/stampy.py:726
+#: stampy/stampy.py:739
 msgid "We're admin of public chat"
 msgstr ""
 
-#: stampy/stampy.py:731
+#: stampy/stampy.py:744
 msgid "We're admin because no admin listed on public chat"
 msgstr ""
 
-#: stampy/stampy.py:792
+#: stampy/stampy.py:805
 #, python-format
 msgid "Logging level set to %s"
 msgstr ""
 
-#: stampy/stampy.py:860
+#: stampy/stampy.py:873
 msgid "Started execution"
 msgstr ""
 
-#: stampy/stampy.py:871
+#: stampy/stampy.py:884
 msgid "Token required for operation, please check https://core.telegram.org/bots"
 msgstr ""
 
-#: stampy/stampy.py:890
+#: stampy/stampy.py:903
 #, python-format
 msgid "Plug triggers reported: %s"
 msgstr ""
 
-#: stampy/stampy.py:895
+#: stampy/stampy.py:908
 msgid "Running in daemon mode"
 msgstr ""
 
-#: stampy/stampy.py:900
+#: stampy/stampy.py:913
 msgid "Running in one-shoot mode"
 msgstr ""
 
-#: stampy/stampy.py:903
+#: stampy/stampy.py:916
 msgid "Stopped execution"
 msgstr ""
 
-#: stampy/plugin/admin.py:51
+#: stampy/plugin/admin.py:50
 msgid "Use `/admin unlink` to remove channel linking\n"
 msgstr ""
 
-#: stampy/plugin/admin.py:52
+#: stampy/plugin/admin.py:51
 msgid ""
 "Use `/admin link master` to generate and store linking token to be used "
 "on slaves\n"
 msgstr ""
 
-#: stampy/plugin/admin.py:53
+#: stampy/plugin/admin.py:52
 msgid ""
 "Use `/admin link slave <token> to use provided token to link against "
 "master channel\n"
 msgstr ""
 
-#: stampy/plugin/admin.py:54
+#: stampy/plugin/admin.py:53
 msgid "Use `/admin link show to list linked channel\n"
 msgstr ""
 
-#: stampy/plugin/admin.py:73 stampy/plugin/alias.py:73
+#: stampy/plugin/admin.py:72 stampy/plugin/alias.py:73
 #: stampy/plugin/autokarma.py:79 stampy/plugin/comic.py:93
 #: stampy/plugin/config.py:87 stampy/plugin/espp.py:67
 #: stampy/plugin/forward.py:151 stampy/plugin/help.py:66
@@ -263,27 +268,27 @@ msgstr ""
 msgid "Command: %s by %s"
 msgstr ""
 
-#: stampy/plugin/admin.py:128
+#: stampy/plugin/admin.py:127
 #, python-format
 msgid "Generated token %s for channel %s"
 msgstr ""
 
-#: stampy/plugin/admin.py:129
+#: stampy/plugin/admin.py:128
 #, python-format
 msgid "Token for linking against this channel has been generated as %s"
 msgstr ""
 
-#: stampy/plugin/admin.py:133
+#: stampy/plugin/admin.py:132
 #, python-format
 msgid "Already generated token %s for channel %s"
 msgstr ""
 
-#: stampy/plugin/admin.py:134
+#: stampy/plugin/admin.py:133
 #, python-format
 msgid "A token for linking against this channel already existed as %s"
 msgstr ""
 
-#: stampy/plugin/admin.py:136 stampy/plugin/admin.py:224
+#: stampy/plugin/admin.py:135 stampy/plugin/admin.py:223
 msgid ""
 "\n"
 "\n"
@@ -291,41 +296,41 @@ msgid ""
 "```/gconfig delete isolated``` to revert back to global karma"
 msgstr ""
 
-#: stampy/plugin/admin.py:142
+#: stampy/plugin/admin.py:141
 msgid "This channel is a slave for another one, cannot generate token"
 msgstr ""
 
-#: stampy/plugin/admin.py:166
+#: stampy/plugin/admin.py:165
 #, python-format
 msgid "chanenslave: %s, master-id: %s, master-token:%s"
 msgstr ""
 
-#: stampy/plugin/admin.py:180
+#: stampy/plugin/admin.py:179
 #, python-format
 msgid "Channel *%s* with name *%s* has been linked as *SLAVE*"
 msgstr ""
 
-#: stampy/plugin/admin.py:188
+#: stampy/plugin/admin.py:187
 #, python-format
 msgid "This channel has been set as *SLAVE* from *MASTER* channel *%s*"
 msgstr ""
 
-#: stampy/plugin/admin.py:216
+#: stampy/plugin/admin.py:215
 #, python-format
 msgid "Channel *%s* with name *%s* has been unlinked as *SLAVE*"
 msgstr ""
 
-#: stampy/plugin/admin.py:223
+#: stampy/plugin/admin.py:222
 #, python-format
 msgid "This channel has been unliked as *SLAVE* from *MASTER* channel *%s*"
 msgstr ""
 
-#: stampy/plugin/admin.py:250
+#: stampy/plugin/admin.py:249
 #, python-format
 msgid "This channel %s is slave of channel %s"
 msgstr ""
 
-#: stampy/plugin/admin.py:256
+#: stampy/plugin/admin.py:255
 msgid "Defined slaves:\n"
 msgstr ""
 
@@ -474,12 +479,12 @@ msgstr ""
 msgid "Comic: %s, last: %s, now: %s, url: %s"
 msgstr ""
 
-#: stampy/plugin/comic.py:259
+#: stampy/plugin/comic.py:268
 #, python-format
 msgid "Updating last checked as per %s"
 msgstr ""
 
-#: stampy/plugin/comic.py:285
+#: stampy/plugin/comic.py:294
 #, python-format
 msgid "# of Comics for today: %s"
 msgstr ""
@@ -682,6 +687,16 @@ msgstr ""
 #: stampy/plugin/forward.py:256
 #, python-format
 msgid "createforward: circular reference %s=%s"
+msgstr ""
+
+#: stampy/plugin/forward.py:259
+#, python-format
+msgid "createforward: %s=%s"
+msgstr ""
+
+#: stampy/plugin/forward.py:278
+#, python-format
+msgid "getforward: %s -> %s"
 msgstr ""
 
 #: stampy/plugin/help.py:45

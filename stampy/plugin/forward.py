@@ -13,9 +13,9 @@ from prettytable import from_db_cursor
 
 import stampy.plugin.config
 import stampy.stampy
-from stampy.i18n import translate
+from stampy.i18n import _
 
-_ = translate.ugettext
+from stampy.i18n import _L
 
 
 def init():
@@ -41,7 +41,7 @@ def run(message):  # do not edit this line
 
     if text:
         if text.split()[0].lower()[0:8] == "/forward":
-            logger.debug(msg=_("Processing forward commands"))
+            logger.debug(msg=_L("Processing forward commands"))
             forwardcommands(message)
     return
 
@@ -87,7 +87,7 @@ def doforward(message, target):
     while not code:
         result = json.load(urllib.urlopen(message))
         code = result['ok']
-        logger.error(msg=_("ERROR (%s) forwarding message: Code: %s : Text: %s") % (attempt, code, result))
+        logger.error(msg=_L("ERROR (%s) forwarding message: Code: %s : Text: %s") % (attempt, code, result))
         try:
             if result['error_code'] == 403 and result['description'] == u'Forbidden: bot was blocked by the user':
                 # User hasn't initiated or has blocked direct messages from bot
@@ -99,9 +99,9 @@ def doforward(message, target):
         sleep(1)
         # exit after 60 retries with 1 second delay each
         if attempt > 60:
-            logger.error(msg=_("PERM ERROR forwarding message: Code: %s : Text: %s") % (code, result))
+            logger.error(msg=_L("PERM ERROR forwarding message: Code: %s : Text: %s") % (code, result))
             code = True
-    logger.debug(msg=_("forwarding message: Code: %s : Text: %s") % (code, text))
+    logger.debug(msg=_L("forwarding message: Code: %s : Text: %s") % (code, text))
     return exitcode
 
 
@@ -129,7 +129,7 @@ def forwardmessage(message):
         for target in getforward(source=chat_id):
             doforward(message=message, target=target)
     else:
-        logger.debug(msg=_("Forward plugin not enabled, skipping"))
+        logger.debug(msg=_L("Forward plugin not enabled, skipping"))
     return
 
 
@@ -148,9 +148,9 @@ def forwardcommands(message):
     who_un = msgdetail["who_un"]
 
     logger = logging.getLogger(__name__)
-    logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
+    logger.debug(msg=_L("Command: %s by %s") % (texto, who_un))
     if stampy.stampy.is_owner(message):
-        logger.debug(msg=_("Command: %s by Owner: %s") % (texto, who_un))
+        logger.debug(msg=_L("Command: %s by Owner: %s") % (texto, who_un))
         try:
             command = texto.split(' ')[1]
         except:
@@ -253,10 +253,10 @@ def createforward(source, target):
 
     logger = logging.getLogger(__name__)
     if getforward(source) == target:
-        logger.error(msg=_("createforward: circular reference %s=%s") % (source, target))
+        logger.error(msg=_L("createforward: circular reference %s=%s") % (source, target))
     else:
         sql = "INSERT INTO forward VALUES('%s','%s');" % (source, target)
-        logger.debug(msg=_("createforward: %s=%s" % (source, target)))
+        logger.debug(msg=_L("createforward: %s=%s" % (source, target)))
         stampy.stampy.dbsql(sql)
         return
     return False
@@ -275,5 +275,5 @@ def getforward(source):
     cur = stampy.stampy.dbsql(sql)
     rows = cur.fetchall()
     for target in rows:
-        logger.debug(msg=_("getforward: %s -> %s" % (source, target)))
+        logger.debug(msg=_L("getforward: %s -> %s" % (source, target)))
         yield target[0]

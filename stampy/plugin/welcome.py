@@ -8,9 +8,9 @@ import logging
 
 import stampy.plugin.config
 import stampy.stampy
-from stampy.i18n import translate
+from stampy.i18n import _
 
-_ = translate.ugettext
+from stampy.i18n import _L
 
 
 def init():
@@ -88,7 +88,7 @@ def welcomeuser(message):
 
     greeting = welcome.replace("$username", name)
 
-    logger.debug(msg=_('New user in chat, sending greetings: %s') % greeting)
+    logger.debug(msg=_L('New user in chat, sending greetings: %s') % greeting)
 
     if greeting:
         stampy.stampy.sendmessage(chat_id=msgdetail["chat_id"], text=greeting,

@@ -12,9 +12,8 @@ from prettytable import from_db_cursor
 
 import stampy.plugin.config
 import stampy.stampy
-from stampy.i18n import translate
-
-_ = translate.ugettext
+from stampy.i18n import _
+from stampy.i18n import _L
 
 
 def init():
@@ -70,7 +69,7 @@ def admincommands(message):
 
     # Only users defined as 'owner' or 'admin' can perform commands
     if stampy.stampy.is_owner_or_admin(message):
-        logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
+        logger.debug(msg=_L("Command: %s by %s") % (texto, who_un))
         try:
             command = texto.split(' ')[1]
         except:
@@ -125,12 +124,12 @@ def changenmastertoken(message):
             generatedtoken = "%s:%s" % (chat_id, token)
             stampy.plugin.config.setconfig(key='link-master', gid=chat_id,
                                            value=generatedtoken)
-            logger.debug(msg=_("Generated token %s for channel %s") % (token, chat_id))
+            logger.debug(msg=_L("Generated token %s for channel %s") % (token, chat_id))
             text = _("Token for linking against this channel has been generated "
                      "as %s") % generatedtoken
         else:
             generatedtoken = stampy.plugin.config.config(key='link-master', default=False, gid=chat_id)
-            logger.debug(msg=_("Already generated token %s for channel %s") % (generatedtoken, chat_id))
+            logger.debug(msg=_L("Already generated token %s for channel %s") % (generatedtoken, chat_id))
             text = _("A token for linking against this channel already existed as %s") % generatedtoken
 
         text = text + _("\n\nChannel has also been enabled as running in isolated "
@@ -163,7 +162,7 @@ def chanlinkslave(message, token=""):
 
     masterid = token.split(':')[0]
 
-    logger.debug(msg=_("chanenslave: %s, master-id: %s, master-token:%s") % (chat_id, masterid, token.split(':')[1]))
+    logger.debug(msg=_L("chanenslave: %s, master-id: %s, master-token:%s") % (chat_id, masterid, token.split(':')[1]))
 
     if stampy.plugin.config.config(key='link-master', default=False,
                                    gid=masterid) == token:

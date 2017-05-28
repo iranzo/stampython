@@ -21,7 +21,7 @@ def upgrade():
     """
     Performs upgrade of database
     """
-    
+
     op.add_column(u'config', sa.Column('id', sa.Text(), nullable=True))
     op.execute("""
         UPDATE
@@ -35,4 +35,5 @@ def downgrade():
     """
     Performs database downgrade
     """
+
     op.drop_column(u'config', 'id')

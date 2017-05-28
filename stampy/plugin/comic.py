@@ -20,9 +20,9 @@ import stampy.plugin.config
 import stampy.plugin.karma
 import stampy.plugin.stats
 import stampy.stampy
-from stampy.i18n import translate
+from stampy.i18n import _
 
-_ = translate.ugettext
+from stampy.i18n import _L
 
 sched = BackgroundScheduler()
 sched.start()
@@ -90,10 +90,10 @@ def comiccommands(message):
     message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    logger.debug(msg=_("Command: %s by %s") % (texto, who_un))
+    logger.debug(msg=_L("Command: %s by %s") % (texto, who_un))
 
     if stampy.stampy.is_owner_or_admin(message):
-        logger.debug(msg=_("Command: %s by Owner: %s") % (texto, who_un))
+        logger.debug(msg=_L("Command: %s by Owner: %s") % (texto, who_un))
         try:
             command = texto.split(' ')[1]
         except:
@@ -143,7 +143,7 @@ def getcomics():
         # Fill valid values
         value.append(row[0])
 
-    logger.debug(msg=_("getcomics: %s") % value)
+    logger.debug(msg=_L("getcomics: %s") % value)
 
     return value
 
@@ -167,7 +167,7 @@ def listcomics():
     except:
         text = ""
 
-    logger.debug(msg=_("Returning comics"))
+    logger.debug(msg=_L("Returning comics"))
     return text
 
 
@@ -222,7 +222,7 @@ def comics(message=False, name=False, all=False):
 
         if (date - datelast).days >= 1:
             # Last checked comic was more than 1 day ago
-            logger.debug(msg=_("Comic: %s, last: %s, now: %s, url: %s") % (name, datelast, date, url))
+            logger.debug(msg=_L("Comic: %s, last: %s, now: %s, url: %s") % (name, datelast, date, url))
 
             if tipo == 'rss':
                 # Comic is rss feed, process
@@ -265,7 +265,7 @@ def comics(message=False, name=False, all=False):
         for comic in stampy.stampy.getitems(comicsupdated):
             # Update date in SQL so it's not invoked again
             sql = "UPDATE comic SET lastchecked='%s' where name='%s'" % (datefor, comic)
-            logger.debug(msg=_("Updating last checked as per %s") % sql)
+            logger.debug(msg=_L("Updating last checked as per %s") % sql)
             stampy.stampy.dbsql(sql=sql)
 
         # Update stats for chats where sent comic
@@ -291,7 +291,7 @@ def comicfromrss(url):
         if date.year == dateitem.year and date.month == dateitem.month and date.day == dateitem.day:
             tira.append(item)
 
-    logger.debug(msg=_("# of Comics for today: %s") % len(tira))
+    logger.debug(msg=_L("# of Comics for today: %s") % len(tira))
 
     imgtxt = False
     imgsrc = False
