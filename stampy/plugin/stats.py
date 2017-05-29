@@ -390,7 +390,7 @@ def getoutofchat(chat_id=False):
     return result
 
 
-def dochatcleanup(chat_id=False, maxage=int(stampy.plugin.config.config("maxage", default=180))):
+def dochatcleanup(chat_id=False, maxage=False):
     """
     Checks on the stats database the date of the last update in the chat
     :param chat_id: Channel ID to query in database
@@ -422,7 +422,10 @@ def dochatcleanup(chat_id=False, maxage=int(stampy.plugin.config.config("maxage"
 
         now = datetime.datetime.now()
 
-        if (now - chatdate).days > maxage:
+        # get maxage from channel config (to quickly expire some) or general
+        maxage = int(stampy.plugin.config.gconfig("maxage", default=180))
+
+        if (now - chatdate).days >= maxage:
             logger.debug(msg=_L("CHAT ID %s with name %s with %s inactivity days is going to be purged") % (
                 chatid, name, (now - chatdate).days))
             # The last update was older than maxage days ago, get out of chat and
@@ -484,7 +487,10 @@ def dochatcleanup(chat_id=False, maxage=int(stampy.plugin.config.config("maxage"
             for line in cur:
                 (type, id, name, date, count, memberid) = line
                 logger.debug(msg=_L("LINE for user %s and memberid: %s will be deleted") % (name, memberid))
-                memberid.remove(chatid)
+                try:
+                    memberid.remove(chatid)
+                except:
+                    pass
                 # Update stats entry in database without the removed chat
                 updatestats(type=type, id=id, name=name, date=date, memberid=memberid)
     return

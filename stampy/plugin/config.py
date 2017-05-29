@@ -107,10 +107,12 @@ def configcommands(message):
                 key = word
                 # Define valid keys for each role
                 if gid > 0:  # user private chat
-                    validkeys = ['language', 'currency', 'modulo', 'stock', 'espp', 'highlight']
+                    validkeys = ['language', 'currency', 'modulo', 'stock',
+                                 'espp']
                 elif gid < 0:  # group chat or channel
                     validkeys = ['language', 'currency', 'modulo', 'stock',
-                                 'espp', 'isolated', 'admin', 'welcome']
+                                 'espp', 'isolated', 'admin', 'welcome',
+                                 'maxage']
                 else:
                     validkeys = []
 
@@ -133,9 +135,12 @@ def configcommands(message):
 
                     # Define valid keys for each role
                     if gid > 0:  # user private chat
-                        validkeys = ['language', 'currency', 'modulo', 'stock', 'espp', 'highlight']
+                        validkeys = ['language', 'currency', 'modulo',
+                                     'stock', 'espp']
                     elif gid < 0:  # group chat or channel
-                        validkeys = ['language', 'currency', 'modulo', 'stock', 'espp', 'isolated', 'admin', 'welcome']
+                        validkeys = ['language', 'currency', 'modulo',
+                                     'stock', 'espp', 'isolated', 'admin',
+                                     'welcome', 'maxage']
                     else:
                         validkeys = []
 

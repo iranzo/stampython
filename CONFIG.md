@@ -2,7 +2,6 @@
 
 - owner: owner of bot
 - daemon: Run as daemon or one shoot
-- maxage: chats older than this will be removed
 - cleanup: cleanup tasks periodicity
 - sleep: delay between two telegram server checks for messages
 - token: auth token against telegram server
@@ -13,7 +12,7 @@
 ### User/chat configuration
 
 - common
-    - language: en (TODO)
+    - language: en|es
     - currency: EUR
     - modulo: 1 (to just show karma every X/modulo points, 0 to disable)
     - stock: stock tickers to check
@@ -24,6 +23,7 @@
     - isolated: False, if true, allow link, all karma, etc is tied to GID
     - link: empty, if defined, channel is slave to a mater
     - admin: List of admins of channels, default empty: everyone
+    - maxage: chats older than this will be removed
 
 ## Donations
 
