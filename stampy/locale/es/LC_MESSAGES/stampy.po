@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-05-28 23:36+0200\n"
-"PO-Revision-Date: 2017-05-28 23:37+0200\n"
+"POT-Creation-Date: 2017-05-29 16:44+0200\n"
+"PO-Revision-Date: 2017-05-29 16:44+0200\n"
 "Last-Translator: Pablo Iranzo Gómez <Pablo.Iranzo@gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -820,7 +820,7 @@ msgstr "Borrando hilight para `%s`"
 #: stampy/plugin/highlight.py:113
 #, python-format
 msgid "Adding hilight for `%s`"
-msgstr "Borrando hilight para `%s`"
+msgstr "Añadiendo hilight para `%s`"
 
 #: stampy/plugin/highlight.py:205
 #, python-format
