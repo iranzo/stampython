@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-05-29 16:44+0200\n"
-"PO-Revision-Date: 2017-05-29 16:44+0200\n"
+"POT-Creation-Date: 2017-06-02 21:25+0200\n"
+"PO-Revision-Date: 2017-06-02 21:29+0200\n"
 "Last-Translator: Pablo Iranzo Gómez <Pablo.Iranzo@gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -24,22 +24,22 @@ msgstr ""
 msgid "Language changed to %s"
 msgstr "Idioma cambiado a  %s"
 
-#: stampy/plugins.py:41
+#: stampy/plugins.py:40
 #, python-format
 msgid "Plugin added: %s"
 msgstr "Complemento añadido: %s"
 
-#: stampy/plugins.py:44
+#: stampy/plugins.py:43
 #, python-format
 msgid "Plugin disabled: %s"
 msgstr "Complemento deshabilitado: %s"
 
-#: stampy/plugins.py:70
+#: stampy/plugins.py:69
 #, python-format
 msgid "Processing plugin initialization: %s"
 msgstr "Procesando inicialización del complemento: %s"
 
-#: stampy/plugins.py:77
+#: stampy/plugins.py:76
 #, python-format
 msgid "Plugin %s is triggered by %s"
 msgstr "Plugin %s se activa mediante %s"
@@ -283,6 +283,7 @@ msgstr "Use `/admin linik show` para listar los canales enlazados\n"
 #: stampy/plugin/autokarma.py:79 stampy/plugin/comic.py:93
 #: stampy/plugin/config.py:87 stampy/plugin/espp.py:67
 #: stampy/plugin/forward.py:151 stampy/plugin/help.py:66
+#: stampy/plugin/stock.py:119
 #, python-format
 msgid "Command: %s by %s"
 msgstr "Comando: %s por %s"
@@ -571,52 +572,52 @@ msgstr ""
 "Use `/[g|l]config delete <clave>` para eliminar un valor\n"
 "\n"
 
-#: stampy/plugin/config.py:118
+#: stampy/plugin/config.py:120
 #, python-format
 msgid "Deleting config for `%s`"
 msgstr "Borrando configuración para `%s`"
 
-#: stampy/plugin/config.py:121
+#: stampy/plugin/config.py:123
 #, python-format
 msgid "Key *%s* not allowed to be removed"
 msgstr "La clave *%s* no tiene autorización para eliminarla"
 
-#: stampy/plugin/config.py:145
+#: stampy/plugin/config.py:150
 #, python-format
 msgid "Setting config for `%s` to `%s`"
 msgstr "Estableciendo configuración para `%s` a `%s`"
 
-#: stampy/plugin/config.py:147
+#: stampy/plugin/config.py:152
 #, python-format
 msgid "Key *%s* not allowed to be set"
 msgstr "La clave *%s* no está autorizada para ser definida"
 
-#: stampy/plugin/config.py:181
+#: stampy/plugin/config.py:186
 #, python-format
 msgid "%s has a value of %s for id %s"
 msgstr "%s tiene un valor de %s para el id %s"
 
-#: stampy/plugin/config.py:186
+#: stampy/plugin/config.py:191
 #, python-format
 msgid "Defined configurations for gid %s:\n"
 msgstr "Configuraciones definidas para gid %s:\n"
 
-#: stampy/plugin/config.py:189
+#: stampy/plugin/config.py:194
 #, python-format
 msgid "Returning config %s for key %s for id %s"
 msgstr "Devolviendo configuración %s para %s para id %s"
 
-#: stampy/plugin/config.py:253
+#: stampy/plugin/config.py:258
 #, python-format
 msgid "Updating config for %s with %s for id %s"
 msgstr "Actualizando configuración para %s con %s para id %s"
 
-#: stampy/plugin/config.py:270
+#: stampy/plugin/config.py:275
 #, python-format
 msgid "setconfig: %s=%s for id %s"
 msgstr "setconfig %s=%s para id %s"
 
-#: stampy/plugin/config.py:285
+#: stampy/plugin/config.py:290
 #, python-format
 msgid "rmconfig: %s for id %s"
 msgstr "rmconfig %s para id %s"
@@ -1023,6 +1024,86 @@ msgstr "Procesando palabras para limpieza: %s"
 msgid "Word %s with %s inactivity days is going to be purged"
 msgstr "La palabra %s con %s días de inactividad va a ser eliminada"
 
+#: stampy/plugin/kick.py:53
+msgid ""
+"Use `/kick <username or id> to kick user from chat\n"
+"\n"
+msgstr ""
+"Use `/kick <usuario o id> para expulsar a un usuario del chat\n"
+"\n"
+
+#: stampy/plugin/kick.py:54
+msgid ""
+"Use `/kickban <username or id> to kick user from chat and ban to forbid new "
+"entry\n"
+"\n"
+msgstr ""
+"Use `/kickban <usuario o id> para expulsar a un usuario del chat e impedirle "
+"la entrada de nuevo\n"
+"\n"
+
+#: stampy/plugin/kick.py:55
+msgid ""
+"Use `/unban <user ID>\n"
+"\n"
+msgstr ""
+"Use `/unban <usuario o id> para aceptar al usuario de chat de nuevo\n"
+"\n"
+
+#: stampy/plugin/kick.py:77
+#, python-format
+msgid "Owner kick/ban/unban: %s by %s"
+msgstr "Expulsar/prohibir/aceptar por propietario: %s por %s"
+
+#: stampy/plugin/kick.py:101
+msgid "Not unique user found for command, retry"
+msgstr "No se encontró a un usuario único, reintente."
+
+#: stampy/plugin/kick.py:113
+#, python-format
+msgid "User %s kicked out of chat %s"
+msgstr "Usuario %s expulsado del chat %s"
+
+#: stampy/plugin/kick.py:115
+#, python-format
+msgid "Error kicking user %s from chat %s: %s"
+msgstr "Error expulsando al usuario %s del chat %s: %s"
+
+#: stampy/plugin/kick.py:123
+#, python-format
+msgid "User %s kicked and banned out of chat %s"
+msgstr "Usuario %s expulsado y bloqueado en el chat %s"
+
+#: stampy/plugin/kick.py:125
+#, python-format
+msgid "Error kick+ban user %s from chat %s: %s"
+msgstr "Error expulsando y bloqueando al usuario %s del chat %s: %s"
+
+#: stampy/plugin/kick.py:133
+#, python-format
+msgid "User %s unbanned out of chat %s"
+msgstr "Usuario %s de nuevo permitido en el chat %s"
+
+#: stampy/plugin/kick.py:135
+#, python-format
+msgid "Error unbanning user %s from chat %s: %s"
+msgstr "Error al aceptar al usuario %s del chat %s: %s"
+
+#: stampy/plugin/kick.py:166
+#, python-format
+msgid "User %s kicked and banned from %s"
+msgstr "Usuario %s expulsado y bloqueado del grupo %s"
+
+#: stampy/plugin/kick.py:170
+#, python-format
+msgid "Error when kicking user: %s"
+msgstr "Error al expulsar al usuario: %s"
+
+#: stampy/plugin/kick.py:197
+#, python-format
+msgid "User %s unbaned from %s"
+msgstr "Usuario %s de nuevo aceptado en grupo %s"
+
 #: stampy/plugin/quote.py:46
 msgid "Use `/quote add <id> <text>` to add a quote for that username\n"
 msgstr ""
@@ -1154,12 +1235,12 @@ msgstr "Chat id %s abandonado"
 msgid "Processing chat_ids for cleanup: %s"
 msgstr "Procesando chat_ids para limpieza: %s"
 
-#: stampy/plugin/stats.py:426
+#: stampy/plugin/stats.py:429
 #, python-format
 msgid "CHAT ID %s with name %s with %s inactivity days is going to be purged"
 msgstr "El chat %s con nombre %s y %s días de inactividad va a ser eliminado"
 
-#: stampy/plugin/stats.py:430
+#: stampy/plugin/stats.py:433
 #, python-format
 msgid ""
 "Due to inactivity of more than %s days, this bot will exit the channel, "
@@ -1168,55 +1249,60 @@ msgstr ""
 "Debido a inactividad de más de %s días, este bot saldrá del canal, por "
 "favor, reañádalo en el futuro si es necesario"
 
-#: stampy/plugin/stats.py:458
+#: stampy/plugin/stats.py:461
 #, python-format
 msgid "The removed channel (%s) was master for others, electing new master: %s"
 msgstr ""
 "El canal eliminado (%s) era MAESTRO para otros, escogiendo a nuevo maestro: "
 "%s"
 
-#: stampy/plugin/stats.py:486 stampy/plugin/stats.py:579
+#: stampy/plugin/stats.py:489 stampy/plugin/stats.py:585
 #, python-format
 msgid "LINE for user %s and memberid: %s will be deleted"
 msgstr "LINEA para usuario %s con memberid: %s será eliminada"
 
-#: stampy/plugin/stats.py:504
+#: stampy/plugin/stats.py:510
 #, python-format
 msgid "Migrating chat id: %s to %s"
 msgstr "Migrando chat id %s a %s"
 
-#: stampy/plugin/stats.py:549
+#: stampy/plugin/stats.py:555
 #, python-format
 msgid "Processing userids for cleanup: %s"
 msgstr "Procesando userids para limpieza: %s"
 
-#: stampy/plugin/stats.py:562
+#: stampy/plugin/stats.py:568
 #, python-format
 msgid "USER ID %s with name %s with %s inactivity days is going to be purged"
 msgstr ""
 "El usuario %s con nombre %s y con %s días de inactividad va a ser eliminado"
 
-#: stampy/plugin/stats.py:645
+#: stampy/plugin/stats.py:651
 #, python-format
 msgid "values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid:%s"
 msgstr ""
 "valores: tipo: %s, id:%s, nombre:%s,  fecha:%s, numero:%s, memberid: %s"
 
-#: stampy/plugin/stats.py:666
+#: stampy/plugin/stats.py:672
 msgid "@All invoked"
 msgstr "@All invocado"
 
-#: stampy/plugin/stats.py:690
+#: stampy/plugin/stats.py:696
 #, python-format
 msgid "%s wanted to ping you: "
 msgstr "%s quiso mencionarle: "
 
-#: stampy/plugin/stats.py:710
+#: stampy/plugin/stats.py:716
 #, python-format
 msgid "Pinging chat %s: %s on %s"
 msgstr "Mencionando chat %s: %s en %s"
 
-#: stampy/plugin/stock.py:51
+#: stampy/plugin/stats.py:742
+#, python-format
+msgid "Found users with id(%s)/chat(%s): %s"
+msgstr "Encontrado usuarios con id(%s)/chat(%s): %s"
+
+#: stampy/plugin/stock.py:50
 msgid ""
 "Use `stock <ticker>` to get stock trading price\n"
 "\n"
@@ -1224,7 +1310,7 @@ msgstr ""
 "Use `stock <valor>` para obtener la cotización del valor\n"
 "\n"
 
-#: stampy/plugin/stock.py:139
+#: stampy/plugin/stock.py:138
 #, python-format
 msgid "USD/%s rate \n"
 msgstr "Tasa de cambio USD/%s\n"

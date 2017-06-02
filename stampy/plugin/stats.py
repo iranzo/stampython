@@ -717,3 +717,28 @@ def pingchat(chatid):
     updatestats(type="chat", id=chatid, name=name,
                 date=datefor, memberid=memberid)
     return
+
+
+def idfromuser(idorname=False, chat_id=False):
+    logger = logging.getLogger(__name__)
+    string = "%" + "%s" % idorname + "%"
+    sql = "select id,name from stats where (name like '%s' or id like '%s')" % (string, string)
+
+    if chat_id:
+        string = "%" + "%s" % chat_id + "%"
+        sql = sql + " and memberid like '%s'" % string
+
+    sql = sql + ";"
+
+    # Find user ID provided in database for current channel
+
+    cur = stampy.stampy.dbsql(sql)
+    results = []
+
+    for row in cur:
+        # Process each word returned
+        results.append({"id": row[0], "name": row[1]})
+
+    logger.debug(msg=_L("Found users with id(%s)/chat(%s): %s") % (idorname, chat_id, results))
+
+    return results
