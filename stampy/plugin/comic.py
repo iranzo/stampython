@@ -33,7 +33,7 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    botname = stampy.stampy.getme()['username']
+    botname = stampy.stampy.getme()
     if botname == 'redken_bot':
         sched.add_job(comics, 'interval', id='comic', minutes=30,
                       replace_existing=True, misfire_grace_time=120)

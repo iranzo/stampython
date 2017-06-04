@@ -94,7 +94,7 @@ def run(message):  # do not edit this line
 
         if leftusername:
             try:
-                botname = stampy.stampy.getme()['username']
+                botname = stampy.stampy.getme()
             except:
                 botname = False
 

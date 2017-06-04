@@ -153,21 +153,21 @@ def dbsql(sql=False):
 
     worked = False
     attempt = 0
-    while attempt < 10:
+    while attempt < 60:
         if sql:
             attempt = attempt + 1
             try:
                 cur.execute(sql)
                 con.commit()
                 worked = True
-                attempt = 10
+                attempt = 60
             except:
                 exc_info = sys.exc_info()
                 traceback.print_exception(*exc_info)
                 worked = False
                 sleep(random.randint(0, 10))
         else:
-            attempt = 10
+            attempt = 60
 
         if not worked:
             logger.critical(msg=_L("Error # %s on SQL execution: %s") % (attempt, sql))
@@ -303,13 +303,21 @@ def getme():
     """
 
     logger = logging.getLogger(__name__)
-    url = "%s%s/getMe" % (plugin.config.config(key='url'),
-                          plugin.config.config(key='token'))
-    message = "%s" % url
-    try:
-        result = json.load(urllib.urlopen(message))['result']
-    except:
-        result = {'username': 'stampy'}
+
+    if not plugin.config.config(key='myself', default=False):
+
+        url = "%s%s/getMe" % (plugin.config.config(key='url'),
+                              plugin.config.config(key='token'))
+        message = "%s" % url
+        try:
+            result = json.load(urllib.urlopen(message))['result']['username']
+        except:
+            result = 'stampy'
+
+        plugin.config.setconfig(key='myself', value=result)
+
+    else:
+        result = plugin.config.config(key='myself')
 
     logger.info(msg=_L("Getting bot details and returning: %s") % result)
     return result
@@ -600,7 +608,7 @@ def process(messages):
         global plugtriggers
 
         msgdetail = getmsgdetail(message)
-        botname = getme()['username']
+        botname = getme()
 
         # Process group configuration for language
         chat_id = msgdetail['chat_id']
@@ -874,6 +882,9 @@ def main():
 
     if not plugin.config.config(key='sleep'):
         plugin.config.setconfig(key='sleep', value=10)
+
+    # Remove our name so it is retrieved on boot
+    plugin.config.deleteconfig(key='myself')
 
     # Check if we've the token required to access or exit
     if not plugin.config.config(key='token'):

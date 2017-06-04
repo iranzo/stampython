@@ -67,7 +67,7 @@ def helpcommands(message):
 
     if chat_id != msgdetail['who_id']:
         # Provide text on public channel
-        text = _("Message sent privately, open a chat with @%s and say hi to receive private messages or read https://github.com/iranzo/stampython/blob/master/README.md\n") % stampy.stampy.getme()['username']
+        text = _("Message sent privately, open a chat with @%s and say hi to receive private messages or read https://github.com/iranzo/stampython/blob/master/README.md\n") % stampy.stampy.getme()
         stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                   reply_to_message_id=message_id)
 
