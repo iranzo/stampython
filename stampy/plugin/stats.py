@@ -127,7 +127,7 @@ def help(message):  # do not edit this line
 
     commandtext = _("Use `@all` to ping all users in a channel as long as they have username defined in Telegram\n\n")
     if stampy.stampy.is_owner(message):
-        commandtext += _("Use `/stats show <user|chat>` to get stats on last usage\n\n")
+        commandtext += _("Use `/stats show <user|chat|search>` to get stats on last usage\n\n")
         commandtext += _("Use `/getout <chatid|here>` to have bot leave that chat or current one\n\n")
     return commandtext
 
@@ -162,7 +162,7 @@ def statscommands(message):
 
         for case in stampy.stampy.Switch(command):
             if case('show'):
-                text = showstats(key)
+                text = showstats(type=key)
                 stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                           reply_to_message_id=message_id,
                                           disable_web_page_preview=True,
@@ -172,6 +172,16 @@ def statscommands(message):
                 dochatcleanup()
 
                 break
+
+            if case('search'):
+                text = showstats(name=key)
+                stampy.stampy.sendmessage(chat_id=chat_id, text=text,
+                                          reply_to_message_id=message_id,
+                                          disable_web_page_preview=True,
+                                          parse_mode="Markdown")
+
+                break
+
             if case():
                 break
 
@@ -211,17 +221,29 @@ def getoutcommands(message):
     return
 
 
-def showstats(type=False):
+def showstats(type=False, name=None):
     """
     Shows stats for defined type or all if missing
+    :param name: name to search in the stats database 
     :param type: user or chat or empy for combined
     :return: table with the results
     """
     logger = logging.getLogger(__name__)
     if type:
-        sql = "select type,id,name,date,count from stats WHERE type='%s' ORDER BY count DESC LIMIT 10" % type
+        sql = "select type,id,name,date,count from stats WHERE type='%s'" % type
+
+        if name:
+            string = "%" + "%s" % name + "%"
+            sql = sql + " and name like '%s'" % string
     else:
-        sql = "select type,id,name,date,count from stats ORDER BY count DESC LIMIT 10"
+        sql = "select type,id,name,date,count from stats"
+
+        if name:
+            string = "%" + "%s" % name + "%"
+            sql = sql + " WHERE name like '%s'" % string
+
+    sql = sql + " ORDER BY count DESC LIMIT 10"
+
     cur = stampy.stampy.dbsql(sql)
     table = from_db_cursor(cur)
     text = _("Defined stats:\n")
