@@ -73,7 +73,7 @@ def kickcommands(message):
     who_un = msgdetail["who_un"]
     user_id = False
 
-    if stampy.stampy.is_owner(message):
+    if stampy.stampy.is_owner_or_admin(message):
         logger.debug(msg=_L("Owner kick/ban/unban: %s by %s") % (texto, who_un))
         try:
             command = texto.split(' ')[0]
