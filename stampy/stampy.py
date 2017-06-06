@@ -246,16 +246,24 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
         sleep(1)
         if not code:
             for case in Switch(result['description']):
-                if case('Bad Request: message text is empty'):
+                if case(u"Bad Request: message text is empty"):
                     # Message is empty, no need to resend
                     attempt = 61
                     break
-                if case("Forbidden: bot can't initiate conversation with a user"):
+                if case(u"Forbidden: bot can't initiate conversation with a user"):
                     # Bot hasn't been authorized by user, cancelling
                     attempt = 61
                     break
-                if case('Bad Request: reply message not found'):
+                if case(u"Bad Request: reply message not found"):
                     # Original reply has been deleted
+                    attempt = 61
+                    break
+                if case(u"Forbidden: bot was blocked by the user"):
+                    # User blocked the bot
+                    attempt = 61
+                    break
+                if case(u"Bad Request: can't parse entities in message text: "
+                        u"Can't find end of the entity starting at byte offset 510"):
                     attempt = 61
                     break
 
