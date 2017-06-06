@@ -220,6 +220,11 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
                     parse_mode=parse_mode, extra=extra)
         return
 
+    overridegid = plugin.config.config(key='overridegid', gid=0,
+                                       default=False)
+    if overridegid:
+        chat_id = overridegid
+
     message = "%s?chat_id=%s&text=%s" % (
               url, chat_id, urllib.quote_plus(text.encode('utf-8')))
     if reply_to_message_id:

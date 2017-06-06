@@ -49,13 +49,14 @@ def run(message):  # do not edit this line
     text = msgdetail["text"]
 
     # Update stats on the message being processed
-    if msgdetail["chat_id"] and msgdetail["chat_name"]:
-        updatestats(type="chat", id=msgdetail["chat_id"], name=msgdetail["chat_name"],
-                    date=msgdetail["datefor"], memberid=msgdetail["who_id"])
+    if not stampy.plugin.config.config(key='overridegid', default=False):
+        if msgdetail["chat_id"] and msgdetail["chat_name"]:
+            updatestats(type="chat", id=msgdetail["chat_id"], name=msgdetail["chat_name"],
+                        date=msgdetail["datefor"], memberid=msgdetail["who_id"])
 
-    if msgdetail["name"]:
-        updatestats(type="user", id=msgdetail["who_id"], name=msgdetail["name"], date=msgdetail["datefor"],
-                    memberid=msgdetail["chat_id"])
+        if msgdetail["name"]:
+            updatestats(type="user", id=msgdetail["who_id"], name=msgdetail["name"], date=msgdetail["datefor"],
+                        memberid=msgdetail["chat_id"])
 
     if text:
         if text.split()[0].lower()[0:6] == "/stats":
@@ -224,7 +225,7 @@ def getoutcommands(message):
 def showstats(type=False, name=None):
     """
     Shows stats for defined type or all if missing
-    :param name: name to search in the stats database 
+    :param name: name to search in the stats database
     :param type: user or chat or empy for combined
     :return: table with the results
     """
