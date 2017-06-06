@@ -347,65 +347,6 @@ def clearupdates(offset):
     return result
 
 
-def telegramcommands(message):
-    """
-    Processes telegram commands in message texts (/help, etc)
-    :param message: message received
-    :return: True if any telegramcommands where processed,
-             False if no telegramcommands were present
-    """
-
-    msgdetail = getmsgdetail(message)
-
-    texto = msgdetail["text"]
-    chat_id = msgdetail["chat_id"]
-    message_id = msgdetail["message_id"]
-
-    logger = logging.getLogger(__name__)
-
-    # Process lines for commands in the first word of the line (Telegram)
-    if texto:
-        word = texto.split()[0]
-    else:
-        texto = ""
-        word = ""
-    if "@" in word:
-        # If the message is directed as /help@bot, remove that part
-        word = word.split("@")[0]
-
-    commandtext = False
-    retv = False
-    for case in Switch(word):
-        if case('/help'):
-            if is_owner(message):
-                commandtext += _("Use `/quit` to exit daemon mode\n")
-                commandtext += _("Learn more about this bot in [https://github.com/iranzo/stampython] (https://github.com/iranzo/stampython)")
-            break
-        if case('/start'):
-            commandtext = _("This bot does not use start or stop commands, it automatically checks for karma operands")
-            retv = True
-            break
-        if case('/stop'):
-            commandtext = _("This bot does not use start or stop commands, it automatically checks for karma operands")
-            retv = True
-            break
-        if case('/quit'):
-            # Disable running as daemon to ensure we're exiting the loop
-            if is_owner(message):
-                plugin.config.setconfig('daemon', False)
-            retv = True
-
-        if case():
-            commandtext = False
-
-    # If any of above commands did match, send command
-    if commandtext:
-        sendmessage(chat_id=chat_id, text=commandtext,
-                    reply_to_message_id=message_id, parse_mode="Markdown")
-        logger.debug(msg=_L("Command: %s") % word)
-    return retv
-
-
 def sendsticker(chat_id=0, sticker="", text="", reply_to_message_id=""):
     """
     Sends a sticker to chat_id as a reply to a message received
