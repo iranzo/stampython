@@ -23,6 +23,10 @@ The bot stores stats on users/chats, remembering the chat/user name and last tim
 - `/forward delete source_id=target_id` Stops forwarding messages from source to target
 - `/forward list` To get list of defined forwards
 
+## Sudo
+- `/sudo gid=<gid>` sets gid to act as, allows later to run:
+- `/sudo <command>` where <command> might be like for example `/hilight list`
+
 ## quit
 
 - `/quit` will exit daemon mode

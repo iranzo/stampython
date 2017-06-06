@@ -5,10 +5,6 @@
 # Author: Pablo Iranzo Gomez (Pablo.Iranzo@gmail.com)
 
 import logging
-import random
-import string
-
-from prettytable import from_db_cursor
 
 import stampy.plugin.config
 import stampy.stampy
@@ -72,11 +68,6 @@ def basecommands(message):
         except:
             command = False
 
-        try:
-            word = texto.split(' ')[1]
-        except:
-            word = ""
-
         for case in stampy.stampy.Switch(command):
             if case('/quit'):
                 stampy.plugin.config.setconfig('daemon', False)
@@ -84,4 +75,3 @@ def basecommands(message):
             if case():
                 break
     return
-
