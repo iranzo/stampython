@@ -88,13 +88,17 @@ def doforward(message, target):
         result = json.load(urllib.urlopen(message))
         code = result['ok']
         logger.error(msg=_L("ERROR (%s) forwarding message: Code: %s : Text: %s") % (attempt, code, result))
-        try:
+        if code == 'False' or not code:
             if result['error_code'] == 403 and result['description'] == u'Forbidden: bot was blocked by the user':
                 # User hasn't initiated or has blocked direct messages from bot
                 attempt = 60
                 exitcode = 'blocked'
-        except:
-            pass
+
+            if result['error_code'] == 400 and result['description'] == u'Bad Request: message to forward not found':
+                # Message not found on chat
+                attempt = 60
+                exitcode = '0'
+
         attempt += 1
         sleep(1)
         # exit after 60 retries with 1 second delay each
