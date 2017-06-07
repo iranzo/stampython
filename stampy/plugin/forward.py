@@ -99,6 +99,11 @@ def doforward(message, target):
                 attempt = 60
                 exitcode = '0'
 
+            if result['error_code'] == 400 and result ['description'] == u'Bad Request: chat not found':
+                # Message not found on chat
+                attempt = 60
+                exitcode = '0'
+
         attempt += 1
         sleep(1)
         # exit after 60 retries with 1 second delay each
