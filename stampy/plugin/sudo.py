@@ -50,7 +50,7 @@ def help(message):  # do not edit this line
     commandtext = ""
 
     if stampy.stampy.is_owner(message):
-        commandtext = _("Use `/sudo group=<gid>` to assign group to work on\n")
+        commandtext = _("Use `/sudo gid=<gid>` to assign group to work on\n")
         commandtext += _("Use `/sudo command` to execute command as if chat id were the one defined\n")
     return commandtext
 

@@ -25,6 +25,7 @@ Also, as per general usage (copied from [Readme.md](README.md) ):
 
 - `word++` to add karma
 - `word--` to remove karma
+- reply to message with '++', '--' or '==' to add or remove karma to user of prior message or to the same words that were used
 - `/quote add username text` to add a quote for given username with the following text as message
 - `/quote username` to retrieve a random quote for that username.
 - `/comic list` to list all knwon comic strips
