@@ -99,7 +99,7 @@ def doforward(message, target):
                 attempt = 60
                 exitcode = '0'
 
-            if result['error_code'] == 400 and result ['description'] == u'Bad Request: chat not found':
+            if result['error_code'] == 400 and result['description'] == u'Bad Request: chat not found':
                 # Message not found on chat
                 attempt = 60
                 exitcode = '0'

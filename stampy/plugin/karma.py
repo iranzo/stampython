@@ -57,6 +57,7 @@ def help(message):  # do not edit this line
     commandtext += _("Use `srank <word>` to search for similar words already ranked\n\n")
     if stampy.stampy.is_owner(message):
         commandtext += _("Use `skarma <word>=<value>` to establish karma of a word\n\n")
+        commandtext += _("Use `skarma purge` to clear old karma\n\n")
 
     return commandtext
 
@@ -111,6 +112,8 @@ def karmacommands(message):
                                           disable_web_page_preview=True,
                                           parse_mode="Markdown")
                 putkarma(word=key, value=value, gid=stampy.stampy.geteffectivegid(gid=chat_id))
+            elif word == "purge":
+                dokarmacleanup()
             break
         if case():
             commandtext = False

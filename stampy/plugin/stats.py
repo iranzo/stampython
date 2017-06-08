@@ -171,6 +171,7 @@ def statscommands(message):
                 break
             if case('purge'):
                 dochatcleanup()
+                dousercleanup()
 
                 break
 

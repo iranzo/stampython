@@ -183,7 +183,7 @@ def createalias(word, value, gid=0):
         if not getalias(word, gid) or getalias(word, gid) == word:
             # Removing duplicates on karma DB and add
             # the previous values
-            old = stampy.plugin.karma.getkarma(word)
+            old = stampy.plugin.karma.getkarma(word=word, gid=gid)
             stampy.plugin.karma.updatekarma(word=word, change=-old)
             stampy.plugin.karma.updatekarma(word=value, change=old)
 
