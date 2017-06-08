@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.71\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-06-07 16:42+0200\n"
+"POT-Creation-Date: 2017-06-09 17:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -241,8 +241,8 @@ msgstr ""
 
 #: stampy/plugin/admin.py:72 stampy/plugin/alias.py:73
 #: stampy/plugin/autokarma.py:79 stampy/plugin/base.py:65
-#: stampy/plugin/comic.py:93 stampy/plugin/config.py:87
-#: stampy/plugin/espp.py:67 stampy/plugin/forward.py:155
+#: stampy/plugin/comic.py:95 stampy/plugin/config.py:87
+#: stampy/plugin/espp.py:67 stampy/plugin/forward.py:160
 #: stampy/plugin/help.py:66 stampy/plugin/stock.py:119 stampy/plugin/sudo.py:73
 #, python-format
 msgid "Command: %s by %s"
@@ -334,7 +334,7 @@ msgid ""
 msgstr ""
 
 #: stampy/plugin/alias.py:75 stampy/plugin/autokarma.py:82
-#: stampy/plugin/comic.py:96 stampy/plugin/forward.py:157
+#: stampy/plugin/comic.py:98 stampy/plugin/forward.py:162
 #: stampy/plugin/sudo.py:75
 #, python-format
 msgid "Command: %s by Owner: %s"
@@ -432,44 +432,44 @@ msgstr ""
 msgid "Use `/quit` to exit bot execution\n"
 msgstr ""
 
-#: stampy/plugin/comic.py:69
+#: stampy/plugin/comic.py:71
 msgid "Use `/comic list` to list comics defined\n"
 msgstr ""
 
-#: stampy/plugin/comic.py:70
+#: stampy/plugin/comic.py:72
 msgid "Use `/comic all` to show all actual comics\n"
 msgstr ""
 
-#: stampy/plugin/comic.py:72
+#: stampy/plugin/comic.py:74
 msgid ""
 "Use `/comic trigger` to send comics to chats defined\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/comic.py:146
+#: stampy/plugin/comic.py:148
 #, python-format
 msgid "getcomics: %s"
 msgstr ""
 
-#: stampy/plugin/comic.py:164
+#: stampy/plugin/comic.py:166
 msgid "Defined comic strips:\n"
 msgstr ""
 
-#: stampy/plugin/comic.py:170
+#: stampy/plugin/comic.py:172
 msgid "Returning comics"
 msgstr ""
 
-#: stampy/plugin/comic.py:225
+#: stampy/plugin/comic.py:227
 #, python-format
 msgid "Comic: %s, last: %s, now: %s, url: %s"
 msgstr ""
 
-#: stampy/plugin/comic.py:268
+#: stampy/plugin/comic.py:270
 #, python-format
 msgid "Updating last checked as per %s"
 msgstr ""
 
-#: stampy/plugin/comic.py:294
+#: stampy/plugin/comic.py:296
 #, python-format
 msgid "# of Comics for today: %s"
 msgstr ""
@@ -636,50 +636,50 @@ msgstr ""
 msgid "ERROR (%s) forwarding message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/plugin/forward.py:106
+#: stampy/plugin/forward.py:111
 #, python-format
 msgid "PERM ERROR forwarding message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/plugin/forward.py:108
+#: stampy/plugin/forward.py:113
 #, python-format
 msgid "forwarding message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/plugin/forward.py:136
+#: stampy/plugin/forward.py:141
 msgid "Forward plugin not enabled, skipping"
 msgstr ""
 
-#: stampy/plugin/forward.py:180
+#: stampy/plugin/forward.py:185
 #, python-format
 msgid "Deleting forward for `%s -> %s`"
 msgstr ""
 
-#: stampy/plugin/forward.py:192
+#: stampy/plugin/forward.py:197
 #, python-format
 msgid "Setting forward for `%s` to `%s`"
 msgstr ""
 
-#: stampy/plugin/forward.py:238
+#: stampy/plugin/forward.py:243
 #, python-format
 msgid "%s has a forward %s"
 msgstr ""
 
-#: stampy/plugin/forward.py:243
+#: stampy/plugin/forward.py:248
 msgid "Defined forwards:\n"
 msgstr ""
 
-#: stampy/plugin/forward.py:260
+#: stampy/plugin/forward.py:265
 #, python-format
 msgid "createforward: circular reference %s=%s"
 msgstr ""
 
-#: stampy/plugin/forward.py:263
+#: stampy/plugin/forward.py:268
 #, python-format
 msgid "createforward: %s=%s"
 msgstr ""
 
-#: stampy/plugin/forward.py:282
+#: stampy/plugin/forward.py:287
 #, python-format
 msgid "getforward: %s -> %s"
 msgstr ""
@@ -827,131 +827,137 @@ msgstr ""
 msgid "Returning %s"
 msgstr ""
 
-#: stampy/plugin/karma.py:54
+#: stampy/plugin/karma.py:56
 msgid ""
 "Use `word++` or `word--` to increment or decrement karma, a new message "
 "will be sent providing the new total\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/karma.py:55
+#: stampy/plugin/karma.py:57
 msgid ""
 "Reply to a message with `++`, `--` to give user karma to telegram alias "
 "or `==` to repeat karma to the same words\n"
 msgstr ""
 
-#: stampy/plugin/karma.py:56
+#: stampy/plugin/karma.py:58
 msgid ""
 "Use `rank <word>` or `rank` to get value for actual word or top 10 "
 "rankings\n"
 msgstr ""
 
-#: stampy/plugin/karma.py:57
+#: stampy/plugin/karma.py:59
 msgid ""
 "Use `srank <word>` to search for similar words already ranked\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/karma.py:59
+#: stampy/plugin/karma.py:61
 msgid ""
 "Use `skarma <word>=<value>` to establish karma of a word\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/karma.py:108
+#: stampy/plugin/karma.py:62
+msgid ""
+"Use `skarma purge` to clear old karma\n"
+"\n"
+msgstr ""
+
+#: stampy/plugin/karma.py:111
 #, python-format
 msgid "Setting karma for `%s` to `%s`"
 msgstr ""
 
-#: stampy/plugin/karma.py:155
+#: stampy/plugin/karma.py:160
 #, python-format
 msgid "`%s` has `%s` karma points."
 msgstr ""
 
-#: stampy/plugin/karma.py:161
+#: stampy/plugin/karma.py:166
 msgid "Global rankings:\n"
 msgstr ""
 
-#: stampy/plugin/karma.py:165
+#: stampy/plugin/karma.py:170
 #, python-format
 msgid "Returning karma %s for word %s"
 msgstr ""
 
-#: stampy/plugin/karma.py:189
+#: stampy/plugin/karma.py:194
 #, python-format
 msgid "Returning srank for word: %s"
 msgstr ""
 
-#: stampy/plugin/karma.py:205 stampy/plugin/karma.py:253
+#: stampy/plugin/karma.py:210 stampy/plugin/karma.py:258
 #, python-format
 msgid "Putting karma of %s to %s"
 msgstr ""
 
-#: stampy/plugin/karma.py:230
+#: stampy/plugin/karma.py:235
 #, python-format
 msgid "Getting karma for %s: %s"
 msgstr ""
 
-#: stampy/plugin/karma.py:283
+#: stampy/plugin/karma.py:288
 #, python-format
 msgid "Sticker for %s karma points"
 msgstr ""
 
-#: stampy/plugin/karma.py:335
+#: stampy/plugin/karma.py:340
 #, python-format
 msgid "Text to process: %s"
 msgstr ""
 
-#: stampy/plugin/karma.py:348
+#: stampy/plugin/karma.py:353
 msgid "Text has karma operators"
 msgstr ""
 
-#: stampy/plugin/karma.py:351
+#: stampy/plugin/karma.py:356
 #, python-format
 msgid "Processing word %s sent by id %s with username %s (%s %s)"
 msgstr ""
 
-#: stampy/plugin/karma.py:397
+#: stampy/plugin/karma.py:402
 #, python-format
 msgid "%s Found in %s at %s with id %s (%s), sent by id %s named %s (%s %s)"
 msgstr ""
 
-#: stampy/plugin/karma.py:403
+#: stampy/plugin/karma.py:408
 #, python-format
 msgid "`%s` now has `%s` karma points."
 msgstr ""
 
-#: stampy/plugin/karma.py:406
+#: stampy/plugin/karma.py:411
 #, python-format
 msgid "`%s` now has no Karma and has been garbage collected."
 msgstr ""
 
-#: stampy/plugin/karma.py:441
+#: stampy/plugin/karma.py:446
 #, python-format
 msgid "Processing words for cleanup: %s"
 msgstr ""
 
-#: stampy/plugin/karma.py:457
+#: stampy/plugin/karma.py:462
 #, python-format
 msgid "Word %s with %s inactivity days is going to be purged"
 msgstr ""
 
 #: stampy/plugin/kick.py:53
 msgid ""
-"Use `/kick <username or id> to kick user from chat\n"
+"Use `/kick <username or id>` to kick user from chat\n"
 "\n"
 msgstr ""
 
 #: stampy/plugin/kick.py:54
 msgid ""
-"Use `/kickban <username or id> to kick user from chat and ban to forbid "
+"Use `/kickban <username or id>` to kick user from chat and ban to forbid "
 "new entry\n"
 "\n"
 msgstr ""
 
 #: stampy/plugin/kick.py:55
 msgid ""
-"Use `/unban <user ID>\n"
+"Use `/unban <user ID>`\n"
 "\n"
 msgstr ""
 
@@ -1049,139 +1055,139 @@ msgstr ""
 msgid "createquote: %s=%s on %s for group %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:85
+#: stampy/plugin/stats.py:86
 #, python-format
 msgid "Someone with id %s left chat %s, cleaning up"
 msgstr ""
 
-#: stampy/plugin/stats.py:104
+#: stampy/plugin/stats.py:105
 #, python-format
 msgid "Bot has left chat %s, cleaning up"
 msgstr ""
 
-#: stampy/plugin/stats.py:129
+#: stampy/plugin/stats.py:130
 msgid ""
 "Use `@all` to ping all users in a channel as long as they have username "
 "defined in Telegram\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/stats.py:131
+#: stampy/plugin/stats.py:132
 msgid ""
 "Use `/stats show <user|chat|search>` to get stats on last usage\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/stats.py:132
+#: stampy/plugin/stats.py:133
 msgid ""
 "Use `/getout <chatid|here>` to have bot leave that chat or current one\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/stats.py:153
+#: stampy/plugin/stats.py:154
 #, python-format
 msgid "Owner Stat: %s by %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:208
+#: stampy/plugin/stats.py:210
 #, python-format
 msgid "Owner getout: %s by %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:250
+#: stampy/plugin/stats.py:252
 msgid "Defined stats:\n"
 msgstr ""
 
-#: stampy/plugin/stats.py:252
+#: stampy/plugin/stats.py:254
 #, python-format
 msgid "Returning stats %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:308 stampy/plugin/stats.py:367
+#: stampy/plugin/stats.py:310 stampy/plugin/stats.py:369
 #, python-format
 msgid "values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid: %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:314
+#: stampy/plugin/stats.py:316
 msgid "ERROR on updatestats"
 msgstr ""
 
-#: stampy/plugin/stats.py:373
+#: stampy/plugin/stats.py:375
 msgid "ERROR on remove_from_memberid"
 msgstr ""
 
-#: stampy/plugin/stats.py:393
+#: stampy/plugin/stats.py:395
 #, python-format
 msgid "Chat id %s users %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:412
+#: stampy/plugin/stats.py:414
 #, python-format
 msgid "Chat id %s left"
 msgstr ""
 
-#: stampy/plugin/stats.py:437
+#: stampy/plugin/stats.py:439
 #, python-format
 msgid "Processing chat_ids for cleanup: %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:452
+#: stampy/plugin/stats.py:454
 #, python-format
 msgid "CHAT ID %s with name %s with %s inactivity days is going to be purged"
 msgstr ""
 
-#: stampy/plugin/stats.py:456
+#: stampy/plugin/stats.py:458
 #, python-format
 msgid ""
 "Due to inactivity of more than %s days, this bot will exit the channel, "
 "please re-add in the future if needed"
 msgstr ""
 
-#: stampy/plugin/stats.py:484
+#: stampy/plugin/stats.py:486
 #, python-format
 msgid "The removed channel (%s) was master for others, electing new master: %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:512 stampy/plugin/stats.py:608
+#: stampy/plugin/stats.py:514 stampy/plugin/stats.py:610
 #, python-format
 msgid "LINE for user %s and memberid: %s will be deleted"
 msgstr ""
 
-#: stampy/plugin/stats.py:533
+#: stampy/plugin/stats.py:535
 #, python-format
 msgid "Migrating chat id: %s to %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:578
+#: stampy/plugin/stats.py:580
 #, python-format
 msgid "Processing userids for cleanup: %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:591
+#: stampy/plugin/stats.py:593
 #, python-format
 msgid "USER ID %s with name %s with %s inactivity days is going to be purged"
 msgstr ""
 
-#: stampy/plugin/stats.py:674
+#: stampy/plugin/stats.py:676
 #, python-format
 msgid "values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid:%s"
 msgstr ""
 
-#: stampy/plugin/stats.py:695
+#: stampy/plugin/stats.py:697
 msgid "@All invoked"
 msgstr ""
 
-#: stampy/plugin/stats.py:719
+#: stampy/plugin/stats.py:721
 #, python-format
 msgid "%s wanted to ping you: "
 msgstr ""
 
-#: stampy/plugin/stats.py:739
+#: stampy/plugin/stats.py:741
 #, python-format
 msgid "Pinging chat %s: %s on %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:765
+#: stampy/plugin/stats.py:767
 #, python-format
 msgid "Found users with id(%s)/chat(%s): %s"
 msgstr ""

@@ -11,3 +11,5 @@ push-to-test.sh
 .vscode
 .history
 .markdownlint.json
+.coverage
+.coveralls.yml

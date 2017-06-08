@@ -50,9 +50,9 @@ def help(message):  # do not edit this line
 
     commandtext = ""
     if stampy.stampy.is_owner_or_admin(message):
-        commandtext += _("Use `/kick <username or id> to kick user from chat\n\n")
-        commandtext += _("Use `/kickban <username or id> to kick user from chat and ban to forbid new entry\n\n")
-        commandtext += _("Use `/unban <user ID>\n\n")
+        commandtext += _("Use `/kick <username or id>` to kick user from chat\n\n")
+        commandtext += _("Use `/kickban <username or id>` to kick user from chat and ban to forbid new entry\n\n")
+        commandtext += _("Use `/unban <user ID>`\n\n")
     return commandtext
 
 
