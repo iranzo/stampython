@@ -23,6 +23,7 @@ import stampy.stampy
 from stampy.i18n import _
 
 from stampy.i18n import _L
+import random
 
 sched = BackgroundScheduler()
 sched.start()
@@ -35,8 +36,9 @@ def init():
     """
     botname = stampy.stampy.getme()
     if botname == 'redken_bot':
-        sched.add_job(comics, 'interval', id='comic', minutes=30,
-                      replace_existing=True, misfire_grace_time=120)
+        delay = int(random.randint(0, 10))
+        when = 30 + delay
+        sched.add_job(comics, 'interval', id='comic', minutes=when, replace_existing=True, misfire_grace_time=120)
 
     triggers = ["^/comic"]
     for comic in getcomics():

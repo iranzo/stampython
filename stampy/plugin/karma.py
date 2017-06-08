@@ -16,6 +16,7 @@ import stampy.stampy
 from stampy.i18n import _
 
 from stampy.i18n import _L
+import random
 
 sched = BackgroundScheduler()
 sched.start()
@@ -26,8 +27,9 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    sched.add_job(dokarmacleanup, 'interval', minutes=int(stampy.plugin.config.config('cleanup', 24 * 60)), id='dokarmacleanup', replace_existing=True,
-                  misfire_grace_time=120)
+    delay = int(random.randint(0, 10))
+    when = int(stampy.plugin.config.config('cleanup', 24 * 60)) + delay
+    sched.add_job(dokarmacleanup, 'interval', minutes=when, id='dokarmacleanup', replace_existing=True, misfire_grace_time=120)
     triggers = ["++", "--", u"—", "@", "^rank", "^srank", "^skarma", "=="]
     return triggers
 
