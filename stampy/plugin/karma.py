@@ -460,7 +460,9 @@ def dokarmacleanup(word=False, maxage=int(stampy.plugin.config.config("maxage", 
 
         if (now - worddate).days > maxage:
             logger.debug(msg=_L("Word %s with %s inactivity days is going to be purged") % (word, (now - worddate).days))
+            words.append({'word': word, 'gid': gid})
 
-            # Remove word from database
-            updatekarma(word=word, change=-row[1], gid=gid)
+    for old in words:
+        # Remove word from database based on prior loop
+        putkarma(word=old['word'], value=0, gid=old['gid'])
     return
