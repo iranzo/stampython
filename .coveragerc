@@ -2,6 +2,7 @@
 branch = True
 source = stampy
 omit = ./stampy/versions/*
+omit = ./tests/*
 
 [report]
 ignore_errors = True
