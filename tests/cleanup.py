@@ -26,6 +26,7 @@ def clean():
     stampy.plugin.config.setconfig('owner', 'iranzo')
     stampy.plugin.config.setconfig('url', 'https://api.telegram.org/bot')
     stampy.plugin.config.setconfig('verbosity', 'DEBUG')
+    stampy.plugin.config.setconfig('unittest', 'True')
 
     # Empty karma database in case it contained some leftover
     stampy.stampy.dbsql('DELETE from karma')

@@ -356,8 +356,9 @@ def comicfromurl(name, forceurl=False):
     except:
         imgtxt = False
         imgsrc = False
+        page = False
 
-    if url == page.url:
+    if page and url == page.url:
         tree = html.fromstring(page.content)
         if imgxpath and imgxpath != 'False':
             try:

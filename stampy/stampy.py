@@ -236,8 +236,13 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
     code = False
     attempt = 0
     while not code:
-        result = json.load(urllib.urlopen(message))
-        code = result['ok']
+        # It this is executed as per unit testing, skip sending message
+        if not plugin.config.config(key='unittest', default='False'):
+            result = json.load(urllib.urlopen(message))
+            code = result['ok']
+        else:
+            code = True
+            result = ""
         logger.error(msg=_L("ERROR (%s) sending message: Code: %s : Text: %s") % (attempt, code, result))
         attempt += 1
         sleep(1)
@@ -370,7 +375,11 @@ def sendsticker(chat_id=0, sticker="", text="", reply_to_message_id=""):
         message += "&reply_to_message_id=%s" % reply_to_message_id
     logger.debug(msg=_L("Sending sticker: %s") % text)
 
-    sent = {"message": json.load(urllib.urlopen(message))['result']}
+    # It this is executed as per unit testing, skip sending message
+    if not plugin.config.config(key='unittest', default='False'):
+        sent = {"message": json.load(urllib.urlopen(message))['result']}
+    else:
+        sent = False
 
     # Check if there's something to forward and do it
     plugin.forward.forwardmessage(sent)
@@ -414,8 +423,13 @@ def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
         files = {'photo': rawimage.raw}
 
         try:
-            output = requests.post(url, files=files, data=payload)
-            sent = {"message": json.loads(output.text)['result']}
+            # It this is executed as per unit testing, skip sending message
+            if not plugin.config.config(key='unittest', default='False'):
+                output = requests.post(url, files=files, data=payload)
+                sent = {"message": json.loads(output.text)['result']}
+            else:
+                output = False
+                sent = False
 
         except:
             logger.debug(msg=_L("Failure sending image: %s") % image)

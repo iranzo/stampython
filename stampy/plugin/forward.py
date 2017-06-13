@@ -84,8 +84,14 @@ def doforward(message, target):
     attempt = 0
     exitcode = 0
     while not code:
-        result = json.load(urllib.urlopen(message))
-        code = result['ok']
+        # It this is executed as per unit testing, skip sending message
+        if not stampy.plugin.config.config(key='unittest', default='False'):
+            result = json.load(urllib.urlopen(message))
+            code = result['ok']
+        else:
+            code = True
+            result = ""
+
         logger.error(msg=_L("ERROR (%s) forwarding message: Code: %s : Text: %s") % (attempt, code, result))
         if code == 'False' or not code:
             if result['error_code'] == 403 and result['description'] == u'Forbidden: bot was blocked by the user':
