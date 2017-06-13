@@ -1,21 +1,18 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from distutils.core import setup
+import setuptools
 
-from babel.messages import frontend as babel
+# In python < 2.7.4, a lazy loading of package `pbr` will break
+# setuptools if some other modules registered functions in `atexit`.
+# solution from: http://bugs.python.org/issue15881#msg170215
 
-setup(
-    name='stampython',
-    version='0.71',
-    packages=['stampy'],
-    url='https://github.com/iranzo/stampython',
-    license='GPL',
-    author='Pablo Iranzo Gómez',
-    author_email='Pablo.Iranzo@gmail.com',
-    description='Telegram bot for controlling Karma',
-    cmdclass={'compile_catalog': babel.compile_catalog,
-              'extract_messages': babel.extract_messages,
-              'init_catalog': babel.init_catalog,
-              'update_catalog': babel.update_catalog},
-)
+try:
+    import multiprocessing  # noqa
+except ImportError:
+    pass
+
+
+setuptools.setup(
+    setup_requires=['pbr>=2.0.0'],
+    pbr=True)

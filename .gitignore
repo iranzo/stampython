@@ -11,5 +11,10 @@ push-to-test.sh
 .vscode
 .history
 .markdownlint.json
-.coverage
+.coverage*
 .coveralls.yml
+./.testrepository/
+.testrepository*
+/cover
+/covhtml
+.eggs

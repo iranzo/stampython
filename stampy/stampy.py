@@ -13,14 +13,14 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   See the
 # GNU General Public License for more details.
 
+import argparse
 import datetime
 import json
-import optparse
+import logging
 import random
 import sqlite3 as lite
 import string
 import sys
-import logging
 import traceback
 import urllib
 from time import sleep
@@ -28,10 +28,9 @@ from time import sleep
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 
-
-import plugins
 import plugin.config
 import plugin.forward
+import plugins
 from i18n import _
 from i18n import _L
 from i18n import chlang
@@ -47,30 +46,28 @@ global loglanguage
 loglanguage = 'en'
 language = 'en'
 
-
 description = _('Stampy is a script for controlling Karma via Telegram.org bot api')
 
 # Option parsing
-p = optparse.OptionParser("stampy.py [arguments]", description=description)
-p.add_option("-t", "--token", dest="token",
-             help=_("API token for bot access to messages"), default=False)
-p.add_option("-b", "--database", dest="database",
-             help=_("database file for storing karma"),
-             default="stampy.db")
-p.add_option('-v', "--verbosity", dest="verbosity",
-             help=_("Set verbosity level for messages while running/logging"),
-             default=0, type='choice',
-             choices=["info", "debug", "warn", "critical"])
-p.add_option('-u', "--url", dest="url",
-             help=_("Define URL for accessing bot API"),
-             default="https://api.telegram.org/bot")
-p.add_option('-o', '--owner', dest='owner',
-             help=_("Define owner username"),
-             default="iranzo")
-p.add_option('-d', '--daemon', dest='daemon', help=_("Run as daemon"),
-             default=False, action="store_true")
+p = argparse.ArgumentParser("stampy.py [arguments]", description=description)
+p.add_argument("-t", "--token", dest="token",
+               help=_("API token for bot access to messages"), default=False)
+p.add_argument("-b", "--database", dest="database",
+               help=_("database file for storing karma"),
+               default="stampy.db")
+p.add_argument('-v', "--verbosity", dest="verbosity",
+               help=_("Set verbosity level for messages while running/logging"),
+               default=0, choices=["info", "debug", "warn", "critical"])
+p.add_argument('-u', "--url", dest="url",
+               help=_("Define URL for accessing bot API"),
+               default="https://api.telegram.org/bot")
+p.add_argument('-o', '--owner', dest='owner',
+               help=_("Define owner username"),
+               default="iranzo")
+p.add_argument('-d', '--daemon', dest='daemon', help=_("Run as daemon"),
+               default=False, action="store_true")
 
-(options, args) = p.parse_args()
+options, unknown = p.parse_known_args()
 
 
 # Set scheduler
@@ -572,6 +569,10 @@ def process(messages):
         msgdetail = getmsgdetail(message)
         botname = getme()
 
+        # Write the line for debug
+        messageline = _L("TEXT: %s : %s : %s") % (msgdetail["chat_name"], msgdetail["name"], msgdetail["text"])
+        logger.debug(msg=messageline)
+
         # Process group configuration for language
         chat_id = msgdetail['chat_id']
         chlang(lang=plugin.config.gconfig(key='language', gid=chat_id))
@@ -605,7 +606,6 @@ def process(messages):
             if runplugin:
                 logger.debug(msg=_L("Processing plugin: %s") % name)
                 code = i.run(message=message)
-                logger.debug(msg=_L("Plugin return code: %s") % code)
 
             if code:
                 # Plugin has changed triggers, reload
@@ -615,10 +615,6 @@ def process(messages):
         # Update last message id to later clear it from the server
         if msgdetail["update_id"] > lastupdateid:
             lastupdateid = msgdetail["update_id"]
-
-        # Write the line for debug
-        messageline = _L("TEXT: %s : %s : %s") % (msgdetail["chat_name"], msgdetail["name"], msgdetail["text"])
-        logger.debug(msg=messageline)
 
     if date != 0:
         logger.info(msg=_L("Last processed message at: %s") % date)
@@ -892,6 +888,7 @@ def main():
 
 
 if __name__ == "__main__":
+
     # Set name to the database being used to allow multibot execution
     if plugin.config.config(key="database"):
         __name__ = plugin.config.config(key="database").split(".")[0]

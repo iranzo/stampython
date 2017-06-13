@@ -1,7 +1,8 @@
+[run]
+branch = True
+source = stampy
+omit = ./stampy/versions/*
+
 [report]
-omit =  
-    */python?.?/*
-    */site-packages/nose/*
-    *__init__*
-    stampy/versions/*
+ignore_errors = True
 

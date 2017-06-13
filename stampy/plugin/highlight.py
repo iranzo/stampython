@@ -15,7 +15,6 @@ import stampy.plugin.karma
 import stampy.plugin.stats
 import stampy.stampy
 from stampy.i18n import _
-
 from stampy.i18n import _L
 
 

@@ -6,6 +6,7 @@
 
 import datetime
 import logging
+import random
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from prettytable import from_db_cursor
@@ -14,9 +15,7 @@ import stampy.plugin.alias
 import stampy.plugin.config
 import stampy.stampy
 from stampy.i18n import _
-
 from stampy.i18n import _L
-import random
 
 sched = BackgroundScheduler()
 sched.start()

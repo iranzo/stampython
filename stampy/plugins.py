@@ -12,7 +12,6 @@ import os
 import plugin.config
 from i18n import _L
 
-
 PluginFolder = "./stampy/plugin"
 
 

@@ -7,6 +7,7 @@
 import datetime
 import json
 import logging
+import random
 import urllib
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -16,9 +17,7 @@ import stampy.plugin.config
 import stampy.plugin.karma
 import stampy.stampy
 from stampy.i18n import _
-
 from stampy.i18n import _L
-import random
 
 sched = BackgroundScheduler()
 sched.start()

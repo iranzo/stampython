@@ -5,8 +5,9 @@
 # Author: Pablo Iranzo Gomez (Pablo.Iranzo@gmail.com)
 
 import gettext
-import os
 import logging
+import os
+
 import stampy
 
 

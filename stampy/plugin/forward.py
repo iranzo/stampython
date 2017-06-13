@@ -14,7 +14,6 @@ from prettytable import from_db_cursor
 import stampy.plugin.config
 import stampy.stampy
 from stampy.i18n import _
-
 from stampy.i18n import _L
 
 

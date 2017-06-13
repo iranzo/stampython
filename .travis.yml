@@ -8,7 +8,7 @@ notifications:
 before_install:
     - pip install pep8
     - pip install misspellings
-    - pip install nose
+    - pip install python-coveralls
 
 script:
     # Run pep8 on all .py files in all subfolders
@@ -17,4 +17,6 @@ script:
     - find . -name \*.py -exec pep8 --ignore=E402,E501 {} +
     - find . -name '*.py' | misspellings -f -
     - nosetests
-    
+
+after_success:
+  - coveralls

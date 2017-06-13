@@ -6,6 +6,7 @@
 
 import datetime
 import logging
+import random
 from urlparse import urlparse
 
 import dateutil.parser
@@ -21,9 +22,7 @@ import stampy.plugin.karma
 import stampy.plugin.stats
 import stampy.stampy
 from stampy.i18n import _
-
 from stampy.i18n import _L
-import random
 
 sched = BackgroundScheduler()
 sched.start()

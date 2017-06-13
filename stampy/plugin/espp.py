@@ -11,7 +11,6 @@ import stampy.plugin.config
 import stampy.plugin.stock
 import stampy.stampy
 from stampy.i18n import _
-
 from stampy.i18n import _L
 
 
