@@ -17,12 +17,12 @@ class TestStampy(TestCase):
 
     def test_espp(self):
         messages = [{u'message': {u'date': 1478361249, u'text': u'/espp 71',
-                              u'from': {u'username': u'iranzo',
-                                        u'first_name': u'Pablo',
-                                        u'last_name': u'Iranzo G\xf3mez',
-                                        u'id': 5812695}, u'message_id': 108,
-                              u'chat': {u'all_members_are_administrators': True,
-                                        u'type': u'group', u'id': -158164217,
-                                        u'title': u'BOTdevel'}},
-                 u'update_id': 837253571}]
+                                  u'from': {u'username': u'iranzo',
+                                            u'first_name': u'Pablo',
+                                            u'last_name': u'Iranzo G\xf3mez',
+                                            u'id': 5812695}, u'message_id': 108,
+                                  u'chat': {u'all_members_are_administrators': True,
+                                            u'type': u'group', u'id': -158164217,
+                                            u'title': u'BOTdevel'}},
+                     u'update_id': 837253571}]
         stampy.stampy.process(messages)
