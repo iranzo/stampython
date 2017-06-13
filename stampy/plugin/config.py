@@ -241,23 +241,6 @@ def config(key, default=False, gid=0):
     return value
 
 
-def saveconfig(key, value, gid=0):
-    """
-    Saves configuration for a given key to a defined value
-    :param gid: group ID to check
-    :param key: key to save
-    :param value: value to store
-    :return:
-    """
-
-    logger = logging.getLogger(__name__)
-    if value:
-        sql = "UPDATE config SET value='%s' WHERE key='%s' AND id='%s';" % (value, key, gid)
-        stampy.stampy.dbsql(sql)
-        logger.debug(msg=_L("Updating config for %s with %s for id %s") % (key, value, gid))
-    return value
-
-
 def setconfig(key, value, gid=0):
     """
     Sets a config parameter in database
