@@ -71,7 +71,7 @@ class TestStampy(TestCase):
                                             u'last_name': u'Iranzo G\xf3mez',
                                             u'id': 5812695}, u'message_id': 108,
                                   u'chat': {u'all_members_are_administrators': True,
-                                            u'type': u'group', u'id': -15124124,
+                                            u'type': u'group', u'id': -234,
                                             u'title': u'BOTdevel'}},
                      u'update_id': 837253571}]
         stampy.stampy.process(messages)
