@@ -22,6 +22,7 @@
     - link: empty, if defined, channel is slave to a mater
     - admin: List of admins of channels, default empty: everyone
     - maxage: chats older than this will be removed
+    - silent: makes stampy not to output messages to that chat
 
 ## Donations
 
