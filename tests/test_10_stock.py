@@ -16,7 +16,7 @@ class TestStampy(TestCase):
     cleanup.clean()
 
     def test_stock(self):
-        messages = [{u'message': {u'date': 1478361249, u'text': u'/stock',
+        messages = [{u'message': {u'date': 1478361249, u'text': u'stock',
                                   u'from': {u'username': u'iranzo',
                                             u'first_name': u'Pablo',
                                             u'last_name': u'Iranzo G\xf3mez',
