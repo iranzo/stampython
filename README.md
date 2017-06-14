@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/iranzo/stampython.svg?branch=master)](https://travis-ci.org/iranzo/stampython)
 [![Coverage Status](https://coveralls.io/repos/github/iranzo/stampython/badge.svg?branch=master)](https://coveralls.io/github/iranzo/stampython?branch=master)
+[![Requirements Status](https://requires.io/github/iranzo/stampython/requirements.svg?branch=master)](https://requires.io/github/iranzo/stampython/requirements/?branch=master)
 [![Code Climate](https://codeclimate.com/github/iranzo/stampython/badges/gpa.svg)](https://codeclimate.com/github/iranzo/stampython)
 [![Pypi](http://img.shields.io/pypi/v/stampython.svg)](https://pypi.python.org/pypi/stampython/)
 
