@@ -136,10 +136,13 @@ def dbsql(sql=False):
     try:
         con = lite.connect(options.database, timeout=1)
         cur = con.cursor()
+        cur.execute("SELECT key,value FROM config WHERE key='token';")
+        cur.fetchone()
 
     except lite.Error, e:
         logger.debug(msg="Error %s:" % e.args[0])
-        print _("Error accessing database")
+        print _("Error accessing database, creating...")
+        createorupdatedb()
         con = lite.connect(options.database, timeout=1)
         cur = con.cursor()
 
@@ -431,9 +434,7 @@ def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
                 output = requests.post(url, files=files, data=payload)
                 sent = {"message": json.loads(output.text)['result']}
             else:
-                output = False
                 sent = False
-
         except:
             logger.debug(msg=_L("Failure sending image: %s") % image)
             sent = False
@@ -905,6 +906,8 @@ def main():
 
 
 if __name__ == "__main__":
+    # Update db if needed
+    createorupdatedb()
 
     # Set name to the database being used to allow multibot execution
     if plugin.config.config(key="database"):
