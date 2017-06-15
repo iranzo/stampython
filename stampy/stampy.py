@@ -136,13 +136,10 @@ def dbsql(sql=False):
     try:
         con = lite.connect(options.database, timeout=1)
         cur = con.cursor()
-        cur.execute("SELECT key,value FROM config WHERE key='token';")
-        cur.fetchone()
 
     except lite.Error, e:
         logger.debug(msg="Error %s:" % e.args[0])
-        print _("Error accessing database, creating...")
-        createorupdatedb()
+        print _("Error accessing database")
         con = lite.connect(options.database, timeout=1)
         cur = con.cursor()
 
@@ -237,7 +234,9 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
     attempt = 0
     while not code:
         # It this is executed as per unit testing, skip sending message
-        if not plugin.config.config(key='unittest', default=False) and not plugin.config.gconfig(key='silent', default=False, gid=geteffectivegid(gid=chat_id)):
+        UTdisable = not plugin.config.config(key='unittest', default=False)
+        Silent = not plugin.config.gconfig(key='silent', default=False, gid=geteffectivegid(gid=chat_id))
+        if UTdisable and Silent:
             result = json.load(urllib.urlopen(message))
             code = result['ok']
         else:
@@ -376,7 +375,9 @@ def sendsticker(chat_id=0, sticker="", text="", reply_to_message_id=""):
     logger.debug(msg=_L("Sending sticker: %s") % text)
 
     # It this is executed as per unit testing, skip sending message
-    if not plugin.config.config(key='unittest', default='False') and not plugin.config.gconfig(key='silent', default=False, gid=geteffectivegid(gid=chat_id)):
+    UTdisable = not plugin.config.config(key='unittest', default=False)
+    Silent = not plugin.config.gconfig(key='silent', default=False, gid=geteffectivegid(gid=chat_id))
+    if UTdisable and Silent:
         sent = {"message": json.load(urllib.urlopen(message))['result']}
     else:
         sent = False
@@ -424,7 +425,9 @@ def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
 
         try:
             # It this is executed as per unit testing, skip sending message
-            if not plugin.config.config(key='unittest', default='False') and not plugin.config.gconfig(key='silent', default=False, gid=geteffectivegid(gid=chat_id)):
+            UTdisable = not plugin.config.config(key='unittest', default=False)
+            Silent = not plugin.config.gconfig(key='silent', default=False, gid=geteffectivegid(gid=chat_id))
+            if UTdisable and Silent:
                 output = requests.post(url, files=files, data=payload)
                 sent = {"message": json.loads(output.text)['result']}
             else:
@@ -747,7 +750,7 @@ def geteffectivegid(gid):
         else:
             return gid
     else:
-        # Non insolation configured, returning '0' as gid to use
+        # Non isolation configured, returning '0' as gid to use
         return 0
 
 

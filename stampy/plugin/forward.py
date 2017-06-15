@@ -85,7 +85,8 @@ def doforward(message, target):
     exitcode = 0
     while not code:
         # It this is executed as per unit testing, skip sending message
-        if not stampy.plugin.config.config(key='unittest', default='False'):
+        UTdisable = not stampy.plugin.config.config(key='unittest', default=False)
+        if UTdisable:
             result = json.load(urllib.urlopen(message))
             code = result['ok']
         else:

@@ -30,8 +30,8 @@ def init():
     """
     delay = int(random.randint(0, 10))
     when = int(stampy.plugin.config.config('cleanup', 24 * 60)) + delay
-    sched.add_job(dochatcleanup, 'interval', minutes=when, id='dochatcleanup', replace_existing=True, misfire_grace_time=120)
-    sched.add_job(dousercleanup, 'interval', minutes=when, id='dousercleanup', replace_existing=True, misfire_grace_time=120)
+    sched.add_job(dochatcleanup, 'interval', minutes=when + delay, id='dochatcleanup', replace_existing=True, misfire_grace_time=120)
+    sched.add_job(dousercleanup, 'interval', minutes=when - delay, id='dousercleanup', replace_existing=True, misfire_grace_time=120)
     triggers = ["@all", "^/stats", "*", "^/getout"]
     return triggers
 
@@ -48,7 +48,7 @@ def run(message):  # do not edit this line
     msgdetail = stampy.stampy.getmsgdetail(message)
     text = msgdetail["text"]
 
-    # Update stats on the message being processed
+    # Update stats on the message being processed unless we use sudo
     if not stampy.plugin.config.config(key='overridegid', default=False):
         if msgdetail["chat_id"] and msgdetail["chat_name"]:
             updatestats(type="chat", id=msgdetail["chat_id"], name=msgdetail["chat_name"],
