@@ -426,10 +426,11 @@ def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
         # Send image
         files = {'photo': rawimage.raw}
 
+        # It this is executed as per unit testing, skip sending message
+        UTdisable = not plugin.config.config(key='unittest', default=False)
+        Silent = not plugin.config.gconfig(key='silent', default=False, gid=geteffectivegid(gid=chat_id))
+
         try:
-            # It this is executed as per unit testing, skip sending message
-            UTdisable = not plugin.config.config(key='unittest', default=False)
-            Silent = not plugin.config.gconfig(key='silent', default=False, gid=geteffectivegid(gid=chat_id))
             if UTdisable and Silent:
                 output = requests.post(url, files=files, data=payload)
                 sent = {"message": json.loads(output.text)['result']}

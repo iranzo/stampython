@@ -83,6 +83,9 @@ def doforward(message, target):
     code = False
     attempt = 0
     exitcode = 0
+
+    logger.debug(msg=_L("forwarding message: Code: %s : Text: %s") % (code, text))
+
     while not code:
         # It this is executed as per unit testing, skip sending message
         UTdisable = not stampy.plugin.config.config(key='unittest', default=False)
@@ -116,7 +119,6 @@ def doforward(message, target):
         if attempt > 60:
             logger.error(msg=_L("PERM ERROR forwarding message: Code: %s : Text: %s") % (code, result))
             code = True
-    logger.debug(msg=_L("forwarding message: Code: %s : Text: %s") % (code, text))
     return exitcode
 
 
@@ -290,5 +292,5 @@ def getforward(source):
     cur = stampy.stampy.dbsql(sql)
     rows = cur.fetchall()
     for target in rows:
-        logger.debug(msg=_L("getforward: %s -> %s" % (source, target)))
+        logger.debug(msg=_L("getforward: %s -> %s" % (source, target[0])))
         yield target[0]
