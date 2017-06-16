@@ -85,7 +85,7 @@ def kickcommands(message):
         except:
             who = False
 
-        if not who and msgdetail["replyto"].lower():
+        if not who and msgdetail["replyto"]:
             who = msgdetail["replyto"].lower()
 
         # Retrieve users that match provided id or name
@@ -109,10 +109,10 @@ def kickcommands(message):
             for case in stampy.stampy.Switch(command):
                 if case('/kick'):
                     result = kick(chat_id=chat_id, user_id=user_id)
-                    if result['ok'] == "True":
+                    if result['ok'] is True or result['ok'] == 'True':
                         text = _("User %s kicked out of chat %s") % (user_id, chat_id)
                     else:
-                        text = _("Error kicking user %s from chat %s: %s") % (user_id, chat_id, result['description'])
+                        text = _("Error kicking user %s from chat %s: %s") % (user_id, chat_id, result)
 
                     stampy.stampy.sendmessage(chat_id=chat_id, text=text, reply_to_message_id=message_id, disable_web_page_preview=True, parse_mode="Markdown")
                     break
@@ -152,22 +152,23 @@ def kick(chat_id=False, user_id=False, ban=False):
     """
 
     logger = logging.getLogger(__name__)
-    result = False
+    result = {'ok': False}
 
     if chat_id and user_id:
         url = "%s%s/kickChatMember?chat_id=%s&user_id=%s" % (stampy.plugin.config.config(key='url'), stampy.plugin.config.config(key='token'), chat_id, user_id)
         try:
             result = json.load(urllib.urlopen(url))
         except:
-            result = False
+            result = {'ok': False}
+    else:
+        result = {'ok': False}
 
-    logger.debug(msg="RESULT: %s" % result)
-    if result['ok'] == 'True':
+    if result['ok'] is True or result['ok'] == 'True':
         logger.info(msg=_L("User %s kicked and banned from %s") % (user_id, chat_id))
         if not ban:
             unban(chat_id=chat_id, user_id=user_id)
     else:
-        logger.error(msg=_L("Error when kicking user: %s") % result['description'])
+        logger.error(msg=_L("Error when kicking user: %s") % result)
 
     return result
 

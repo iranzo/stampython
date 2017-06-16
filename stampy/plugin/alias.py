@@ -183,9 +183,8 @@ def createalias(word, value, gid=0):
             # Removing duplicates on karma DB and add
             # the previous values
             old = stampy.plugin.karma.getkarma(word=word, gid=gid)
-            stampy.plugin.karma.updatekarma(word=word, change=-old)
-            stampy.plugin.karma.updatekarma(word=value, change=old)
-
+            stampy.plugin.karma.updatekarma(word=word, change=-old, gid=gid)
+            stampy.plugin.karma.updatekarma(word=value, change=old, gid=gid)
             sql = "INSERT INTO alias(key, value, gid) VALUES('%s','%s', '%s');" % (word, value, gid)
             logger.debug(msg="createalias: %s=%s for gid %s" % (word, value, gid))
             stampy.stampy.dbsql(sql)
