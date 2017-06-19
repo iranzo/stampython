@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-06-15 00:10+0200\n"
-"PO-Revision-Date: 2017-06-15 00:10+0200\n"
+"POT-Creation-Date: 2017-06-19 21:46+0200\n"
+"PO-Revision-Date: 2017-06-19 21:47+0200\n"
 "Last-Translator: Pablo Iranzo Gómez <Pablo.Iranzo@gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -89,138 +89,138 @@ msgstr "Error accediendo a la base de datos, creándola..."
 msgid "Error # %s on SQL execution: %s"
 msgstr "Error # %s en la ejecución SQL: %s"
 
-#: stampy/stampy.py:246
+#: stampy/stampy.py:248
 #, python-format
 msgid "ERROR (%s) sending message: Code: %s : Text: %s"
 msgstr "ERROR (%s) enviando el mensaje: Código: %s : Texto: %s"
 
-#: stampy/stampy.py:274
+#: stampy/stampy.py:276
 #, python-format
 msgid "PERM ERROR sending message: Code: %s : Text: %s"
 msgstr "ERROR PERMANENTE al enviar el mensaje: Código: %s : Texto: %s"
 
-#: stampy/stampy.py:286
+#: stampy/stampy.py:288
 #, python-format
 msgid "Sending message: Code: %s : Text: %s"
 msgstr "Enviando mensaje: Código: %s : Texto: %s"
 
-#: stampy/stampy.py:310
+#: stampy/stampy.py:312
 #, python-format
 msgid "Getting updates and returning: %s"
 msgstr "Obteniendo actualizaciones y devolviendo: %s"
 
-#: stampy/stampy.py:337
+#: stampy/stampy.py:339
 #, python-format
 msgid "Getting bot details and returning: %s"
 msgstr "Obteniendo Detalles del bot y devolviendo: %s"
 
-#: stampy/stampy.py:356
+#: stampy/stampy.py:358
 #, python-format
 msgid "Clearing messages at %s"
 msgstr "Borrando mensajes en %s"
 
-#: stampy/stampy.py:376
+#: stampy/stampy.py:378
 #, python-format
 msgid "Sending sticker: %s"
 msgstr "Enviando pegatina: %s"
 
-#: stampy/stampy.py:413
+#: stampy/stampy.py:417
 #, python-format
 msgid "Sending image: %s"
 msgstr "Enviando imagen: %s"
 
-#: stampy/stampy.py:435
+#: stampy/stampy.py:440
 #, python-format
 msgid "Failure sending image: %s"
 msgstr "Fallo enviando imagen: %s"
 
-#: stampy/stampy.py:438
+#: stampy/stampy.py:443
 #, python-format
 msgid "Failure downloading image: %s"
 msgstr "Fallo descargando imagen: %s"
 
-#: stampy/stampy.py:587
+#: stampy/stampy.py:592
 #, python-format
 msgid "TEXT: %s : %s : %s"
 msgstr "TEXTO: %s : %s : %s"
 
-#: stampy/stampy.py:621
+#: stampy/stampy.py:626
 #, python-format
 msgid "Processing plugin: %s"
 msgstr "Procesando complemento: %s"
 
-#: stampy/stampy.py:627
+#: stampy/stampy.py:632
 #, python-format
 msgid "New triggers for %s: %s"
 msgstr "Nuevos disparadores para %s: %s"
 
-#: stampy/stampy.py:634
+#: stampy/stampy.py:639
 #, python-format
 msgid "Last processed message at: %s"
 msgstr "Último mensaje procesado en: %s"
 
-#: stampy/stampy.py:636
+#: stampy/stampy.py:641
 #, python-format
 msgid "Last processed update_id : %s"
 msgstr "Última actualización procesada: %s"
 
-#: stampy/stampy.py:638
+#: stampy/stampy.py:643
 #, python-format
 msgid "Number of messages in this batch: %s"
 msgstr "Número de mensajes en este lote: %s"
 
-#: stampy/stampy.py:669
+#: stampy/stampy.py:674
 #, python-format
 msgid "Final deduplicated list: %s"
 msgstr "Lista final deduplicada: %s"
 
-#: stampy/stampy.py:709
+#: stampy/stampy.py:714
 msgid "We're admin of private chats"
 msgstr "Somos admin de chats privados"
 
-#: stampy/stampy.py:714
+#: stampy/stampy.py:719
 msgid "We're not owner of public chats"
 msgstr "No somos propietarios de chats publicos"
 
-#: stampy/stampy.py:719
+#: stampy/stampy.py:724
 msgid "We're admin of public chat"
 msgstr "Somos administrador de chat público"
 
-#: stampy/stampy.py:724
+#: stampy/stampy.py:729
 msgid "We're admin because no admin listed on public chat"
 msgstr ""
 "Somos administradores porque no hay administrador definido en el chat público"
 
-#: stampy/stampy.py:785
+#: stampy/stampy.py:790
 #, python-format
 msgid "Logging level set to %s"
 msgstr "Nivel de registro establecido a %s"
 
-#: stampy/stampy.py:853
+#: stampy/stampy.py:858
 msgid "Started execution"
 msgstr "Ejecución iniciada"
 
-#: stampy/stampy.py:867
+#: stampy/stampy.py:872
 msgid ""
 "Token required for operation, please check https://core.telegram.org/bots"
 msgstr ""
 "Es necesaria una clave/token para operar, por favor, revise https://core."
 "telegram.org/bots"
 
-#: stampy/stampy.py:886
+#: stampy/stampy.py:891
 #, python-format
 msgid "Plug triggers reported: %s"
 msgstr "Complementos devueltos: %s"
 
-#: stampy/stampy.py:891
+#: stampy/stampy.py:896
 msgid "Running in daemon mode"
 msgstr "Ejecutando en modo demonio"
 
-#: stampy/stampy.py:896
+#: stampy/stampy.py:901
 msgid "Running in one-shoot mode"
 msgstr "Ejecución única"
 
-#: stampy/stampy.py:899
+#: stampy/stampy.py:904
 msgid "Stopped execution"
 msgstr "Ejecución detenida"
 
@@ -252,7 +252,7 @@ msgstr "Use `/admin linik show` para listar los canales enlazados\n"
 #: stampy/plugin/admin.py:72 stampy/plugin/alias.py:72
 #: stampy/plugin/autokarma.py:78 stampy/plugin/base.py:65
 #: stampy/plugin/comic.py:94 stampy/plugin/config.py:86
-#: stampy/plugin/espp.py:66 stampy/plugin/forward.py:165
+#: stampy/plugin/espp.py:66 stampy/plugin/forward.py:168
 #: stampy/plugin/help.py:65 stampy/plugin/stock.py:119 stampy/plugin/sudo.py:73
 #, python-format
 msgid "Command: %s by %s"
@@ -351,7 +351,7 @@ msgstr ""
 "\n"
 
 #: stampy/plugin/alias.py:74 stampy/plugin/autokarma.py:81
-#: stampy/plugin/comic.py:97 stampy/plugin/forward.py:167
+#: stampy/plugin/comic.py:97 stampy/plugin/forward.py:170
 #: stampy/plugin/sudo.py:75
 #, python-format
 msgid "Command: %s by Owner: %s"
@@ -636,7 +636,7 @@ msgstr "Acciones estimadas: %s\n"
 #: stampy/plugin/espp.py:109
 #, python-format
 msgid "Estimated earning: %s %s\n"
-msgstr "Ganancais estimadas: %s %s\n"
+msgstr "Ganancias estimadas: %s %s\n"
 
 #: stampy/plugin/espp.py:111
 #, python-format
@@ -672,55 +672,55 @@ msgstr ""
 "Use `/forward delete <origen>=<destino>` para eliminar un reenvío\n"
 "\n"
 
-#: stampy/plugin/forward.py:95
-#, python-format
-msgid "ERROR (%s) forwarding message: Code: %s : Text: %s"
-msgstr "ERROR (%s) al reenviar el mensaje: Código: %s : Texto: %s"
-
-#: stampy/plugin/forward.py:116
-#, python-format
-msgid "PERM ERROR forwarding message: Code: %s : Text: %s"
-msgstr "ERROR PERMANENTE al reenviar el mensaje: Código: %s : Texto: %s"
-
-#: stampy/plugin/forward.py:118
+#: stampy/plugin/forward.py:87
 #, python-format
 msgid "forwarding message: Code: %s : Text: %s"
 msgstr "reenviando mensaje: Código: %s : Texto: %s"
 
-#: stampy/plugin/forward.py:146
+#: stampy/plugin/forward.py:99
+#, python-format
+msgid "ERROR (%s) forwarding message: Code: %s : Text: %s"
+msgstr "ERROR (%s) al reenviar el mensaje: Código: %s : Texto: %s"
+
+#: stampy/plugin/forward.py:120
+#, python-format
+msgid "PERM ERROR forwarding message: Code: %s : Text: %s"
+msgstr "ERROR PERMANENTE al reenviar el mensaje: Código: %s : Texto: %s"
+
+#: stampy/plugin/forward.py:149
 msgid "Forward plugin not enabled, skipping"
 msgstr "Complemento de reenvío no habilitado, saltando"
 
-#: stampy/plugin/forward.py:190
+#: stampy/plugin/forward.py:193
 #, python-format
 msgid "Deleting forward for `%s -> %s`"
 msgstr "Borrando reenvio de \"%s -> %s`"
 
-#: stampy/plugin/forward.py:202
+#: stampy/plugin/forward.py:205
 #, python-format
 msgid "Setting forward for `%s` to `%s`"
 msgstr "Estableciendo reenvío de `%s` a `%s`"
 
-#: stampy/plugin/forward.py:248
+#: stampy/plugin/forward.py:251
 #, python-format
 msgid "%s has a forward %s"
 msgstr "%s tiene una redirección %s"
 
-#: stampy/plugin/forward.py:253
+#: stampy/plugin/forward.py:256
 msgid "Defined forwards:\n"
 msgstr "Reenvíos definidos:\n"
 
-#: stampy/plugin/forward.py:270
+#: stampy/plugin/forward.py:273
 #, python-format
 msgid "createforward: circular reference %s=%s"
 msgstr "createforward: referencia circular %s=%s"
 
-#: stampy/plugin/forward.py:273
+#: stampy/plugin/forward.py:276
 #, python-format
 msgid "createforward: %s=%s"
 msgstr "createforward: %s=%s"
 
-#: stampy/plugin/forward.py:292
+#: stampy/plugin/forward.py:295
 #, python-format
 msgid "getforward: %s -> %s"
 msgstr "getforward: %s -> %s"
@@ -1082,17 +1082,17 @@ msgstr "Usuario %s de nuevo permitido en el chat %s"
 msgid "Error unbanning user %s from chat %s: %s"
 msgstr "Error al aceptar al usuario %s del chat %s: %s"
 
-#: stampy/plugin/kick.py:166
+#: stampy/plugin/kick.py:167
 #, python-format
 msgid "User %s kicked and banned from %s"
 msgstr "Usuario %s expulsado y bloqueado del grupo %s"
 
-#: stampy/plugin/kick.py:170
+#: stampy/plugin/kick.py:171
 #, python-format
 msgid "Error when kicking user: %s"
 msgstr "Error al expulsar al usuario: %s"
 
-#: stampy/plugin/kick.py:197
+#: stampy/plugin/kick.py:198
 #, python-format
 msgid "User %s unbaned from %s"
 msgstr "Usuario %s de nuevo aceptado en grupo %s"

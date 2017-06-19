@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: stampy 0.0.1.dev437\n"
+"Project-Id-Version: stampy 0.0.1.dev443\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-06-15 00:09+0200\n"
+"POT-Creation-Date: 2017-06-19 21:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,134 +83,134 @@ msgstr ""
 msgid "Error # %s on SQL execution: %s"
 msgstr ""
 
-#: stampy/stampy.py:246
+#: stampy/stampy.py:248
 #, python-format
 msgid "ERROR (%s) sending message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/stampy.py:274
+#: stampy/stampy.py:276
 #, python-format
 msgid "PERM ERROR sending message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/stampy.py:286
+#: stampy/stampy.py:288
 #, python-format
 msgid "Sending message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/stampy.py:310
+#: stampy/stampy.py:312
 #, python-format
 msgid "Getting updates and returning: %s"
 msgstr ""
 
-#: stampy/stampy.py:337
+#: stampy/stampy.py:339
 #, python-format
 msgid "Getting bot details and returning: %s"
 msgstr ""
 
-#: stampy/stampy.py:356
+#: stampy/stampy.py:358
 #, python-format
 msgid "Clearing messages at %s"
 msgstr ""
 
-#: stampy/stampy.py:376
+#: stampy/stampy.py:378
 #, python-format
 msgid "Sending sticker: %s"
 msgstr ""
 
-#: stampy/stampy.py:413
+#: stampy/stampy.py:417
 #, python-format
 msgid "Sending image: %s"
 msgstr ""
 
-#: stampy/stampy.py:435
+#: stampy/stampy.py:440
 #, python-format
 msgid "Failure sending image: %s"
 msgstr ""
 
-#: stampy/stampy.py:438
+#: stampy/stampy.py:443
 #, python-format
 msgid "Failure downloading image: %s"
 msgstr ""
 
-#: stampy/stampy.py:587
+#: stampy/stampy.py:592
 #, python-format
 msgid "TEXT: %s : %s : %s"
 msgstr ""
 
-#: stampy/stampy.py:621
+#: stampy/stampy.py:626
 #, python-format
 msgid "Processing plugin: %s"
 msgstr ""
 
-#: stampy/stampy.py:627
+#: stampy/stampy.py:632
 #, python-format
 msgid "New triggers for %s: %s"
 msgstr ""
 
-#: stampy/stampy.py:634
+#: stampy/stampy.py:639
 #, python-format
 msgid "Last processed message at: %s"
 msgstr ""
 
-#: stampy/stampy.py:636
+#: stampy/stampy.py:641
 #, python-format
 msgid "Last processed update_id : %s"
 msgstr ""
 
-#: stampy/stampy.py:638
+#: stampy/stampy.py:643
 #, python-format
 msgid "Number of messages in this batch: %s"
 msgstr ""
 
-#: stampy/stampy.py:669
+#: stampy/stampy.py:674
 #, python-format
 msgid "Final deduplicated list: %s"
 msgstr ""
 
-#: stampy/stampy.py:709
+#: stampy/stampy.py:714
 msgid "We're admin of private chats"
 msgstr ""
 
-#: stampy/stampy.py:714
+#: stampy/stampy.py:719
 msgid "We're not owner of public chats"
 msgstr ""
 
-#: stampy/stampy.py:719
+#: stampy/stampy.py:724
 msgid "We're admin of public chat"
 msgstr ""
 
-#: stampy/stampy.py:724
+#: stampy/stampy.py:729
 msgid "We're admin because no admin listed on public chat"
 msgstr ""
 
-#: stampy/stampy.py:785
+#: stampy/stampy.py:790
 #, python-format
 msgid "Logging level set to %s"
 msgstr ""
 
-#: stampy/stampy.py:853
+#: stampy/stampy.py:858
 msgid "Started execution"
 msgstr ""
 
-#: stampy/stampy.py:867
+#: stampy/stampy.py:872
 msgid "Token required for operation, please check https://core.telegram.org/bots"
 msgstr ""
 
-#: stampy/stampy.py:886
+#: stampy/stampy.py:891
 #, python-format
 msgid "Plug triggers reported: %s"
 msgstr ""
 
-#: stampy/stampy.py:891
+#: stampy/stampy.py:896
 msgid "Running in daemon mode"
 msgstr ""
 
-#: stampy/stampy.py:896
+#: stampy/stampy.py:901
 msgid "Running in one-shoot mode"
 msgstr ""
 
-#: stampy/stampy.py:899
+#: stampy/stampy.py:904
 msgid "Stopped execution"
 msgstr ""
 
@@ -237,7 +237,7 @@ msgstr ""
 #: stampy/plugin/admin.py:72 stampy/plugin/alias.py:72
 #: stampy/plugin/autokarma.py:78 stampy/plugin/base.py:65
 #: stampy/plugin/comic.py:94 stampy/plugin/config.py:86
-#: stampy/plugin/espp.py:66 stampy/plugin/forward.py:165
+#: stampy/plugin/espp.py:66 stampy/plugin/forward.py:168
 #: stampy/plugin/help.py:65 stampy/plugin/stock.py:119 stampy/plugin/sudo.py:73
 #, python-format
 msgid "Command: %s by %s"
@@ -329,7 +329,7 @@ msgid ""
 msgstr ""
 
 #: stampy/plugin/alias.py:74 stampy/plugin/autokarma.py:81
-#: stampy/plugin/comic.py:97 stampy/plugin/forward.py:167
+#: stampy/plugin/comic.py:97 stampy/plugin/forward.py:170
 #: stampy/plugin/sudo.py:75
 #, python-format
 msgid "Command: %s by Owner: %s"
@@ -621,55 +621,55 @@ msgid ""
 "\n"
 msgstr ""
 
-#: stampy/plugin/forward.py:95
-#, python-format
-msgid "ERROR (%s) forwarding message: Code: %s : Text: %s"
-msgstr ""
-
-#: stampy/plugin/forward.py:116
-#, python-format
-msgid "PERM ERROR forwarding message: Code: %s : Text: %s"
-msgstr ""
-
-#: stampy/plugin/forward.py:118
+#: stampy/plugin/forward.py:87
 #, python-format
 msgid "forwarding message: Code: %s : Text: %s"
 msgstr ""
 
-#: stampy/plugin/forward.py:146
+#: stampy/plugin/forward.py:99
+#, python-format
+msgid "ERROR (%s) forwarding message: Code: %s : Text: %s"
+msgstr ""
+
+#: stampy/plugin/forward.py:120
+#, python-format
+msgid "PERM ERROR forwarding message: Code: %s : Text: %s"
+msgstr ""
+
+#: stampy/plugin/forward.py:149
 msgid "Forward plugin not enabled, skipping"
 msgstr ""
 
-#: stampy/plugin/forward.py:190
+#: stampy/plugin/forward.py:193
 #, python-format
 msgid "Deleting forward for `%s -> %s`"
 msgstr ""
 
-#: stampy/plugin/forward.py:202
+#: stampy/plugin/forward.py:205
 #, python-format
 msgid "Setting forward for `%s` to `%s`"
 msgstr ""
 
-#: stampy/plugin/forward.py:248
+#: stampy/plugin/forward.py:251
 #, python-format
 msgid "%s has a forward %s"
 msgstr ""
 
-#: stampy/plugin/forward.py:253
+#: stampy/plugin/forward.py:256
 msgid "Defined forwards:\n"
-msgstr ""
-
-#: stampy/plugin/forward.py:270
-#, python-format
-msgid "createforward: circular reference %s=%s"
 msgstr ""
 
 #: stampy/plugin/forward.py:273
 #, python-format
+msgid "createforward: circular reference %s=%s"
+msgstr ""
+
+#: stampy/plugin/forward.py:276
+#, python-format
 msgid "createforward: %s=%s"
 msgstr ""
 
-#: stampy/plugin/forward.py:292
+#: stampy/plugin/forward.py:295
 #, python-format
 msgid "getforward: %s -> %s"
 msgstr ""
@@ -990,17 +990,17 @@ msgstr ""
 msgid "Error unbanning user %s from chat %s: %s"
 msgstr ""
 
-#: stampy/plugin/kick.py:166
+#: stampy/plugin/kick.py:167
 #, python-format
 msgid "User %s kicked and banned from %s"
 msgstr ""
 
-#: stampy/plugin/kick.py:170
+#: stampy/plugin/kick.py:171
 #, python-format
 msgid "Error when kicking user: %s"
 msgstr ""
 
-#: stampy/plugin/kick.py:197
+#: stampy/plugin/kick.py:198
 #, python-format
 msgid "User %s unbaned from %s"
 msgstr ""
