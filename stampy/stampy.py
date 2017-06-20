@@ -249,7 +249,12 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
         attempt += 1
         sleep(1)
         if not code:
-            for case in Switch(result['description']):
+            error = result['description']
+            if 'entity starting at byte offset' in error:
+                # Trim the byte offset to make this error more generic
+                error = error[:103]
+
+            for case in Switch(error):
                 if case(u"Bad Request: message text is empty"):
                     # Message is empty, no need to resend
                     attempt = 61
@@ -266,8 +271,7 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
                     # User blocked the bot
                     attempt = 61
                     break
-                if case(u"Bad Request: can't parse entities in message text: "
-                        u"Can't find end of the entity starting at byte offset 510"):
+                if case(u"Bad Request: can't parse entities in message text: Can't find end of the entity starting at byte offset"):
                     attempt = 61
                     break
 
