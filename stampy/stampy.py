@@ -290,7 +290,7 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
         plugin.forward.forwardmessage(sent)
 
     logger.debug(msg=_L("Sending message: Code: %s : Text: %s") % (code, text))
-    return
+    return code
 
 
 def getupdates(offset=0, limit=100):
