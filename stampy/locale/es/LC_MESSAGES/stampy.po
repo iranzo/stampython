@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-06-19 21:46+0200\n"
-"PO-Revision-Date: 2017-06-19 21:47+0200\n"
+"POT-Creation-Date: 2017-06-26 21:21+0200\n"
+"PO-Revision-Date: 2017-06-26 21:24+0200\n"
 "Last-Translator: Pablo Iranzo Gómez <Pablo.Iranzo@gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -94,133 +94,133 @@ msgstr "Error # %s en la ejecución SQL: %s"
 msgid "ERROR (%s) sending message: Code: %s : Text: %s"
 msgstr "ERROR (%s) enviando el mensaje: Código: %s : Texto: %s"
 
-#: stampy/stampy.py:276
+#: stampy/stampy.py:280
 #, python-format
 msgid "PERM ERROR sending message: Code: %s : Text: %s"
 msgstr "ERROR PERMANENTE al enviar el mensaje: Código: %s : Texto: %s"
 
-#: stampy/stampy.py:288
+#: stampy/stampy.py:292
 #, python-format
 msgid "Sending message: Code: %s : Text: %s"
 msgstr "Enviando mensaje: Código: %s : Texto: %s"
 
-#: stampy/stampy.py:312
+#: stampy/stampy.py:316
 #, python-format
 msgid "Getting updates and returning: %s"
 msgstr "Obteniendo actualizaciones y devolviendo: %s"
 
-#: stampy/stampy.py:339
+#: stampy/stampy.py:343
 #, python-format
 msgid "Getting bot details and returning: %s"
 msgstr "Obteniendo Detalles del bot y devolviendo: %s"
 
-#: stampy/stampy.py:358
+#: stampy/stampy.py:362
 #, python-format
 msgid "Clearing messages at %s"
 msgstr "Borrando mensajes en %s"
 
-#: stampy/stampy.py:378
+#: stampy/stampy.py:382
 #, python-format
 msgid "Sending sticker: %s"
 msgstr "Enviando pegatina: %s"
 
-#: stampy/stampy.py:417
+#: stampy/stampy.py:421
 #, python-format
 msgid "Sending image: %s"
 msgstr "Enviando imagen: %s"
 
-#: stampy/stampy.py:440
+#: stampy/stampy.py:444
 #, python-format
 msgid "Failure sending image: %s"
 msgstr "Fallo enviando imagen: %s"
 
-#: stampy/stampy.py:443
+#: stampy/stampy.py:447
 #, python-format
 msgid "Failure downloading image: %s"
 msgstr "Fallo descargando imagen: %s"
 
-#: stampy/stampy.py:592
+#: stampy/stampy.py:596
 #, python-format
 msgid "TEXT: %s : %s : %s"
 msgstr "TEXTO: %s : %s : %s"
 
-#: stampy/stampy.py:626
+#: stampy/stampy.py:630
 #, python-format
 msgid "Processing plugin: %s"
 msgstr "Procesando complemento: %s"
 
-#: stampy/stampy.py:632
+#: stampy/stampy.py:636
 #, python-format
 msgid "New triggers for %s: %s"
 msgstr "Nuevos disparadores para %s: %s"
 
-#: stampy/stampy.py:639
+#: stampy/stampy.py:643
 #, python-format
 msgid "Last processed message at: %s"
 msgstr "Último mensaje procesado en: %s"
 
-#: stampy/stampy.py:641
+#: stampy/stampy.py:645
 #, python-format
 msgid "Last processed update_id : %s"
 msgstr "Última actualización procesada: %s"
 
-#: stampy/stampy.py:643
+#: stampy/stampy.py:647
 #, python-format
 msgid "Number of messages in this batch: %s"
 msgstr "Número de mensajes en este lote: %s"
 
-#: stampy/stampy.py:674
+#: stampy/stampy.py:678
 #, python-format
 msgid "Final deduplicated list: %s"
 msgstr "Lista final deduplicada: %s"
 
-#: stampy/stampy.py:714
+#: stampy/stampy.py:718
 msgid "We're admin of private chats"
 msgstr "Somos admin de chats privados"
 
-#: stampy/stampy.py:719
+#: stampy/stampy.py:723
 msgid "We're not owner of public chats"
 msgstr "No somos propietarios de chats publicos"
 
-#: stampy/stampy.py:724
+#: stampy/stampy.py:728
 msgid "We're admin of public chat"
 msgstr "Somos administrador de chat público"
 
-#: stampy/stampy.py:729
+#: stampy/stampy.py:733
 msgid "We're admin because no admin listed on public chat"
 msgstr ""
 "Somos administradores porque no hay administrador definido en el chat público"
 
-#: stampy/stampy.py:790
+#: stampy/stampy.py:794
 #, python-format
 msgid "Logging level set to %s"
 msgstr "Nivel de registro establecido a %s"
 
-#: stampy/stampy.py:858
+#: stampy/stampy.py:862
 msgid "Started execution"
 msgstr "Ejecución iniciada"
 
-#: stampy/stampy.py:872
+#: stampy/stampy.py:876
 msgid ""
 "Token required for operation, please check https://core.telegram.org/bots"
 msgstr ""
 "Es necesaria una clave/token para operar, por favor, revise https://core."
 "telegram.org/bots"
 
-#: stampy/stampy.py:891
+#: stampy/stampy.py:895
 #, python-format
 msgid "Plug triggers reported: %s"
 msgstr "Complementos devueltos: %s"
 
-#: stampy/stampy.py:896
+#: stampy/stampy.py:900
 msgid "Running in daemon mode"
 msgstr "Ejecutando en modo demonio"
 
-#: stampy/stampy.py:901
+#: stampy/stampy.py:905
 msgid "Running in one-shoot mode"
 msgstr "Ejecución única"
 
-#: stampy/stampy.py:904
+#: stampy/stampy.py:908
 msgid "Stopped execution"
 msgstr "Ejecución detenida"
 
@@ -252,8 +252,9 @@ msgstr "Use `/admin linik show` para listar los canales enlazados\n"
 #: stampy/plugin/admin.py:72 stampy/plugin/alias.py:72
 #: stampy/plugin/autokarma.py:78 stampy/plugin/base.py:65
 #: stampy/plugin/comic.py:94 stampy/plugin/config.py:86
-#: stampy/plugin/espp.py:66 stampy/plugin/forward.py:168
-#: stampy/plugin/help.py:65 stampy/plugin/stock.py:119 stampy/plugin/sudo.py:73
+#: stampy/plugin/espp.py:66 stampy/plugin/feed.py:94
+#: stampy/plugin/forward.py:168 stampy/plugin/help.py:65
+#: stampy/plugin/stock.py:119 stampy/plugin/sudo.py:73
 #, python-format
 msgid "Command: %s by %s"
 msgstr "Comando: %s por %s"
@@ -351,8 +352,8 @@ msgstr ""
 "\n"
 
 #: stampy/plugin/alias.py:74 stampy/plugin/autokarma.py:81
-#: stampy/plugin/comic.py:97 stampy/plugin/forward.py:170
-#: stampy/plugin/sudo.py:75
+#: stampy/plugin/comic.py:97 stampy/plugin/feed.py:97
+#: stampy/plugin/forward.py:170 stampy/plugin/sudo.py:75
 #, python-format
 msgid "Command: %s by Owner: %s"
 msgstr "Comando: %s por propietario: %s"
@@ -495,7 +496,7 @@ msgstr "Devolviendo comics"
 msgid "Comic: %s, last: %s, now: %s, url: %s"
 msgstr "Comic: %s, último: %s, actual: %s, url: %s"
 
-#: stampy/plugin/comic.py:269
+#: stampy/plugin/comic.py:269 stampy/plugin/feed.py:286
 #, python-format
 msgid "Updating last checked as per %s"
 msgstr "Actualizando última comprobación a %s"
@@ -651,6 +652,65 @@ msgstr "Tasa de interés vs inversión: %s %%"
 #: stampy/plugin/espp.py:116
 msgid "espp setting not defined, please use /gconfig set espp=<value>"
 msgstr "espp no está definida, utilice /gconfig set espp=<valor>"
+
+#: stampy/plugin/feed.py:68
+msgid "Use `/feed list` to list feeds defined\n"
+msgstr "Use `/feed list` para mostrar los feeds definidos\n"
+
+#: stampy/plugin/feed.py:69
+msgid "Use `/feed <name>` show items from feed\n"
+msgstr "Use `/feed <nombre>` para mostrar elementos del feed\n"
+
+#: stampy/plugin/feed.py:70
+msgid "Use `/feed add <name> <url>` to add a new feed\n"
+msgstr "Use `/feed add <nombre> <url>` para añadir un nuevo feed\n"
+
+#: stampy/plugin/feed.py:71
+msgid "Use `/feed delete <name>` to remove an existing feed\n"
+msgstr ""
+"Use `/feed delete <nombre>` para eliminar un feed\n"
+"\n"
+
+#: stampy/plugin/feed.py:73
+msgid ""
+"Use `/feed trigger` to send feeds to chats defined\n"
+"\n"
+msgstr ""
+"Use `/feed trigger` para forzar el envío de feeds a sus chats\n"
+"\n"
+
+#: stampy/plugin/feed.py:126
+#, python-format
+msgid "Adding new feed `%s`"
+msgstr "Añadiendo nuevo feed `%s`"
+
+#: stampy/plugin/feed.py:137
+#, python-format
+msgid "Removing feed `%s`"
+msgstr "Borrando feed `%s`"
+
+#: stampy/plugin/feed.py:171
+#, python-format
+msgid "getfeeds: %s"
+msgstr "getfeeds: %s"
+
+#: stampy/plugin/feed.py:189
+msgid "Defined feeds:\n"
+msgstr "Feeds definidos:\n"
+
+#: stampy/plugin/feed.py:195
+msgid "Returning feeds"
+msgstr "Devolviendo feeds %s"
+
+#: stampy/plugin/feed.py:261
+#, python-format
+msgid "# of feeds for today: %s"
+msgstr "Número de feeds hoy: %s"
+
+#: stampy/plugin/feed.py:309
+#, python-format
+msgid "feedadd: %s on %s for group %s"
+msgstr "feedadd: %s en %s para el grupo %s"
 
 #: stampy/plugin/forward.py:43
 msgid "Processing forward commands"

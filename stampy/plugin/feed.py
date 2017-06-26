@@ -121,12 +121,24 @@ def rsscommands(message):
             if case('add'):
                 name = texto.split(' ')[2]
                 url = texto.split(' ')[3]
-                feedadd(name=name, url=url, gid=chat_id)
+                code = feedadd(name=name, url=url, gid=chat_id)
+                if code is not False:
+                    text = _("Adding new feed `%s`") % name
+                    stampy.stampy.sendmessage(chat_id=chat_id, text=text,
+                                              reply_to_message_id=message_id,
+                                              disable_web_page_preview=True,
+                                              parse_mode="Markdown")
                 break
 
             if case('delete'):
                 name = texto.split(' ')[2]
-                feeddel(name=name, gid=chat_id)
+                code = feeddel(name=name, gid=chat_id)
+                if code is not False:
+                    text = _("Removing feed `%s`") % name
+                    stampy.stampy.sendmessage(chat_id=chat_id, text=text,
+                                              reply_to_message_id=message_id,
+                                              disable_web_page_preview=True,
+                                              parse_mode="Markdown")
                 break
 
             if case():
@@ -257,7 +269,7 @@ def feeds(message=False, name=False):
                 title = False
 
             if url and title:
-                itemtext = '[%s][%s] - [%s](%s)' % (name, dateitem, title, url)
+                itemtext = '*%s* *%s* - [%s](%s)' % (name, dateitem, title, url)
                 try:
                     code = stampy.stampy.sendmessage(chat_id=chat_id, text=itemtext, reply_to_message_id=message_id, parse_mode='Markdown')
                 except:
