@@ -290,7 +290,9 @@ def feedadd(name=False, url=False, gid=0):
 
     logger = logging.getLogger(__name__)
     if name and url:
-        sql = "INSERT INTO feeds(name, url, gid) VALUES('%s','%s', '%s');" % (name, url, gid)
+        date = datetime.datetime.now()
+        lastchecked = date.strftime('%Y/%m/%d %H:%M:%S')
+        sql = "INSERT INTO feeds(name, url, gid, lastchecked) VALUES('%s','%s', '%s', '%s');" % (name, url, gid, lastchecked)
         cur = stampy.stampy.dbsql(sql)
         logger.debug(msg=_L("feedadd: %s on %s for group %s") % (name, url, gid))
         # Retrieve last id
