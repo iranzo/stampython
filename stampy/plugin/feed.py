@@ -255,7 +255,7 @@ def feeds(message=False, name=False):
         feed = feedparser.parse(url)
         news = []
         for item in reversed(feed["items"]):
-            dateitem = dateutil.parser.parse(item["updated"])
+            dateitem = dateutil.parser.parse(item["published"])
             if dateitem > datelast:
                 news.append(item)
 
