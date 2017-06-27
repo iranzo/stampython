@@ -270,6 +270,7 @@ def feeds(message=False, name=False):
                 title = False
 
             if url and title:
+                dateitem = dateutil.parser.parse(item["published"])
                 itemtext = '*%s* *%s* - [%s](%s)' % (name, dateitem, title, url)
                 try:
                     code = stampy.stampy.sendmessage(chat_id=chat_id, text=itemtext, reply_to_message_id=message_id, parse_mode='Markdown')
@@ -278,7 +279,7 @@ def feeds(message=False, name=False):
 
                 if code:
                     gidstoping.append(chat_id)
-                    feedsupdated.append({'name':name, 'gid': gid})
+                    feedsupdated.append({'name': name, 'gid': gid})
 
     # Update feeds with results so they are not shown next time
     for feed in stampy.stampy.getitems(feedsupdated):
