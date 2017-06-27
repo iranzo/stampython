@@ -34,7 +34,7 @@ def init():
     botname = stampy.stampy.getme()
     if botname == 'redken_bot':
         delay = int(random.randint(0, 10))
-        when = 30 + delay
+        when = 45 + delay
         sched.add_job(feeds, 'interval', id='feeds', minutes=when, replace_existing=True, misfire_grace_time=120)
 
     triggers = ["^/feed"]
@@ -232,9 +232,10 @@ def feeds(message=False, name=False):
 
     datefor = date.strftime('%Y/%m/%d %H:%M:%S')
 
+    feedsupdated = []
+
     for row in cur:
         # Clear the feeds update for each run
-        feedsupdated = []
 
         (name, gid, lastchecked, url) = row
         if message:
@@ -277,14 +278,14 @@ def feeds(message=False, name=False):
 
                 if code:
                     gidstoping.append(chat_id)
-                    feedsupdated.append(name)
+                    feedsupdated.append({'name':name, 'gid': gid})
 
-        # Update feeds with results so they are not shown next time
-        for feed in stampy.stampy.getitems(feedsupdated):
-            # Update date in SQL so it's not invoked again
-            sql = "UPDATE feeds SET lastchecked='%s' where name='%s' and gid='%s'" % (datefor, feed, gid)
-            logger.debug(msg=_L("Updating last checked as per %s") % sql)
-            stampy.stampy.dbsql(sql=sql)
+    # Update feeds with results so they are not shown next time
+    for feed in stampy.stampy.getitems(feedsupdated):
+        # Update date in SQL so it's not invoked again
+        sql = "UPDATE feeds SET lastchecked='%s' where name='%s' and gid='%s'" % (datefor, feed['name'], feed['gid'])
+        logger.debug(msg=_L("Updating last checked as per %s") % sql)
+        stampy.stampy.dbsql(sql=sql)
 
     # Update stats for chats where sent feed
     for gid in stampy.stampy.getitems(gidstoping):
