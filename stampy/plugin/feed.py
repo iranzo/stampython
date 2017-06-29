@@ -102,7 +102,7 @@ def rsscommands(message):
 
         for case in stampy.stampy.Switch(command):
             if case('list'):
-                text = listfeeds()
+                text = listfeeds(gid=chat_id)
                 stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                           reply_to_message_id=message_id,
                                           disable_web_page_preview=True,
@@ -160,7 +160,7 @@ def getfeeds():
     """
 
     logger = logging.getLogger(__name__)
-    sql = "SELECT name FROM feeds;"
+    sql = "SELECT name FROM feeds"
     cur = stampy.stampy.dbsql(sql)
     data = cur.fetchall()
     value = []
@@ -173,7 +173,7 @@ def getfeeds():
     return value
 
 
-def listfeeds():
+def listfeeds(gid=False):
     """
     Lists the feeds defined
     :return: table with feeds stored
@@ -181,7 +181,10 @@ def listfeeds():
 
     logger = logging.getLogger(__name__)
 
-    sql = "select name,lastchecked,url  from feeds ORDER BY name ASC;"
+    sql = "select name,lastchecked,url  from feeds"
+    if gid:
+        sql = "%s%s" % (sql, " WHERE gid=%s" % gid)
+    sql = "%s%s" % (sql, " ORDER BY name ASC;")
     cur = stampy.stampy.dbsql(sql)
 
     try:
