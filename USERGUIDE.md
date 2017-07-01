@@ -21,7 +21,7 @@ On the channel to become `master` execute: `/admin link master` and it will gene
 
 On the channel to be linked against `master`, a.k.a. `slave`, execute: `/admin link slave <token>` where `token` is the code received as reply to the command in master channel.
 
-Also, as per general usage (copied from [Readme.md](README.md) ):
+Also, as per general usage:
 
 - `word++` to add karma
 - `word--` to remove karma

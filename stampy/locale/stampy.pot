@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampy 0.0.1.dev454\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-07-01 10:14+0200\n"
+"POT-Creation-Date: 2017-07-01 14:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -133,84 +133,84 @@ msgstr ""
 msgid "Failure downloading image: %s"
 msgstr ""
 
-#: stampy/stampy.py:596
+#: stampy/stampy.py:601
 #, python-format
 msgid "TEXT: %s : %s : %s"
 msgstr ""
 
-#: stampy/stampy.py:630
+#: stampy/stampy.py:635
 #, python-format
 msgid "Processing plugin: %s"
 msgstr ""
 
-#: stampy/stampy.py:636
+#: stampy/stampy.py:641
 #, python-format
 msgid "New triggers for %s: %s"
 msgstr ""
 
-#: stampy/stampy.py:643
+#: stampy/stampy.py:648
 #, python-format
 msgid "Last processed message at: %s"
 msgstr ""
 
-#: stampy/stampy.py:645
+#: stampy/stampy.py:650
 #, python-format
 msgid "Last processed update_id : %s"
 msgstr ""
 
-#: stampy/stampy.py:647
+#: stampy/stampy.py:652
 #, python-format
 msgid "Number of messages in this batch: %s"
 msgstr ""
 
-#: stampy/stampy.py:678
+#: stampy/stampy.py:683
 #, python-format
 msgid "Final deduplicated list: %s"
 msgstr ""
 
-#: stampy/stampy.py:718
+#: stampy/stampy.py:723
 msgid "We're admin of private chats"
 msgstr ""
 
-#: stampy/stampy.py:723
+#: stampy/stampy.py:728
 msgid "We're not owner of public chats"
 msgstr ""
 
-#: stampy/stampy.py:728
+#: stampy/stampy.py:733
 msgid "We're admin of public chat"
 msgstr ""
 
-#: stampy/stampy.py:733
+#: stampy/stampy.py:738
 msgid "We're admin because no admin listed on public chat"
 msgstr ""
 
-#: stampy/stampy.py:794
+#: stampy/stampy.py:799
 #, python-format
 msgid "Logging level set to %s"
 msgstr ""
 
-#: stampy/stampy.py:862
+#: stampy/stampy.py:867
 msgid "Started execution"
 msgstr ""
 
-#: stampy/stampy.py:876
+#: stampy/stampy.py:881
 msgid "Token required for operation, please check https://core.telegram.org/bots"
 msgstr ""
 
-#: stampy/stampy.py:895
+#: stampy/stampy.py:900
 #, python-format
 msgid "Plug triggers reported: %s"
 msgstr ""
 
-#: stampy/stampy.py:900
+#: stampy/stampy.py:905
 msgid "Running in daemon mode"
 msgstr ""
 
-#: stampy/stampy.py:905
+#: stampy/stampy.py:910
 msgid "Running in one-shoot mode"
 msgstr ""
 
-#: stampy/stampy.py:908
+#: stampy/stampy.py:913
 msgid "Stopped execution"
 msgstr ""
 
@@ -990,77 +990,234 @@ msgstr ""
 msgid "Word %s with %s inactivity days is going to be purged"
 msgstr ""
 
-#: stampy/plugin/kick.py:53
+#: stampy/plugin/kick.py:55
 msgid ""
 "Use `/kick <username or id>` to kick user from chat\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/kick.py:54
+#: stampy/plugin/kick.py:56
 msgid ""
 "Use `/kickban <username or id>` to kick user from chat and ban to forbid "
 "new entry\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/kick.py:55
+#: stampy/plugin/kick.py:57
 msgid ""
-"Use `/unban <user ID>`\n"
+"Use `/unban <user ID>` to unban user\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/kick.py:77
+#: stampy/plugin/kick.py:58
+msgid ""
+"Use `/op <user ID>` to grant all privileges\n"
+"\n"
+msgstr ""
+
+#: stampy/plugin/kick.py:59
+msgid ""
+"Use `/deop <user ID>` to remove all privileges\n"
+"\n"
+msgstr ""
+
+#: stampy/plugin/kick.py:60
+msgid ""
+"Use `/opall` to grant op to all\n"
+"\n"
+msgstr ""
+
+#: stampy/plugin/kick.py:61
+msgid ""
+"Use `/deopall` to remove all ops\n"
+"\n"
+msgstr ""
+
+#: stampy/plugin/kick.py:62
+msgid ""
+"Use `/topic <topic>` to change title\n"
+"\n"
+msgstr ""
+
+#: stampy/plugin/kick.py:63
+msgid ""
+"Use `/mute <user ID>` to forbid sending messages\n"
+"\n"
+msgstr ""
+
+#: stampy/plugin/kick.py:64
+msgid ""
+"Use `/unmute <user ID>` to allow sending messages\n"
+"\n"
+msgstr ""
+
+#: stampy/plugin/kick.py:96
 #, python-format
 msgid "Owner kick/ban/unban: %s by %s"
 msgstr ""
 
-#: stampy/plugin/kick.py:101
+#: stampy/plugin/kick.py:124
 msgid "Not unique user found for command, retry"
 msgstr ""
 
-#: stampy/plugin/kick.py:113
+#: stampy/plugin/kick.py:136
+#, python-format
+msgid "Users opped on chat %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:138
+#, python-format
+msgid "Error opping users from chat %s: %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:146
+#, python-format
+msgid "Users %s deoped on chat %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:148
+#, python-format
+msgid "Error deoping users from chat %s: %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:156
 #, python-format
 msgid "User %s kicked out of chat %s"
 msgstr ""
 
-#: stampy/plugin/kick.py:115
+#: stampy/plugin/kick.py:158
 #, python-format
 msgid "Error kicking user %s from chat %s: %s"
 msgstr ""
 
-#: stampy/plugin/kick.py:123
+#: stampy/plugin/kick.py:166
 #, python-format
 msgid "User %s kicked and banned out of chat %s"
 msgstr ""
 
-#: stampy/plugin/kick.py:125
+#: stampy/plugin/kick.py:168
 #, python-format
 msgid "Error kick+ban user %s from chat %s: %s"
 msgstr ""
 
-#: stampy/plugin/kick.py:133
+#: stampy/plugin/kick.py:176
 #, python-format
 msgid "User %s unbanned out of chat %s"
 msgstr ""
 
-#: stampy/plugin/kick.py:135
+#: stampy/plugin/kick.py:178
 #, python-format
 msgid "Error unbanning user %s from chat %s: %s"
 msgstr ""
 
-#: stampy/plugin/kick.py:167
+#: stampy/plugin/kick.py:185
+#, python-format
+msgid "User %s oped on chat %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:187
+#, python-format
+msgid "Error oping user %s from chat %s: %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:195
+#, python-format
+msgid "User %s deoped on chat %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:197
+#, python-format
+msgid "Error deoping %s from chat %s: %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:206
+#, python-format
+msgid "User %s muted on chat %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:209
+#, python-format
+msgid "Error muting user %s from chat %s: %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:219
+#, python-format
+msgid "User %s unmuted on chat %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:221
+#, python-format
+msgid "Error unmuting %s from chat %s: %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:230 stampy/plugin/kick.py:488
+#, python-format
+msgid "User %s information: %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:232
+#, python-format
+msgid "Error querying user %s information: %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:265
 #, python-format
 msgid "User %s kicked and banned from %s"
 msgstr ""
 
-#: stampy/plugin/kick.py:171
+#: stampy/plugin/kick.py:269
 #, python-format
 msgid "Error when kicking user: %s"
 msgstr ""
 
-#: stampy/plugin/kick.py:198
+#: stampy/plugin/kick.py:296
 #, python-format
 msgid "User %s unbaned from %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:326
+#, python-format
+msgid "chat type: %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:362
+#, python-format
+msgid "User %s has updated permissions: %s on  %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:364
+#, python-format
+msgid "Error when modifying user permission %s: %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:384
+#, python-format
+msgid "Setting new title to %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:395
+#, python-format
+msgid "Topic %s has been updated on  %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:397
+#, python-format
+msgid "Error when modifying topic: %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:440
+#, python-format
+msgid "User %s has updated restrictions: %s on %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:442
+#, python-format
+msgid "Error when modifying user restriction: %s: %s"
+msgstr ""
+
+#: stampy/plugin/kick.py:490
+#, python-format
+msgid "Error /whois on user: %s"
 msgstr ""
 
 #: stampy/plugin/quote.py:45
@@ -1079,165 +1236,171 @@ msgid ""
 "\n"
 msgstr ""
 
-#: stampy/plugin/quote.py:83
+#: stampy/plugin/quote.py:90
 #, python-format
 msgid "Quote `%s` added"
 msgstr ""
 
-#: stampy/plugin/quote.py:92
+#: stampy/plugin/quote.py:99
 #, python-format
 msgid "Deleting quote id `%s`"
 msgstr ""
 
-#: stampy/plugin/quote.py:112
+#: stampy/plugin/quote.py:119
 #, python-format
 msgid "No quote recorded for `%s`"
 msgstr ""
 
-#: stampy/plugin/quote.py:114
+#: stampy/plugin/quote.py:121
 msgid "No quote found"
 msgstr ""
 
-#: stampy/plugin/quote.py:171
+#: stampy/plugin/quote.py:178
 #, python-format
 msgid "createquote: %s=%s on %s for group %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:85
+#: stampy/plugin/stats.py:88
 #, python-format
 msgid "Someone with id %s left chat %s, cleaning up"
 msgstr ""
 
-#: stampy/plugin/stats.py:104
+#: stampy/plugin/stats.py:107
 #, python-format
 msgid "Bot has left chat %s, cleaning up"
 msgstr ""
 
-#: stampy/plugin/stats.py:129
+#: stampy/plugin/stats.py:132
 msgid ""
 "Use `@all` to ping all users in a channel as long as they have username "
 "defined in Telegram\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/stats.py:131
+#: stampy/plugin/stats.py:134
 msgid ""
-"Use `/stats show <user|chat|search>` to get stats on last usage\n"
+"Use `/stats show <private|group|supergroup|channel|search>` to get stats "
+"on last usage\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/stats.py:132
+#: stampy/plugin/stats.py:135
 msgid ""
 "Use `/getout <chatid|here>` to have bot leave that chat or current one\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/stats.py:153
+#: stampy/plugin/stats.py:156
 #, python-format
 msgid "Owner Stat: %s by %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:209
+#: stampy/plugin/stats.py:212
 #, python-format
 msgid "Owner getout: %s by %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:251
+#: stampy/plugin/stats.py:254
 msgid "Defined stats:\n"
 msgstr ""
 
-#: stampy/plugin/stats.py:253
+#: stampy/plugin/stats.py:256
 #, python-format
 msgid "Returning stats %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:309 stampy/plugin/stats.py:368
+#: stampy/plugin/stats.py:312 stampy/plugin/stats.py:371
 #, python-format
 msgid "values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid: %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:315
+#: stampy/plugin/stats.py:318
 msgid "ERROR on updatestats"
 msgstr ""
 
-#: stampy/plugin/stats.py:374
+#: stampy/plugin/stats.py:377
 msgid "ERROR on remove_from_memberid"
 msgstr ""
 
-#: stampy/plugin/stats.py:394
+#: stampy/plugin/stats.py:397
 #, python-format
 msgid "Chat id %s users %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:413
+#: stampy/plugin/stats.py:416
 #, python-format
 msgid "Chat id %s left"
 msgstr ""
 
-#: stampy/plugin/stats.py:438
+#: stampy/plugin/stats.py:441
 #, python-format
 msgid "Processing chat_ids for cleanup: %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:453
+#: stampy/plugin/stats.py:456
 #, python-format
 msgid "CHAT ID %s with name %s with %s inactivity days is going to be purged"
 msgstr ""
 
-#: stampy/plugin/stats.py:457
+#: stampy/plugin/stats.py:460
 #, python-format
 msgid ""
 "Due to inactivity of more than %s days, this bot will exit the channel, "
 "please re-add in the future if needed"
 msgstr ""
 
-#: stampy/plugin/stats.py:485
+#: stampy/plugin/stats.py:488
 #, python-format
 msgid "The removed channel (%s) was master for others, electing new master: %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:513 stampy/plugin/stats.py:609
+#: stampy/plugin/stats.py:516 stampy/plugin/stats.py:612
 #, python-format
 msgid "LINE for user %s and memberid: %s will be deleted"
 msgstr ""
 
-#: stampy/plugin/stats.py:534
+#: stampy/plugin/stats.py:537
 #, python-format
 msgid "Migrating chat id: %s to %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:579
+#: stampy/plugin/stats.py:582
 #, python-format
 msgid "Processing userids for cleanup: %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:592
+#: stampy/plugin/stats.py:595
 #, python-format
 msgid "USER ID %s with name %s with %s inactivity days is going to be purged"
 msgstr ""
 
-#: stampy/plugin/stats.py:675
+#: stampy/plugin/stats.py:680
 #, python-format
 msgid "values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid:%s"
 msgstr ""
 
-#: stampy/plugin/stats.py:696
+#: stampy/plugin/stats.py:701
 msgid "@All invoked"
 msgstr ""
 
-#: stampy/plugin/stats.py:720
+#: stampy/plugin/stats.py:725
 #, python-format
 msgid "%s wanted to ping you: "
 msgstr ""
 
-#: stampy/plugin/stats.py:740
+#: stampy/plugin/stats.py:745
 #, python-format
 msgid "Pinging chat %s: %s on %s"
 msgstr ""
 
-#: stampy/plugin/stats.py:766
+#: stampy/plugin/stats.py:771
 #, python-format
 msgid "Found users with id(%s)/chat(%s): %s"
+msgstr ""
+
+#: stampy/plugin/stats.py:791
+#, python-format
+msgid "Returning userids: %s for chat: %s"
 msgstr ""
 
 #: stampy/plugin/stock.py:50
