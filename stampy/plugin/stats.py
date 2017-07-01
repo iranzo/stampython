@@ -743,7 +743,7 @@ def pingchat(chatid):
     date = datetime.datetime.now()
     datefor = date.strftime('%Y-%m-%d %H:%M:%S')
     logger.debug(msg=_L("Pinging chat %s: %s on %s") % (chatid, name, datefor))
-    updatestats(type="chat", id=chatid, name=name,
+    updatestats(type=type, id=chatid, name=name,
                 date=datefor, memberid=memberid)
     return
 
