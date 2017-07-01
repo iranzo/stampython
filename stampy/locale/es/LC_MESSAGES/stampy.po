@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-06-26 21:21+0200\n"
-"PO-Revision-Date: 2017-06-26 21:24+0200\n"
+"POT-Creation-Date: 2017-07-01 10:15+0200\n"
+"PO-Revision-Date: 2017-07-01 10:15+0200\n"
 "Last-Translator: Pablo Iranzo Gómez <Pablo.Iranzo@gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -496,7 +496,7 @@ msgstr "Devolviendo comics"
 msgid "Comic: %s, last: %s, now: %s, url: %s"
 msgstr "Comic: %s, último: %s, actual: %s, url: %s"
 
-#: stampy/plugin/comic.py:269 stampy/plugin/feed.py:286
+#: stampy/plugin/comic.py:269 stampy/plugin/feed.py:319
 #, python-format
 msgid "Updating last checked as per %s"
 msgstr "Actualizando última comprobación a %s"
@@ -662,8 +662,12 @@ msgid "Use `/feed <name>` show items from feed\n"
 msgstr "Use `/feed <nombre>` para mostrar elementos del feed\n"
 
 #: stampy/plugin/feed.py:70
-msgid "Use `/feed add <name> <url>` to add a new feed\n"
-msgstr "Use `/feed add <nombre> <url>` para añadir un nuevo feed\n"
+msgid ""
+"Use `/feed add <name> <url> <interval:min>` to add a new feed (default "
+"interval 1440 mins)\n"
+msgstr ""
+"Use `/feed add <nombre> <url> <intervalo:min>` para añadir un nuevo feed "
+"(intervalo por defecto 1440 min)\n"
 
 #: stampy/plugin/feed.py:71
 msgid "Use `/feed delete <name>` to remove an existing feed\n"
@@ -679,35 +683,35 @@ msgstr ""
 "Use `/feed trigger` para forzar el envío de feeds a sus chats\n"
 "\n"
 
-#: stampy/plugin/feed.py:126
+#: stampy/plugin/feed.py:131
 #, python-format
 msgid "Adding new feed `%s`"
 msgstr "Añadiendo nuevo feed `%s`"
 
-#: stampy/plugin/feed.py:137
+#: stampy/plugin/feed.py:142
 #, python-format
 msgid "Removing feed `%s`"
 msgstr "Borrando feed `%s`"
 
-#: stampy/plugin/feed.py:171
+#: stampy/plugin/feed.py:176
 #, python-format
 msgid "getfeeds: %s"
 msgstr "getfeeds: %s"
 
-#: stampy/plugin/feed.py:189
+#: stampy/plugin/feed.py:197
 msgid "Defined feeds:\n"
 msgstr "Feeds definidos:\n"
 
-#: stampy/plugin/feed.py:195
+#: stampy/plugin/feed.py:203
 msgid "Returning feeds"
 msgstr "Devolviendo feeds %s"
 
-#: stampy/plugin/feed.py:261
+#: stampy/plugin/feed.py:288
 #, python-format
 msgid "# of feeds for today: %s"
 msgstr "Número de feeds hoy: %s"
 
-#: stampy/plugin/feed.py:309
+#: stampy/plugin/feed.py:343
 #, python-format
 msgid "feedadd: %s on %s for group %s"
 msgstr "feedadd: %s en %s para el grupo %s"

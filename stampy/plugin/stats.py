@@ -498,7 +498,7 @@ def dochatcleanup(chat_id=False, maxage=False):
                 sql = "DELETE from %s where id='%s';" % (table, chatid)
                 cur = stampy.stampy.dbsql(sql)
 
-            for table in ['karma', 'quote', 'autokarma', 'alias']:
+            for table in ['karma', 'quote', 'autokarma', 'alias', 'feeds']:
                 # Remove channel stats
                 sql = "DELETE from %s where gid='%s';" % (table, chatid)
                 cur = stampy.stampy.dbsql(sql)
@@ -532,7 +532,7 @@ def migratechats(oldchat, newchat, includeall=True):
 
     # move data from old master to new one (except stats and config)
     logger.debug(msg=_L("Migrating chat id: %s to %s") % (oldchat, newchat))
-    for table in ['karma', 'quote', 'autokarma', 'alias']:
+    for table in ['karma', 'quote', 'autokarma', 'alias', 'feeds']:
         sql = "UPDATE %s SET gid='%s' where gid='%s';" % (table, newchat, oldchat)
         stampy.stampy.dbsql(sql)
 

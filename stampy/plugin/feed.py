@@ -6,7 +6,7 @@
 
 import datetime
 import logging
-import random
+import time
 
 import dateutil.parser
 import feedparser
@@ -33,13 +33,13 @@ def init():
     """
     botname = stampy.stampy.getme()
     if botname == 'redken_bot':
-        delay = int(random.randint(0, 10))
-        when = 45 + delay
+        when = 5
         sched.add_job(feeds, 'interval', id='feeds', minutes=when, replace_existing=True, misfire_grace_time=120)
 
     triggers = ["^/feed"]
-    for feed in getfeeds():
-        triggers.extend(["/%s" % feed])
+
+    # Refresh feeds in case bot was down:
+    feeds()
 
     return triggers
 
@@ -67,7 +67,7 @@ def help(message):  # do not edit this line
     commandtext = ""
     commandtext += _("Use `/feed list` to list feeds defined\n")
     commandtext += _("Use `/feed <name>` show items from feed\n")
-    commandtext += _("Use `/feed add <name> <url>` to add a new feed\n")
+    commandtext += _("Use `/feed add <name> <url> <interval:min>` to add a new feed (default interval 1440 mins)\n")
     commandtext += _("Use `/feed delete <name>` to remove an existing feed\n")
     if stampy.stampy.is_owner(message):
         commandtext += _(
@@ -121,7 +121,12 @@ def rsscommands(message):
             if case('add'):
                 name = texto.split(' ')[2]
                 url = texto.split(' ')[3]
-                code = feedadd(name=name, url=url, gid=chat_id)
+                try:
+                    interval = texto.split(' ')[4]
+                except:
+                    interval = 30
+                code = feedadd(name=name, url=url, gid=chat_id,
+                               interval=interval)
                 if code is not False:
                     text = _("Adding new feed `%s`") % name
                     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
@@ -181,7 +186,7 @@ def listfeeds(gid=False):
 
     logger = logging.getLogger(__name__)
 
-    sql = "select name,lastchecked,url  from feeds"
+    sql = "select name,lastchecked,url,interval  from feeds"
     if gid:
         sql = "%s%s" % (sql, " WHERE gid=%s" % gid)
     sql = "%s%s" % (sql, " ORDER BY name ASC;")
@@ -220,12 +225,12 @@ def feeds(message=False, name=False):
         gid = False
 
     if name:
-        sql = "SELECT name,gid,lastchecked,url from feeds WHERE name='%s'" % name
+        sql = "SELECT name,gid,lastchecked,url,interval from feeds WHERE name='%s'" % name
         if gid:
             extra = "and gid='%s';" % gid
             sql = "%s %s" % (sql, extra)
     else:
-        sql = "SELECT name,gid,lastchecked,url from feeds"
+        sql = "SELECT name,gid,lastchecked,url,interval from feeds"
         if gid:
             extra = "WHERE gid='%s'" % gid
             sql = "%s %s" % (sql, extra)
@@ -233,56 +238,79 @@ def feeds(message=False, name=False):
     cur = stampy.stampy.dbsql(sql)
     gidstoping = []
 
+    # Formatted date to write back in database
     datefor = date.strftime('%Y/%m/%d %H:%M:%S')
 
+    # Convert to epoch to properly compare
+    dateforts = time.mktime(date.timetuple())
+
+    # Clear the feeds updated
     feedsupdated = []
 
     for row in cur:
-        # Clear the feeds update for each run
+        (name, gid, lastchecked, url, interval) = row
 
-        (name, gid, lastchecked, url) = row
         if message:
             chat_id = msgdetail["chat_id"]
         else:
             chat_id = gid
 
         try:
-            # Parse date or if in error, use today
+            # Parse date or if in error, use past
             datelast = utc.localize(dateutil.parser.parse(lastchecked))
 
         except:
             datelast = utc.localize(datetime.datetime(year=1981, month=1,
                                                       day=24), is_dst=False)
 
-        # Get the feed
-        feed = feedparser.parse(url)
-        news = []
-        for item in reversed(feed["items"]):
-            dateitem = dateutil.parser.parse(item["published"])
-            if dateitem > datelast:
-                news.append(item)
+        # Get time since last check on the feed (epoch)
+        datelastts = time.mktime(datelast.timetuple())
+        timediff = int((dateforts - datelastts) / 60)
 
-        logger.debug(msg=_L("# of feeds for today: %s") % len(news))
+        # Check if interval is defined or set default
+        interval = int(interval)
 
-        for item in news:
-            try:
-                url = item['link']
-                title = item['title']
-            except:
-                url = False
-                title = False
+        if interval == 0:
+            interval = 1440
 
-            if url and title:
+        # If more time has passed since last check than the interval for
+        # checks, run the check
+
+        if timediff >= interval:
+            # Get the feed
+            feed = feedparser.parse(url)
+            news = []
+            for item in reversed(feed["items"]):
                 dateitem = dateutil.parser.parse(item["published"])
-                itemtext = '*%s* *%s* - [%s](%s)' % (name, dateitem, title, url)
-                try:
-                    code = stampy.stampy.sendmessage(chat_id=chat_id, text=itemtext, reply_to_message_id=message_id, parse_mode='Markdown')
-                except:
-                    code = False
+                if dateitem > datelast:
+                    news.append(item)
 
-                if code:
-                    gidstoping.append(chat_id)
-                    feedsupdated.append({'name': name, 'gid': gid})
+            logger.debug(msg=_L("# of feeds for today: %s") % len(news))
+
+            # Even if we don't have updated items, update the lastchecked
+            # date for interval to work properly
+            if len(news) == 0:
+                feedsupdated.append({'name': name, 'gid': gid})
+
+            for item in news:
+                try:
+                    url = item['link']
+                    title = item['title']
+                except:
+                    url = False
+                    title = False
+
+                if url and title:
+                    dateitem = dateutil.parser.parse(item["published"])
+                    itemtext = '*%s* *%s* - [%s](%s)' % (name, dateitem, title, url)
+                    try:
+                        code = stampy.stampy.sendmessage(chat_id=chat_id, text=itemtext, reply_to_message_id=message_id, parse_mode='Markdown')
+                    except:
+                        code = False
+
+                    if code:
+                        gidstoping.append(chat_id)
+                        feedsupdated.append({'name': name, 'gid': gid})
 
     # Update feeds with results so they are not shown next time
     for feed in stampy.stampy.getitems(feedsupdated):
@@ -296,12 +324,13 @@ def feeds(message=False, name=False):
         stampy.plugin.stats.pingchat(chatid=gid)
 
 
-def feedadd(name=False, url=False, gid=0):
+def feedadd(name=False, url=False, gid=0, interval=30):
     """
     Adds a quote for a specified username
     :param gid: group id to filter
     :param name: name of feed
     :param url: rss feed url
+    :param interval: interval in minutes between checks
     :return: returns feed ID entry in database
     """
 
@@ -309,7 +338,7 @@ def feedadd(name=False, url=False, gid=0):
     if name and url:
         date = datetime.datetime.now()
         lastchecked = date.strftime('%Y/%m/%d %H:%M:%S')
-        sql = "INSERT INTO feeds(name, url, gid, lastchecked) VALUES('%s','%s', '%s', '%s');" % (name, url, gid, lastchecked)
+        sql = "INSERT INTO feeds(name, url, gid, lastchecked, interval) VALUES('%s','%s', '%s', '%s', '%s');" % (name, url, gid, lastchecked, interval)
         cur = stampy.stampy.dbsql(sql)
         logger.debug(msg=_L("feedadd: %s on %s for group %s") % (name, url, gid))
         # Retrieve last id
