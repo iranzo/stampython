@@ -497,6 +497,11 @@ def getmsgdetail(message):
             # Define dictionary for text replacements
 
     try:
+        chat_type = message['message']['chat']['type']
+    except:
+        chat_type = ""
+
+    try:
         chat_name = replace_all(message[type]['chat']['title'], dictionary)
     except:
         chat_name = ""
@@ -556,7 +561,7 @@ def getmsgdetail(message):
 
     vals = {"name": name, "chat_id": chat_id, "chat_name": chat_name, "date": date, "datefor": datefor, "error": error,
             "message_id": message_id, "text": text, "update_id": update_id, "who_gn": who_gn, "who_id": who_id,
-            "who_ln": who_ln, "who_un": who_un, "type": type, "replyto": replyto, "replytotext": replytotext}
+            "who_ln": who_ln, "who_un": who_un, "type": type, "replyto": replyto, "replytotext": replytotext, "chat_type": chat_type}
 
     return vals
 
