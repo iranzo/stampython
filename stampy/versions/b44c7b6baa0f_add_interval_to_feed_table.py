@@ -26,7 +26,7 @@ def upgrade():
                     UPDATE
                        "feeds"
                     SET
-                        interval = 30
+                        interval = 1440
                 """)
 
 
