@@ -76,15 +76,22 @@ def quotecommands(message):
         # cur.execute('CREATE TABLE quote(id AUTOINCREMENT, name TEXT,
         # date TEXT, text TEXT;')
         if case('add'):
-            who_quote = texto.split(' ')[2]
-            date = time.time()
-            quote = str.join(" ", texto.split(' ')[3:])
-            result = addquote(username=who_quote, date=date, text=quote, gid=stampy.stampy.geteffectivegid(gid=chat_id))
-            text = _("Quote `%s` added") % result
-            stampy.stampy.sendmessage(chat_id=chat_id, text=text,
-                                      reply_to_message_id=message_id,
-                                      disable_web_page_preview=True,
-                                      parse_mode="Markdown")
+            try:
+                who_quote = texto.split(' ')[2]
+                date = time.time()
+                quote = str.join(" ", texto.split(' ')[3:])
+            except:
+                who_quote = False
+                date = False
+                quote = False
+
+            if who_quote and date and quote:
+                result = addquote(username=who_quote, date=date, text=quote, gid=stampy.stampy.geteffectivegid(gid=chat_id))
+                text = _("Quote `%s` added") % result
+                stampy.stampy.sendmessage(chat_id=chat_id, text=text,
+                                          reply_to_message_id=message_id,
+                                          disable_web_page_preview=True,
+                                          parse_mode="Markdown")
             break
         if case('del'):
             if stampy.stampy.is_owner_or_admin(message):
