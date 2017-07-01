@@ -87,20 +87,20 @@ def irccommands(message):
     except:
         command = False
 
-    if command == '/topic':
-        newtitle = " ".join(texto.split(' ')[1:])
-        dictionary = {
-            "'": "",
-            "\n": " ",
-            u"—": "--"
-        }
-        newtitle = stampy.stampy.replace_all(text=newtitle,
-                                             dictionary=dictionary)
-        topic(chat_id=chat_id, title=newtitle)
-        return
-
     if stampy.stampy.is_owner_or_admin(message):
         logger.debug(msg=_L("Owner kick/ban/unban: %s by %s") % (texto, who_un))
+
+        if command == '/topic':
+            newtitle = " ".join(texto.split(' ')[1:])
+            dictionary = {
+                "'": "",
+                "\n": " ",
+                u"—": "--"
+            }
+            newtitle = stampy.stampy.replace_all(text=newtitle,
+                                                 dictionary=dictionary)
+            topic(chat_id=chat_id, title=newtitle)
+            return
 
         if command == '/opall':
             opall(chat_id=chat_id, extra="op")
