@@ -51,11 +51,14 @@ def run(message):  # do not edit this line
     # Update stats on the message being processed unless we use sudo
     if not stampy.plugin.config.config(key='overridegid', default=False):
         if msgdetail["chat_id"] and msgdetail["chat_name"]:
-            updatestats(type="chat", id=msgdetail["chat_id"], name=msgdetail["chat_name"],
-                        date=msgdetail["datefor"], memberid=msgdetail["who_id"])
+            updatestats(type=msgdetail['chat_type'], id=msgdetail["chat_id"],
+                        name=msgdetail["chat_name"], date=msgdetail["datefor"], memberid=msgdetail["who_id"])
 
         if msgdetail["name"]:
-            updatestats(type="user", id=msgdetail["who_id"], name=msgdetail["name"], date=msgdetail["datefor"],
+            # Hardcode 'private' as message might have been received in a
+            # chat but we still want to update user information
+            updatestats(type='private', id=msgdetail["who_id"],
+                        name=msgdetail["name"], date=msgdetail["datefor"],
                         memberid=msgdetail["chat_id"])
 
     if text:
@@ -84,8 +87,8 @@ def run(message):  # do not edit this line
         if wholeft:
             logger.debug(msg=_L('Someone with id %s left chat %s, cleaning up') % (wholeft, msgdetail["chat_name"]))
 
-            remove_from_memberid(type='chat', id=chat_id, memberid=wholeft)
-            remove_from_memberid(type='user', id=wholeft, memberid=chat_id)
+            remove_from_memberid(type=msgdetail['chat_type'], id=chat_id, memberid=wholeft)
+            remove_from_memberid(type='private', id=wholeft, memberid=chat_id)
 
         # Check if it was the bot leaving the channel and cleanup
         try:
@@ -128,7 +131,7 @@ def help(message):  # do not edit this line
 
     commandtext = _("Use `@all` to ping all users in a channel as long as they have username defined in Telegram\n\n")
     if stampy.stampy.is_owner(message):
-        commandtext += _("Use `/stats show <user|chat|search>` to get stats on last usage\n\n")
+        commandtext += _("Use `/stats show <private|group|supergroup|channel|search>` to get stats on last usage\n\n")
         commandtext += _("Use `/getout <chatid|here>` to have bot leave that chat or current one\n\n")
     return commandtext
 
@@ -424,9 +427,9 @@ def dochatcleanup(chat_id=False, maxage=False):
     logger = logging.getLogger(__name__)
 
     if chat_id:
-        sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type='chat' and id=%s" % chat_id
+        sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type <> 'private' and id=%s" % chat_id
     else:
-        sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type='chat'"
+        sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type <> 'private'"
 
     chatids = []
     cur = stampy.stampy.dbsql(sql)
@@ -438,7 +441,7 @@ def dochatcleanup(chat_id=False, maxage=False):
     logger.debug(msg=_L("Processing chat_ids for cleanup: %s") % chatids)
 
     for chatid in chatids:
-        (type, id, name, date, count, memberid) = getstats(type='chat', id=chatid)
+        (type, id, name, date, count, memberid) = getstats(id=chatid)
         if date and (date != "False"):
             chatdate = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
         else:
@@ -471,7 +474,7 @@ def dochatcleanup(chat_id=False, maxage=False):
 
             for row in cur.fetchall():
                 id = row[0]
-                value = getstats(type='chat', id=id)
+                value = getstats(id=id)
                 if value:
                     newmemberid = value[5]
                 else:
@@ -542,9 +545,9 @@ def migratechats(oldchat, newchat, includeall=True):
             stampy.stampy.dbsql(sql)
 
         # Migrate forward data
-        sql = "UPDATE forward SET source='%s' where source='%s;" % (newchat, oldchat)
+        sql = "UPDATE forward SET source='%s' where source='%s';" % (newchat, oldchat)
         stampy.stampy.dbsql(sql)
-        sql = "UPDATE forward SET target='%s' where target='%s;" % (newchat, oldchat)
+        sql = "UPDATE forward SET target='%s' where target='%s';" % (newchat, oldchat)
         stampy.stampy.dbsql(sql)
     else:
         # Delete forwards not migrated
@@ -558,7 +561,7 @@ def migratechats(oldchat, newchat, includeall=True):
 def dousercleanup(user_id=False, maxage=int(stampy.plugin.config.config("maxage", default=180))):
     """
     Checks on the stats database the date of the last update from the user
-    :param user_id: Channel ID to query in database
+    :param user_id: User ID to query in database
     :param maxage: defines maximum number of days to allow chats to be inactive
     """
 
@@ -601,7 +604,7 @@ def dousercleanup(user_id=False, maxage=int(stampy.plugin.config.config("maxage"
             cur = stampy.stampy.dbsql(sql)
 
             # Remove users membership that had that channel id
-            sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type='chat' and memberid LIKE '%%%s%%';" % userid
+            sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type<>'private' and memberid LIKE '%%%s%%';" % userid
             cur = stampy.stampy.dbsql(sql)
 
             for line in cur:
@@ -654,7 +657,9 @@ def getstats(type=False, id=0, name=False, date=False, count=0):
     """
 
     logger = logging.getLogger(__name__)
-    sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE id='%s' AND type='%s';" % (id, type)
+    sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE id='%s'" % id
+    if type:
+        sql = "%s%s" % (sql, " AND type='%s';" % type)
     cur = stampy.stampy.dbsql(sql)
     try:
         value = cur.fetchone()
@@ -694,11 +699,11 @@ def getall(message):
 
     if "@all" in texto:
         logger.debug(msg=_L("@All invoked"))
-        (type, id, name, date, count, members) = getstats(type='chat', id=chat_id)
+        (type, id, name, date, count, members) = getstats(id=chat_id)
 
         all = []
         for member in members:
-            (type, id, name, date, count, memberid) = getstats(type='user', id=member)
+            (type, id, name, date, count, memberid) = getstats(type='private', id=member)
             username = None
             if name:
                 for each in name.split():
@@ -734,7 +739,7 @@ def pingchat(chatid):
     """
 
     logger = logging.getLogger(__name__)
-    (type, id, name, date, count, memberid) = getstats(type='chat', id=chatid)
+    (type, id, name, date, count, memberid) = getstats(id=chatid)
     date = datetime.datetime.now()
     datefor = date.strftime('%Y-%m-%d %H:%M:%S')
     logger.debug(msg=_L("Pinging chat %s: %s on %s") % (chatid, name, datefor))
@@ -766,3 +771,23 @@ def idfromuser(idorname=False, chat_id=False):
     logger.debug(msg=_L("Found users with id(%s)/chat(%s): %s") % (idorname, chat_id, results))
 
     return results
+
+
+def getusers(chat_id=False):
+    """
+    Checks on the stats database list of users
+    :param chat_id: Channel ID to query in database
+    """
+
+    logger = logging.getLogger(__name__)
+
+    userids = []
+    if chat_id:
+        (type, id, name, date, count, members) = getstats(id=chat_id)
+        for member in members:
+            (type, id, name, date, count, memberid) = getstats(type='private', id=member)
+            userids.append(id)
+
+    logger.debug(msg=_L("Returning userids: %s for chat: %s") % (userids,
+                                                                 chat_id))
+    return userids
