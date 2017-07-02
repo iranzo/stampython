@@ -18,13 +18,6 @@ The bot stores stats on users/chats, remembering the chat/user name and last tim
 - `/stats show (user|chat)` will list the list of users/chats and time of last update
 
 
-## Feed
-
-- `/feed add name url` Adds a new feed form URL on channel
-- `/feed delete feed` Removes feed from channel
-- `/feed list` To get list of defined feeds
-- `/feed feed` To get that feed updates
-
 ## Forward
 
 - `/forward source_id=target_id` Forwards messages from source to target

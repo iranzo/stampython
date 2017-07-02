@@ -36,6 +36,11 @@ Also, as per general usage:
 - `stock <ticker>` to get trading quote for ticker in stock market
 - `/espp <amount>` to get earning calculations based on stock defined and monthly rate (for 6 months)
 - `/hilight <add|delete|list> <word>` Adds/deletes word or lists words that will cause a forward to notify you
+- `/feed add name url` Adds a new feed form URL on channel
+- `/feed delete feed` Removes feed from channel
+- `/feed list` To get list of defined feeds
+- `/feed feed` To get that feed updates
+
 
 ## Extra commands only for admin user
 
