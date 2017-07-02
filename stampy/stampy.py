@@ -493,11 +493,16 @@ def getmsgdetail(message):
             chat_id = message['channel_post']['chat']['id']
             type = "channel_post"
         except:
-            chat_id = ""
-            # Define dictionary for text replacements
+            try:
+                chat_id = message['edited_message']['chat']['id']
+                type = 'edited_message'
+            except:
+                chat_id = ""
+
+    # Define dictionary for text replacements
 
     try:
-        chat_type = message['message']['chat']['type']
+        chat_type = message[type]['chat']['type']
     except:
         chat_type = ""
 
