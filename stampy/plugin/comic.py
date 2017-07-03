@@ -37,11 +37,16 @@ def init():
     if botname == 'redken_bot':
         delay = int(random.randint(0, 10))
         when = 30 + delay
-        sched.add_job(comics, 'interval', id='comic', minutes=when, replace_existing=True, misfire_grace_time=120)
+        sched.add_job(comics, 'interval', id='comic', minutes=when,
+                      replace_existing=True, misfire_grace_time=120,
+                      coalesce=True)
 
     triggers = ["^/comic"]
     for comic in getcomics():
         triggers.extend(["/%s" % comic])
+
+    # Refresh comics in case bot was down:
+    comics()
 
     return triggers
 

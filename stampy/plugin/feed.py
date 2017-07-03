@@ -34,7 +34,9 @@ def init():
     botname = stampy.stampy.getme()
     if botname == 'redken_bot':
         when = 5
-        sched.add_job(feeds, 'interval', id='feeds', minutes=when, replace_existing=True, misfire_grace_time=120)
+        sched.add_job(feeds, 'interval', id='feeds', minutes=when,
+                      replace_existing=True, misfire_grace_time=120,
+                      coalesce=True)
 
     triggers = ["^/feed"]
 
@@ -212,8 +214,8 @@ def feeds(message=False, name=False):
     """
     logger = logging.getLogger(__name__)
 
-    date = datetime.datetime.now()
     utc = pytz.utc
+    date = utc.localize(datetime.datetime.now())
 
     if message:
         msgdetail = stampy.stampy.getmsgdetail(message)
@@ -276,7 +278,9 @@ def feeds(message=False, name=False):
         # If more time has passed since last check than the interval for
         # checks, run the check
 
-        if timediff >= interval:
+        if timediff < interval:
+            logger.debug(msg=_L("Skipping feed %s because last run was %s mins ago (%s required") % (name, timediff, interval))
+        else:
             # Get the feed
             feed = feedparser.parse(url)
             news = []
