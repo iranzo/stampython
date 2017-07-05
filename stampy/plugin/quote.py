@@ -95,13 +95,17 @@ def quotecommands(message):
             break
         if case('del'):
             if stampy.stampy.is_owner_or_admin(message):
-                id_todel = texto.split(' ')[2]
-                text = _("Deleting quote id `%s`") % id_todel
-                stampy.stampy.sendmessage(chat_id=chat_id, text=text,
-                                          reply_to_message_id=message_id,
-                                          disable_web_page_preview=True,
-                                          parse_mode="Markdown")
-                deletequote(id=id_todel, gid=stampy.stampy.geteffectivegid(gid=chat_id))
+                try:
+                    id_todel = texto.split(' ')[2]
+                except:
+                    id_todel = False
+                if id_todel:
+                    text = _("Deleting quote id `%s`") % id_todel
+                    stampy.stampy.sendmessage(chat_id=chat_id, text=text,
+                                              reply_to_message_id=message_id,
+                                              disable_web_page_preview=True,
+                                              parse_mode="Markdown")
+                    deletequote(id=id_todel, gid=stampy.stampy.geteffectivegid(gid=chat_id))
             break
         if case():
             # We're just given the nick (or not), so find quote for it
