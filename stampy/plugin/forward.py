@@ -63,7 +63,7 @@ def help(message):  # do not edit this line
 def doforward(message, target):
     """
     Forwards a message target chatid
-    :param message: Message to process (contaning all details)
+    :param message: Message to process (containing all details)
     :param target: Target chat_id
     :return:
     """
