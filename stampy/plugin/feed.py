@@ -214,8 +214,7 @@ def feeds(message=False, name=False):
     """
     logger = logging.getLogger(__name__)
 
-    utc = pytz.utc
-    date = utc.localize(datetime.datetime.now())
+    date = utize(datetime.datetime.now())
 
     if message:
         msgdetail = stampy.stampy.getmsgdetail(message)
@@ -259,17 +258,17 @@ def feeds(message=False, name=False):
 
         try:
             # Parse date or if in error, use past
-            datelast = utc.localize(dateutil.parser.parse(lastchecked))
+            datelast = utize(dateutil.parser.parse(lastchecked))
 
         except:
-            datelast = utc.localize(datetime.datetime(year=1981, month=1, day=24), is_dst=False)
+            datelast = utize(datetime.datetime(year=1981, month=1, day=24))
 
         try:
             # Parse date or if in error, use past
-            datelastitem = utc.localize(dateutil.parser.parse(lastitem))
+            datelastitem = utize(dateutil.parser.parse(lastitem))
 
         except:
-            datelastitem = utc.localize(datetime.datetime(year=1981, month=1, day=24), is_dst=False)
+            datelastitem = utize(datetime.datetime(year=1981, month=1, day=24))
 
         # Get time since last check on the feed (epoch)
         datelastts = time.mktime(datelast.timetuple())
@@ -285,14 +284,15 @@ def feeds(message=False, name=False):
         # checks, run the check
 
         if timediff < interval:
-            logger.debug(msg=_L("Skipping feed %s because last run was %s mins ago (%s required") % (name, timediff, interval))
+            logger.debug(msg=_L("Skipping feed %s because last run was %s mins ago (%s required)") % (name, timediff, interval))
         else:
             # Get the feed
             feed = feedparser.parse(url)
             news = []
             for item in reversed(feed["items"]):
-                dateitem = dateutil.parser.parse(item["published"])
-                if dateitem > datelastitem:
+                dateitem = utize(dateutil.parser.parse(item["published"]))
+
+                if utize(dateitem) > utize(datelastitem):
                     news.append(item)
 
             logger.debug(msg=_L("# of feeds for today: %s") % len(news))
@@ -300,7 +300,9 @@ def feeds(message=False, name=False):
             # Even if we don't have updated items, update the lastchecked
             # date for interval to work properly
             if len(news) == 0:
-                feedsupdated.append({'name': name, 'gid': gid})
+                dateitem = utize(dateitem)
+                dateitemfor = dateitem.strftime('%Y/%m/%d %H:%M:%S')
+                feedsupdated.append({'name': name, 'gid': gid, 'dateitem': dateitemfor})
 
             for item in news:
                 try:
@@ -311,7 +313,7 @@ def feeds(message=False, name=False):
                     title = False
 
                 if url and title:
-                    dateitem = dateutil.parser.parse(item["published"])
+                    dateitem = utize(dateutil.parser.parse(item["published"]))
                     dateitemfor = dateitem.strftime('%Y/%m/%d %H:%M:%S')
                     itemtext = '*%s* *%s* - [%s](%s)' % (name, dateitem, title, url)
                     try:
@@ -378,4 +380,25 @@ def feeddel(name=False, gid=0):
         logger.debug(msg="feeddel: %s, group: %s" % (name, gid))
         stampy.stampy.dbsql(sql)
         code = True
+    return code
+
+
+def utize(date):
+    """
+    Converts date to UTC tz
+    :param date: date to convert
+    :return:
+    """
+
+    tz = pytz.timezone('GMT')
+
+    try:
+        code = date.astimezone(tz)
+
+    except:
+        try:
+            code = date.replace(tzinfo=tz)
+        except:
+            code = date
+
     return code
