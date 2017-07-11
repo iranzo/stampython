@@ -113,6 +113,11 @@ def doforward(message, target):
                 attempt = 60
                 exitcode = '0'
 
+            if result['error_code'] == 400 and result['description'] == u"Bad Request: message can't be forwarded":
+                # Message cannot be forwarded
+                attempt = 60
+                exitcode = '0'
+
         attempt += 1
         sleep(1)
         # exit after 60 retries with 1 second delay each
