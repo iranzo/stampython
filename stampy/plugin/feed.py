@@ -227,12 +227,12 @@ def feeds(message=False, name=False):
         gid = False
 
     if name:
-        sql = "SELECT name,gid,lastchecked,url,interval from feeds WHERE name='%s'" % name
+        sql = "SELECT name,gid,lastchecked,url,interval,lastitem from feeds WHERE name='%s'" % name
         if gid:
             extra = "and gid='%s';" % gid
             sql = "%s %s" % (sql, extra)
     else:
-        sql = "SELECT name,gid,lastchecked,url,interval from feeds"
+        sql = "SELECT name,gid,lastchecked,url,interval, lastitem from feeds"
         if gid:
             extra = "WHERE gid='%s'" % gid
             sql = "%s %s" % (sql, extra)
@@ -250,7 +250,7 @@ def feeds(message=False, name=False):
     feedsupdated = []
 
     for row in cur:
-        (name, gid, lastchecked, url, interval) = row
+        (name, gid, lastchecked, url, interval, lastitem) = row
 
         if message:
             chat_id = msgdetail["chat_id"]
@@ -262,8 +262,14 @@ def feeds(message=False, name=False):
             datelast = utc.localize(dateutil.parser.parse(lastchecked))
 
         except:
-            datelast = utc.localize(datetime.datetime(year=1981, month=1,
-                                                      day=24), is_dst=False)
+            datelast = utc.localize(datetime.datetime(year=1981, month=1, day=24), is_dst=False)
+
+        try:
+            # Parse date or if in error, use past
+            datelastitem = utc.localize(dateutil.parser.parse(lastitem))
+
+        except:
+            datelastitem = utc.localize(datetime.datetime(year=1981, month=1, day=24), is_dst=False)
 
         # Get time since last check on the feed (epoch)
         datelastts = time.mktime(datelast.timetuple())
@@ -286,7 +292,7 @@ def feeds(message=False, name=False):
             news = []
             for item in reversed(feed["items"]):
                 dateitem = dateutil.parser.parse(item["published"])
-                if dateitem > datelast:
+                if dateitem > datelastitem:
                     news.append(item)
 
             logger.debug(msg=_L("# of feeds for today: %s") % len(news))
@@ -306,6 +312,7 @@ def feeds(message=False, name=False):
 
                 if url and title:
                     dateitem = dateutil.parser.parse(item["published"])
+                    dateitemfor = dateitem.strftime('%Y/%m/%d %H:%M:%S')
                     itemtext = '*%s* *%s* - [%s](%s)' % (name, dateitem, title, url)
                     try:
                         code = stampy.stampy.sendmessage(chat_id=chat_id, text=itemtext, reply_to_message_id=message_id, parse_mode='Markdown')
@@ -314,12 +321,13 @@ def feeds(message=False, name=False):
 
                     if code:
                         gidstoping.append(chat_id)
-                        feedsupdated.append({'name': name, 'gid': gid})
+                        feedsupdated.append({'name': name, 'gid': gid,
+                                             'dateitem': dateitemfor})
 
     # Update feeds with results so they are not shown next time
     for feed in stampy.stampy.getitems(feedsupdated):
         # Update date in SQL so it's not invoked again
-        sql = "UPDATE feeds SET lastchecked='%s' where name='%s' and gid='%s'" % (datefor, feed['name'], feed['gid'])
+        sql = "UPDATE feeds SET lastchecked='%s',lastitem='%s' where name='%s' and gid='%s'" % (datefor, feed['dateitem'], feed['name'], feed['gid'])
         logger.debug(msg=_L("Updating last checked as per %s") % sql)
         stampy.stampy.dbsql(sql=sql)
 
