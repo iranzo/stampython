@@ -300,7 +300,7 @@ def feeds(message=False, name=False):
             # Even if we don't have updated items, update the lastchecked
             # date for interval to work properly
             if len(news) == 0:
-                dateitem = utize(dateitem)
+                dateitem = utize(datelastitem)
                 dateitemfor = dateitem.strftime('%Y/%m/%d %H:%M:%S')
                 feedsupdated.append({'name': name, 'gid': gid, 'dateitem': dateitemfor})
 
