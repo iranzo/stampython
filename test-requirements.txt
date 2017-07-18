@@ -11,3 +11,5 @@ lxml
 pymarkdownlint
 nose
 python-coveralls
+flake8
+ 
