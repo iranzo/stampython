@@ -83,7 +83,7 @@ def welcomeuser(message):
     except:
         newlastname = ""
 
-    name = "%s %s (@%s)" % (newfirstname, newlastname, newusername)
+    name = "%s %s ([`@%s`](https://t.me/%s))" % (newfirstname, newlastname, newusername, newusername)
 
     greeting = welcome.replace("$username", name)
 
