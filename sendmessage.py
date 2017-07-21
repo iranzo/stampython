@@ -6,7 +6,6 @@
 
 
 import argparse
-import sys
 from stampy.stampy import sendmessage
 
 
