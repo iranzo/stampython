@@ -275,6 +275,10 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
                     attempt = 61
                     break
 
+                if case(u'Forbidden: bot was kicked from the supergroup chat'):
+                    attempt = 61
+                    break
+
         # exit after 60 retries with 1 second delay each
         if attempt > 60:
             logger.error(msg=_L("PERM ERROR sending message: Code: %s : Text: %s") % (code, result))
