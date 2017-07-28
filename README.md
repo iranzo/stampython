@@ -1,5 +1,6 @@
 # Stampython: A Telegram bot for karma accounting
 
+[![License](https://img.shields.io/github/license/iranzo/stampython.svg)](LICENSE)
 [![Build Status](https://travis-ci.org/iranzo/stampython.svg?branch=master)](https://travis-ci.org/iranzo/stampython)
 [![Coverage Status](https://coveralls.io/repos/github/iranzo/stampython/badge.svg?branch=master)](https://coveralls.io/github/iranzo/stampython?branch=master)
 [![Requirements Status](https://requires.io/github/iranzo/stampython/requirements.svg?branch=master)](https://requires.io/github/iranzo/stampython/requirements/?branch=master)
