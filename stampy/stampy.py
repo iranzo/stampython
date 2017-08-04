@@ -259,23 +259,31 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
                     # Message is empty, no need to resend
                     attempt = 61
                     break
+
                 if case(u"Forbidden: bot can't initiate conversation with a user"):
                     # Bot hasn't been authorized by user, cancelling
                     attempt = 61
                     break
+
                 if case(u"Bad Request: reply message not found"):
                     # Original reply has been deleted
                     attempt = 61
                     break
+
                 if case(u"Forbidden: bot was blocked by the user"):
                     # User blocked the bot
                     attempt = 61
                     break
+
                 if case(u"Bad Request: can't parse entities in message text: Can't find end of the entity starting at byte offset"):
                     attempt = 61
                     break
 
                 if case(u'Forbidden: bot was kicked from the supergroup chat'):
+                    attempt = 61
+                    break
+
+                if case(u'Bad Request: chat not found'):
                     attempt = 61
                     break
 
