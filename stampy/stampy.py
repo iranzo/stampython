@@ -26,7 +26,6 @@ import urllib
 from time import sleep
 
 import requests
-from apscheduler.schedulers.background import BackgroundScheduler
 
 import plugin.config
 import plugin.forward
@@ -68,11 +67,6 @@ p.add_argument('-d', '--daemon', dest='daemon', help=_("Run as daemon"),
                default=False, action="store_true")
 
 options, unknown = p.parse_known_args()
-
-
-# Set scheduler
-scheduler = BackgroundScheduler()
-scheduler.start()
 
 
 # Implement switch from http://code.activestate.com/recipes/410692/
@@ -642,11 +636,11 @@ def process(messages):
                 if "*" in trigger:
                     runplugin = True
                     break
-                elif trigger[0] == "^":
+                elif trigger[0] == "^" and trigger != '^#cron':
                     if command == trigger[1:]:
                         runplugin = True
                         break
-                elif trigger in texto:
+                elif trigger in texto and trigger != '^#cron':
                     runplugin = True
                     break
 
@@ -674,6 +668,31 @@ def process(messages):
     # clear updates (marking messages as read)
     if lastupdateid != 0:
         clearupdates(offset=lastupdateid + 1)
+
+
+def processcron():
+    """
+    This function processes plugins with cron features
+    """
+
+    logger = logging.getLogger(__name__)
+
+    # Call plugins to process message
+    global plugs
+    global plugtriggers
+
+    for i in plugs:
+        name = i.__name__.split(".")[-1]
+
+        runplugin = False
+        for trigger in plugtriggers[name]:
+            if "^#cron" in trigger:
+                runplugin = True
+                break
+
+        if runplugin:
+            logger.debug(msg=_L("Processing plugin cron: %s") % name)
+            i.cron()
 
 
 def getitems(var):
@@ -840,9 +859,6 @@ def conflogging(target=None):
         else:
             plugin.config.setconfig(key="verbosity", value=options.verbosity)
 
-    
-    ()
-
     # create formatter
     formatter = logging.Formatter('%(asctime)s : %(name)s : %(funcName)s(%(lineno)d) : %(levelname)s : %(message)s')
 
@@ -878,9 +894,6 @@ def main():
 
     # Configure logging
     conflogging(target="stampy")
-
-    # Configuring apscheduler logger
-    conflogging(target="apscheduler")
 
     # Configuring alembic logger
     conflogging(target="alembic")
@@ -926,10 +939,12 @@ def main():
         logger.info(msg=_L("Running in daemon mode"))
         while plugin.config.config(key='daemon') == 'True':
             process(getupdates())
+            processcron()
             sleep(int(plugin.config.config(key='sleep')))
     else:
         logger.info(msg=_L("Running in one-shoot mode"))
         process(getupdates())
+        processcron()
 
     logger.info(msg=_L("Stopped execution"))
     logging.shutdown()

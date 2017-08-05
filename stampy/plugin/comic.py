@@ -6,13 +6,11 @@
 
 import datetime
 import logging
-import random
 from urlparse import urlparse
 
 import dateutil.parser
 import feedparser
 import requests
-from apscheduler.schedulers.background import BackgroundScheduler
 from lxml import html
 from prettytable import from_db_cursor
 
@@ -24,9 +22,6 @@ import stampy.stampy
 from stampy.i18n import _
 from stampy.i18n import _L
 
-sched = BackgroundScheduler()
-sched.start()
-
 
 def init():
     """
@@ -34,21 +29,25 @@ def init():
     :return: List of triggers for plugin
     """
     botname = stampy.stampy.getme()
-    if botname == 'redken_bot':
-        delay = int(random.randint(0, 10))
-        when = 30 + delay
-        sched.add_job(comics, 'interval', id='comic', minutes=when,
-                      replace_existing=True, misfire_grace_time=120,
-                      coalesce=True)
 
     triggers = ["^/comic"]
+
+    if botname == 'redken_bot':
+        triggers.append("^#cron")
+
     for comic in getcomics():
         triggers.extend(["/%s" % comic])
 
-    # Refresh comics in case bot was down:
-    comics()
-
     return triggers
+
+
+def cron():
+    """
+    Function to be executed periodically
+    :return:
+    """
+
+    comics()
 
 
 def run(message):  # do not edit this line

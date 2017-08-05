@@ -7,10 +7,8 @@
 import datetime
 import json
 import logging
-import random
 import urllib
 
-from apscheduler.schedulers.background import BackgroundScheduler
 from prettytable import from_db_cursor
 
 import stampy.plugin.config
@@ -19,21 +17,25 @@ import stampy.stampy
 from stampy.i18n import _
 from stampy.i18n import _L
 
-sched = BackgroundScheduler()
-sched.start()
-
 
 def init():
     """
     Initializes module
     :return: List of triggers for plugin
     """
-    delay = int(random.randint(0, 10))
-    when = int(stampy.plugin.config.config('cleanup', 24 * 60)) + delay
-    sched.add_job(dochatcleanup, 'interval', minutes=when + delay, id='dochatcleanup', replace_existing=True, misfire_grace_time=120)
-    sched.add_job(dousercleanup, 'interval', minutes=when - delay, id='dousercleanup', replace_existing=True, misfire_grace_time=120)
-    triggers = ["@all", "^/stats", "*", "^/getout"]
+
+    triggers = ["@all", "^/stats", "*", "^/getout", "^#cron"]
     return triggers
+
+
+def cron():
+    """
+    Function to be executed periodically
+    :return:
+    """
+
+    dochatcleanup()
+    dousercleanup()
 
 
 def run(message):  # do not edit this line

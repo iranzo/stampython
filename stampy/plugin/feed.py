@@ -11,7 +11,6 @@ import time
 import dateutil.parser
 import feedparser
 import pytz
-from apscheduler.schedulers.background import BackgroundScheduler
 from prettytable import from_db_cursor
 
 import stampy.plugin.alias
@@ -22,9 +21,6 @@ import stampy.stampy
 from stampy.i18n import _
 from stampy.i18n import _L
 
-sched = BackgroundScheduler()
-sched.start()
-
 
 def init():
     """
@@ -32,18 +28,22 @@ def init():
     :return: List of triggers for plugin
     """
     botname = stampy.stampy.getme()
-    if botname == 'redken_bot':
-        when = 5
-        sched.add_job(feeds, 'interval', id='feeds', minutes=when,
-                      replace_existing=True, misfire_grace_time=120,
-                      coalesce=True)
 
     triggers = ["^/feed"]
 
-    # Refresh feeds in case bot was down:
-    feeds()
+    if botname == 'redken_bot':
+        triggers.append("^#cron")
 
     return triggers
+
+
+def cron():
+    """
+    Function to be executed periodically
+    :return:
+    """
+
+    feeds()
 
 
 def run(message):  # do not edit this line
