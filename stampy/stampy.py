@@ -756,7 +756,6 @@ def shouldrun(name):
         # checks, run the check
 
         if timediff < interval:
-            logger.debug(msg=_L("Skipping job %s because last run was %s mins ago (%s required)") % (name, timediff, interval))
             code = False
         else:
             code = True
