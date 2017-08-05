@@ -21,10 +21,13 @@ import random
 import sqlite3 as lite
 import string
 import sys
+import time
 import traceback
 import urllib
 from time import sleep
 
+import dateutil.parser
+import pytz
 import requests
 
 import plugin.config
@@ -636,11 +639,11 @@ def process(messages):
                 if "*" in trigger:
                     runplugin = True
                     break
-                elif trigger[0] == "^" and trigger != '^#cron':
+                elif trigger[0] == "^":
                     if command == trigger[1:]:
                         runplugin = True
                         break
-                elif trigger in texto and trigger != '^#cron':
+                elif trigger in texto:
                     runplugin = True
                     break
 
@@ -670,6 +673,27 @@ def process(messages):
         clearupdates(offset=lastupdateid + 1)
 
 
+def utize(date):
+    """
+    Converts date to UTC tz
+    :param date: date to convert
+    :return:
+    """
+
+    tz = pytz.timezone('GMT')
+
+    try:
+        code = date.astimezone(tz)
+
+    except:
+        try:
+            code = date.replace(tzinfo=tz)
+        except:
+            code = date
+
+    return code
+
+
 def processcron():
     """
     This function processes plugins with cron features
@@ -683,16 +707,81 @@ def processcron():
 
     for i in plugs:
         name = i.__name__.split(".")[-1]
-
-        runplugin = False
-        for trigger in plugtriggers[name]:
-            if "^#cron" in trigger:
-                runplugin = True
-                break
-
-        if runplugin:
+        if shouldrun(name=name):
             logger.debug(msg=_L("Processing plugin cron: %s") % name)
             i.cron()
+
+
+def shouldrun(name):
+    """
+    Checks name on database to see if it should run or not and updates as executed
+    :param name: Name to check on database
+    :return: Bool
+    """
+
+    sql = "SELECT name,lastchecked,interval from cron where name='%s'" % name
+    cur = dbsql(sql)
+
+    date = utize(datetime.datetime.now())
+
+    # Formatted date to write back in database
+    datefor = date.strftime('%Y/%m/%d %H:%M:%S')
+
+    # Convert to epoch to properly compare
+    dateforts = time.mktime(date.timetuple())
+
+    code = False
+
+    for row in cur:
+        (name, lastchecked, interval) = row
+
+        try:
+            # Parse date or if in error, use past
+            datelast = utize(dateutil.parser.parse(lastchecked))
+
+        except:
+            datelast = utize(datetime.datetime(year=1981, month=1, day=24))
+
+        # Get time since last check on the feed (epoch)
+        datelastts = time.mktime(datelast.timetuple())
+        timediff = int((dateforts - datelastts) / 60)
+
+        # Check if interval is defined or set default
+        interval = int(interval)
+
+        if interval == 0:
+            interval = 1440
+
+        # If more time has passed since last check than the interval for
+        # checks, run the check
+
+        if timediff < interval:
+            logger.debug(msg=_L("Skipping job %s because last run was %s mins ago (%s required)") % (name, timediff, interval))
+            code = False
+        else:
+            code = True
+
+    # Update db with results
+    if code:
+        sql = "UPDATE cron SET lastchecked='%s' where name='%s'" % (datefor, name)
+        logger.debug(msg=_L("Updating last checked as per %s") % sql)
+        dbsql(sql=sql)
+    return code
+
+
+def cronme(name=False, interval=5):
+    """
+    Adds an entry in cron database for job name and interval in mins
+    :param name: name of job
+    :param interval: mins between executions
+    :return:
+    """
+
+    if name:
+        sql = "DELETE from cron WHERE name='%s'" % name
+        dbsql(sql=sql)
+        sql = "INSERT INTO cron(name,interval) VALUES('%s', '%s')" % (name, interval)
+        dbsql(sql=sql)
 
 
 def getitems(var):

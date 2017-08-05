@@ -10,7 +10,6 @@ import time
 
 import dateutil.parser
 import feedparser
-import pytz
 from prettytable import from_db_cursor
 
 import stampy.plugin.alias
@@ -32,7 +31,7 @@ def init():
     triggers = ["^/feed"]
 
     if botname == 'redken_bot':
-        triggers.append("^#cron")
+        stampy.stampy.cronme(name="feed", interval=5)
 
     return triggers
 
@@ -214,7 +213,7 @@ def feeds(message=False, name=False):
     """
     logger = logging.getLogger(__name__)
 
-    date = utize(datetime.datetime.now())
+    date = stampy.stampy.utize(datetime.datetime.now())
 
     if message:
         msgdetail = stampy.stampy.getmsgdetail(message)
@@ -258,17 +257,17 @@ def feeds(message=False, name=False):
 
         try:
             # Parse date or if in error, use past
-            datelast = utize(dateutil.parser.parse(lastchecked))
+            datelast = stampy.stampy.utize(dateutil.parser.parse(lastchecked))
 
         except:
-            datelast = utize(datetime.datetime(year=1981, month=1, day=24))
+            datelast = stampy.stampy.utize(datetime.datetime(year=1981, month=1, day=24))
 
         try:
             # Parse date or if in error, use past
-            datelastitem = utize(dateutil.parser.parse(lastitem))
+            datelastitem = stampy.stampy.utize(dateutil.parser.parse(lastitem))
 
         except:
-            datelastitem = utize(datetime.datetime(year=1981, month=1, day=24))
+            datelastitem = stampy.stampy.utize(datetime.datetime(year=1981, month=1, day=24))
 
         # Get time since last check on the feed (epoch)
         datelastts = time.mktime(datelast.timetuple())
@@ -290,9 +289,9 @@ def feeds(message=False, name=False):
             feed = feedparser.parse(url)
             news = []
             for item in reversed(feed["items"]):
-                dateitem = utize(dateutil.parser.parse(item["published"]))
+                dateitem = stampy.stampy.utize(dateutil.parser.parse(item["published"]))
 
-                if utize(dateitem) > utize(datelastitem):
+                if stampy.stampy.utize(dateitem) > stampy.stampy.utize(datelastitem):
                     news.append(item)
 
             logger.debug(msg=_L("# of feeds for today: %s") % len(news))
@@ -300,7 +299,7 @@ def feeds(message=False, name=False):
             # Even if we don't have updated items, update the lastchecked
             # date for interval to work properly
             if len(news) == 0:
-                dateitem = utize(datelastitem)
+                dateitem = stampy.stampy.utize(datelastitem)
                 dateitemfor = dateitem.strftime('%Y/%m/%d %H:%M:%S')
                 feedsupdated.append({'name': name, 'gid': gid, 'dateitem': dateitemfor})
 
@@ -313,7 +312,7 @@ def feeds(message=False, name=False):
                     title = False
 
                 if url and title:
-                    dateitem = utize(dateutil.parser.parse(item["published"]))
+                    dateitem = stampy.stampy.utize(dateutil.parser.parse(item["published"]))
                     dateitemfor = dateitem.strftime('%Y/%m/%d %H:%M:%S')
                     itemtext = '*%s* *%s* - [%s](%s)' % (name, dateitem, title, url)
                     try:
@@ -380,25 +379,4 @@ def feeddel(name=False, gid=0):
         logger.debug(msg="feeddel: %s, group: %s" % (name, gid))
         stampy.stampy.dbsql(sql)
         code = True
-    return code
-
-
-def utize(date):
-    """
-    Converts date to UTC tz
-    :param date: date to convert
-    :return:
-    """
-
-    tz = pytz.timezone('GMT')
-
-    try:
-        code = date.astimezone(tz)
-
-    except:
-        try:
-            code = date.replace(tzinfo=tz)
-        except:
-            code = date
-
     return code

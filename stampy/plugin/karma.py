@@ -22,7 +22,10 @@ def init():
     :return: List of triggers for plugin
     """
 
-    triggers = ["++", "--", u"—", "@", "^rank", "^srank", "^skarma", "==", "^#cron"]
+    triggers = ["++", "--", u"—", "@", "^rank", "^srank", "^skarma", "=="]
+
+    stampy.stampy.cronme(name="karma", interval=24 * 60)
+
     return triggers
 
 

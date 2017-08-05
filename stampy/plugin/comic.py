@@ -33,7 +33,7 @@ def init():
     triggers = ["^/comic"]
 
     if botname == 'redken_bot':
-        triggers.append("^#cron")
+        stampy.stampy.cronme(name="comic", interval=30)
 
     for comic in getcomics():
         triggers.extend(["/%s" % comic])

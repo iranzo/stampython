@@ -24,7 +24,10 @@ def init():
     :return: List of triggers for plugin
     """
 
-    triggers = ["@all", "^/stats", "*", "^/getout", "^#cron"]
+    triggers = ["@all", "^/stats", "*", "^/getout"]
+
+    stampy.stampy.cronme(name="stats", interval=24 * 60)
+
     return triggers
 
 
