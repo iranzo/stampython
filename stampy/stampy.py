@@ -134,7 +134,7 @@ def dbsql(sql=False):
     # Initialize database access
     con = False
     try:
-        con = lite.connect(options.database, timeout=1)
+        con = lite.connect(options.database, timeout=60)
         cur = con.cursor()
         cur.execute("SELECT key,value FROM config WHERE key='token';")
         cur.fetchone()
@@ -245,7 +245,10 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
         else:
             code = True
             result = ""
-        logger.error(msg=_L("ERROR (%s) sending message: Code: %s : Text: %s") % (attempt, code, result))
+
+        if attempt > 0:
+            logger.error(msg=_L("ERROR (%s) sending message: Code: %s : Text: %s") % (attempt, code, result))
+
         attempt += 1
         sleep(1)
         if not code:
