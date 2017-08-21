@@ -273,12 +273,13 @@ def hilightwords(message):
     text_to_process = msgdetail["text"].lower()
     chat_name = msgdetail["chat_name"]
     chat_id = msgdetail["chat_id"]
+    msgtype = msgdetail["chat_type"]
 
     keywords = gethilightwords(uid=False)
     uids = gethilightuids(word=False)
 
     try:
-        value = stampy.plugin.stats.getstats(type='chat', id=chat_id)
+        value = stampy.plugin.stats.getstats(type=msgtype, id=chat_id)
     except:
         value = False
 
