@@ -109,7 +109,10 @@ def autokcommands(message):
                     deleteautok(key=key, value=value, gid=stampy.stampy.geteffectivegid(gid=chat_id))
 
             if case():
-                word = texto.split(' ')[1]
+                try:
+                    word = texto.split(' ')[1]
+                except:
+                    word = ""
                 if "=" in word:
                     key = word.split('=')[0]
                     value = texto.split('=')[1:][0]
