@@ -6,9 +6,9 @@
 
 import json
 import logging
-import urllib
 from time import sleep
 
+import requests
 from prettytable import from_db_cursor
 
 import stampy.plugin.config
@@ -73,25 +73,23 @@ def doforward(message, target):
     msgdetail = stampy.stampy.getmsgdetail(message)
     chat_id = msgdetail["chat_id"]
     message_id = msgdetail["message_id"]
-    text = msgdetail['text']
 
     url = "%s%s/forwardMessage" % (stampy.plugin.config.config(key="url"),
                                    stampy.plugin.config.config(key='token'))
 
-    message = "%s?chat_id=%s&from_chat_id=%s&message_id=%s" % (url, target, chat_id, message_id)
+    forwardmessageurl = "%s?chat_id=%s&from_chat_id=%s&message_id=%s" % (url, target, chat_id, message_id)
 
     code = False
     attempt = 0
     exitcode = 0
 
-    logger.debug(msg=_L("forwarding message: Code: %s : Text: %s") % (code, text))
-
     while not code:
         # It this is executed as per unit testing, skip sending message
         UTdisable = not stampy.plugin.config.config(key='unittest', default=False)
         if UTdisable:
-            result = json.load(urllib.urlopen(message))
-            code = result['ok']
+            output = json.loads(requests.get(forwardmessageurl).text)
+            result = {"message": output['result']}
+            code = output['ok']
         else:
             code = True
             result = ""
@@ -124,6 +122,8 @@ def doforward(message, target):
         if attempt > 60:
             logger.error(msg=_L("PERM ERROR forwarding message: Code: %s : Text: %s") % (code, result))
             code = True
+        logger.debug(msg=_L("forwarded message: Code: %s : message: %s") % (code, result))
+
     return exitcode
 
 

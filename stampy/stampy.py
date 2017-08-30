@@ -446,15 +446,12 @@ def sendimage(chat_id=0, image="", text="", reply_to_message_id=""):
         UTdisable = not plugin.config.config(key='unittest', default=False)
         Silent = not plugin.config.gconfig(key='silent', default=False, gid=geteffectivegid(gid=chat_id))
 
-        try:
-            if UTdisable and Silent:
-                output = requests.post(url, files=files, data=payload)
-                sent = {"message": json.loads(output.text)['result']}
-            else:
-                sent = False
-        except:
-            logger.debug(msg=_L("Failure sending image: %s") % image)
+        if UTdisable and Silent:
+            output = requests.post(url, files=files, data=payload)
+            sent = {"message": json.loads(output.text)['result']}
+        else:
             sent = False
+            logger.debug(msg=_L("Failure sending image: %s") % image)
     else:
         logger.debug(msg=_L("Failure downloading image: %s") % image)
 
@@ -543,8 +540,18 @@ def getmsgdetail(message):
 
     try:
         message_id = int(message[type]['message_id'])
+
+    except:
+        message_id = ""
+
+    try:
         date = int(float(message[type]['date']))
         datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
+    except:
+        date = ""
+        datefor = ""
+
+    try:
         who_gn = replace_all(message[type]['from']['first_name'], dictionary)
         who_id = message[type]['from']['id']
         error = False
@@ -552,9 +559,6 @@ def getmsgdetail(message):
         error = True
         who_id = ""
         who_gn = ""
-        date = ""
-        datefor = ""
-        message_id = ""
 
     try:
         who_ln = replace_all(message[type]['from']['last_name'], dictionary)
