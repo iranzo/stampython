@@ -53,7 +53,7 @@ def help(message):  # do not edit this line
 
 class GoogleFinanceAPI:
     def __init__(self):
-        self.prefix = "http://finance.google.com/finance/info?client=ig&q="
+        self.prefix = "https://www.google.com/finance/getprices?i=60&p=1d&f=d,o&df=cpct&auto=1&q="
 
     def get(self, symbol, exchange=False):
         """
@@ -62,17 +62,38 @@ class GoogleFinanceAPI:
         :param exchange: Exchange provided
         :return:
         """
+
+        logger = logging.getLogger(__name__)
+
         string = ""
         if symbol and exchange:
             string = "%s:%s" % (exchange, symbol)
         if symbol and not exchange:
             string = "%s" % symbol
         url = self.prefix + "%s" % string
-        u = urllib2.urlopen(url)
-        content = u.read()
+        content = requests.get(url).content
 
-        obj = json.loads(content[3:])
-        return obj[0]
+        # Construct dict
+        quote = {'t': symbol}
+
+        count = 0
+        last = ""
+        for line in content.split("\n"):
+            # skip
+            count = count + 1
+            if line != "":
+                last = line
+
+        quote['l_cur'] = last.split(",")[1]
+
+        # OLD Data provided by API
+        # text += "%s Quote " % quote["t"] + " " + quote["l_cur"] + " " + quote["c"] + " (%s%%)" % quote["cp"]
+        # RHT Quote  107.46 -0.04 (-0.04%) (90.15 EUR)
+
+        quote['c'] = ""
+        quote['cp'] = ""
+
+        return quote
 
 
 def get_currency_rate(currency, rate_in):
@@ -139,7 +160,7 @@ def stock(message):
     for ticker in stock:
         try:
             quote = c.get(ticker)
-            text += "%s Quote " % quote["t"] + " " + quote["l_cur"] + " " + quote["c"] + " (%s%%)" % quote["cp"]
+            text += "%s Quote " % quote["t"] + " " + quote["l_cur"]
             quoteUSD = float(quote["l_cur"])
             quoteEur = float(quoteUSD * rate)
             text += " (%s %s)\n" % ("{0:.2f}".format(quoteEur), currency)
