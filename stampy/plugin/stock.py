@@ -53,7 +53,7 @@ def help(message):  # do not edit this line
 
 class GoogleFinanceAPI:
     def __init__(self):
-        self.prefix = "https://www.google.com/finance/getprices?i=60&p=1d&f=d,o&df=cpct&auto=1&q="
+        self.prefix = "https://www.google.com/finance/getprices?i=60&p=2d&f=d,o&df=cpct&auto=1&q="
 
     def get(self, symbol, exchange=False):
         """
@@ -159,7 +159,7 @@ def stock(message):
     text += _("USD/%s rate " % currency + str(rate) + "\n")
     for ticker in stock:
         try:
-            quote = c.get(ticker)
+            quote = c.get(ticker.upper())
             text += "%s Quote " % quote["t"] + " " + quote["l_cur"]
             quoteUSD = float(quote["l_cur"])
             quoteEur = float(quoteUSD * rate)
