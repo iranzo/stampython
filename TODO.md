@@ -8,6 +8,8 @@
 - Implement autoban so when a certain word is used:
     - Delete the offending message: https://core.telegram.org/bots/api#deletemessage
 - Implement ratelimiting to kick out users that exceed number of messages per period of time
+- Implement ical plugin for reminders based on calendar events
+- Implement stats per group, so most active users or messages per user in a chat_id is recorded
 
 
 ## Donations
