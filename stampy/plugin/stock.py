@@ -95,6 +95,17 @@ class GoogleFinanceAPI:
 
         return quote
 
+class IEXAPI:
+    def __init__(self):
+        self.prefix = "https://api.iextrading.com/1.0/tops?symbols="
+
+    def get(self, symbol):
+        url = self.prefix + "%s" % symbol
+        content = requests.get(url).content
+        quote = {'t': symbol}
+        content = content.split(",")[7]
+        quote['l_cur'] = content.split(":")[1]
+        return quote
 
 def get_currency_rate(currency, rate_in):
     """
@@ -128,7 +139,7 @@ def stock(message):
     """
 
     logger = logging.getLogger(__name__)
-    c = GoogleFinanceAPI()
+    c = IEXAPI()
 
     msgdetail = stampy.stampy.getmsgdetail(message)
 
