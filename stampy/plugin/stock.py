@@ -48,51 +48,6 @@ def help(message):  # do not edit this line
     return commandtext
 
 
-class GoogleFinanceAPI:
-    def __init__(self):
-        self.prefix = "https://www.google.com/finance/getprices?i=60&f=d,c&df=cpct&auto=1&q="
-
-    def get(self, symbol, exchange=False):
-        """
-        Gets data from symbol
-        :param symbol: stock ticker to check
-        :param exchange: Exchange provided
-        :return:
-        """
-
-        logger = logging.getLogger(__name__)
-
-        string = ""
-        if symbol and exchange:
-            string = "%s:%s" % (exchange, symbol)
-        if symbol and not exchange:
-            string = "%s" % symbol
-        url = self.prefix + "%s" % string
-        content = requests.get(url).content
-
-        # Construct dict
-        quote = {'t': symbol}
-
-        count = 0
-        last = ""
-        for line in content.split("\n"):
-            # skip
-            count = count + 1
-            if line != "":
-                last = line
-
-        quote['l_cur'] = last.split(",")[1]
-
-        # OLD Data provided by API
-        # text += "%s Quote " % quote["t"] + " " + quote["l_cur"] + " " + quote["c"] + " (%s%%)" % quote["cp"]
-        # RHT Quote  107.46 -0.04 (-0.04%) (90.15 EUR)
-
-        quote['c'] = ""
-        quote['cp'] = ""
-
-        return quote
-
-
 class IEXAPI:
     def __init__(self):
         self.prefix = "https://api.iextrading.com/1.0/tops?symbols="
