@@ -55,7 +55,7 @@ def espp(message):
     """
 
     logger = logging.getLogger(__name__)
-    c = stampy.plugin.stock.GoogleFinanceAPI()
+    c = stampy.plugin.stock.IEXAPI()
     msgdetail = stampy.stampy.getmsgdetail(message)
 
     texto = msgdetail["text"]
