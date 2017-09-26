@@ -53,7 +53,7 @@ def help(message):  # do not edit this line
 
 class GoogleFinanceAPI:
     def __init__(self):
-        self.prefix = "https://www.google.com/finance/getprices?i=60&p=2d&f=d,o&df=cpct&auto=1&q="
+        self.prefix = "https://www.google.com/finance/getprices?i=60&f=d,c&df=cpct&auto=1&q="
 
     def get(self, symbol, exchange=False):
         """
