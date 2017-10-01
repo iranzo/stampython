@@ -50,10 +50,10 @@ def help(message):  # do not edit this line
 
 class IEXAPI:
     def __init__(self):
-        self.prefix = "https://api.iextrading.com/1.0/tops?symbols="
+        self.prefix = "https://api.iextrading.com/1.0/stock/"
 
     def get(self, symbol):
-        url = self.prefix + "%s" % symbol
+        url = self.prefix + "%s/quote" % symbol
         content = requests.get(url).content
         quote = {'t': symbol}
         content = content.split(",")[7]
