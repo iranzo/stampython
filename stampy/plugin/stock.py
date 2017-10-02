@@ -56,7 +56,7 @@ class IEXAPI:
         url = self.prefix + "%s/quote" % symbol
         content = requests.get(url).content
         quote = {'t': symbol}
-        content = content.split(",")[7]
+        content = content.split(",")[9]
         quote['l_cur'] = content.split(":")[1]
         return quote
 
