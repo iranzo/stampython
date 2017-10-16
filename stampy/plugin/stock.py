@@ -56,8 +56,8 @@ class IEXAPI:
         url = self.prefix + "%s/quote" % symbol
         content = requests.get(url).content
         quote = {'t': symbol}
-        content = content.split(",")[9]
-        quote['l_cur'] = content.split(":")[1]
+        quote['l_cur'] = content.split(",")[9].split(":")[1]
+        quote['change'] = content.split(",")[20].split(":")[1]
         return quote
 
 
@@ -129,6 +129,7 @@ def stock(message):
             quoteUSD = float(quote["l_cur"])
             quoteEur = float(quoteUSD * rate)
             text += " (%s %s)\n" % ("{0:.2f}".format(quoteEur), currency)
+            text += " Change: %s\n" % quote["change"]
         except:
             text += ""
 
