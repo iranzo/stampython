@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stampython 0.50\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-10-16 21:36+0200\n"
-"PO-Revision-Date: 2017-10-16 21:36+0200\n"
+"POT-Creation-Date: 2017-10-16 22:29+0200\n"
+"PO-Revision-Date: 2017-10-16 22:30+0200\n"
 "Last-Translator: Pablo Iranzo Gómez <Pablo.Iranzo@gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -264,7 +264,7 @@ msgstr "Use `/admin linik show` para listar los canales enlazados\n"
 #: stampy/plugin/comic.py:98 stampy/plugin/config.py:86
 #: stampy/plugin/espp.py:66 stampy/plugin/feed.py:95
 #: stampy/plugin/forward.py:173 stampy/plugin/help.py:65
-#: stampy/plugin/stock.py:105 stampy/plugin/sudo.py:73
+#: stampy/plugin/stock.py:106 stampy/plugin/sudo.py:73
 #, python-format
 msgid "Command: %s by %s"
 msgstr "Comando: %s por %s"
@@ -1558,14 +1558,10 @@ msgstr ""
 "Use `stock <valor>` para obtener la cotización del valor\n"
 "\n"
 
-#: stampy/plugin/stock.py:124
+#: stampy/plugin/stock.py:125
 #, python-format
 msgid "USD/%s rate \n"
 msgstr "Tasa de cambio USD/%s\n"
-
-#: stampy/plugin/stock.py:132
-msgid "Change:"
-msgstr "Cambio:"
 
 #: stampy/plugin/sudo.py:53
 msgid "Use `/sudo gid=<gid>` to assign group to work on\n"
@@ -1627,6 +1623,9 @@ msgstr ""
 #, python-format
 msgid "New user in chat, sending greetings: %s"
 msgstr "Nuevo usuario en el chat, enviando saludos: %s"
+
+#~ msgid "Change:"
+#~ msgstr "Cambio:"
 
 #~ msgid "Plugin return code: %s"
 #~ msgstr "Código de retorno del complemento: %s"
