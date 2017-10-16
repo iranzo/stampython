@@ -130,7 +130,6 @@ def stock(message):
             quoteUSD = float(quote["l_cur"])
             quoteEur = float(quoteUSD * rate)
             text += " (%s %s)\n" % ("{0:.2f}".format(quoteEur), currency)
-            text += " " + _("Change:") + " %s\n" % quote["change"]
         except:
             text += ""
 
