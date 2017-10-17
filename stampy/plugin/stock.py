@@ -54,11 +54,15 @@ class IEXAPI:
 
     def get(self, symbol):
         url = self.prefix + "%s/quote" % symbol
-        content = requests.get(url).content
+        content = requests.get(url).content.split(",")
         quote = {'t': symbol}
-        quote['l_cur'] = content.split(",")[9].split(":")[1]
-        quote['c'] = content.split(",")[20].split(":")[1]
-        quote['cp'] = float(content.split(",")[21].split(":")[1]) * 100
+        for x in content:
+            if x.find("\"change\"") != -1:
+                quote['c'] = x.split(":")[1]
+            if x.find("\"changePercent\"") != -1:
+                quote['cp'] = x.split(":")[1]
+            if x.find("\"latestPrice\"") != -1:
+                quote['l_cur'] = x.split(":")[1]
         return quote
 
 
