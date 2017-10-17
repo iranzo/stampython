@@ -57,8 +57,8 @@ class IEXAPI:
         content = requests.get(url).content
         quote = {'t': symbol}
         quote['l_cur'] = content.split(",")[9].split(":")[1]
-        quote['c'] = content.split(",")[21].split(":")[1]
-        quote['cp'] = float(content.split(",")[22].split(":")[1]) * 100
+        quote['c'] = content.split(",")[20].split(":")[1]
+        quote['cp'] = float(content.split(",")[21].split(":")[1]) * 100
         return quote
 
 
