@@ -16,6 +16,7 @@ import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.sql import table
 
+
 def upgrade():
     """
     Performs upgrade of database
@@ -33,13 +34,15 @@ def upgrade():
     op.bulk_insert(
         comic,
         [
-             {'name': 'CommitStrip', 'type': 'rssurl', 'channelgid': '-1001105187138',
-              'lastchecked': '1981/01/24', 'url': 'http://www.commitstrip.com/en/feed/',
-              'imgxpath': '//div/p/img/@src',
-              'txtxpath': '//h1[@class="entry-title"]/text()'}
+            {'name': 'CommitStrip', 'type': 'rssurl',
+             'channelgid': '-1001105187138',
+             'lastchecked': '1981/01/24',
+             'url': 'http://www.commitstrip.com/en/feed/',
+             'imgxpath': '//div/p/img/@src',
+             'txtxpath': '//h1[@class="entry-title"]/text()'
+             }
         ]
     )
-
 
 
 def downgrade():
