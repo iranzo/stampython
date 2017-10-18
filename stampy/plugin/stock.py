@@ -54,16 +54,15 @@ class IEXAPI:
 
     def get(self, symbol):
         url = self.prefix + "%s/quote" % symbol
-        content = requests.get(url).content.split(",")
+        content = json.loads(requests.get(url).content)
         quote = {'t': symbol}
-        for x in content:
-            if x.find("\"change\"") != -1:
-                quote['c'] = x.split(":")[1]
-            if x.find("\"changePercent\"") != -1:
-                quote['cp'] = x.split(":")[1]
-            if x.find("\"latestPrice\"") != -1:
-                quote['l_cur'] = x.split(":")[1]
-        return quote
+        if "change" in content:
+            quote['c']=content['change']
+        if "changePercent" in content:
+             quote['cp']=content['changePercent']
+        if "latestPrice" in content:
+            quote['l_cur'] = content['latestPrice']
+    return quote
 
 
 def get_currency_rate(currency, rate_in):
@@ -130,8 +129,8 @@ def stock(message):
     for ticker in stock:
         try:
             quote = c.get(ticker.upper())
-            text += "%s Quote " % quote["t"] + " " + quote["l_cur"] + " " + quote["c"] + " (%s%%)" % quote["cp"]
-            quoteUSD = float(quote["l_cur"])
+            text += "%s Quote " % quote["t"] + " " + str(quote["l_cur"]) + " " + str(quote["c"]) + " (%s%%)" % str(quote["cp"])
+            quoteUSD = quote["l_cur"]
             quoteEur = float(quoteUSD * rate)
             text += " (%s %s)\n" % ("{0:.2f}".format(quoteEur), currency)
         except:
