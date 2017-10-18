@@ -64,6 +64,7 @@ class IEXAPI:
             quote['l_cur'] = content['latestPrice']
         return quote
 
+
 def get_currency_rate(currency, rate_in):
     """
     Get currency rate
