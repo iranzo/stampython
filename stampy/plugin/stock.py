@@ -7,6 +7,7 @@
 # Modified by: Pablo Iranzo Gomez (Pablo.Iranzo@gmail.com)
 
 import logging
+import json
 import sys
 import requests
 
