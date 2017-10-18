@@ -57,13 +57,12 @@ class IEXAPI:
         content = json.loads(requests.get(url).content)
         quote = {'t': symbol}
         if "change" in content:
-            quote['c']=content['change']
+            quote['c'] = content['change']
         if "changePercent" in content:
-             quote['cp']=content['changePercent']
+            quote['cp'] = content['changePercent']
         if "latestPrice" in content:
             quote['l_cur'] = content['latestPrice']
-    return quote
-
+        return quote
 
 def get_currency_rate(currency, rate_in):
     """
