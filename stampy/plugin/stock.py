@@ -54,11 +54,14 @@ class IEXAPI:
 
     def get(self, symbol):
         url = self.prefix + "%s/quote" % symbol
-        content = requests.get(url).content
+        content = json.loads(requests.get(url).content)
         quote = {'t': symbol}
-        quote['l_cur'] = content.split(",")[9].split(":")[1]
-        quote['c'] = content.split(",")[20].split(":")[1]
-        quote['cp'] = float(content.split(",")[21].split(":")[1]) * 100
+        if "change" in content:
+            quote['c'] = content['change']
+        if "changePercent" in content:
+            quote['cp'] = content['changePercent']
+        if "latestPrice" in content:
+            quote['l_cur'] = content['latestPrice']
         return quote
 
 
@@ -126,8 +129,8 @@ def stock(message):
     for ticker in stock:
         try:
             quote = c.get(ticker.upper())
-            text += "%s Quote " % quote["t"] + " " + quote["l_cur"] + " " + quote["c"] + " (%s%%)" % quote["cp"]
-            quoteUSD = float(quote["l_cur"])
+            text += "%s Quote " % quote["t"] + " " + str(quote["l_cur"]) + " " + str(quote["c"]) + " (%s%%)" % str(quote["cp"])
+            quoteUSD = quote["l_cur"]
             quoteEur = float(quoteUSD * rate)
             text += " (%s %s)\n" % ("{0:.2f}".format(quoteEur), currency)
         except:
