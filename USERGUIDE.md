@@ -40,6 +40,7 @@ Also, as per general usage:
 - `/feed delete feed` Removes feed from channel
 - `/feed list` To get list of defined feeds
 - `/feed feed` To get that feed updates
+- `/cn` To get a random Chuck Norris fact
 
 
 ## Extra commands only for admin user
