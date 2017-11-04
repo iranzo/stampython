@@ -64,10 +64,10 @@ def cn(message):
 
     logger.debug(msg=_L("Command: %s by %s" % (texto, who_un)))
 
-    text = "```Chuck"
+    text = "``` "
     url = "https://api.chucknorris.io/jokes/random"
     text += json.loads(requests.get(url).content)['value']
-    text += "```"
+    text += " ```"
     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                               reply_to_message_id=message_id,
                               disable_web_page_preview=True,
