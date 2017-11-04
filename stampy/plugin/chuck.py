@@ -64,7 +64,7 @@ def cn(message):
 
     logger.debug(msg=_L("Command: %s by %s" % (texto, who_un)))
 
-    text = "```"
+    text = "```Chuck"
     url = "https://api.chucknorris.io/jokes/random"
     text += json.loads(requests.get(url).content)['value']
     text += "```"
