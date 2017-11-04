@@ -12,6 +12,7 @@ import stampy.plugin.config
 import stampy.stampy
 from stampy.i18n import _
 from stampy.i18n import _L
+import random
 
 
 def init():
@@ -42,7 +43,7 @@ def help(message):  # do not edit this line
     :param message: message to process
     :return: help text
     """
-    commandtext = _("Use `/cn` to get a random Chuck Norris quote\n\n")
+    commandtext = _("Use `/cn <word>` to get a random Chuck Norris quote based on word\n\n")
     return commandtext
 
 
@@ -64,9 +65,30 @@ def cn(message):
 
     logger.debug(msg=_L("Command: %s by %s" % (texto, who_un)))
 
+    # We might be have been given no command, just stock
+    try:
+        command = texto.split(' ')[1]
+    except:
+        command = False
+
+    if not command:
+        url = "https://api.chucknorris.io/jokes/random"
+    else:
+        url = "https://api.chucknorris.io/jokes/search?query=%s" % command
+
     text = "``` "
-    url = "https://api.chucknorris.io/jokes/random"
-    text += json.loads(requests.get(url).content)['value']
+    # we might get more than one result
+    result = json.loads(requests.get(url).content)
+    if 'result' in result:
+        totalelem = len(result['result'])
+        if totalelem > 1:
+            elem = random.randint(0, totalelem - 1)
+        else:
+            elem = 0
+        text += result['result'][elem]['value']
+    else:
+        text += result['value']
+
     text += " ```"
     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                               reply_to_message_id=message_id,
