@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: stampy 0.0.1.dev515\n"
+"Project-Id-Version: stampy 0.0.1.dev530\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-10-16 22:29+0200\n"
+"POT-Creation-Date: 2017-11-04 13:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -246,10 +246,10 @@ msgstr ""
 
 #: stampy/plugin/admin.py:72 stampy/plugin/alias.py:72
 #: stampy/plugin/autokarma.py:78 stampy/plugin/base.py:65
-#: stampy/plugin/comic.py:98 stampy/plugin/config.py:86
-#: stampy/plugin/espp.py:66 stampy/plugin/feed.py:95
+#: stampy/plugin/chuck.py:65 stampy/plugin/comic.py:98
+#: stampy/plugin/config.py:86 stampy/plugin/espp.py:66 stampy/plugin/feed.py:95
 #: stampy/plugin/forward.py:173 stampy/plugin/help.py:65
-#: stampy/plugin/stock.py:106 stampy/plugin/sudo.py:73
+#: stampy/plugin/stock.py:110 stampy/plugin/sudo.py:73
 #, python-format
 msgid "Command: %s by %s"
 msgstr ""
@@ -436,6 +436,12 @@ msgstr ""
 
 #: stampy/plugin/base.py:46
 msgid "Use `/quit` to exit bot execution\n"
+msgstr ""
+
+#: stampy/plugin/chuck.py:45
+msgid ""
+"Use `/cn` to get a random Chuck Norris quote\n"
+"\n"
 msgstr ""
 
 #: stampy/plugin/comic.py:74
@@ -1413,13 +1419,13 @@ msgstr ""
 msgid "Returning userids: %s for chat: %s"
 msgstr ""
 
-#: stampy/plugin/stock.py:47
+#: stampy/plugin/stock.py:48
 msgid ""
 "Use `stock <ticker>` to get stock trading price\n"
 "\n"
 msgstr ""
 
-#: stampy/plugin/stock.py:125
+#: stampy/plugin/stock.py:129
 #, python-format
 msgid "USD/%s rate \n"
 msgstr ""
