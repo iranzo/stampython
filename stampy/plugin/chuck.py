@@ -80,14 +80,20 @@ def cn(message):
     # we might get more than one result
     result = json.loads(requests.get(url).content)
     if 'result' in result:
-        totalelem = len(result['result'])
-        if totalelem > 1:
-            elem = random.randint(0, totalelem - 1)
+        if result['total'] != 0:
+            try:
+                totalelem = len(result['result'])
+            except:
+                totalelem = 0
+            if totalelem > 1:
+                elem = random.randint(0, totalelem - 1)
+            else:
+                elem = 0
+            text += result['result'][elem]['value']
         else:
-            elem = 0
-        text += result['result'][elem]['value']
+            text += "Chuck Norris didn't said a word about it."
     else:
-        text += result['value']
+        text += "Chuck Norris didn't said a word about it."
 
     text += " ```"
     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
