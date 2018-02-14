@@ -93,7 +93,7 @@ def cn(message):
         else:
             text += "Chuck Norris didn't said a word about it."
     else:
-        text += "Chuck Norris didn't said a word about it."
+        text += result['value']
 
     text += " ```"
     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
