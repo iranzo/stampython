@@ -17,6 +17,7 @@ import stampy.plugin.config
 import stampy.plugin.karma
 import stampy.plugin.stats
 import stampy.stampy
+import re
 from stampy.i18n import _
 from stampy.i18n import _L
 
@@ -310,6 +311,12 @@ def feeds(message=False, name=False):
                 except:
                     url = False
                     title = False
+
+                # Patch RHJobs feed
+                if name == "RHJobs":
+                    description = item['description']
+                    jobid = re.search('\*\*Job ID\*\*(.*)', description).group(1).strip().replace("_", '')
+                    url = "https://global-redhat.icims.com/jobs/%s/job?iis=A+Red+Hat+Employee&iispid=21098" % jobid
 
                 if url and title:
                     dateitem = stampy.stampy.utize(dateutil.parser.parse(item["published"]))
