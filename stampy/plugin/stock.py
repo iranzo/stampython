@@ -60,7 +60,7 @@ class IEXAPI:
         if "change" in content:
             quote['c'] = content['change']
         if "changePercent" in content:
-            quote['cp'] = content['changePercent']*100
+            quote['cp'] = content['changePercent'] * 100
         if "latestPrice" in content:
             quote['l_cur'] = content['latestPrice']
         return quote
