@@ -315,8 +315,11 @@ def feeds(message=False, name=False):
                 # Patch RHJobs feed
                 if name == "RHJobs":
                     description = item['description']
-                    jobid = re.search('\*\*Job ID\*\*(.*)', description).group(1).strip().replace("_", '')
-                    url = "https://global-redhat.icims.com/jobs/%s/job?iis=A+Red+Hat+Employee&iispid=21098" % jobid
+                    try:
+                        jobid = re.search('\*\*Job ID\*\*(.*)', description).group(1).strip().replace("_", '')
+                        url = "https://global-redhat.icims.com/jobs/%s/job?iis=A+Red+Hat+Employee&iispid=21098" % jobid
+                    except:
+                        url = None
 
                 if url and title:
                     dateitem = stampy.stampy.utize(dateutil.parser.parse(item["published"]))
