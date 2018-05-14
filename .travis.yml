@@ -10,6 +10,15 @@ before_install:
     - pip install misspellings
     - pip install python-coveralls
 
+addons:
+  apt:
+    update: true
+  sonarcloud:
+    organization: "iranzo-github"
+    token:
+      secure: "wTs2gICF05qTPJveJ30RCF8OBZy8cmP6YU0lkdvGJmjDvwuZ4gM9WW6amaF6KREcKJEaZj+FK+k877J9sGo2oPg/Vqgn8d/KNDkMRDBy4ZlQSkFC8jqEAR7Rum7THhwYDPCiQJaFcxHVm0nColmKFdaZkzihbtziCLxwEcZ7e1GvnJ1cEEJq0UUTkjjjxscEU0RMKzZhPOncJNFGhiCcBf1lUccAdTV1iNJ/ldgc8iJfRkDJJ/X2Dz4ISwWxSrsz34qUbAsUzUz5vpUX2Tb//z75Rgsl6X6eGsH7UGvkI2j79GTLXBVs0Tf6YjunaWnPHJ4XaX5VLtwxdKDLvGW05cvMc/QcDx+mJ1cVl4JFlMraix4UwgiFENWuyaNfNh9CgDHZ0SrByyGX1z/nMPcOF0AtL4OIEdzAoRKoT9hbmEpdC3Dmj1pc9ktYsRk/n5hTEjdpEF0pmVZoPufKSgg3oBCCHvPe4Fz9250HCoPdjmHJzPbJa5rjhB9KJtaGPXOC/EUa/JZTt6PJhtRrpIShuP65usIvYPQoo9HnVIaYUY7flabWxzRTh1CjL8usnP80NHEQ60RlYoNe5G62xadmrFioqYSmM6qtJsxQKP81DzVf+PUVBrEO3gL3PP61Vxg7TWazM1Qc1VVsIMnuuTnQUMTm8VWuWE/nnQlOF6MdznQ="
+
+
 script:
     # Run pep8 on all .py files in all subfolders
     # (I ignore "E402: module level import not at top of file"
@@ -17,6 +26,7 @@ script:
     - find . -name \*.py -exec pep8 --ignore=E402,E501 {} +
     - find . -name '*.py' | misspellings -f -
     - nosetests
+    - sonar-scanner
 
 after_success:
   - coveralls
