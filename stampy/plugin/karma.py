@@ -22,7 +22,7 @@ def init():
     :return: List of triggers for plugin
     """
 
-    triggers = ["++", "--", u"—", "@", "^rank", "^srank", "^skarma", "=="]
+    triggers = ["++", "--", u"—", "@", "^rank", "^srank", "^skarma", "==", "!="]
 
     stampy.stampy.cronme(name="karma", interval=24 * 60)
 
@@ -58,7 +58,7 @@ def help(message):  # do not edit this line
     :return: help text
     """
     commandtext = _("Use `word++` or `word--` to increment or decrement karma, a new message will be sent providing the new total\n\n")
-    commandtext += _("Reply to a message with `++`, `--` to give user karma to telegram alias or `==` to repeat karma to the same words\n")
+    commandtext += _("Reply to a message with `++`, `--` to give user karma to telegram alias or `==` to repeat karma to the same words or `!=` to invert it\n")
     commandtext += _("Use `rank <word>` or `rank` to get value for actual word or top 10 rankings\n")
     commandtext += _("Use `srank <word>` to search for similar words already ranked\n\n")
     if stampy.stampy.is_owner(message):
@@ -346,11 +346,28 @@ def karmaprocess(msgdetail):
     wordadd = []
     worddel = []
 
-    # Pre-process text for "==
-    if "==" in " ".join(text_to_process):
-        if msgdetail['replytotext']:
+    # Pre-process text for "==" and "!="
+    if msgdetail['replytotext']:
+        if "==" in " ".join(text_to_process):
             newtext = stampy.stampy.replace_all(msgdetail['replytotext'], dictionary).lower().split(" ")
             text_to_process.extend(newtext)
+        elif "!=" in " ".join(text_to_process):
+            newdictionary = {
+                "++": "+-",
+                "--": "-+"
+            }
+
+            newtext = stampy.stampy.replace_all(msgdetail['replytotext'], newdictionary).lower().split(" ")
+
+            # Finish inversion
+            newdictionary = {
+                "+-": "--",
+                "-+": "++"
+            }
+
+            newtext = stampy.stampy.replace_all(" ".join(newtext), newdictionary).lower().split(" ")
+            text_to_process = newtext
+
 
     # If operators are not there, exit faster
     if "--" in " ".join(text_to_process) or "++" in " ".join(text_to_process):
