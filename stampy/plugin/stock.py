@@ -74,8 +74,12 @@ def get_currency_rate(currency, rate_in):
     :return: rate
     """
 
-    base_url = 'http://api.fixer.io/latest'
-    query = base_url + '?base=%s&symbols=%s' % (currency, rate_in)
+    stockapikey = stampy.plugin.config.config(key="stockapikey", default="")
+
+    base_url = 'http://data.fixer.io/api/latest?access_key=%s' % stockapikey
+
+    query = base_url + '&symbols=%s' % rate_in
+
     try:
         response = requests.get(query)
         if response.status_code != 200:
