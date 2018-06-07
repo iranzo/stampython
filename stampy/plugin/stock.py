@@ -78,7 +78,7 @@ def get_currency_rate(currency, rate_in):
 
     base_url = 'http://data.fixer.io/api/latest?access_key=%s' % stockapikey
 
-    query = base_url + '&symbols=%s' % rate_in
+    query = base_url + '&symbols=%s' % currency
 
     try:
         response = requests.get(query)
@@ -87,7 +87,7 @@ def get_currency_rate(currency, rate_in):
             return response
         else:
             rates = response.json()
-            rate_in_currency = rates["rates"][rate_in]
+            rate_in_currency = 1/rates["rates"][currency]
             return rate_in_currency
     except requests.ConnectionError as error:
         print error
