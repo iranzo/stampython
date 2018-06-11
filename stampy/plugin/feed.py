@@ -138,8 +138,11 @@ def rsscommands(message):
                 break
 
             if case('delete'):
-                name = texto.split(' ')[2]
-                code = feeddel(name=name, gid=chat_id)
+                try:
+                    name = texto.split(' ')[2]
+                    code = feeddel(name=name, gid=chat_id)
+                except:
+                    code = False
                 if code is not False:
                     text = _("Removing feed `%s`") % name
                     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
