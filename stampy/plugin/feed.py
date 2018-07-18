@@ -324,6 +324,9 @@ def feeds(message=False, name=False):
                     except:
                         url = None
 
+                    if url and 'USA-' in title:
+                        url = url = "https://us-redhat.icims.com/jobs/%s/job?iis=A+Red+Hat+Employee&iispid=21098" % jobid
+
                 if url and title:
                     dateitem = stampy.stampy.utize(dateutil.parser.parse(item["published"]))
                     dateitemfor = dateitem.strftime('%Y/%m/%d %H:%M:%S')
