@@ -218,4 +218,6 @@ def getalias(word, gid=0):
     # We can define recursive aliases, so this will return the ultimate one
     if value:
         return getalias(word=value, gid=gid)
-    return word.lower()
+    if word:
+        return word.lower()
+    return False
