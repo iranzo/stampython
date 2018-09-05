@@ -87,7 +87,10 @@ def get_currency_rate(currency, rate_in):
             return response
         else:
             rates = response.json()
-            rate_in_currency = 1/rates["rates"][currency]
+            if 'rates' in rates:
+                rate_in_currency = 1 / rates["rates"][currency]
+            else:
+                rate_in_currency = 1
             return rate_in_currency
     except requests.ConnectionError as error:
         print error

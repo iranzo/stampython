@@ -368,7 +368,6 @@ def karmaprocess(msgdetail):
             newtext = stampy.stampy.replace_all(" ".join(newtext), newdictionary).lower().split(" ")
             text_to_process = newtext
 
-
     # If operators are not there, exit faster
     if "--" in " ".join(text_to_process) or "++" in " ".join(text_to_process):
         logger.debug(msg=_L("Text has karma operators"))
