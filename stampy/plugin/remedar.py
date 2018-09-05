@@ -72,7 +72,13 @@ def replacevowels(message):
 
     remedar = stampy.plugin.config.config(key='remedar', gid=chat_id)
 
-    if texto != '' and remedar and who_id in remedar.split(" "):
+    doremedar = False
+    if remedar:
+        for user in remedar.split(" "):
+            if int(user) == who_id:
+                doremedar = True
+
+    if texto != '' and doremedar:
         text = re.sub("[aeouAEOUáéóúàèòùäëöü]", "i", texto)
         if texto != text:
             logger.info("Remedar for %s in chat %s" % (who_id, chat_id))
