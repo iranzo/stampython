@@ -192,6 +192,15 @@ def statscommands(message):
 
                 break
 
+            if case('usearch'):
+                text = showstats(name=key, key='memberid')
+                stampy.stampy.sendmessage(chat_id=chat_id, text=text,
+                                          reply_to_message_id=message_id,
+                                          disable_web_page_preview=True,
+                                          parse_mode="Markdown")
+
+                break
+
             if case():
                 break
 
@@ -231,7 +240,7 @@ def getoutcommands(message):
     return
 
 
-def showstats(type=False, name=None):
+def showstats(type=False, name=None, key="name"):
     """
     Shows stats for defined type or all if missing
     :param name: name to search in the stats database
@@ -244,13 +253,13 @@ def showstats(type=False, name=None):
 
         if name:
             string = "%" + "%s" % name + "%"
-            sql = sql + " and name like '%s'" % string
+            sql = sql + " and " + key + "like '%s'" % string
     else:
         sql = "select type,id,name,date,count from stats"
 
         if name:
             string = "%" + "%s" % name + "%"
-            sql = sql + " WHERE name like '%s'" % string
+            sql = sql + " WHERE " + key + " like '%s'" % string
 
     sql = sql + " ORDER BY count DESC LIMIT 10"
 
