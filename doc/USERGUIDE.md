@@ -1,8 +1,9 @@
+
 # User guide
 
 ## Introduction
 
-After reading [README.md](README.md) that contains more 'how-to-run' information, it might be interesting for you to learn about how to use it.
+After reading [index.md](index.md) that contains more 'how-to-run' information, it might be interesting for you to learn about how to use it.
 
 In short, many options are documented by sending "/help" on a channel where <https://t.me/redken_bot> is.
 

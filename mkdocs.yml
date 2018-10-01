@@ -1,0 +1,6 @@
+site_name: Stampython
+docs_dir: doc/
+theme: readthedocs
+repo_url: https://github.com/iranzo/stampython/
+repo_name: GitHub
+use_directory_urls: false

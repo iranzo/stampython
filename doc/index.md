@@ -15,9 +15,19 @@ Check more information about [Telegram Bots](https://core.telegram.org/bots/).
 
 News about the program, new features, etc at <https://t.me/redkennews>.
 
-Read the documentation at <https://stampython.readthedocs.io/>
+Quick User guide at [USERGUIDE.md](USERGUIDE.md)
+Quick Admin guide at [ADMINGUIDE.md](ADMINGUIDE.md)
+Configuration variables at [CONFIG.md](CONFIG.md)
 
 Send a "/help" command to <https://telegram.me/redken_bot> to get up-to-date information about commands available
+
+## Important
+
+- The bot will need to have access to all of your messages in order to process them
+
+## Notes
+
+- On first execution it will create database and start filling values
 
 ## Test
 
