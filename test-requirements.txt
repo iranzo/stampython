@@ -12,4 +12,4 @@ pymarkdownlint
 nose
 python-coveralls
 flake8
- 
+misspellings
