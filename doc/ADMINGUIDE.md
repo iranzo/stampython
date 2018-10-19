@@ -1,3 +1,15 @@
+
+**Table of contents**
+<!-- TOC depthFrom:1 insertAnchor:true orderedList:true -->
+
+1. [Introduction](#introduction)
+2. [Highlights](#highlights)
+3. [Installation](#installation)
+4. [Usage help](#usage-help)
+
+<!-- /TOC -->
+
+
 # Owner guide
 
 Some of the following commands  are available for admins of a group or set of groups. Check [USERGUIDE.md](USERGUIDE.md) for commands available to all users.

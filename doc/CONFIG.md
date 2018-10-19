@@ -1,3 +1,14 @@
+
+**Table of contents**
+<!-- TOC depthFrom:1 insertAnchor:true orderedList:true -->
+
+1. [Administrator configuration](#administrator-configuration)
+2. [User/chat configuration](#userchat-configuration)
+3. [Donations](#donations)
+
+<!-- /TOC -->
+
+<a id="markdown-administrator-configuration" name="administrator-configuration"></a>
 ### Administrator configuration
 
 - owner: owner of bot
@@ -9,6 +20,7 @@
 - verbosity: log level verbosity
 - url: URL for telegram server bot api entry point
 
+<a id="markdown-userchat-configuration" name="userchat-configuration"></a>
 ### User/chat configuration
 
 - common
@@ -25,7 +37,8 @@
     - silent: makes stampy not to output messages to that chat
     - welcome: outputs the text when a new user joins the chat, replacing "$username" by user name
 
-## Donations
+<a id="markdown-donations" name="donations"></a>
+### Donations
 
 The bot runs on my hardware which involves (HW, power, internet, etc), if
 you wish to collaborate, please, use <https://www.paypal.me/iranzop> for

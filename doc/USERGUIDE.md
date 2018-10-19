@@ -1,6 +1,24 @@
 
+**Table of contents**
+<!-- TOC depthFrom:1 insertAnchor:true orderedList:true -->
+
+1. [User guide](#user-guide)
+    1. [Introduction](#introduction)
+    2. [Extra commands only for admin user](#extra-commands-only-for-admin-user)
+        1. [Configuration](#configuration)
+        2. [Karma](#karma)
+        3. [Auto-karma triggers](#auto-karma-triggers)
+        4. [Alias](#alias)
+        5. [quote](#quote)
+    3. [Donations](#donations)
+
+<!-- /TOC -->
+
+
+<a id="markdown-user-guide" name="user-guide"></a>
 # User guide
 
+<a id="markdown-introduction" name="introduction"></a>
 ## Introduction
 
 After reading [index.md](index.md) that contains more 'how-to-run' information, it might be interesting for you to learn about how to use it.
@@ -44,8 +62,10 @@ Also, as per general usage:
 - `/cn` To get a random Chuck Norris fact
 
 
+<a id="markdown-extra-commands-only-for-admin-user" name="extra-commands-only-for-admin-user"></a>
 ## Extra commands only for admin user
 
+<a id="markdown-configuration" name="configuration"></a>
 ### Configuration
 
 The bot, once token has been used and admin has been set, will store that information in the database, so you can control it from a chat window
@@ -55,10 +75,12 @@ The bot, once token has been used and admin has been set, will store that inform
     - As of this writing (verbosity, url for api, token, sleep timeout, owner, database, run in daemon mode)
 - `/[g|l]config delete var` will delete that variable from configuration.
 
+<a id="markdown-karma" name="karma"></a>
 ### Karma
 
 - `/skarma word=value` will set specified word to the karma value provided.
 
+<a id="markdown-auto-karma-triggers" name="auto-karma-triggers"></a>
 ### Auto-karma triggers
 
 Bot allows to trigger auto-karma events, so when keyword is given, it will trigger an event to increase karma value for other words
@@ -67,6 +89,7 @@ Bot allows to trigger auto-karma events, so when keyword is given, it will trigg
 - `/alias list [word]` Will show current defined autokarma triggers and in case a word is provided will search based on that word
 - `/alias delete key=value` will delete a previously defined auto-karma so no more auto-karma events will be triggered for that pair
 
+<a id="markdown-alias" name="alias"></a>
 ### Alias
 
 Bot allows to setup alias, so when karma is given to a word, it will instead add it to a different one (and report that one)
@@ -83,10 +106,12 @@ Bot allows to setup alias, so when karma is given to a word, it will instead add
 - `/alias list` Will show current defined aliases
 - `/alias delete key` will delete a previously defined alias so each word gets karma on its own
 
+<a id="markdown-quote" name="quote"></a>
 ### quote
 
 - `/quote del id` to remove a specific quote id from database
 
+<a id="markdown-donations" name="donations"></a>
 ## Donations
 
 The bot runs on my hardware which involves (HW, power, internet, etc), if you wish to collaborate, please, use <https://www.paypal.me/iranzop> for your donation.

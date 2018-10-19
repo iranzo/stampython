@@ -7,6 +7,19 @@
 [![Code Climate](https://codeclimate.com/github/iranzo/stampython/badges/gpa.svg)](https://codeclimate.com/github/iranzo/stampython)
 [![Pypi](http://img.shields.io/pypi/v/stampython.svg)](https://pypi.python.org/pypi/stampython/)
 
+**Table of contents**
+<!-- TOC depthFrom:2 insertAnchor:true orderedList:true -->
+
+1. [Introduction](#introduction)
+2. [Important](#important)
+3. [Notes](#notes)
+4. [Test](#test)
+5. [Donations](#donations)
+
+<!-- /TOC -->
+
+
+<a id="markdown-introduction" name="introduction"></a>
 ## Introduction
 
 Attempt to create a python script that monitors a telegram bot URL and replies to commands for adding/removing karma.
@@ -21,18 +34,22 @@ Configuration variables at [CONFIG.md](CONFIG.md)
 
 Send a "/help" command to <https://telegram.me/redken_bot> to get up-to-date information about commands available
 
+<a id="markdown-important" name="important"></a>
 ## Important
 
 - The bot will need to have access to all of your messages in order to process them
 
+<a id="markdown-notes" name="notes"></a>
 ## Notes
 
 - On first execution it will create database and start filling values
 
+<a id="markdown-test" name="test"></a>
 ## Test
 
 - I've a copy running the name `@redken_bot`. Invite it to your channels if you want to give it a try or click <https://telegram.me/redken_bot>.
 
+<a id="markdown-donations" name="donations"></a>
 ## Donations
 
 The bot runs on my hardware which involves (HW, power, internet, etc), if
