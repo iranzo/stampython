@@ -57,28 +57,31 @@ def run(message):  # do not edit this line
         newtexto = _("Cleaned up: ")
         for word in texto.split():
             if "http" in word:
-                url = word
+                url = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', word)
+                if len(url) != 0:
+                    url = url[0]
 
-                # Unshorten URL
-                try:
-                    session = requests.Session()  # so connections are recycled
-                    resp = session.head(url, allow_redirects=True)
-                    newurl = resp.url
-                except:
-                    newurl = "url removed"
+                    # Unshorten URL
+                    try:
+                        session = requests.Session()  # so connections are recycled
+                        resp = session.head(url, allow_redirects=True)
+                        newurl = resp.url
+                    except:
+                        # Fake as we couldn't expand url
+                        newurl = url
 
-                if newurl != url:
-                    delete = True
-
-                # Check if url has to be cleaned
-                if cleankey:
-                    renewurl = re.sub(cleankey, '', newurl)
-                    if renewurl != newurl:
+                    if newurl != url:
                         delete = True
 
-                    newurl = renewurl
+                    # Check if url has to be cleaned
+                    if cleankey:
+                        renewurl = re.sub(cleankey, '', newurl)
+                        if renewurl != newurl:
+                            delete = True
 
-                newtexto = newtexto + " " + newurl
+                        newurl = renewurl
+
+                    newtexto = newtexto + " " + newurl
             else:
                 newtexto = newtexto + " " + word
 
