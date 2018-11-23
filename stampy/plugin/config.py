@@ -135,16 +135,16 @@ def configcommands(message):
                     # Define valid keys for each role
                     if gid > 0:  # user private chat
                         validkeys = ['language', 'currency', 'modulo',
-                                     'stock', 'espp']
+                                     'stock', 'espp', 'cleanlink', 'cleankey']
                     elif gid < 0:  # group chat or channel
                         validkeys = ['language', 'currency', 'modulo',
                                      'stock', 'espp', 'isolated', 'admin',
-                                     'welcome', 'maxage', 'silent', 'remedar']
+                                     'welcome', 'maxage', 'silent', 'remedar', 'cleanlink', 'cleankey']
                     else:
                         validkeys = []
 
                     if key in validkeys or gid == 0:
-                        value = word.split('=')[1]
+                        value = "=".join(word.split('=')[1:])
                         setconfig(key=key, value=value, gid=gid)
                         text = _("Setting config for `%s` to `%s`") % (key, value)
                     else:

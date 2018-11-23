@@ -2,9 +2,9 @@
 **Table of contents**
 <!-- TOC depthFrom:1 insertAnchor:true orderedList:true -->
 
-1. [Administrator configuration](#administrator-configuration)
-2. [User/chat configuration](#userchat-configuration)
-3. [Donations](#donations)
+- [Administrator configuration](#administrator-configuration)
+- [User/chat configuration](#userchat-configuration)
+- [Donations](#donations)
 
 <!-- /TOC -->
 
@@ -29,6 +29,8 @@
     - modulo: 1 (to just show karma every X/modulo points, 0 to disable)
     - stock: stock tickers to check
     - espp: offering price at start of period for ESPP
+    - cleanlink: True if we want links to be expanded and removed
+    - cleankey: Regexp to replace, for example tag=
 - chat
     - isolated: False, if true, allow link, all karma, etc is tied to GID
     - link: empty, if defined, channel is slave to a mater

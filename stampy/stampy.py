@@ -225,6 +225,8 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
         message += "&reply_to_message_id=%s" % reply_to_message_id
     if disable_web_page_preview:
         message += "&disable_web_page_preview=1"
+    else:
+        message += "&disable_web_page_preview=0"
     if parse_mode:
         message += "&parse_mode=%s" % parse_mode
     if extra:
@@ -287,6 +289,10 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
                     attempt = 61
                     break
 
+                if case(u'Bad Request: reply message not found'):
+                    attempt = 61
+                    break
+
         # exit after 60 retries with 1 second delay each
         if attempt > 60:
             logger.error(msg=_L("PERM ERROR sending message: Code: %s : Text: %s") % (code, result))
@@ -302,6 +308,61 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
         plugin.forward.forwardmessage(sent)
 
     logger.debug(msg=_L("Sending message: Code: %s : Text: %s") % (code, text))
+    return code
+
+
+def deletemessage(chat_id=0, message_id=False):
+    """
+    Deletes a message from a chat
+    :param chat_id: chat_id to delete the message
+    :param message_id: message to delete
+    :return:
+    """
+
+    logger = logging.getLogger(__name__)
+    url = "%s%s/deleteMessage" % (plugin.config.config(key="url"), plugin.config.config(key='token'))
+    message = "%s?chat_id=%s&message_id=%s" % (url, chat_id, message_id)
+
+    code = False
+    attempt = 0
+    while not code:
+        # It this is executed as per unit testing, skip deleting message
+        UTdisable = not plugin.config.config(key='unittest', default=False)
+        Silent = not plugin.config.gconfig(key='silent', default=False, gid=geteffectivegid(gid=chat_id))
+        if UTdisable and Silent:
+            result = json.load(urllib.urlopen(message))
+            code = result['ok']
+        else:
+            code = True
+            result = ""
+
+        if attempt > 0:
+            logger.error(msg=_L("ERROR (%s) deleting message: Code: %s : Text: %s") % (attempt, code, result))
+
+        attempt += 1
+        sleep(1)
+        if not code:
+            error = result['description']
+            if 'entity starting at byte offset' in error:
+                # Trim the byte offset to make this error more generic
+                error = error[:103]
+
+            for case in Switch(error):
+                if case(u"Bad Request: message can't be deleted"):
+                    # Message can't be deleted
+                    attempt = 61
+                    break
+                if case(u'Bad Request: message to delete not found'):
+                    # Message was already removed
+                    attempt = 61
+                    break
+
+        # exit after 60 retries with 1 second delay each
+        if attempt > 60:
+            logger.error(msg=_L("PERM ERROR deleting message: Code: %s : Text: %s") % (code, result))
+            code = True
+
+    logger.debug(msg=_L("Deleted message: Code: %s : Text: %s") % (code, message_id))
     return code
 
 
