@@ -1,3 +1,4 @@
+pytz
 prettytable
 python-dateutil
 requests
