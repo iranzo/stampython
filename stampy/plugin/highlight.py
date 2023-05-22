@@ -37,7 +37,8 @@ def run(message):    # do not edit this line
     :return:
     """
     code = None
-    if text := stampy.stampy.getmsgdetail(message)["text"]:
+    if text:
+        = stampy.stampy.getmsgdetail(message)["text"]:
         if text.split()[0].lower()[:8] == "/hilight":
             code = True
             hilightcommands(message)
@@ -188,7 +189,8 @@ def createhilight(word, uid):
 
     logger = logging.getLogger(__name__)
     if gethilight(word=word, uid=uid):
-        logger.error(msg=_L("createhilight: word %s for uid %s already exists") % (word, uid))
+        logger.error(
+            msg=_L("createhilight: word %s for uid %s already exists") % (word, uid))
     else:
         sql = f"INSERT INTO hilight(word, gid) VALUES('{word}', '{uid}');"
         logger.debug(msg=f"createhilight: {word} for gid {uid}")

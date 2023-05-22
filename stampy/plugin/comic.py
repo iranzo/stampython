@@ -56,7 +56,8 @@ def run(message):    # do not edit this line
     :param message: message to run against
     :return:
     """
-    if text := stampy.stampy.getmsgdetail(message)["text"]:
+    if text:
+        = stampy.stampy.getmsgdetail(message)["text"]:
         comiccommands(message)
     return None
 

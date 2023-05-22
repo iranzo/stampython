@@ -28,7 +28,8 @@ def run(message):    # do not edit this line
     :param message: message to run against
     :return:
     """
-    if text := stampy.stampy.getmsgdetail(message)["text"]:
+    if text:
+        = stampy.stampy.getmsgdetail(message)["text"]:
         if text.split()[0].lower()[:6] == "/quote":
             quotecommands(message)
     return
@@ -112,11 +113,14 @@ def quotecommands(message):
             except:
                 nick = False
             try:
-                (quoteid, username, date, quote) = getquote(username=nick, gid=stampy.stampy.geteffectivegid(gid=chat_id))
-                datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
+                (quoteid, username, date, quote) = getquote(
+                    username=nick, gid=stampy.stampy.geteffectivegid(gid=chat_id))
+                datefor = datetime.datetime.fromtimestamp(
+                    float(date)).strftime('%Y-%m-%d %H:%M:%S')
                 text = f'`{quote}` -- `@{username}`, {datefor} (id {quoteid})'
             except:
-                text = _("No quote recorded for `%s`") % nick if nick else _("No quote found")
+                text = _("No quote recorded for `%s`") % nick if nick else _(
+                    "No quote found")
             stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                       reply_to_message_id=message_id,
                                       disable_web_page_preview=True,

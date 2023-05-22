@@ -478,18 +478,20 @@ def dochatcleanup(chat_id=False, maxage=False):
 
             for row in cur.fetchall():
                 id = row[0]
-                newmemberid = value[5] if (value := getstats(id=id)) else []
+                newmemberid = value[5] if (value: = getstats(id=id)) else []
                 if len(newmemberid) > maxmembers:
                     maxmembers = len(newmemberid)
                     newmaster = id
 
             if newmaster != 0:
-                logger.debug(msg=_L("The removed channel (%s) was master for others, electing new master: %s") % (chatid, newmaster))
+                logger.debug(msg=_L("The removed channel (%s) was master for others, electing new master: %s") % (
+                    chatid, newmaster))
                 # Update slaves to new master
                 sql = f"UPDATE config SET value='{newmaster}' WHERE key='link' and value='{chatid}'"
                 cur = stampy.stampy.dbsql(sql)
 
-                migratechats(oldchat=chat_id, newchat=newmaster, includeall=False)
+                migratechats(oldchat=chat_id, newchat=newmaster,
+                             includeall=False)
 
                 # Remove 'link' from the new master so it becomes a master
                 stampy.plugin.config.deleteconfig(key='link', gid=newmaster)
@@ -607,10 +609,12 @@ def dousercleanup(user_id=False, maxage=int(stampy.plugin.config.config("maxage"
 
             for line in cur:
                 (type, id, name, date, count, memberid) = line
-                logger.debug(msg=_L("LINE for user %s and memberid: %s will be deleted") % (name, memberid))
+                logger.debug(
+                    msg=_L("LINE for user %s and memberid: %s will be deleted") % (name, memberid))
                 memberid.remove(userid)
                 # Update stats entry in database without the removed chat
-                updatestats(type=type, id=id, name=name, date=date, memberid=memberid)
+                updatestats(type=type, id=id, name=name,
+                            date=date, memberid=memberid)
 
             # Check if user was admin for any channel, and remove
             username = None
@@ -632,7 +636,8 @@ def dousercleanup(user_id=False, maxage=int(stampy.plugin.config.config("maxage"
                         admins.remove(username)
                     except:
                         pass
-                    if newadmin := " ".join(admins):
+                    if newadmin:
+                        = " ".join(admins):
                         stampy.plugin.config.setconfig(key='admin',
                                                        value=newadmin, gid=id)
                     else:

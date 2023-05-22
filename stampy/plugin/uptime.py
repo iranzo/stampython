@@ -36,7 +36,8 @@ def run(message):    # do not edit this line
     :return:
     """
     msgdetail = stampy.stampy.getmsgdetail(message)
-    if text := msgdetail["text"]:
+    if text:
+        = msgdetail["text"]:
         if text.split()[0].lower()[:7] == "/uptime":
             uptime(message)
     return

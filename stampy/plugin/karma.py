@@ -42,7 +42,8 @@ def run(message):    # do not edit this line
     :param message: message to run against
     :return:
     """
-    if text := stampy.stampy.getmsgdetail(message)["text"]:
+    if text:
+        = stampy.stampy.getmsgdetail(message)["text"]:
         karmacommands(message)
         karmawords(message)
     return
@@ -434,7 +435,8 @@ def karmaprocess(msgdetail):
             stampyphant(chat_id=chat_id, karma=karma)
 
     if messagetext != "":
-        stampy.stampy.sendmessage(chat_id=chat_id, text=messagetext, reply_to_message_id=message_id, parse_mode="Markdown")
+        stampy.stampy.sendmessage(chat_id=chat_id, text=messagetext,
+                                  reply_to_message_id=message_id, parse_mode="Markdown")
 
     return
 

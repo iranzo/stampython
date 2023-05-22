@@ -29,7 +29,8 @@ def run(message):    # do not edit this line
     :return:
     """
     msgdetail = stampy.stampy.getmsgdetail(message)
-    if text := msgdetail["text"]:
+    if text:
+        = msgdetail["text"]:
         if text.split()[0].lower()[:5] == "/info":
             info(message)
     return

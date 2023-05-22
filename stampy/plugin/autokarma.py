@@ -35,7 +35,8 @@ def run(message):    # do not edit this line
     :return:
     """
     code = None
-    if text := stampy.stampy.getmsgdetail(message)["text"]:
+    if text:
+        = stampy.stampy.getmsgdetail(message)["text"]:
         if text.split()[0].lower()[:6] == "/autok":
             code = True
             autokcommands(message)

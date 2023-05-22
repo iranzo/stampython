@@ -29,7 +29,8 @@ def run(message):    # do not edit this line
     :param message: message to run against
     :return:
     """
-    if text := stampy.stampy.getmsgdetail(message)["text"]:
+    if text:
+        = stampy.stampy.getmsgdetail(message)["text"]:
         if text.split()[0].lower()[:5] == "/espp":
             espp(message=message)
     return
@@ -79,9 +80,11 @@ def espp(message):
         rate = 1
 
     text += _("USD/%s rate ") % currency + str(rate) + "\n"
-    if initial := float(
-        stampy.plugin.config.gconfig(key="espp", default=False, gid=chat_id)
-    ):
+    if initial:
+        = float(
+            stampy.plugin.config.gconfig(
+                key="espp", default=False, gid=chat_id)
+        ):
         text += _("Initial quote: %s USD\n") % initial
         try:
             quote = c.get(ticker)

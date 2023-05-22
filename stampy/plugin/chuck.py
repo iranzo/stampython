@@ -29,7 +29,8 @@ def run(message):    # do not edit this line
     :param message: message to run against
     :return:
     """
-    if text := stampy.stampy.getmsgdetail(message)["text"]:
+    if text:
+        = stampy.stampy.getmsgdetail(message)["text"]:
         if text.split()[0].lower() == "/cn":
             cn(message=message)
     return

@@ -31,7 +31,8 @@ def run(message):    # do not edit this line
     """
     logger = logging.getLogger(__name__)
     logger.debug(msg=_L("Processing plugin: Code: %s") % __file__)
-    if text := stampy.stampy.getmsgdetail(message)["text"]:
+    if text:
+        = stampy.stampy.getmsgdetail(message)["text"]:
         if text.split()[0].lower()[:6] == "/alias":
             aliascommands(message)
     return
@@ -175,7 +176,8 @@ def createalias(word, value, gid=0):
 
     logger = logging.getLogger(__name__)
     if getalias(value, gid=gid) == word or word.lower() == value.lower():
-        logger.error(msg=_L("createalias: circular reference %s=%s for gid %s") % (word, value, gid))
+        logger.error(msg=_L("createalias: circular reference %s=%s for gid %s") % (
+            word, value, gid))
     elif not getalias(word, gid) or getalias(word, gid) == word:
         # Removing duplicates on karma DB and add
         # the previous values

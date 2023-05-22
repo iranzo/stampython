@@ -35,7 +35,8 @@ def run(message):    # do not edit this line
     logger = logging.getLogger(__name__)
 
     msgdetail = stampy.stampy.getmsgdetail(message)
-    if text := msgdetail["text"]:
+    if text:
+        = msgdetail["text"]:
         if text.split()[0].lower()[:8] == "/forward":
             logger.debug(msg=_L("Processing forward commands"))
             forwardcommands(message)

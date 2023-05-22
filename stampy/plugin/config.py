@@ -27,7 +27,8 @@ def run(message):    # do not edit this line
     :param message: message to run against
     :return:
     """
-    if text := stampy.stampy.getmsgdetail(message)["text"]:
+    if text:
+        = stampy.stampy.getmsgdetail(message)["text"]:
         if text.split()[0].lower()[:7] == "/config":
             configcommands(message)
         elif text.split()[0].lower()[:8] == "/gconfig":
@@ -201,9 +202,10 @@ def gconfig(key, default=False, gid=0):
     :return: value in database for that key
     """
 
-    if value := config(key=key, default=False, gid=gid):
+    if value:
+        = config(key=key, default=False, gid=gid):
         return value
-    return value if (value := config(key=key, default=False, gid=0)) else default
+    return value if (value: = config(key=key, default=False, gid=0)) else default
 
 
 def config(key, default=False, gid=0):

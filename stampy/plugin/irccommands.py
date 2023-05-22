@@ -327,19 +327,23 @@ def op(chat_id=False, user_id=False, extra=""):
     result = {'ok': False}
 
     # Permissions as defined on API
-    permissions_base = ["can_change_info", "can_invite_users", "can_restrict_members", "can_promote_members"]
+    permissions_base = ["can_change_info", "can_invite_users",
+                        "can_restrict_members", "can_promote_members"]
     permissions_group = permissions_base[:]
     permissions_group.extend(["can_delete_messages"])
     permissions_channel = permissions_base[:]
-    permissions_channel.extend(["can_post_messages", "can_edit_messages", "can_delete_messages"])
+    permissions_channel.extend(
+        ["can_post_messages", "can_edit_messages", "can_delete_messages"])
     permissions_supergroup = permissions_base[:]
     permissions_supergroup.extend(["can_delete_messages", "can_pin_messages"])
 
-    type, id, name, date, count, memberid = stampy.plugin.stats.getstats(id=chat_id)
+    type, id, name, date, count, memberid = stampy.plugin.stats.getstats(
+        id=chat_id)
 
     if not type:
         # Use API call for getting chat type if not in database
-        url = "%s%s/getChat?chat_id=%s" % (stampy.plugin.config.config(key='url'), stampy.plugin.config.config(key='token'), chat_id)
+        url = "%s%s/getChat?chat_id=%s" % (stampy.plugin.config.config(
+            key='url'), stampy.plugin.config.config(key='token'), chat_id)
         try:
             result = json.load(urllib.urlopen(url))['result']['type']
 

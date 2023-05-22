@@ -213,9 +213,10 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
                     parse_mode=parse_mode, extra=extra)
         return
 
-    if overridegid := plugin.config.config(
-        key='overridegid', gid=0, default=False
-    ):
+    if overridegid:
+        = plugin.config.config(
+            key='overridegid', gid=0, default=False
+        ):
         chat_id = overridegid
 
     message = f"{url}?chat_id={chat_id}&text={urllib.quote_plus(text.encode('utf-8'))}"
@@ -688,7 +689,8 @@ def process(messages):
         botname = getme()
 
         # Write the line for debug
-        messageline = _L("TEXT: %s : %s : %s") % (msgdetail["chat_name"], msgdetail["name"], msgdetail["text"])
+        messageline = _L("TEXT: %s : %s : %s") % (
+            msgdetail["chat_name"], msgdetail["name"], msgdetail["text"])
         logger.debug(msg=messageline)
 
         # Process group configuration for language
@@ -925,7 +927,8 @@ def is_owner_or_admin(message, strict=False):
 
             if plugin.config.config(key='admin', gid=chat_id, default="") == "":
                 if not admin:
-                    logger.debug(msg=_L("We're admin because no admin listed on public chat"))
+                    logger.debug(
+                        msg=_L("We're admin because no admin listed on public chat"))
                     admin = True
 
     return owner or admin
@@ -941,9 +944,10 @@ def geteffectivegid(gid):
     if not plugin.config.gconfig(key='isolated', default=False, gid=gid):
         # Non isolation configured, returning '0' as gid to use
         return 0
-    if link := plugin.config.gconfig(key='link', default=False, gid=gid):
-        # This chat_id has 'link' defined against master, effective gid
-        # should be that one
+    if link:
+        = plugin.config.gconfig(key='link', default=False, gid=gid):
+            # This chat_id has 'link' defined against master, effective gid
+            # should be that one
         return int(link)
     else:
         return gid

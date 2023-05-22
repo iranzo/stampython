@@ -31,7 +31,8 @@ def run(message):    # do not edit this line
     :param message: message to run against
     :return:
     """
-    if text := stampy.stampy.getmsgdetail(message)["text"]:
+    if text:
+        = stampy.stampy.getmsgdetail(message)["text"]:
         if text.split()[0].lower() == "stock":
             stock(message=message)
     return
@@ -120,12 +121,14 @@ def stock(message):
         command = False
 
     if not command:
-        stock = stampy.plugin.config.gconfig(key="stock", default="RHT", gid=chat_id).split(" ")
+        stock = stampy.plugin.config.gconfig(
+            key="stock", default="RHT", gid=chat_id).split(" ")
     else:
         stock = texto.split(" ")[1::]
 
     text = "```\n"
-    currency = stampy.plugin.config.gconfig(key="currency", default="EUR", gid=chat_id)
+    currency = stampy.plugin.config.gconfig(
+        key="currency", default="EUR", gid=chat_id)
     rate = get_currency_rate('USD', currency) if currency != 'USD' else 1
     text += _(f"USD/{currency} rate {str(rate)}" + "\n")
     for ticker in stock:
