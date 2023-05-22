@@ -46,10 +46,9 @@ def run_migrations_offline():
 
     """
 
-    # if a database path was provided, override the one in alembic.ini
-    database = context.get_x_argument(as_dictionary=True).get('database')
     if database:
-        url = "sqlite:///%s" % database
+        = context.get_x_argument(as_dictionary=True).get('database'):
+        url = f"sqlite:///{database}"
     else:
         url = config.get_main_option("sqlalchemy.url")
 
@@ -71,10 +70,9 @@ def run_migrations_online():
     # get the alembic section of the config file
     ini_section = config.get_section(config.config_ini_section)
 
-    # if a database path was provided, override the one in alembic.ini
-    database = context.get_x_argument(as_dictionary=True).get('database')
     if database:
-        ini_section['sqlalchemy.url'] = "sqlite:///%s" % database
+        = context.get_x_argument(as_dictionary=True).get('database'):
+        ini_section['sqlalchemy.url'] = f"sqlite:///{database}"
     else:
         ini_section = config.get_section(config.config_ini_section)
 

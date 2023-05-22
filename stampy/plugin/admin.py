@@ -21,11 +21,10 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    triggers = ["^/admin"]
-    return triggers
+    return ["^/admin"]
 
 
-def run(message):  # do not edit this line
+def run(message):    # do not edit this line
     """
     Executes plugin
     :param message: message to run against
@@ -33,7 +32,7 @@ def run(message):  # do not edit this line
     """
     text = stampy.stampy.getmsgdetail(message)["text"]
     if text and stampy.stampy.is_owner_or_admin(message):
-        if text.split()[0].lower()[0:6] == "/admin":
+        if text.split()[0].lower()[:6] == "/admin":
             admincommands(message)
     return
 
@@ -89,8 +88,8 @@ def admincommands(message):
                     changenmastertoken(message=message)
                 elif word == "slave":
                     try:
-                        token = texto.split(' ')[3]
                         if token:
+                            = texto.split(' ')[3]:
                             chanlinkslave(message=message, token=token)
                     except:
                         pass
@@ -120,8 +119,8 @@ def changenmastertoken(message):
         if not stampy.plugin.config.config(key='link-master', default=False, gid=chat_id):
             charset = string.letters + string.digits
             size = 20
-            token = ''.join((random.choice(charset)) for x in range(size))
-            generatedtoken = "%s:%s" % (chat_id, token)
+            token = ''.join((random.choice(charset)) for _ in range(size))
+            generatedtoken = f"{chat_id}:{token}"
             stampy.plugin.config.setconfig(key='link-master', gid=chat_id,
                                            value=generatedtoken)
             logger.debug(msg=_L("Generated token %s for channel %s") % (token, chat_id))
@@ -205,21 +204,24 @@ def chanunlink(message):
 
     chat_id = msgdetail["chat_id"]
     message_id = msgdetail["message_id"]
-    masterid = stampy.plugin.config.config(key='link', default=False, gid=chat_id)
-
     if masterid:
-        # Delete link from slave
+        = stampy.plugin.config.config(
+            key='link', default=False, gid=chat_id
+        ):
+            # Delete link from slave
         stampy.plugin.config.deleteconfig(key='link', gid=chat_id)
 
         # Notify master channel of slave linked
-        text = _("Channel *%s* with name *%s* has been unlinked as *SLAVE*") % (chat_id, msgdetail['chat_name'])
+        text = _("Channel *%s* with name *%s* has been unlinked as *SLAVE*") % (
+            chat_id, msgdetail['chat_name'])
 
         stampy.stampy.sendmessage(chat_id=masterid, text=text,
                                   disable_web_page_preview=True,
                                   parse_mode="Markdown")
 
         # Notify slave of master linked
-        text = _("This channel has been unliked as *SLAVE* from *MASTER* channel *%s*") % masterid
+        text = _(
+            "This channel has been unliked as *SLAVE* from *MASTER* channel *%s*") % masterid
         text = text + _("\n\nChannel has also been enabled as running in "
                         "isolated mode, use ```/gconfig delete isolated``` to "
                         "revert back to global karma")
@@ -242,14 +244,16 @@ def chanshowslave(message):
 
     chat_id = msgdetail["chat_id"]
     message_id = msgdetail["message_id"]
-    masterid = stampy.plugin.config.config(key='link', default=False, gid=chat_id)
-
     if masterid:
-        # We've a master channel, report it
-        text = _("This channel %s is slave of channel %s") % (chat_id, masterid)
+        = stampy.plugin.config.config(
+            key='link', default=False, gid=chat_id
+        ):
+            # We've a master channel, report it
+        text = _("This channel %s is slave of channel %s") % (
+            chat_id, masterid)
     else:
         # We nee to check database to see if we've any slave
-        sql = "SELECT id from config where key='link' and value='%s'" % chat_id
+        sql = f"SELECT id from config where key='link' and value='{chat_id}'"
         cur = stampy.stampy.dbsql(sql=sql)
 
         text = _("Defined slaves:\n")

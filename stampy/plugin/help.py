@@ -18,19 +18,18 @@ def init():
     :return: List of triggers for plugin
     """
 
-    triggers = ["^/help"]
-    return triggers
+    return ["^/help"]
 
 
-def run(message):  # do not edit this line
+def run(message):    # do not edit this line
     """
     Executes plugin
     :param message: message to run against
     :return:
     """
-    text = stampy.stampy.getmsgdetail(message)["text"]
     if text:
-        if text.split()[0].lower()[0:5] == "/help":
+        = stampy.stampy.getmsgdetail(message)["text"]:
+        if text.split()[0].lower()[:5] == "/help":
             helpcommands(message=message)
     return
 
@@ -74,13 +73,11 @@ def helpcommands(message):
         chat_id = msgdetail['who_id']
         message_id = False
 
-    # Call plugins to process help messages
-    commandtext = ""
-
-    for i in stampy.stampy.plugs:
-        if i.__name__.split(".")[-1] != "help":
-            commandtext += i.help(message=message)
-
+    commandtext = "".join(
+        i.help(message=message)
+        for i in stampy.stampy.plugs
+        if i.__name__.split(".")[-1] != "help"
+    )
     for i in stampy.stampy.plugs:
         if i.__name__.split(".")[-1] == "help":
             commandtext += i.help(message=message)

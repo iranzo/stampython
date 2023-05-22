@@ -20,10 +20,19 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    triggers = ["^/kick", "^/kickban", "^/unban", "^/op", "^/deop",
-                "^/topic", "^/mute", "^/unmute", "^/opall", "^/deopall",
-                "^/whois"]
-    return triggers
+    return [
+        "^/kick",
+        "^/kickban",
+        "^/unban",
+        "^/op",
+        "^/deop",
+        "^/topic",
+        "^/mute",
+        "^/unmute",
+        "^/opall",
+        "^/deopall",
+        "^/whois",
+    ]
 
 
 def run(message):  # do not edit this line
@@ -297,7 +306,7 @@ def unban(chat_id=False, user_id=False):
         except:
             result = {'ok': False}
 
-        logger.debug(msg="RESULT: %s" % result)
+        logger.debug(msg=f"RESULT: {result}")
 
     if result['ok'] is True or result['ok'] == 'True':
         logger.info(msg=_L("User %s unbaned from %s") % (user_id, chat_id))
@@ -318,19 +327,23 @@ def op(chat_id=False, user_id=False, extra=""):
     result = {'ok': False}
 
     # Permissions as defined on API
-    permissions_base = ["can_change_info", "can_invite_users", "can_restrict_members", "can_promote_members"]
+    permissions_base = ["can_change_info", "can_invite_users",
+                        "can_restrict_members", "can_promote_members"]
     permissions_group = permissions_base[:]
     permissions_group.extend(["can_delete_messages"])
     permissions_channel = permissions_base[:]
-    permissions_channel.extend(["can_post_messages", "can_edit_messages", "can_delete_messages"])
+    permissions_channel.extend(
+        ["can_post_messages", "can_edit_messages", "can_delete_messages"])
     permissions_supergroup = permissions_base[:]
     permissions_supergroup.extend(["can_delete_messages", "can_pin_messages"])
 
-    type, id, name, date, count, memberid = stampy.plugin.stats.getstats(id=chat_id)
+    type, id, name, date, count, memberid = stampy.plugin.stats.getstats(
+        id=chat_id)
 
     if not type:
         # Use API call for getting chat type if not in database
-        url = "%s%s/getChat?chat_id=%s" % (stampy.plugin.config.config(key='url'), stampy.plugin.config.config(key='token'), chat_id)
+        url = "%s%s/getChat?chat_id=%s" % (stampy.plugin.config.config(
+            key='url'), stampy.plugin.config.config(key='token'), chat_id)
         try:
             result = json.load(urllib.urlopen(url))['result']['type']
 
@@ -360,13 +373,13 @@ def op(chat_id=False, user_id=False, extra=""):
             break
 
     # Enable all permissions for OP operations
-    if extra == "" or extra == "op":
+    if extra in ["", "op"]:
         value = True
     elif extra == "deop":
         value = False
     if chat_id and user_id:
         for item in permissions:
-            extra = "%s&%s=%s" % (extra, item, value)
+            extra = f"{extra}&{item}={value}"
         url = "%s%s/promoteChatMember?chat_id=%s&user_id=%s&%s" % (stampy.plugin.config.config(key='url'), stampy.plugin.config.config(key='token'), chat_id, user_id, extra)
 
         try:
@@ -430,7 +443,7 @@ def mute(chat_id=False, user_id=False, extra=""):
     permissions = ["can_send_messages", "can_send_media_messages", "can_send_other_messages", "can_add_web_page_previews"]
 
     # Enable all restrictions
-    if extra == "" or extra == "mute":
+    if extra in ["", "mute"]:
         value = False
     elif extra == "unmute":
         value = True
@@ -440,7 +453,7 @@ def mute(chat_id=False, user_id=False, extra=""):
     if chat_id and user_id:
         # Iterate over permissions to set new value
         for item in permissions:
-            extra = "%s&%s=%s" % (extra, item, value)
+            extra = f"{extra}&{item}={value}"
 
         # For permissions we must assign all of them in a row or it will
         # reset other settings

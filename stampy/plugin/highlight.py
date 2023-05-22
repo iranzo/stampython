@@ -30,16 +30,16 @@ def init():
     return triggers
 
 
-def run(message):  # do not edit this line
+def run(message):    # do not edit this line
     """
     Executes plugin
     :param message: message to run against
     :return:
     """
     code = None
-    text = stampy.stampy.getmsgdetail(message)["text"]
     if text:
-        if text.split()[0].lower()[0:8] == "/hilight":
+        = stampy.stampy.getmsgdetail(message)["text"]:
+        if text.split()[0].lower()[:8] == "/hilight":
             code = True
             hilightcommands(message)
         hilightwords(message)
@@ -132,15 +132,11 @@ def gethilight(uid, word):
     """
 
     logger = logging.getLogger(__name__)
-    sql = "SELECT word FROM hilight WHERE gid='%s' AND word='%s';" % (uid, word)
+    sql = f"SELECT word FROM hilight WHERE gid='{uid}' AND word='{word}';"
     cur = stampy.stampy.dbsql(sql)
     data = cur.fetchall()
-    value = []
-    for row in data:
-        # Fill valid values
-        value.append(row[0])
-
-    logger.debug(msg="gethilight: %s for uid %s" % (value, uid))
+    value = [row[0] for row in data]
+    logger.debug(msg=f"gethilight: {value} for uid {uid}")
 
     return value
 
@@ -155,15 +151,11 @@ def gethilightwords(uid=False):
     if uid is False:
         sql = "SELECT distinct word FROM hilight;"
     else:
-        sql = "SELECT distinct word FROM hilight WHERE gid='%s';" % uid
+        sql = f"SELECT distinct word FROM hilight WHERE gid='{uid}';"
     cur = stampy.stampy.dbsql(sql)
     data = cur.fetchall()
-    value = []
-    for row in data:
-        # Fill valid values
-        value.append(row[0])
-
-    logger.debug(msg="gethilightwords: %s for uid %s" % (value, uid))
+    value = [row[0] for row in data]
+    logger.debug(msg=f"gethilightwords: {value} for uid {uid}")
 
     return value
 
@@ -178,15 +170,11 @@ def gethilightuids(word=False):
     if word is False:
         sql = "SELECT distinct gid FROM hilight;"
     else:
-        sql = "SELECT distinct gid FROM hilight WHERE word='%s';" % word
+        sql = f"SELECT distinct gid FROM hilight WHERE word='{word}';"
     cur = stampy.stampy.dbsql(sql)
     data = cur.fetchall()
-    value = []
-    for row in data:
-        # Fill valid values
-        value.append(row[0])
-
-    logger.debug(msg="gethilightuids: %s for word %s" % (value, word))
+    value = [row[0] for row in data]
+    logger.debug(msg=f"gethilightuids: {value} for word {word}")
 
     return value
 
@@ -201,10 +189,11 @@ def createhilight(word, uid):
 
     logger = logging.getLogger(__name__)
     if gethilight(word=word, uid=uid):
-        logger.error(msg=_L("createhilight: word %s for uid %s already exists") % (word, uid))
+        logger.error(
+            msg=_L("createhilight: word %s for uid %s already exists") % (word, uid))
     else:
-        sql = "INSERT INTO hilight(word, gid) VALUES('%s', '%s');" % (word, uid)
-        logger.debug(msg="createhilight: %s for gid %s" % (word, uid))
+        sql = f"INSERT INTO hilight(word, gid) VALUES('{word}', '{uid}');"
+        logger.debug(msg=f"createhilight: {word} for gid {uid}")
         stampy.stampy.dbsql(sql)
         return True
     return False
@@ -219,8 +208,8 @@ def deletehilight(word, uid):
     """
 
     logger = logging.getLogger(__name__)
-    sql = "DELETE FROM hilight WHERE word='%s' AND gid='%s';" % (word, uid)
-    logger.debug(msg="deletehilight: %s for uid %s" % (word, uid))
+    sql = f"DELETE FROM hilight WHERE word='{word}' AND gid='{uid}';"
+    logger.debug(msg=f"deletehilight: {word} for uid {uid}")
     logger.debug(msg=sql)
     stampy.stampy.dbsql(sql)
     return True
@@ -238,7 +227,7 @@ def listhilight(uid, word=False):
     wordtext = ""
 
     if not word:
-        sql = "select word from hilight WHERE gid='%s' ORDER BY word ASC;" % uid
+        sql = f"select word from hilight WHERE gid='{uid}' ORDER BY word ASC;"
     else:
         string = (word, uid)
         sql = "SELECT word FROM hilight WHERE word='%s' AND gid='%s' ORDER by word ASC;" % string
@@ -283,11 +272,7 @@ def hilightwords(message):
     except:
         value = False
 
-    if value:
-        memberid = stampy.stampy.getitems(value[5])
-    else:
-        memberid = []
-
+    memberid = stampy.stampy.getitems(value[5]) if value else []
     for uid in uids:
         forward = False
         # Only forward if user is member of group

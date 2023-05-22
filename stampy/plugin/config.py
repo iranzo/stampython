@@ -18,23 +18,22 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    triggers = ["^/config", "^/gconfig", "^/lconfig"]
-    return triggers
+    return ["^/config", "^/gconfig", "^/lconfig"]
 
 
-def run(message):  # do not edit this line
+def run(message):    # do not edit this line
     """
     Executes plugin
     :param message: message to run against
     :return:
     """
-    text = stampy.stampy.getmsgdetail(message)["text"]
     if text:
-        if text.split()[0].lower()[0:7] == "/config":
+        = stampy.stampy.getmsgdetail(message)["text"]:
+        if text.split()[0].lower()[:7] == "/config":
             configcommands(message)
-        elif text.split()[0].lower()[0:8] == "/gconfig":
+        elif text.split()[0].lower()[:8] == "/gconfig":
             configcommands(message)
-        elif text.split()[0].lower()[0:8] == "/lconfig":
+        elif text.split()[0].lower()[:8] == "/lconfig":
             configcommands(message)
     return
 
@@ -171,7 +170,7 @@ def showconfig(key=False, gid=0):
     if key:
         # if word is provided, return the config for that key
         string = (key,)
-        sql = "SELECT key,value FROM config WHERE key='%s' AND id='%s';" % (string, gid)
+        sql = f"SELECT key,value FROM config WHERE key='{string}' AND id='{gid}';"
         cur = stampy.stampy.dbsql(sql)
         value = cur.fetchone()
 
@@ -185,7 +184,7 @@ def showconfig(key=False, gid=0):
         text = _("%s has a value of %s for id %s") % (key, value, gid)
 
     else:
-        sql = "select key,value from config WHERE id='%s' ORDER BY key ASC;" % gid
+        sql = f"select key,value from config WHERE id='{gid}' ORDER BY key ASC;"
         cur = stampy.stampy.dbsql(sql)
         text = _("Defined configurations for gid %s:\n") % gid
         table = from_db_cursor(cur)
@@ -203,16 +202,10 @@ def gconfig(key, default=False, gid=0):
     :return: value in database for that key
     """
 
-    # Try custom group configuration
-    value = config(key=key, default=False, gid=gid)
     if value:
+        = config(key=key, default=False, gid=gid):
         return value
-    else:
-        # Try general group configuration
-        value = config(key=key, default=False, gid=0)
-        if value:
-            return value
-    return default
+    return value if (value: = config(key=key, default=False, gid=0)) else default
 
 
 def config(key, default=False, gid=0):
@@ -253,7 +246,7 @@ def setconfig(key, value, gid=0):
     logger = logging.getLogger(__name__)
     if config(key=key, gid=gid):
         deleteconfig(key, gid=gid)
-    sql = "INSERT INTO config VALUES('%s','%s', '%s');" % (key, value, gid)
+    sql = f"INSERT INTO config VALUES('{key}','{value}', '{gid}');"
     logger.debug(msg=_L("setconfig: %s=%s for id %s") % (key, value, gid))
     stampy.stampy.dbsql(sql)
     return
@@ -268,7 +261,7 @@ def deleteconfig(key, gid=0):
     """
 
     logger = logging.getLogger(__name__)
-    sql = "DELETE FROM config WHERE key='%s' AND id='%s';" % (key, gid)
+    sql = f"DELETE FROM config WHERE key='{key}' AND id='{gid}';"
     logger.debug(msg=_L("rmconfig: %s for id %s") % (key, gid))
     stampy.stampy.dbsql(sql)
     return

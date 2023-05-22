@@ -36,7 +36,7 @@ def init():
         stampy.stampy.cronme(name="comic", interval=30)
 
     for comic in getcomics():
-        triggers.extend(["/%s" % comic])
+        triggers.extend([f"/{comic}"])
 
     return triggers
 
@@ -50,17 +50,16 @@ def cron():
     comics()
 
 
-def run(message):  # do not edit this line
+def run(message):    # do not edit this line
     """
     Executes plugin
     :param message: message to run against
     :return:
     """
-    code = None
-    text = stampy.stampy.getmsgdetail(message)["text"]
     if text:
+        = stampy.stampy.getmsgdetail(message)["text"]:
         comiccommands(message)
-    return code
+    return None
 
 
 def help(message):  # do not edit this line
@@ -143,11 +142,7 @@ def getcomics():
     sql = "SELECT distinct name FROM comic;"
     cur = stampy.stampy.dbsql(sql)
     data = cur.fetchall()
-    value = []
-    for row in data:
-        # Fill valid values
-        value.append(row[0])
-
+    value = [row[0] for row in data]
     logger.debug(msg=_L("getcomics: %s") % value)
 
     return value
@@ -187,12 +182,11 @@ def comics(message=False, name=False, all=False):
 
     date = datetime.datetime.now()
 
-    if name:
-        sql = "SELECT name,type,channelgid,lastchecked,url from comic WHERE " \
-              "name='%s';" % name
-    else:
-        sql = "SELECT name,type,channelgid,lastchecked,url from comic"
-
+    sql = (
+        f"SELECT name,type,channelgid,lastchecked,url from comic WHERE name='{name}';"
+        if name
+        else "SELECT name,type,channelgid,lastchecked,url from comic"
+    )
     if message:
         msgdetail = stampy.stampy.getmsgdetail(message)
         message_id = msgdetail["message_id"]
@@ -205,11 +199,7 @@ def comics(message=False, name=False, all=False):
     gidstoping = []
     for row in cur:
         (name, tipo, channelgid, lastchecked, url) = row
-        if message:
-            chat_id = msgdetail["chat_id"]
-        else:
-            chat_id = channelgid
-
+        chat_id = msgdetail["chat_id"] if message else channelgid
         if all:
             datelast = datetime.datetime(year=1981, month=1, day=24)
         else:
@@ -269,7 +259,7 @@ def comics(message=False, name=False, all=False):
         # Update comics with results so they are not shown next time
         for comic in stampy.stampy.getitems(comicsupdated):
             # Update date in SQL so it's not invoked again
-            sql = "UPDATE comic SET lastchecked='%s' where name='%s'" % (datefor, comic)
+            sql = f"UPDATE comic SET lastchecked='{datefor}' where name='{comic}'"
             logger.debug(msg=_L("Updating last checked as per %s") % sql)
             stampy.stampy.dbsql(sql=sql)
 
@@ -326,7 +316,7 @@ def comicfromurl(name, forceurl=False):
 
     logger = logging.getLogger(__name__)
 
-    sql = "SELECT url, imgxpath, txtxpath from comic WHERE name='%s';" % name
+    sql = f"SELECT url, imgxpath, txtxpath from comic WHERE name='{name}';"
     cur = stampy.stampy.dbsql(sql)
 
     date = datetime.datetime.now()
@@ -346,7 +336,7 @@ def comicfromurl(name, forceurl=False):
         items = ['year', 'month', 'day']
         for item in items:
             if item in url:
-                url = url.replace('#%s#' % item, '%02d', 1)
+                url = url.replace(f'#{item}#', '%02d', 1)
                 if item == 'year':
                     url = url % year
                 elif item == 'month':
@@ -366,7 +356,7 @@ def comicfromurl(name, forceurl=False):
         tree = html.fromstring(page.content)
         if imgxpath and imgxpath != 'False':
             try:
-                imgsrc = tree.xpath('%s' % imgxpath)[0]
+                imgsrc = tree.xpath(f'{imgxpath}')[0]
             except:
                 imgsrc = False
         else:
@@ -374,15 +364,15 @@ def comicfromurl(name, forceurl=False):
 
         if txtxpath and txtxpath != 'False':
             try:
-                imgtxt = tree.xpath('%s' % txtxpath)[0]
+                imgtxt = tree.xpath(f'{txtxpath}')[0]
             except:
                 imgtxt = False
         else:
-            imgtxt = "%s: %s/%s/%s" % (name, year, month, day)
+            imgtxt = f"{name}: {year}/{month}/{day}"
 
         if imgsrc:
-            if imgsrc[0:2] == "//":
-                imgsrc = 'http:' + imgsrc
+            if imgsrc[:2] == "//":
+                imgsrc = f'http:{imgsrc}'
 
             elif imgsrc[0] == "/":
                 # imgsrc is relative, prepend url

@@ -22,11 +22,10 @@ def init():
     stampy.plugin.config.deleteconfig(key='overridegid', gid='0')
     stampy.plugin.config.deleteconfig(key='sudo', gid='0')
 
-    triggers = ["^/sudo"]
-    return triggers
+    return ["^/sudo"]
 
 
-def run(message):  # do not edit this line
+def run(message):    # do not edit this line
     """
     Executes plugin
     :param message: message to run against
@@ -34,9 +33,9 @@ def run(message):  # do not edit this line
     """
     logger = logging.getLogger(__name__)
     logger.debug(msg=_L("Processing plugin: Code: %s") % __file__)
-    text = stampy.stampy.getmsgdetail(message)["text"]
     if text:
-        if text.split()[0].lower()[0:6] == "/sudo":
+        = stampy.stampy.getmsgdetail(message)["text"]:
+        if text.split()[0].lower()[:6] == "/sudo":
             sudocommands(message)
     return
 
@@ -98,31 +97,35 @@ def sudocommands(message):
                                                   reply_to_message_id=message_id,
                                                   disable_web_page_preview=True,
                                                   parse_mode="Markdown")
-                        if value != "":
-                            stampy.plugin.config.setconfig(key='sudo', value=value, gid=0)
+                        if value == "":
+                            stampy.plugin.config.deleteconfig(
+                                key='sudo', gid=0)
                         else:
-                            stampy.plugin.config.deleteconfig(key='sudo', gid=0)
-                else:
-                    if stampy.plugin.config.config(key='sudo'):
-                        # "=" was not in first command, so consider a command to use as 'sudo'
+                            stampy.plugin.config.setconfig(
+                                key='sudo', value=value, gid=0)
+                elif stampy.plugin.config.config(key='sudo'):
+                    # "=" was not in first command, so consider a command to use as 'sudo'
 
-                        # It is a new list, with unique message, so we can alter it
-                        stampy.plugin.config.setconfig(key='overridegid', gid=0, value=message['message']['chat']['id'])
-                        newmessage = dict(message)
+                    # It is a new list, with unique message, so we can alter it
+                    stampy.plugin.config.setconfig(
+                        key='overridegid', gid=0, value=message['message']['chat']['id'])
+                    newmessage = dict(message)
 
-                        # Alter chat ID
-                        newmessage['message']['chat']['id'] = int(stampy.plugin.config.config(key='sudo'))
+                    # Alter chat ID
+                    newmessage['message']['chat']['id'] = int(
+                        stampy.plugin.config.config(key='sudo'))
 
-                        # Alter message text
-                        type = msgdetail["type"]
-                        newmessage[type]['text'] = newmessage[type]['text'][6:]
+                    # Alter message text
+                    type = msgdetail["type"]
+                    newmessage[type]['text'] = newmessage[type]['text'][6:]
 
-                        # Alter who_id and who_un
-                        newmessage[type]['from']['id'] = int(stampy.plugin.config.config(key='sudo'))
+                    # Alter who_id and who_un
+                    newmessage[type]['from']['id'] = int(
+                        stampy.plugin.config.config(key='sudo'))
 
-                        newmessages = []
-                        newmessages.append(newmessage)
-                        # Process the new mangled message as if it was sent to a telegram chat
-                        stampy.stampy.process(messages=newmessages)
-                        stampy.plugin.config.deleteconfig(key='overridegid', gid='0')
+                    newmessages = [newmessage]
+                    # Process the new mangled message as if it was sent to a telegram chat
+                    stampy.stampy.process(messages=newmessages)
+                    stampy.plugin.config.deleteconfig(
+                        key='overridegid', gid='0')
     return

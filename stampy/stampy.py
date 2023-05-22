@@ -108,8 +108,11 @@ def createorupdatedb():
 
     import alembic.config
     alembicArgs = [
-        '-x', 'database=%s' % options.database, '--raiseerr',
-        'upgrade', 'head',
+        '-x',
+        f'database={options.database}',
+        '--raiseerr',
+        'upgrade',
+        'head',
     ]
 
     logger.debug(msg=_L("Using alembic to upgrade/create database to expected revision"))
@@ -191,14 +194,10 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
     maxlines = 15
     if len(lines) > maxlines:
         # message might be too big for single message (max 4K)
-        if "```" in text:
-            markdown = True
-        else:
-            markdown = False
-
-        texto = string.join(lines[0:maxlines], "\n")
+        markdown = "```" in text
+        texto = string.join(lines[:maxlines], "\n")
         if markdown:
-            texto = "%s```" % texto
+            texto = f"{texto}```"
 
         # Send first batch
         sendmessage(chat_id=chat_id, text=texto,
@@ -208,29 +207,29 @@ def sendmessage(chat_id=0, text="", reply_to_message_id=False,
         # Send remaining batch
         texto = string.join(lines[maxlines:], "\n")
         if markdown:
-            texto = "```%s" % texto
+            texto = f"```{texto}"
         sendmessage(chat_id=chat_id, text=texto, reply_to_message_id=False,
                     disable_web_page_preview=disable_web_page_preview,
                     parse_mode=parse_mode, extra=extra)
         return
 
-    overridegid = plugin.config.config(key='overridegid', gid=0,
-                                       default=False)
     if overridegid:
+        = plugin.config.config(
+            key='overridegid', gid=0, default=False
+        ):
         chat_id = overridegid
 
-    message = "%s?chat_id=%s&text=%s" % (
-              url, chat_id, urllib.quote_plus(text.encode('utf-8')))
+    message = f"{url}?chat_id={chat_id}&text={urllib.quote_plus(text.encode('utf-8'))}"
     if reply_to_message_id:
-        message += "&reply_to_message_id=%s" % reply_to_message_id
+        message += f"&reply_to_message_id={reply_to_message_id}"
     if disable_web_page_preview:
         message += "&disable_web_page_preview=1"
     else:
         message += "&disable_web_page_preview=0"
     if parse_mode:
-        message += "&parse_mode=%s" % parse_mode
+        message += f"&parse_mode={parse_mode}"
     if extra:
-        message += "&%s" % extra
+        message += f"&{extra}"
 
     code = False
     attempt = 0
@@ -321,7 +320,7 @@ def deletemessage(chat_id=0, message_id=False):
 
     logger = logging.getLogger(__name__)
     url = "%s%s/deleteMessage" % (plugin.config.config(key="url"), plugin.config.config(key='token'))
-    message = "%s?chat_id=%s&message_id=%s" % (url, chat_id, message_id)
+    message = f"{url}?chat_id={chat_id}&message_id={message_id}"
 
     code = False
     attempt = 0
@@ -377,10 +376,10 @@ def getupdates(offset=0, limit=100):
     logger = logging.getLogger(__name__)
     url = "%s%s/getUpdates" % (plugin.config.config(key='url'),
                                plugin.config.config(key='token'))
-    message = "%s?" % url
+    message = f"{url}?"
     if offset != 0:
-        message += "offset=%s&" % offset
-    message += "limit=%s" % limit
+        message += f"offset={offset}&"
+    message += f"limit={limit}"
     try:
         result = json.load(urllib.urlopen(message))['result']
     except:
@@ -402,7 +401,7 @@ def getme():
 
         url = "%s%s/getMe" % (plugin.config.config(key='url'),
                               plugin.config.config(key='token'))
-        message = "%s" % url
+        message = f"{url}"
         try:
             result = json.load(urllib.urlopen(message))['result']['username']
         except:
@@ -426,8 +425,8 @@ def clearupdates(offset):
 
     logger = logging.getLogger(__name__)
     url = "%s%s/getUpdates" % (plugin.config.config(key='url'), plugin.config.config(key='token'))
-    message = "%s?" % url
-    message += "offset=%s&" % offset
+    message = f"{url}?"
+    message += f"offset={offset}&"
     try:
         result = json.load(urllib.urlopen(message))
     except:
@@ -448,10 +447,10 @@ def sendsticker(chat_id=0, sticker="", text="", reply_to_message_id=""):
 
     logger = logging.getLogger(__name__)
     url = "%s%s/sendSticker" % (plugin.config.config(key='url'), plugin.config.config(key='token'))
-    message = "%s?chat_id=%s" % (url, chat_id)
-    message = "%s&sticker=%s" % (message, sticker)
+    message = f"{url}?chat_id={chat_id}"
+    message = f"{message}&sticker={sticker}"
     if reply_to_message_id:
-        message += "&reply_to_message_id=%s" % reply_to_message_id
+        message += f"&reply_to_message_id={reply_to_message_id}"
     logger.debug(msg=_L("Sending sticker: %s") % text)
 
     # It this is executed as per unit testing, skip sending message
@@ -633,19 +632,29 @@ def getmsgdetail(message):
     except:
         who_un = ""
 
-    name = "%s %s (@%s)" % (who_gn, who_ln, who_un)
+    name = f"{who_gn} {who_ln} (@{who_un})"
     while "  " in name:
         name = name.replace("  ", " ")
 
-    # args = ('name', 'chat_id', 'chat_name', 'date', 'datefor', 'error', 'message_id',
-    #         'text', 'update_id', 'who_gn', 'who_id', 'who_ln', 'who_un')
-    # vals = dict((k, v) for (k, v) in locals().iteritems() if k in args)
-
-    vals = {"name": name, "chat_id": chat_id, "chat_name": chat_name, "date": date, "datefor": datefor, "error": error,
-            "message_id": message_id, "text": text, "update_id": update_id, "who_gn": who_gn, "who_id": who_id,
-            "who_ln": who_ln, "who_un": who_un, "type": type, "replyto": replyto, "replytotext": replytotext, "chat_type": chat_type}
-
-    return vals
+    return {
+        "name": name,
+        "chat_id": chat_id,
+        "chat_name": chat_name,
+        "date": date,
+        "datefor": datefor,
+        "error": error,
+        "message_id": message_id,
+        "text": text,
+        "update_id": update_id,
+        "who_gn": who_gn,
+        "who_id": who_id,
+        "who_ln": who_ln,
+        "who_un": who_un,
+        "type": type,
+        "replyto": replyto,
+        "replytotext": replytotext,
+        "chat_type": chat_type,
+    }
 
 
 def process(messages):
@@ -680,7 +689,8 @@ def process(messages):
         botname = getme()
 
         # Write the line for debug
-        messageline = _L("TEXT: %s : %s : %s") % (msgdetail["chat_name"], msgdetail["name"], msgdetail["text"])
+        messageline = _L("TEXT: %s : %s : %s") % (
+            msgdetail["chat_name"], msgdetail["name"], msgdetail["text"])
         logger.debug(msg=messageline)
 
         # Process group configuration for language
@@ -688,7 +698,7 @@ def process(messages):
         chlang(lang=plugin.config.gconfig(key='language', gid=chat_id))
 
         try:
-            command = msgdetail["text"].split()[0].lower().replace('@%s' % botname, '')
+            command = msgdetail["text"].split()[0].lower().replace(f'@{botname}', '')
             texto = msgdetail["text"].lower()
             date = msgdetail["datefor"]
         except:
@@ -699,19 +709,15 @@ def process(messages):
         for i in plugs:
             name = i.__name__.split(".")[-1]
 
-            runplugin = False
-            for trigger in plugtriggers[name]:
-                if "*" in trigger:
-                    runplugin = True
-                    break
-                elif trigger[0] == "^":
-                    if command == trigger[1:]:
-                        runplugin = True
-                        break
-                elif trigger in texto:
-                    runplugin = True
-                    break
-
+            runplugin = any(
+                "*" not in trigger
+                and trigger[0] == "^"
+                and command == trigger[1:]
+                or "*" in trigger
+                or trigger[0] != "^"
+                and trigger in texto
+                for trigger in plugtriggers[name]
+            )
             code = False
             if runplugin:
                 logger.debug(msg=_L("Processing plugin: %s") % name)
@@ -784,7 +790,7 @@ def shouldrun(name):
     :return: Bool
     """
 
-    sql = "SELECT name,lastchecked,interval from cron where name='%s'" % name
+    sql = f"SELECT name,lastchecked,interval from cron where name='{name}'"
     cur = dbsql(sql)
 
     date = utize(datetime.datetime.now())
@@ -820,14 +826,10 @@ def shouldrun(name):
         # If more time has passed since last check than the interval for
         # checks, run the check
 
-        if timediff < interval:
-            code = False
-        else:
-            code = True
-
+        code = timediff >= interval
     # Update db with results
     if code:
-        sql = "UPDATE cron SET lastchecked='%s' where name='%s'" % (datefor, name)
+        sql = f"UPDATE cron SET lastchecked='{datefor}' where name='{name}'"
         logger.debug(msg=_L("Updating last checked as per %s") % sql)
         dbsql(sql=sql)
     return code
@@ -842,9 +844,9 @@ def cronme(name=False, interval=5):
     """
 
     if name:
-        sql = "DELETE from cron WHERE name='%s'" % name
+        sql = f"DELETE from cron WHERE name='{name}'"
         dbsql(sql=sql)
-        sql = "INSERT INTO cron(name,interval) VALUES('%s', '%s')" % (name, interval)
+        sql = f"INSERT INTO cron(name,interval) VALUES('{name}', '{interval}')"
         dbsql(sql=sql)
 
 
@@ -884,12 +886,11 @@ def is_owner(message):
     """
 
     logger = logging.getLogger(__name__)
-    code = False
     msgdetail = getmsgdetail(message)
-    for each in plugin.config.config(key='owner').split(" "):
-        if each == msgdetail["who_un"]:
-            code = True
-    return code
+    return any(
+        each == msgdetail["who_un"]
+        for each in plugin.config.config(key='owner').split(" ")
+    )
 
 
 def is_owner_or_admin(message, strict=False):
@@ -924,10 +925,10 @@ def is_owner_or_admin(message, strict=False):
                     admin = True
                     logger.debug(msg=_L("We're admin of public chat"))
 
-            # If we're not admin and admin is empty, consider ourselves admin
-            if not admin:
-                if plugin.config.config(key='admin', gid=chat_id, default="") == "":
-                    logger.debug(msg=_L("We're admin because no admin listed on public chat"))
+            if plugin.config.config(key='admin', gid=chat_id, default="") == "":
+                if not admin:
+                    logger.debug(
+                        msg=_L("We're admin because no admin listed on public chat"))
                     admin = True
 
     return owner or admin
@@ -940,21 +941,16 @@ def geteffectivegid(gid):
     :return: gid to use
     """
 
-    if plugin.config.gconfig(key='isolated', default=False, gid=gid):
-        # Isolated is defined for either channel or general bot config.
-        # need to check now if group is linked and if so, return that gid,
-        # and if not, return groupid
-
-        link = plugin.config.gconfig(key='link', default=False, gid=gid)
-        if link:
-            # This chat_id has 'link' defined against master, effective gid
-            # should be that one
-            return int(link)
-        else:
-            return gid
-    else:
+    if not plugin.config.gconfig(key='isolated', default=False, gid=gid):
         # Non isolation configured, returning '0' as gid to use
         return 0
+    if link:
+        = plugin.config.gconfig(key='link', default=False, gid=gid):
+            # This chat_id has 'link' defined against master, effective gid
+            # should be that one
+        return int(link)
+    else:
+        return gid
 
 
 def loglevel():
