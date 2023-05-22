@@ -19,34 +19,30 @@ def init():
     :return: List of triggers for plugin
     """
 
-    triggers = ["^/info"]
-    return triggers
+    return ["^/info"]
 
 
-def run(message):  # do not edit this line
+def run(message):    # do not edit this line
     """
     Executes plugin
     :param message: message to run against
     :return:
     """
     msgdetail = stampy.stampy.getmsgdetail(message)
-    text = msgdetail["text"]
-
-    if text:
-        if text.split()[0].lower()[0:5] == "/info":
+    if text := msgdetail["text"]:
+        if text.split()[0].lower()[:5] == "/info":
             info(message)
     return
 
 
-def help(message):  # do not edit this line
+def help(message):    # do not edit this line
     """
     Returns help for plugin
     :param message: message to process
     :return: help text
     """
 
-    commandtext = _("Use `/info` to return information about the current message\n\n")
-    return commandtext
+    return _("Use `/info` to return information about the current message\n\n")
 
 
 def info(message):

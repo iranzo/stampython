@@ -24,11 +24,9 @@ def init():
     :return: List of triggers for plugin
     """
 
-    triggers = ["@all", "^/stats", "*", "^/getout"]
-
     stampy.stampy.cronme(name="stats", interval=24 * 60)
 
-    return triggers
+    return ["@all", "^/stats", "*", "^/getout"]
 
 
 def cron():
@@ -41,7 +39,7 @@ def cron():
     dousercleanup()
 
 
-def run(message):  # do not edit this line
+def run(message):    # do not edit this line
     """
     Executes plugin
     :param message: message to run against
@@ -67,9 +65,9 @@ def run(message):  # do not edit this line
                         memberid=msgdetail["chat_id"])
 
     if text:
-        if text.split()[0].lower()[0:6] == "/stats":
+        if text.split()[0].lower()[:6] == "/stats":
             statscommands(message)
-        elif text.split()[0].lower()[0:7] == "/getout":
+        elif text.split()[0].lower()[:7] == "/getout":
             getoutcommands(message)
 
     if "@all" in text:
@@ -249,19 +247,19 @@ def showstats(type=False, name=None, key="name"):
     """
     logger = logging.getLogger(__name__)
     if type:
-        sql = "select type,id,name,date,count from stats WHERE type='%s'" % type
+        sql = f"select type,id,name,date,count from stats WHERE type='{type}'"
 
         if name:
-            string = "%" + "%s" % name + "%"
-            sql = sql + " and " + key + "like '%s'" % string
+            string = f"%{name}%"
+            sql = f"{sql} and {key}" + f"like '{string}'"
     else:
         sql = "select type,id,name,date,count from stats"
 
         if name:
-            string = "%" + "%s" % name + "%"
-            sql = sql + " WHERE " + key + " like '%s'" % string
+            string = f"%{name}%"
+            sql = f"{sql} WHERE {key}" + f" like '{string}'"
 
-    sql = sql + " ORDER BY count DESC LIMIT 10"
+    sql = f"{sql} ORDER BY count DESC LIMIT 10"
 
     cur = stampy.stampy.dbsql(sql)
     table = from_db_cursor(cur)
@@ -293,11 +291,7 @@ def updatestats(type=False, id=0, name=False, date=False, memberid=None):
         value = False
         count = 0
 
-    if value:
-        newmemberid = value[5]
-    else:
-        newmemberid = []
-
+    newmemberid = value[5] if value else []
     # Only add the id if it was not already stored
     if memberid not in newmemberid:
         if memberid is list:
@@ -318,10 +312,10 @@ def updatestats(type=False, id=0, name=False, date=False, memberid=None):
     if [] in newmemberid:
         newmemberid.remove([])
 
-    sql = "DELETE from stats where id='%s'" % id
+    sql = f"DELETE from stats where id='{id}'"
     stampy.stampy.dbsql(sql)
 
-    sql = "INSERT INTO stats(type, id, name, date, count, memberid) VALUES('%s', '%s', '%s', '%s', '%s', '%s');" % (type, id, name, date, count, json.dumps(newmemberid))
+    sql = f"INSERT INTO stats(type, id, name, date, count, memberid) VALUES('{type}', '{id}', '{name}', '{date}', '{count}', '{json.dumps(newmemberid)}');"
 
     logger.debug(msg=_L("values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid: %s") % (type, id, name, date, count, newmemberid))
 
@@ -355,11 +349,7 @@ def remove_from_memberid(type=False, id=0, name=False, date=False, memberid=None
         value = False
         count = 0
 
-    if value:
-        newmemberid = value[5]
-    else:
-        newmemberid = []
-
+    newmemberid = value[5] if value else []
     # Only add the id if it was not already stored
     if memberid in newmemberid:
         newmemberid.remove(memberid)
@@ -377,10 +367,10 @@ def remove_from_memberid(type=False, id=0, name=False, date=False, memberid=None
     if [] in newmemberid:
         newmemberid.remove([])
 
-    sql = "DELETE from stats where id='%s'" % id
+    sql = f"DELETE from stats where id='{id}'"
     stampy.stampy.dbsql(sql)
 
-    sql = "INSERT INTO stats(type, id, name, date, count, memberid) VALUES('%s', '%s', '%s', '%s', '%s', '%s');" % (type, id, name, date, count, json.dumps(newmemberid))
+    sql = f"INSERT INTO stats(type, id, name, date, count, memberid) VALUES('{type}', '{id}', '{name}', '{date}', '{count}', '{json.dumps(newmemberid)}');"
 
     logger.debug(msg=_L("values: type:%s, id:%s, name:%s, date:%s, count:%s, memberid: %s") % (type, id, name, date, count, newmemberid))
 
@@ -441,7 +431,7 @@ def dochatcleanup(chat_id=False, maxage=False):
     logger = logging.getLogger(__name__)
 
     if chat_id:
-        sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type <> 'private' and id=%s" % chat_id
+        sql = f"SELECT type,id,name,date,count,memberid FROM stats WHERE type <> 'private' and id={chat_id}"
     else:
         sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type <> 'private'"
 
@@ -483,17 +473,12 @@ def dochatcleanup(chat_id=False, maxage=False):
             newmaster = 0
             maxmembers = 0
 
-            sql = "SELECT id from config WHERE key='link' and value='%s'" % chatid
+            sql = f"SELECT id from config WHERE key='link' and value='{chatid}'"
             cur = stampy.stampy.dbsql(sql)
 
             for row in cur.fetchall():
                 id = row[0]
-                value = getstats(id=id)
-                if value:
-                    newmemberid = value[5]
-                else:
-                    newmemberid = []
-
+                newmemberid = value[5] if (value := getstats(id=id)) else []
                 if len(newmemberid) > maxmembers:
                     maxmembers = len(newmemberid)
                     newmaster = id
@@ -501,7 +486,7 @@ def dochatcleanup(chat_id=False, maxage=False):
             if newmaster != 0:
                 logger.debug(msg=_L("The removed channel (%s) was master for others, electing new master: %s") % (chatid, newmaster))
                 # Update slaves to new master
-                sql = "UPDATE config SET value='%s' WHERE key='link' and value='%s'" % (newmaster, chatid)
+                sql = f"UPDATE config SET value='{newmaster}' WHERE key='link' and value='{chatid}'"
                 cur = stampy.stampy.dbsql(sql)
 
                 migratechats(oldchat=chat_id, newchat=newmaster, includeall=False)
@@ -512,17 +497,17 @@ def dochatcleanup(chat_id=False, maxage=False):
             # Two different names because of historical reasons
             for table in ['config', 'stats']:
                 # Remove channel stats
-                sql = "DELETE from %s where id='%s';" % (table, chatid)
+                sql = f"DELETE from {table} where id='{chatid}';"
                 cur = stampy.stampy.dbsql(sql)
 
             for table in ['karma', 'quote', 'autokarma', 'alias', 'feeds']:
                 # Remove channel stats
-                sql = "DELETE from %s where gid='%s';" % (table, chatid)
+                sql = f"DELETE from {table} where gid='{chatid}';"
                 cur = stampy.stampy.dbsql(sql)
 
             # Remove users membership that had that channel id
-            string = "%" + "%s" % chatid + "%"
-            sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type='user' and memberid LIKE '%s';" % string
+            string = f"%{chatid}%"
+            sql = f"SELECT type,id,name,date,count,memberid FROM stats WHERE type='user' and memberid LIKE '{string}';"
             cur = stampy.stampy.dbsql(sql)
 
             for line in cur:
@@ -550,25 +535,24 @@ def migratechats(oldchat, newchat, includeall=True):
     # move data from old master to new one (except stats and config)
     logger.debug(msg=_L("Migrating chat id: %s to %s") % (oldchat, newchat))
     for table in ['karma', 'quote', 'autokarma', 'alias', 'feeds']:
-        sql = "UPDATE %s SET gid='%s' where gid='%s';" % (table, newchat, oldchat)
+        sql = f"UPDATE {table} SET gid='{newchat}' where gid='{oldchat}';"
         stampy.stampy.dbsql(sql)
 
     if includeall:
         for table in ['config', 'stats']:
-            sql = "UPDATE %s SET id='%s' where id='%s';" % (table, newchat, oldchat)
+            sql = f"UPDATE {table} SET id='{newchat}' where id='{oldchat}';"
             stampy.stampy.dbsql(sql)
 
         # Migrate forward data
-        sql = "UPDATE forward SET source='%s' where source='%s';" % (newchat, oldchat)
+        sql = f"UPDATE forward SET source='{newchat}' where source='{oldchat}';"
         stampy.stampy.dbsql(sql)
-        sql = "UPDATE forward SET target='%s' where target='%s';" % (newchat, oldchat)
-        stampy.stampy.dbsql(sql)
+        sql = f"UPDATE forward SET target='{newchat}' where target='{oldchat}';"
     else:
         # Delete forwards not migrated
-        sql = "DELETE FROM forward WHERE source='%s';" % oldchat
+        sql = f"DELETE FROM forward WHERE source='{oldchat}';"
         stampy.stampy.dbsql(sql)
-        sql = "DELETE FROM forward WHERE target='%s';" % oldchat
-        stampy.stampy.dbsql(sql)
+        sql = f"DELETE FROM forward WHERE target='{oldchat}';"
+    stampy.stampy.dbsql(sql)
     return
 
 
@@ -582,7 +566,7 @@ def dousercleanup(user_id=False, maxage=int(stampy.plugin.config.config("maxage"
     logger = logging.getLogger(__name__)
 
     if user_id:
-        sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type='user' and id=%s" % user_id
+        sql = f"SELECT type,id,name,date,count,memberid FROM stats WHERE type='user' and id={user_id}"
     else:
         sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE type='user'"
 
@@ -610,11 +594,11 @@ def dousercleanup(user_id=False, maxage=int(stampy.plugin.config.config("maxage"
                 userid, name, (now - chatdate).days))
 
             # Remove channel stats
-            sql = "DELETE from stats where id='%s';" % userid
+            sql = f"DELETE from stats where id='{userid}';"
             cur = stampy.stampy.dbsql(sql)
 
             # Remove hilights
-            sql = "DELETE from hilight where gid='%s';" % userid
+            sql = f"DELETE from hilight where gid='{userid}';"
             cur = stampy.stampy.dbsql(sql)
 
             # Remove users membership that had that channel id
@@ -636,8 +620,8 @@ def dousercleanup(user_id=False, maxage=int(stampy.plugin.config.config("maxage"
                         username = each[1:-1]
             if username and username != "@":
                 # userid to remove has username, check admins on config and remove
-                string = "%" + username + "%"
-                sql = "SELECT id, value FROM config WHERE value like %s" % string
+                string = f"%{username}%"
+                sql = f"SELECT id, value FROM config WHERE value like {string}"
 
                 cur = stampy.stampy.dbsql(sql)
 
@@ -648,9 +632,7 @@ def dousercleanup(user_id=False, maxage=int(stampy.plugin.config.config("maxage"
                         admins.remove(username)
                     except:
                         pass
-                    newadmin = " ".join(admins)
-
-                    if len(newadmin) != 0:
+                    if newadmin := " ".join(admins):
                         stampy.plugin.config.setconfig(key='admin',
                                                        value=newadmin, gid=id)
                     else:
@@ -671,9 +653,9 @@ def getstats(type=False, id=0, name=False, date=False, count=0):
     """
 
     logger = logging.getLogger(__name__)
-    sql = "SELECT type,id,name,date,count,memberid FROM stats WHERE id='%s'" % id
+    sql = f"SELECT type,id,name,date,count,memberid FROM stats WHERE id='{id}'"
     if type:
-        sql = "%s%s" % (sql, " AND type='%s';" % type)
+        sql = f"{sql} AND type='{type}';"
     cur = stampy.stampy.dbsql(sql)
     try:
         value = cur.fetchone()
@@ -727,11 +709,8 @@ def getall(message):
                 all.append(username)
 
         if "@all++" in texto:
-            text = ""
-            newall = []
-            for each in all:
-                newall.append("%s++" % each)
-            text += " ".join(newall)
+            newall = [f"{each}++" for each in all]
+            text = "" + " ".join(newall)
             msgdetail["text"] = text
             if newall and text:
                 stampy.plugin.karma.karmaprocess(msgdetail)
@@ -764,24 +743,19 @@ def pingchat(chatid):
 
 def idfromuser(idorname=False, chat_id=False):
     logger = logging.getLogger(__name__)
-    string = "%" + "%s" % idorname + "%"
-    sql = "select id,name from stats where (name like '%s' or id like '%s')" % (string, string)
+    string = f"%{idorname}%"
+    sql = f"select id,name from stats where (name like '{string}' or id like '{string}')"
 
     if chat_id:
-        string = "%" + "%s" % chat_id + "%"
-        sql = sql + " and memberid like '%s'" % string
+        string = f"%{chat_id}%"
+        sql = f"{sql} and memberid like '{string}'"
 
-    sql = sql + ";"
+    sql = f"{sql};"
 
     # Find user ID provided in database for current channel
 
     cur = stampy.stampy.dbsql(sql)
-    results = []
-
-    for row in cur:
-        # Process each word returned
-        results.append({"id": row[0], "name": row[1]})
-
+    results = [{"id": row[0], "name": row[1]} for row in cur]
     logger.debug(msg=_L("Found users with id(%s)/chat(%s): %s") % (idorname, chat_id, results))
 
     return results

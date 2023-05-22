@@ -23,38 +23,35 @@ def init():
     :return: List of triggers for plugin
     """
 
-    triggers = ["^/uptime"]
-
     # Store initialization time as 'bot start time'
     date = stampy.stampy.utize(datetime.datetime.now())
     stampy.plugin.config.setconfig(key='uptime', gid=0, value=date)
-    return triggers
+    return ["^/uptime"]
 
 
-def run(message):  # do not edit this line
+def run(message):    # do not edit this line
     """
     Executes plugin
     :param message: message to run against
     :return:
     """
     msgdetail = stampy.stampy.getmsgdetail(message)
-    text = msgdetail["text"]
-
-    if text:
-        if text.split()[0].lower()[0:7] == "/uptime":
+    if text := msgdetail["text"]:
+        if text.split()[0].lower()[:7] == "/uptime":
             uptime(message)
     return
 
 
-def help(message):  # do not edit this line
+def help(message):    # do not edit this line
     """
     Returns help for plugin
     :param message: message to process
     :return: help text
     """
 
-    commandtext = _("Use `/uptime` to return information about running time of the bot\n\n")
-    return commandtext
+    return _(
+        "Use `/uptime` to return information about running time of the bot\n\n"
+    )
 
 
 def uptime(message):

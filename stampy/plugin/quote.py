@@ -19,19 +19,17 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    triggers = ["^/quote"]
-    return triggers
+    return ["^/quote"]
 
 
-def run(message):  # do not edit this line
+def run(message):    # do not edit this line
     """
     Executes plugin
     :param message: message to run against
     :return:
     """
-    text = stampy.stampy.getmsgdetail(message)["text"]
-    if text:
-        if text.split()[0].lower()[0:6] == "/quote":
+    if text := stampy.stampy.getmsgdetail(message)["text"]:
+        if text.split()[0].lower()[:6] == "/quote":
             quotecommands(message)
     return
 
@@ -64,7 +62,7 @@ def quotecommands(message):
     who_un = msgdetail["who_un"]
 
     logger = logging.getLogger(__name__)
-    logger.debug(msg="Command: %s by %s" % (texto, who_un))
+    logger.debug(msg=f"Command: {texto} by {who_un}")
 
     # We might be have been given no command, just /quote
     try:
@@ -116,13 +114,9 @@ def quotecommands(message):
             try:
                 (quoteid, username, date, quote) = getquote(username=nick, gid=stampy.stampy.geteffectivegid(gid=chat_id))
                 datefor = datetime.datetime.fromtimestamp(float(date)).strftime('%Y-%m-%d %H:%M:%S')
-                text = '`%s` -- `@%s`, %s (id %s)' % (
-                       quote, username, datefor, quoteid)
+                text = f'`{quote}` -- `@{username}`, {datefor} (id {quoteid})'
             except:
-                if nick:
-                    text = _("No quote recorded for `%s`") % nick
-                else:
-                    text = _("No quote found")
+                text = _("No quote recorded for `%s`") % nick if nick else _("No quote found")
             stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                       reply_to_message_id=message_id,
                                       disable_web_page_preview=True,
@@ -144,10 +138,10 @@ def getquote(username=False, gid=0):
         string = (username, gid)
         sql = "SELECT id,username,date,text FROM quote WHERE username='%s' and gid='%s' ORDER BY RANDOM() LIMIT 1;" % string
     else:
-        sql = "SELECT id,username,date,text FROM quote WHERE gid='%s' ORDER BY RANDOM() LIMIT 1;" % gid
+        sql = f"SELECT id,username,date,text FROM quote WHERE gid='{gid}' ORDER BY RANDOM() LIMIT 1;"
     cur = stampy.stampy.dbsql(sql)
     value = cur.fetchone()
-    logger.debug(msg="getquote: %s for gid: %s" % (username, gid))
+    logger.debug(msg=f"getquote: {username} for gid: {gid}")
     try:
         # Get value from SQL query
         (quoteid, username, date, quote) = value
@@ -159,10 +153,7 @@ def getquote(username=False, gid=0):
         date = False
         quote = False
 
-    if quoteid:
-        return quoteid, username, date, quote
-
-    return False
+    return (quoteid, username, date, quote) if quoteid else False
 
 
 def addquote(username=False, date=False, text=False, gid=0):
@@ -176,15 +167,13 @@ def addquote(username=False, date=False, text=False, gid=0):
     """
 
     logger = logging.getLogger(__name__)
-    sql = "INSERT INTO quote(username, date, text, gid) VALUES('%s','%s', '%s', '%s');" % (
-          username, date, text, gid)
+    sql = f"INSERT INTO quote(username, date, text, gid) VALUES('{username}','{date}', '{text}', '{gid}');"
     cur = stampy.stampy.dbsql(sql)
     logger.debug(msg=_L("createquote: %s=%s on %s for group %s") % (username, text, date, gid))
     # Retrieve last id
     sql = "select last_insert_rowid();"
     cur = stampy.stampy.dbsql(sql)
-    lastrowid = cur.fetchone()[0]
-    return lastrowid
+    return cur.fetchone()[0]
 
 
 def deletequote(id=False, gid=0):
@@ -196,6 +185,6 @@ def deletequote(id=False, gid=0):
     """
 
     logger = logging.getLogger(__name__)
-    sql = "DELETE FROM quote WHERE id='%s' AND gid='%s';" % (id, gid)
-    logger.debug(msg="deletequote: %s, group: %s" % (id, gid))
+    sql = f"DELETE FROM quote WHERE id='{id}' AND gid='{gid}';"
+    logger.debug(msg=f"deletequote: {id}, group: {gid}")
     return stampy.stampy.dbsql(sql)

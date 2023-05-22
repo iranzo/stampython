@@ -17,8 +17,7 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    triggers = ["*"]
-    return triggers
+    return ["*"]
 
 
 def run(message):  # do not edit this line
@@ -37,17 +36,20 @@ def run(message):  # do not edit this line
     return
 
 
-def help(message):  # do not edit this line
+def help(message):    # do not edit this line
     """
     Returns help for plugin
     :param message: message to process
     :return: help text
     """
 
-    commandtext = ""
-    if stampy.stampy.is_owner_or_admin(message):
-        commandtext = _("As admin or owner define 'welcome' to the greeting text sent to new chat members. You can use $username to put long name in the text\n\n")
-    return commandtext
+    return (
+        _(
+            "As admin or owner define 'welcome' to the greeting text sent to new chat members. You can use $username to put long name in the text\n\n"
+        )
+        if stampy.stampy.is_owner_or_admin(message)
+        else ""
+    )
 
 
 def welcomeuser(message):
@@ -83,7 +85,7 @@ def welcomeuser(message):
     except:
         newlastname = ""
 
-    name = "%s %s ([`@%s`](https://t.me/%s))" % (newfirstname, newlastname, newusername, newusername)
+    name = f"{newfirstname} {newlastname} ([`@{newusername}`](https://t.me/{newusername}))"
 
     greeting = welcome.replace("$username", name)
 

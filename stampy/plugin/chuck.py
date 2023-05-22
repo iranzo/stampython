@@ -20,31 +20,30 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    triggers = ["^/cn"]
-    return triggers
+    return ["^/cn"]
 
 
-def run(message):  # do not edit this line
+def run(message):    # do not edit this line
     """
     Executes plugin
     :param message: message to run against
     :return:
     """
-    text = stampy.stampy.getmsgdetail(message)["text"]
-    if text:
+    if text := stampy.stampy.getmsgdetail(message)["text"]:
         if text.split()[0].lower() == "/cn":
             cn(message=message)
     return
 
 
-def help(message):  # do not edit this line
+def help(message):    # do not edit this line
     """
     Returns help for plugin
     :param message: message to process
     :return: help text
     """
-    commandtext = _("Use `/cn <word>` to get a random Chuck Norris quote based on word\n\n")
-    return commandtext
+    return _(
+        "Use `/cn <word>` to get a random Chuck Norris quote based on word\n\n"
+    )
 
 
 def cn(message):
@@ -63,7 +62,7 @@ def cn(message):
     message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    logger.debug(msg=_L("Command: %s by %s" % (texto, who_un)))
+    logger.debug(msg=_L(f"Command: {texto} by {who_un}"))
 
     # We might be have been given no command, just stock
     try:
@@ -74,7 +73,7 @@ def cn(message):
     if not command:
         url = "https://api.chucknorris.io/jokes/random"
     else:
-        url = "https://api.chucknorris.io/jokes/search?query=%s" % command
+        url = f"https://api.chucknorris.io/jokes/search?query={command}"
 
     text = "``` "
     # we might get more than one result
@@ -90,10 +89,7 @@ def cn(message):
                     totalelem = len(result['result'])
                 except:
                     totalelem = 0
-                if totalelem > 1:
-                    elem = random.randint(0, totalelem - 1)
-                else:
-                    elem = 0
+                elem = random.randint(0, totalelem - 1) if totalelem > 1 else 0
                 text += result['result'][elem]['value']
             else:
                 text += "Chuck Norris didn't said a word about it."

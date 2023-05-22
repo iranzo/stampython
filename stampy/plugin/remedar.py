@@ -20,9 +20,7 @@ def init():
     :return: List of triggers for plugin
     """
 
-    triggers = ["*"]
-
-    return triggers
+    return ["*"]
 
 
 def cron():
@@ -32,26 +30,24 @@ def cron():
     """
 
 
-def run(message):  # do not edit this line
+def run(message):    # do not edit this line
     """
     Executes plugin
     :param message: message to run against
     :return:
     """
-    text = stampy.stampy.getmsgdetail(message)["text"]
-    if text:
+    if text := stampy.stampy.getmsgdetail(message)["text"]:
         replacevowels(message)
     return
 
 
-def help(message):  # do not edit this line
+def help(message):    # do not edit this line
     """
     Returns help for plugin
     :param message: message to process
     :return: help text
     """
-    commandtext = ""
-    return commandtext
+    return ""
 
 
 def replacevowels(message):
@@ -81,7 +77,7 @@ def replacevowels(message):
     if texto != '' and doremedar:
         text = re.sub("[aeouAEOUáéóúàèòùäëöü]", "i", texto)
         if texto != text:
-            logger.info("Remedar for %s in chat %s" % (who_id, chat_id))
+            logger.info(f"Remedar for {who_id} in chat {chat_id}")
             stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                       reply_to_message_id=message_id,
                                       disable_web_page_preview=True,

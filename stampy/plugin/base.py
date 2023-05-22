@@ -17,11 +17,10 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    triggers = ["^/quit"]
-    return triggers
+    return ["^/quit"]
 
 
-def run(message):  # do not edit this line
+def run(message):    # do not edit this line
     """
     Executes plugin
     :param message: message to run against
@@ -29,7 +28,7 @@ def run(message):  # do not edit this line
     """
     text = stampy.stampy.getmsgdetail(message)["text"]
     if text and stampy.stampy.is_owner_or_admin(message):
-        if text.split()[0].lower()[0:6] == "/quit":
+        if text.split()[0].lower()[:6] == "/quit":
             basecommands(message)
     return
 

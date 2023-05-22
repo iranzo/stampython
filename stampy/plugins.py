@@ -68,9 +68,7 @@ def initplugins():
         logger.debug(msg=_L("Processing plugin initialization: %s") % i["name"])
         newplug = loadPlugin(i)
         plugs.append(newplug)
-        triggers = []
-        for each in newplug.init():
-            triggers.append(each)
+        triggers = list(newplug.init())
         plugtriggers[i["name"]] = triggers
         logger.debug(msg=_L("Plugin %s is triggered by %s") % (i["name"], triggers))
     return plugs, plugtriggers

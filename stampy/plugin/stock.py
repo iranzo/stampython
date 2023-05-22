@@ -22,31 +22,28 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    triggers = ["^stock"]
-    return triggers
+    return ["^stock"]
 
 
-def run(message):  # do not edit this line
+def run(message):    # do not edit this line
     """
     Executes plugin
     :param message: message to run against
     :return:
     """
-    text = stampy.stampy.getmsgdetail(message)["text"]
-    if text:
+    if text := stampy.stampy.getmsgdetail(message)["text"]:
         if text.split()[0].lower() == "stock":
             stock(message=message)
     return
 
 
-def help(message):  # do not edit this line
+def help(message):    # do not edit this line
     """
     Returns help for plugin
     :param message: message to process
     :return: help text
     """
-    commandtext = _("Use `stock <ticker>` to get stock trading price\n\n")
-    return commandtext
+    return _("Use `stock <ticker>` to get stock trading price\n\n")
 
 
 class IEXAPI:
@@ -54,7 +51,7 @@ class IEXAPI:
         self.prefix = "https://api.iextrading.com/1.0/stock/"
 
     def get(self, symbol):
-        url = self.prefix + "%s/quote" % symbol
+        url = f"{self.prefix}{symbol}/quote"
         content = json.loads(requests.get(url).content)
         quote = {'t': symbol}
         if "change" in content:
@@ -114,7 +111,7 @@ def stock(message):
     message_id = msgdetail["message_id"]
     who_un = msgdetail["who_un"]
 
-    logger.debug(msg=_L("Command: %s by %s" % (texto, who_un)))
+    logger.debug(msg=_L(f"Command: {texto} by {who_un}"))
 
     # We might be have been given no command, just stock
     try:
@@ -129,15 +126,18 @@ def stock(message):
 
     text = "```\n"
     currency = stampy.plugin.config.gconfig(key="currency", default="EUR", gid=chat_id)
-    if currency != 'USD':
-        rate = get_currency_rate('USD', currency)
-    else:
-        rate = 1
-    text += _("USD/%s rate " % currency + str(rate) + "\n")
+    rate = get_currency_rate('USD', currency) if currency != 'USD' else 1
+    text += _(f"USD/{currency} rate {str(rate)}" + "\n")
     for ticker in stock:
         try:
             quote = c.get(ticker.upper())
-            text += "%s Quote " % quote["t"] + " " + str(quote["l_cur"]) + " " + str(quote["c"]) + " (%s%%)" % str(quote["cp"])
+            text += (
+                f'{quote["t"]} Quote  '
+                + str(quote["l_cur"])
+                + " "
+                + str(quote["c"])
+                + " (%s%%)" % str(quote["cp"])
+            )
             quoteUSD = quote["l_cur"]
             quoteEur = float(quoteUSD * rate)
             text += " (%s %s)\n" % ("{0:.2f}".format(quoteEur), currency)

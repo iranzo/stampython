@@ -29,12 +29,10 @@ def init():
     """
     botname = stampy.stampy.getme()
 
-    triggers = ["^/feed"]
-
     if botname == 'redken_bot':
         stampy.stampy.cronme(name="feed", interval=5)
 
-    return triggers
+    return ["^/feed"]
 
 
 def cron():
@@ -46,17 +44,15 @@ def cron():
     feeds()
 
 
-def run(message):  # do not edit this line
+def run(message):    # do not edit this line
     """
     Executes plugin
     :param message: message to run against
     :return:
     """
-    code = None
-    text = stampy.stampy.getmsgdetail(message)["text"]
-    if text:
+    if text := stampy.stampy.getmsgdetail(message)["text"]:
         rsscommands(message)
-    return code
+    return None
 
 
 def help(message):  # do not edit this line
@@ -143,7 +139,7 @@ def rsscommands(message):
                     code = feeddel(name=name, gid=chat_id)
                 except:
                     code = False
-                if code is not False:
+                if code:
                     text = _("Removing feed `%s`") % name
                     stampy.stampy.sendmessage(chat_id=chat_id, text=text,
                                               reply_to_message_id=message_id,
@@ -173,11 +169,7 @@ def getfeeds():
     sql = "SELECT name FROM feeds"
     cur = stampy.stampy.dbsql(sql)
     data = cur.fetchall()
-    value = []
-    for row in data:
-        # Fill valid values
-        value.append(row[0])
-
+    value = [row[0] for row in data]
     logger.debug(msg=_L("getfeeds: %s") % value)
 
     return value
@@ -193,8 +185,8 @@ def listfeeds(gid=False):
 
     sql = "select name,lastchecked,url,interval  from feeds"
     if gid:
-        sql = "%s%s" % (sql, " WHERE gid=%s" % gid)
-    sql = "%s%s" % (sql, " ORDER BY name ASC;")
+        sql = f"{sql} WHERE gid={gid}"
+    sql = f"{sql} ORDER BY name ASC;"
     cur = stampy.stampy.dbsql(sql)
 
     try:
@@ -229,15 +221,15 @@ def feeds(message=False, name=False):
         gid = False
 
     if name:
-        sql = "SELECT name,gid,lastchecked,url,interval,lastitem from feeds WHERE name='%s'" % name
+        sql = f"SELECT name,gid,lastchecked,url,interval,lastitem from feeds WHERE name='{name}'"
         if gid:
-            extra = "and gid='%s';" % gid
-            sql = "%s %s" % (sql, extra)
+            extra = f"and gid='{gid}';"
+            sql = f"{sql} {extra}"
     else:
         sql = "SELECT name,gid,lastchecked,url,interval, lastitem from feeds"
         if gid:
-            extra = "WHERE gid='%s'" % gid
-            sql = "%s %s" % (sql, extra)
+            extra = f"WHERE gid='{gid}'"
+            sql = f"{sql} {extra}"
 
     cur = stampy.stampy.dbsql(sql)
     gidstoping = []
@@ -254,11 +246,7 @@ def feeds(message=False, name=False):
     for row in cur:
         (name, gid, lastchecked, url, interval, lastitem) = row
 
-        if message:
-            chat_id = msgdetail["chat_id"]
-        else:
-            chat_id = gid
-
+        chat_id = msgdetail["chat_id"] if message else gid
         try:
             # Parse date or if in error, use past
             datelast = stampy.stampy.utize(dateutil.parser.parse(lastchecked))
@@ -302,7 +290,7 @@ def feeds(message=False, name=False):
 
             # Even if we don't have updated items, update the lastchecked
             # date for interval to work properly
-            if len(news) == 0:
+            if not news:
                 dateitem = stampy.stampy.utize(datelastitem)
                 dateitemfor = dateitem.strftime('%Y/%m/%d %H:%M:%S')
                 feedsupdated.append({'name': name, 'gid': gid, 'dateitem': dateitemfor})
@@ -319,18 +307,24 @@ def feeds(message=False, name=False):
                 if name == "RHJobs":
                     description = item['description']
                     try:
-                        jobid = re.search('\*\*Job ID\*\*(.*)', description).group(1).strip().replace("_", '')
-                        url = "https://global-redhat.icims.com/jobs/%s/job?iis=A+Red+Hat+Employee&iispid=21098" % jobid
+                        jobid = (
+                            re.search('\*\*Job ID\*\*(.*)', description)[1]
+                            .strip()
+                            .replace("_", '')
+                        )
+                        url = f"https://global-redhat.icims.com/jobs/{jobid}/job?iis=A+Red+Hat+Employee&iispid=21098"
                     except:
                         url = None
 
                     if url and 'USA-' in title:
-                        url = url = "https://us-redhat.icims.com/jobs/%s/job?iis=A+Red+Hat+Employee&iispid=21098" % jobid
+                        url = (
+                            url
+                        ) = f"https://us-redhat.icims.com/jobs/{jobid}/job?iis=A+Red+Hat+Employee&iispid=21098"
 
                 if url and title:
                     dateitem = stampy.stampy.utize(dateutil.parser.parse(item["published"]))
                     dateitemfor = dateitem.strftime('%Y/%m/%d %H:%M:%S')
-                    itemtext = '*%s* *%s* - [%s](%s)' % (name, dateitem, title, url)
+                    itemtext = f'*{name}* *{dateitem}* - [{title}]({url})'
                     try:
                         code = stampy.stampy.sendmessage(chat_id=chat_id, text=itemtext, reply_to_message_id=message_id, parse_mode='Markdown')
                     except:
@@ -344,7 +338,7 @@ def feeds(message=False, name=False):
     # Update feeds with results so they are not shown next time
     for feed in stampy.stampy.getitems(feedsupdated):
         # Update date in SQL so it's not invoked again
-        sql = "UPDATE feeds SET lastchecked='%s',lastitem='%s' where name='%s' and gid='%s'" % (datefor, feed['dateitem'], feed['name'], feed['gid'])
+        sql = f"UPDATE feeds SET lastchecked='{datefor}',lastitem='{feed['dateitem']}' where name='{feed['name']}' and gid='{feed['gid']}'"
         logger.debug(msg=_L("Updating last checked as per %s") % sql)
         stampy.stampy.dbsql(sql=sql)
 
@@ -364,20 +358,16 @@ def feedadd(name=False, url=False, gid=0, interval=30):
     """
 
     logger = logging.getLogger(__name__)
-    if name and url:
-        date = datetime.datetime.now()
-        lastchecked = date.strftime('%Y/%m/%d %H:%M:%S')
-        sql = "INSERT INTO feeds(name, url, gid, lastchecked, interval) VALUES('%s','%s', '%s', '%s', '%s');" % (name, url, gid, lastchecked, interval)
-        cur = stampy.stampy.dbsql(sql)
-        logger.debug(msg=_L("feedadd: %s on %s for group %s") % (name, url, gid))
-        # Retrieve last id
-        sql = "select last_insert_rowid();"
-        cur = stampy.stampy.dbsql(sql)
-        lastrowid = cur.fetchone()[0]
-    else:
-        lastrowid = False
+    if not name or not url:
+        return False
 
-    return lastrowid
+    date = datetime.datetime.now()
+    lastchecked = date.strftime('%Y/%m/%d %H:%M:%S')
+    sql = f"INSERT INTO feeds(name, url, gid, lastchecked, interval) VALUES('{name}','{url}', '{gid}', '{lastchecked}', '{interval}');"
+    cur = stampy.stampy.dbsql(sql)
+    logger.debug(msg=_L("feedadd: %s on %s for group %s") % (name, url, gid))
+    cur = stampy.stampy.dbsql("select last_insert_rowid();")
+    return cur.fetchone()[0]
 
 
 def feeddel(name=False, gid=0):
@@ -391,8 +381,8 @@ def feeddel(name=False, gid=0):
     logger = logging.getLogger(__name__)
     code = False
     if name:
-        sql = "DELETE FROM feeds WHERE name='%s' AND gid='%s';" % (name, gid)
-        logger.debug(msg="feeddel: %s, group: %s" % (name, gid))
+        sql = f"DELETE FROM feeds WHERE name='{name}' AND gid='{gid}';"
+        logger.debug(msg=f"feeddel: {name}, group: {gid}")
         stampy.stampy.dbsql(sql)
         code = True
     return code

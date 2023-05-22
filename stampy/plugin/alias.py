@@ -20,11 +20,10 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    triggers = ["^/alias"]
-    return triggers
+    return ["^/alias"]
 
 
-def run(message):  # do not edit this line
+def run(message):    # do not edit this line
     """
     Executes plugin
     :param message: message to run against
@@ -32,9 +31,8 @@ def run(message):  # do not edit this line
     """
     logger = logging.getLogger(__name__)
     logger.debug(msg=_L("Processing plugin: Code: %s") % __file__)
-    text = stampy.stampy.getmsgdetail(message)["text"]
-    if text:
-        if text.split()[0].lower()[0:6] == "/alias":
+    if text := stampy.stampy.getmsgdetail(message)["text"]:
+        if text.split()[0].lower()[:6] == "/alias":
             aliascommands(message)
     return
 
@@ -125,8 +123,8 @@ def deletealias(word, gid=0):
     """
 
     logger = logging.getLogger(__name__)
-    sql = "DELETE FROM alias WHERE key='%s' AND gid='%s';" % (word, gid)
-    logger.debug(msg="rmalias: %s for group %s" % (word, gid))
+    sql = f"DELETE FROM alias WHERE key='{word}' AND gid='{gid}';"
+    logger.debug(msg=f"rmalias: {word} for group {gid}")
     stampy.stampy.dbsql(sql)
     return
 
@@ -157,7 +155,7 @@ def listalias(word=False, gid=0):
         text = _("%s has an alias %s") % (word, value)
 
     else:
-        sql = "select key,value from alias WHERE gid='%s' ORDER BY key ASC;" % gid
+        sql = f"select key,value from alias WHERE gid='{gid}' ORDER BY key ASC;"
         cur = stampy.stampy.dbsql(sql)
         text = _("Defined aliases:\n")
         table = from_db_cursor(cur)
@@ -178,17 +176,16 @@ def createalias(word, value, gid=0):
     logger = logging.getLogger(__name__)
     if getalias(value, gid=gid) == word or word.lower() == value.lower():
         logger.error(msg=_L("createalias: circular reference %s=%s for gid %s") % (word, value, gid))
-    else:
-        if not getalias(word, gid) or getalias(word, gid) == word:
-            # Removing duplicates on karma DB and add
-            # the previous values
-            old = stampy.plugin.karma.getkarma(word=word, gid=gid)
-            stampy.plugin.karma.updatekarma(word=word, change=-old, gid=gid)
-            stampy.plugin.karma.updatekarma(word=value, change=old, gid=gid)
-            sql = "INSERT INTO alias(key, value, gid) VALUES('%s','%s', '%s');" % (word, value, gid)
-            logger.debug(msg="createalias: %s=%s for gid %s" % (word, value, gid))
-            stampy.stampy.dbsql(sql)
-            return
+    elif not getalias(word, gid) or getalias(word, gid) == word:
+        # Removing duplicates on karma DB and add
+        # the previous values
+        old = stampy.plugin.karma.getkarma(word=word, gid=gid)
+        stampy.plugin.karma.updatekarma(word=word, change=-old, gid=gid)
+        stampy.plugin.karma.updatekarma(word=value, change=old, gid=gid)
+        sql = f"INSERT INTO alias(key, value, gid) VALUES('{word}','{value}', '{gid}');"
+        logger.debug(msg=f"createalias: {word}={value} for gid {gid}")
+        stampy.stampy.dbsql(sql)
+        return
     return False
 
 
@@ -205,7 +202,7 @@ def getalias(word, gid=0):
     sql = "SELECT key,value FROM alias WHERE key='%s' AND gid='%s';" % string
     cur = stampy.stampy.dbsql(sql)
     value = cur.fetchone()
-    logger.debug(msg="getalias: %s for gid %s" % (word, gid))
+    logger.debug(msg=f"getalias: {word} for gid {gid}")
 
     try:
         # Get value from SQL query
@@ -218,6 +215,4 @@ def getalias(word, gid=0):
     # We can define recursive aliases, so this will return the ultimate one
     if value:
         return getalias(word=value, gid=gid)
-    if word:
-        return word.lower()
-    return False
+    return word.lower() if word else False

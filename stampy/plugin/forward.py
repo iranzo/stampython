@@ -22,11 +22,10 @@ def init():
     Initializes module
     :return: List of triggers for plugin
     """
-    triggers = ["^/forward"]
-    return triggers
+    return ["^/forward"]
 
 
-def run(message):  # do not edit this line
+def run(message):    # do not edit this line
     """
     Executes plugin
     :param message: message to run against
@@ -36,10 +35,8 @@ def run(message):  # do not edit this line
     logger = logging.getLogger(__name__)
 
     msgdetail = stampy.stampy.getmsgdetail(message)
-    text = msgdetail["text"]
-
-    if text:
-        if text.split()[0].lower()[0:8] == "/forward":
+    if text := msgdetail["text"]:
+        if text.split()[0].lower()[:8] == "/forward":
             logger.debug(msg=_L("Processing forward commands"))
             forwardcommands(message)
     return
@@ -77,7 +74,7 @@ def doforward(message, target):
     url = "%s%s/forwardMessage" % (stampy.plugin.config.config(key="url"),
                                    stampy.plugin.config.config(key='token'))
 
-    forwardmessageurl = "%s?chat_id=%s&from_chat_id=%s&message_id=%s" % (url, target, chat_id, message_id)
+    forwardmessageurl = f"{url}?chat_id={target}&from_chat_id={chat_id}&message_id={message_id}"
 
     code = False
     attempt = 0
@@ -225,8 +222,8 @@ def deleteforward(source, target):
     """
 
     logger = logging.getLogger(__name__)
-    sql = "DELETE FROM forward WHERE source='%s' AND target='%s';" % (source, target)
-    logger.debug(msg="rmforward: %s -> %s" % (source, target))
+    sql = f"DELETE FROM forward WHERE source='{source}' AND target='{target}';"
+    logger.debug(msg=f"rmforward: {source} -> {target}")
     stampy.stampy.dbsql(sql)
     return
 
@@ -242,7 +239,7 @@ def listforward(source=False):
     if source:
         # if source is provided, return the forwards for that source
         string = (source,)
-        sql = "SELECT source,target FROM forward WHERE source='%s' ORDER by source ASC;" % string
+        sql = f"SELECT source,target FROM forward WHERE source='{string}' ORDER by source ASC;"
         cur = stampy.stampy.dbsql(sql)
         target = cur.fetchone()
 
@@ -277,8 +274,8 @@ def createforward(source, target):
     if getforward(source) == target:
         logger.error(msg=_L("createforward: circular reference %s=%s") % (source, target))
     else:
-        sql = "INSERT INTO forward VALUES('%s','%s');" % (source, target)
-        logger.debug(msg=_L("createforward: %s=%s" % (source, target)))
+        sql = f"INSERT INTO forward VALUES('{source}','{target}');"
+        logger.debug(msg=_L(f"createforward: {source}={target}"))
         stampy.stampy.dbsql(sql)
         return
     return False
@@ -293,9 +290,9 @@ def getforward(source):
 
     logger = logging.getLogger(__name__)
     string = (source,)
-    sql = "SELECT target FROM forward WHERE source='%s';" % string
+    sql = f"SELECT target FROM forward WHERE source='{string}';"
     cur = stampy.stampy.dbsql(sql)
     rows = cur.fetchall()
     for target in rows:
-        logger.debug(msg=_L("getforward: %s -> %s" % (source, target[0])))
+        logger.debug(msg=_L(f"getforward: {source} -> {target[0]}"))
         yield target[0]

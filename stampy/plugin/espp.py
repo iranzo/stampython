@@ -20,31 +20,28 @@ def init():
     :return: List of triggers for plugin
     """
 
-    triggers = ["^/espp"]
-    return triggers
+    return ["^/espp"]
 
 
-def run(message):  # do not edit this line
+def run(message):    # do not edit this line
     """
     Executes plugin
     :param message: message to run against
     :return:
     """
-    text = stampy.stampy.getmsgdetail(message)["text"]
-    if text:
-        if text.split()[0].lower()[0:5] == "/espp":
+    if text := stampy.stampy.getmsgdetail(message)["text"]:
+        if text.split()[0].lower()[:5] == "/espp":
             espp(message=message)
     return
 
 
-def help(message):  # do not edit this line
+def help(message):    # do not edit this line
     """
     Returns help for plugin
     :param message: message to process
     :return: help text
     """
-    commandtext = _("Use `/espp <amount>` to get estimated ESPP earnings\n\n")
-    return commandtext
+    return _("Use `/espp <amount>` to get estimated ESPP earnings\n\n")
 
 
 def espp(message):
@@ -82,8 +79,9 @@ def espp(message):
         rate = 1
 
     text += _("USD/%s rate ") % currency + str(rate) + "\n"
-    initial = float(stampy.plugin.config.gconfig(key="espp", default=False, gid=chat_id))
-    if initial:
+    if initial := float(
+        stampy.plugin.config.gconfig(key="espp", default=False, gid=chat_id)
+    ):
         text += _("Initial quote: %s USD\n") % initial
         try:
             quote = c.get(ticker)
@@ -93,11 +91,7 @@ def espp(message):
             final = initial
             text += ""
 
-        if initial > final:
-            pricebuy = final
-        else:
-            pricebuy = initial
-
+        pricebuy = min(initial, final)
         reduced = 0.85 * pricebuy
 
         text += _("Buy price: %s USD\n") % reduced
